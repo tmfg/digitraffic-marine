@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Testiclient for vessel locations</title>
+    <script type="text/javascript" src="jquery-2.2.0.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.0.3/sockjs.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script>
+        var lines = [];
+
+        function connect() {
+            console.log('trying to connect...');
+
+            var socket = new SockJS('http://10.10.10.10/api/v1/websockets');
+
+            var stompClient = Stomp.over(socket);
+            stompClient.connect('', '', function(frame) {
+                console.log('connected');
+                stompClient.subscribe('/locations', function(message) {
+                    addMessage(JSON.parse(message.body));
+                    updateList();
+                });
+            });
+        }
+
+        function addMessage(message) {
+            var text = convert(message);
+
+            if (lines.length > 10) {
+                lines.shift();
+            }
+
+            lines.push(text);
+        }
+
+        function updateList() {
+            $(".locations").html(lines.join('<br/>'));
+        }
+
+        function convert(message) {
+            return 'id ' + message.id + ' time ' + message.time;
+        }
+
+        connect();
+    </script>
+</head>
+<body>
+    Vessel locations:
+    <div class="locations" />
+</body>
+</html>
