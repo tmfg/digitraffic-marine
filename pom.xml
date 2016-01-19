@@ -18,6 +18,9 @@
 		<relativePath/>
 	</parent>
 
+	<!-- OJDBC7.jar please install driver to local repo -->
+	<!-- PLACEHOLDER -->
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
@@ -56,13 +59,11 @@
             <version>2.7.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.oracle.jdbc</groupId>
-            <artifactId>ojdbc7</artifactId>
-            <version>12.1.0.2</version>
-            <scope>runtime</scope>
-        </dependency>
-
+		<dependency>
+			<groupId>oracle</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0.2</version>
+		</dependency>
     </dependencies>
 
 	<build>
