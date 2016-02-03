@@ -46,17 +46,17 @@ public class AISMessage {
         public final long timestamp;
         public final double speed;
         public final double course;
-        public final int utc_sec;
+        public final int utcSec;
 
         @JsonCreator
         public AISAttributes(@JsonProperty("mmsi") final int mmsi,
                 @JsonProperty("timestamp") final long timestamp, @JsonProperty("speed") final double speed,
-                @JsonProperty("course") final double course, @JsonProperty("utc_sec") final int utc_sec) {
+                @JsonProperty("course") final double course, @JsonProperty("utc_sec") final int utcSec) {
             this.mmsi = mmsi;
             this.timestamp = timestamp;
             this.speed = speed;
             this.course = course;
-            this.utc_sec = utc_sec;
+            this.utcSec = utcSec;
         }
     }
 }
