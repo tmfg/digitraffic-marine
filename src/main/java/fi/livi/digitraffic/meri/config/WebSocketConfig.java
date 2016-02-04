@@ -1,5 +1,8 @@
 package fi.livi.digitraffic.meri.config;
 
+import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_WEBSOKCETS_PART_PATH;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
@@ -16,6 +19,6 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry stompEndpointRegistry) {
-        stompEndpointRegistry.addEndpoint("/api/v1/websockets/").setAllowedOrigins("*").withSockJS();
+        stompEndpointRegistry.addEndpoint(API_V1_BASE_PATH + API_WEBSOKCETS_PART_PATH).setAllowedOrigins("*").withSockJS();
     }
 }
