@@ -11,6 +11,10 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
+import fi.livi.digitraffic.meri.dao.VesselLocationRepository;
+import fi.livi.digitraffic.meri.domain.VesselLocation;
+import fi.livi.digitraffic.meri.model.AISMessage;
+
 @Component
 public class VesselLocationReader {
     private static final Logger LOG = LoggerFactory.getLogger(VesselLocationReader.class);
@@ -18,11 +22,14 @@ public class VesselLocationReader {
     private final String serverAddress;
 
     private final LocationSender locationSender;
+    private final VesselLocationRepository vesselLocationRepository;
 
     @Autowired
-    public VesselLocationReader(@Value("${ais.server.address}") final String serverAddress, final LocationSender locationSender) {
+    public VesselLocationReader(@Value("${ais.server.address}") final String serverAddress, final LocationSender locationSender, final
+    VesselLocationRepository vesselLocationRepository) {
         this.locationSender = locationSender;
         this.serverAddress = serverAddress;
+        this.vesselLocationRepository = vesselLocationRepository;
 
         initializeConnection();
     }
@@ -45,7 +52,10 @@ public class VesselLocationReader {
         public void handleMessage(final WebSocketSession session, final WebSocketMessage<?> message) throws Exception {
             LOG.debug("handleMessage " + message.getPayload());
 
-            locationSender.sendMessage((String) message.getPayload());
+            final AISMessage ais = MessageConverter.convert((String) message.getPayload());
+
+            locationSender.sendMessage(ais);
+            vesselLocationRepository.save(new VesselLocation(ais));
         }
 
         @Override

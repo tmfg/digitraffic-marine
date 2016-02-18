@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.VesselMetadataRepository;
-import fi.livi.digitraffic.meri.model.VesselMetadata;
+import fi.livi.digitraffic.meri.domain.VesselMetadata;
 
 @Service
 @Transactional(readOnly = true)

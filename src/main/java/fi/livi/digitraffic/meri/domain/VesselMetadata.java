@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.model;
+package fi.livi.digitraffic.meri.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
