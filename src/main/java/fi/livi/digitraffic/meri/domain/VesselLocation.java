@@ -8,8 +8,10 @@ import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.livi.digitraffic.meri.model.AISMessage;
 
+@JsonIgnoreProperties("id")
 @Entity
 @Immutable
 public class VesselLocation {
@@ -25,6 +27,10 @@ public class VesselLocation {
     private double speed, course;
 
     private long timestamp;
+
+    public  VesselLocation() {
+        // for hibernate
+    }
 
     public VesselLocation(final AISMessage ais) {
         this.mmsi = ais.attributes.mmsi;
