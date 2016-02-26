@@ -2,11 +2,10 @@ package fi.livi.digitraffic.meri.controller;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.model.AISMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MessageConverter {
     private static final Logger LOG = LoggerFactory.getLogger(MessageConverter.class);

@@ -11,3 +11,9 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 
 # AIS-websocket address
 ais.server.address=ws://ws-address
+
+# Logging
+logging.file=digitraffic-ais.log
+logging.level.fi.livi.digitraffic.meri=INFO
+#logging.level.org.hibernate.SQL=DEBUG
+#logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
