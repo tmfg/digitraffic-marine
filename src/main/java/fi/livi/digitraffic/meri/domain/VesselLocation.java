@@ -6,26 +6,40 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
-import org.hibernate.annotations.Immutable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.livi.digitraffic.meri.model.AISMessage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.Immutable;
 
 @JsonIgnoreProperties("id")
 @Entity
 @Immutable
+@ApiModel(description="Vessel location model")
 public class VesselLocation {
+
     @Id
     @SequenceGenerator(name = "VL_SEQ", sequenceName = "SEQ_VESSEL_LOCATION")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VL_SEQ")
+    @ApiModelProperty(value = "Unique identifier", required = true)
     private long id;
 
+    @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)
     private int mmsi;
 
-    private double x, y;
+    @ApiModelProperty(value = "X-coordinate (longitude) in ETRS89 (EUREF-FIN)", required = true)
+    private double x;
 
-    private double speed, course;
+    @ApiModelProperty(value = "Y-coordinate (latitude) in ETRS89 (EUREF-FIN)", required = true)
+    private double y;
 
+    @ApiModelProperty(value = "Speed in knots", required = true)
+    private double speed;
+
+    @ApiModelProperty(value = "Course in TODO", required = true)
+    private double course;
+
+    @ApiModelProperty(value = "Location record timestamp in milliseconds from Unix epoch.", required = true)
     private long timestamp;
 
     public  VesselLocation() {

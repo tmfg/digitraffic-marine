@@ -1,13 +1,12 @@
 package fi.livi.digitraffic.meri.service;
 
-import java.util.List;
-
+import com.mysema.query.types.expr.BooleanExpression;
+import fi.livi.digitraffic.meri.dao.VesselLocationRepository;
+import fi.livi.digitraffic.meri.domain.QVesselLocation;
+import fi.livi.digitraffic.meri.domain.VesselLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import fi.livi.digitraffic.meri.dao.VesselLocationRepository;
-import fi.livi.digitraffic.meri.domain.VesselLocation;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,12 +19,35 @@ public class VesselLocationServiceImpl implements VesselLocationService {
     }
 
     @Override
-    public List<VesselLocation> findLocations(final int mmsi, final long from, final long to) {
-        return vesselLocationRepository.findByMmsiAndTimestampBetween(mmsi, from, to);
+    public Iterable<VesselLocation> findLocations(final int mmsi, final Long from, final Long to) {
+
+        QVesselLocation vesselLocation = QVesselLocation.vesselLocation;
+        BooleanExpression predicate = vesselLocation.mmsi.eq(mmsi);
+        if (from != null) {
+            predicate = predicate.and(vesselLocation.timestamp.goe(from));
+        }
+        if (to != null) {
+            predicate = predicate.and(vesselLocation.timestamp.loe(to));
+        }
+
+        return vesselLocationRepository.findAll(predicate);
     }
 
     @Override
-    public List<VesselLocation> findLocations(final long from, final long to) {
-        return vesselLocationRepository.findByTimestampBetween(from, to);
+    public Iterable<VesselLocation> findLocations(final Long from, final Long to) {
+        QVesselLocation vesselLocation = QVesselLocation.vesselLocation;
+
+        BooleanExpression predicate = QVesselLocation.vesselLocation.isNotNull();
+
+        if (from != null) {
+            predicate = vesselLocation.timestamp.goe(from);
+        }
+        if (from != null) {
+            predicate = predicate == null ?
+                    vesselLocation.timestamp.loe(to) :
+                    predicate.and(vesselLocation.timestamp.loe(to));
+        }
+
+        return vesselLocationRepository.findAll(predicate);
     }
 }
