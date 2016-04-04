@@ -48,5 +48,9 @@ crashlytics-build.properties
 
 # Created by .ignore support plugin (hsz.mobi)
 
-/digitraffic-ais
+# Ignore developer local conf
+/src/main/resources/application-localhost.properties
+
+/target/
 **/*.log
+buildNumber.properties
