@@ -107,6 +107,13 @@
             <version>4.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <!-- If you have access to scm then you can place actual url's.
