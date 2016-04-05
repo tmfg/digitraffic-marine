@@ -6,9 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -24,9 +22,6 @@ import fi.livi.digitraffic.meri.AisApplication;
 public class NauticalWarningControllerTest {
 
     RestTemplate template = new TestRestTemplate();
-
-    @Autowired
-    EmbeddedWebApplicationContext server;
 
     @Value("${local.server.port}")
     int port;
