@@ -20,8 +20,7 @@ import fi.livi.digitraffic.meri.AisApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AisApplication.class)
-//@WebAppConfiguration
-@WebIntegrationTest({ "server.port=0", "management.port=0"})
+@WebIntegrationTest({ "server.port=18080", "management.port=18081"})
 public class NauticalWarningControllerTest {
 
     RestTemplate template = new TestRestTemplate();
@@ -38,7 +37,7 @@ public class NauticalWarningControllerTest {
         String api = "/nautical-warnings";
         ResponseEntity<String> response = template.getForEntity(localPath + api, String.class);
 
-        assertThat(response.toString(), containsString("foo"));
+        assertThat(response.toString(), containsString("http://localhost:18080"));
 
     }
 }
