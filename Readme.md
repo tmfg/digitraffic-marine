@@ -44,3 +44,8 @@ Or build the JAR file with:
  
  	$ java -Dspring.profiles.active=localhost -jar target/AIS-0.0.1-SNAPSHOT.jar
 
+### Misc commands
+
+Check for Maven dependency updates
+
+    $ mvn versions:display-dependency-updates
