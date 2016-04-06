@@ -32,7 +32,10 @@ public class NauticalWarningControllerTest {
         String api = "/nautical-warnings";
         ResponseEntity<String> response = template.getForEntity(localPath + api, String.class);
 
-        assertThat(response.toString(), containsString("http://localhost:18080"));
+
+        //TODO Assert actual JSON contents
+        assertThat(response.toString(), containsString("{'type':'FeatureCollection','features':[type':'Feature','properties':ID':980,"));
 
     }
+
 }
