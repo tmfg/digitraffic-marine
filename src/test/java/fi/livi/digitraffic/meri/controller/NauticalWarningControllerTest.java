@@ -6,9 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -20,14 +18,10 @@ import fi.livi.digitraffic.meri.AisApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AisApplication.class)
-//@WebAppConfiguration
-@WebIntegrationTest({ "server.port=0", "management.port=0"})
+@WebIntegrationTest({ "server.port=18080", "management.port=18081"})
 public class NauticalWarningControllerTest {
 
     RestTemplate template = new TestRestTemplate();
-
-    @Autowired
-    EmbeddedWebApplicationContext server;
 
     @Value("${local.server.port}")
     int port;
@@ -38,7 +32,10 @@ public class NauticalWarningControllerTest {
         String api = "/nautical-warnings";
         ResponseEntity<String> response = template.getForEntity(localPath + api, String.class);
 
-        assertThat(response.toString(), containsString("foo"));
+
+        //TODO Assert actual JSON contents
+        assertThat(response.toString(), containsString("{'type':'FeatureCollection','features':[type':'Feature','properties':ID':980,"));
 
     }
+
 }
