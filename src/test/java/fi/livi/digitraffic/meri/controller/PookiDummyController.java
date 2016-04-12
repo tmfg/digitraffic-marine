@@ -48,13 +48,6 @@ public class PookiDummyController {
         return responseQueues.get(key);
     }
 
-//    @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings",
-//            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    @ResponseBody
-//    public GeoJSON dummyPookiNauticalWarnings() {
-//        return new GeoJSON(DUMMY_DATA);
-//    }
-
     /**
      * API that uses path variable "key" to return preset responses.
      *

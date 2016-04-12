@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.controller;
+package fi.livi.digitraffic.util;
 
 import org.springframework.http.HttpStatus;
 

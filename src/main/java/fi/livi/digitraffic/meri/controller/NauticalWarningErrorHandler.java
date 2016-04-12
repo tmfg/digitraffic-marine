@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 
+import fi.livi.digitraffic.util.RestUtil;
+
 public class NauticalWarningErrorHandler implements ResponseErrorHandler {
     private final Logger log = LoggerFactory.getLogger(NauticalWarningErrorHandler.class);
 
