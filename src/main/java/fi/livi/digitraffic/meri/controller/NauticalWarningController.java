@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import fi.livi.digitraffic.util.RestUtil;
+
 @RestController
 @RequestMapping(API_V1_BASE_PATH)
 public class NauticalWarningController {
