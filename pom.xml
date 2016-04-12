@@ -135,7 +135,13 @@
 
     <build>
         <plugins>
-
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
             <!-- generate build number -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
