@@ -29,19 +29,19 @@ Download Oracle JDBC driver and add it to your local Maven repository.
 
 
 ### Build project
- 
+
 	$ mvn clean install
 
 ### Running the application
 
 	$ mvn spring-boot:run -Dspring.profiles.active=localhost
-	
-Or build the JAR file with: 
+
+Or build the JAR file with:
 
 	$ mvn clean package
 
  And run the JAR by typing:
- 
+
  	$ java -Dspring.profiles.active=localhost -jar target/AIS-0.0.1-SNAPSHOT.jar
 
 ### Misc commands
