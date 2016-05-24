@@ -17,8 +17,7 @@ import fi.livi.digitraffic.util.RestUtil;
 @RestController
 @RequestMapping(API_V1_BASE_PATH)
 public class NauticalWarningController {
-
-    private RestTemplate template;
+    private final RestTemplate template;
 
     private String POOKI_URL;
     public void setPOOKI_URL(String POOKI_URL) {
@@ -26,8 +25,8 @@ public class NauticalWarningController {
     }
 
     @Autowired
-    public NauticalWarningController(@Value("${ais.pooki.url}") final String pooki_url) {
-        POOKI_URL = pooki_url;
+    public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
+        POOKI_URL = pookiUrl;
         template = new RestTemplate();
         template.setErrorHandler(new NauticalWarningErrorHandler());
     }
@@ -36,7 +35,6 @@ public class NauticalWarningController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseEntity nauticalWarnings() {
-
         ResponseEntity<String> response = template.getForEntity(POOKI_URL, String.class);
 
         if (RestUtil.isError(response.getStatusCode())) {

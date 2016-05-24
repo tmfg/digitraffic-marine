@@ -10,15 +10,15 @@ import org.springframework.web.client.ResponseErrorHandler;
 import fi.livi.digitraffic.util.RestUtil;
 
 public class NauticalWarningErrorHandler implements ResponseErrorHandler {
-    private final Logger log = LoggerFactory.getLogger(NauticalWarningErrorHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(NauticalWarningErrorHandler.class);
 
     @Override
-    public boolean hasError(ClientHttpResponse response) throws IOException {
+    public boolean hasError(final ClientHttpResponse response) throws IOException {
         return RestUtil.isError(response.getStatusCode());
     }
 
     @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
+    public void handleError(final ClientHttpResponse response) throws IOException {
         log.info("Pooki response error: {} {}", response.getStatusCode(), response.getStatusText());
     }
 }

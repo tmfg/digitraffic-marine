@@ -1,11 +1,15 @@
 package fi.livi.digitraffic.util;
 
+import java.util.EnumSet;
+
 import org.springframework.http.HttpStatus;
 
-public class RestUtil {
-    public static boolean isError(HttpStatus statusCode) {
-        HttpStatus.Series series = statusCode.series();
-        return HttpStatus.Series.CLIENT_ERROR.equals(series)
-                || HttpStatus.Series.SERVER_ERROR.equals(series);
+public final class RestUtil {
+    private RestUtil() {}
+
+    private static final EnumSet<HttpStatus.Series> ERRORS = EnumSet.of(HttpStatus.Series.CLIENT_ERROR, HttpStatus.Series.SERVER_ERROR);
+
+    public static boolean isError(final HttpStatus statusCode) {
+        return ERRORS.contains(statusCode.series());
     }
 }
