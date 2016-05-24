@@ -144,6 +144,7 @@
                     </formats>
                     <instrumentation>
                         <ignoreTrivial>true</ignoreTrivial>
+                        <ignoreMethodAnnotation>fi.livi.digitraffic.meri.annotation.CoverageIgnore</ignoreMethodAnnotation>
                     </instrumentation>
                 </configuration>
             </plugin>
