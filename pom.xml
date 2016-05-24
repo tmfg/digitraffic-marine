@@ -40,12 +40,6 @@
             <version>2.7.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-            <version>3.7.3</version>
-        </dependency>
-
         <!-- Static Reader of META-INF/MANIFEST.MF Files -->
         <dependency>
             <groupId>com.jcabi</groupId>
