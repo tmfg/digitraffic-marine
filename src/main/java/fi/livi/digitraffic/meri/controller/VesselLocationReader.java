@@ -2,10 +2,13 @@ package fi.livi.digitraffic.meri.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.client.WebSocketConnectionManager;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import fi.livi.digitraffic.meri.model.AISMessage;
@@ -14,6 +17,8 @@ public abstract class VesselLocationReader {
     private final Logger log;
 
     private final String serverAddress;
+
+    private WebSocketConnectionManager webSocketConnectionManager= null;
 
     public VesselLocationReader(final String serverAddress) {
         this.serverAddress = serverAddress;
@@ -27,8 +32,9 @@ public abstract class VesselLocationReader {
         log.debug("initializing connection to " + serverAddress);
 
         final StandardWebSocketClient client = new StandardWebSocketClient();
+        webSocketConnectionManager = new WebSocketConnectionManager(client, new VesselLocationMessageHandler(), serverAddress);
 
-        client.doHandshake(new VesselLocationMessageHandler(), serverAddress);
+        webSocketConnectionManager.start();
     }
 
     private class VesselLocationMessageHandler implements WebSocketHandler {
@@ -39,7 +45,7 @@ public abstract class VesselLocationReader {
 
         @Override
         public void handleMessage(final WebSocketSession session, final WebSocketMessage<?> message) throws Exception {
-            log.trace("handleMessage " + message.getPayload());
+            log.debug("handleMessage " + message.getPayload());
 
             final AISMessage ais = MessageConverter.convert((String) message.getPayload());
 
@@ -64,5 +70,6 @@ public abstract class VesselLocationReader {
         }
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected abstract void handleMessage(final AISMessage message);
 }
