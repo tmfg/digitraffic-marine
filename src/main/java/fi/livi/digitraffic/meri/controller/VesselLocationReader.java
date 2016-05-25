@@ -16,12 +16,12 @@ import fi.livi.digitraffic.meri.model.AISMessage;
 public abstract class VesselLocationReader {
     private final Logger log;
 
-    private final String serverAddress;
+    private final String aisLocationsUrl;
 
     private WebSocketConnectionManager webSocketConnectionManager= null;
 
-    public VesselLocationReader(final String serverAddress) {
-        this.serverAddress = serverAddress;
+    public VesselLocationReader(final String aisLocationsUrl) {
+        this.aisLocationsUrl = aisLocationsUrl;
 
         this.log = LoggerFactory.getLogger(getClass());
 
@@ -29,10 +29,10 @@ public abstract class VesselLocationReader {
     }
 
     private void initializeConnection() {
-        log.debug("initializing connection to " + serverAddress);
+        log.debug("initializing connection to " + aisLocationsUrl);
 
         final StandardWebSocketClient client = new StandardWebSocketClient();
-        webSocketConnectionManager = new WebSocketConnectionManager(client, new VesselLocationMessageHandler(), serverAddress);
+        webSocketConnectionManager = new WebSocketConnectionManager(client, new VesselLocationMessageHandler(), aisLocationsUrl);
 
         webSocketConnectionManager.start();
     }

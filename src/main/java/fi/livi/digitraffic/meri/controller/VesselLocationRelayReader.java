@@ -11,8 +11,8 @@ public class VesselLocationRelayReader extends VesselLocationReader {
     private final LocationSender locationSender;
 
     @Autowired
-    public VesselLocationRelayReader(@Value("${ais.server.address}") final String serverAddress, final LocationSender locationSender) {
-        super(serverAddress);
+    public VesselLocationRelayReader(@Value("${ais.locations.url}") final String aisLocationsUrl, final LocationSender locationSender) {
+        super(aisLocationsUrl);
 
         this.locationSender = locationSender;
     }

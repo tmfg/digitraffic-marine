@@ -10,7 +10,7 @@ spring.datasource.password=<password>
 spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 
 # AIS-websocket address
-ais.server.address=ws://ws-address
+ais.locations.url = ws://ws-address
 ais.pooki.url = http://localhost:18080/test/nautical-warnings
 
 # Logging
