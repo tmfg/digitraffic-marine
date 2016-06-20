@@ -6,11 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.Immutable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import fi.livi.digitraffic.meri.model.AISMessage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Immutable;
 
 @JsonIgnoreProperties("id")
 @Entity
@@ -42,6 +44,12 @@ public class VesselLocation {
     @ApiModelProperty(value = "Location record timestamp in milliseconds from Unix epoch.", required = true)
     private long timestamp;
 
+    private boolean raim;
+
+    private int rot;
+
+    private boolean posAcc;
+
     public  VesselLocation() {
         // for hibernate
     }
@@ -53,6 +61,9 @@ public class VesselLocation {
         this.speed = ais.attributes.speed;
         this.course = ais.attributes.course;
         this.timestamp = ais.attributes.timestamp;
+        this.raim = ais.attributes.raim == 1;
+        this.rot = ais.attributes.rot;
+        this.posAcc = ais.attributes.posAcc == 1;
     }
 
     public long getId() {
@@ -109,5 +120,29 @@ public class VesselLocation {
 
     public void setMmsi(final int mmsi) {
         this.mmsi = mmsi;
+    }
+
+    public boolean isRaim() {
+        return raim;
+    }
+
+    public void setRaim(boolean raim) {
+        this.raim = raim;
+    }
+
+    public int getRot() {
+        return rot;
+    }
+
+    public void setRot(int rot) {
+        this.rot = rot;
+    }
+
+    public boolean isPosAcc() {
+        return posAcc;
+    }
+
+    public void setPosAcc(boolean posAcc) {
+        this.posAcc = posAcc;
     }
 }
