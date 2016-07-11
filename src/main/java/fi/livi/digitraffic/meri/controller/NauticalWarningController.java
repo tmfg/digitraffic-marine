@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,14 +32,28 @@ public class NauticalWarningController {
         template.setErrorHandler(new NauticalWarningErrorHandler());
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings",
+    public enum Status {
+        DRAFT("merivaroitus_luonnos_dt"),
+        PUBLISHED("merivaroitus_julkaistu_dt"),
+        ARCHIVED("merivaroitus_arkistoitu_dt");
+        private String layer;
+        Status(String layer){
+            this.layer = layer;
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity nauticalWarnings() {
-        ResponseEntity<String> response = template.getForEntity(POOKI_URL, String.class);
+    public ResponseEntity nauticalWarnings(@PathVariable String status) {
+
+        Status s = Status.valueOf(status.toUpperCase());
+
+        String url = String.format("%s?layer=%s", POOKI_URL, s.layer);
+        ResponseEntity<String> response = template.getForEntity(url, String.class);
 
         if (RestUtil.isError(response.getStatusCode())) {
-            response = template.getForEntity(POOKI_URL, String.class);
+            response = template.getForEntity(url, String.class);
         }
 
         if (RestUtil.isError(response.getStatusCode())) {
