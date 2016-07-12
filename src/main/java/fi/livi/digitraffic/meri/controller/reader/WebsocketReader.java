@@ -16,12 +16,6 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.WebSocketMessage;
-import org.springframework.web.socket.WebSocketSession;
 
 public abstract class WebsocketReader<T> {
     private final Logger log;
@@ -31,15 +25,13 @@ public abstract class WebsocketReader<T> {
     public WebsocketReader(final String locationUrl) {
         this.locationUrl = locationUrl;
         this.log = LoggerFactory.getLogger(getClass());
+    }
 
+    public void initialize() {
         try {
             initializeConnection();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DeploymentException e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            log.error("error", e);
         }
     }
 
@@ -79,44 +71,6 @@ public abstract class WebsocketReader<T> {
 
     protected abstract T convert(final String message);
 
-    private class VesselLocationMessageHandler implements WebSocketHandler {
-        @Override
-        public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
-            log.debug("afterConnectionEstablished");
-        }
-
-        @Override
-        public void handleMessage(final WebSocketSession session, final WebSocketMessage<?> message) throws Exception {
-            log.debug("handleMessage " + message.getPayload());
-
-            final T msg = convert((String)message.getPayload());
-
-            try {
-                WebsocketReader.this.handleMessage(msg);
-            } catch(final Exception e) {
-                log.error("exception", e);
-            }
-        }
-
-        @Override
-        public void handleTransportError(final WebSocketSession session, final Throwable exception) throws Exception {
-            log.debug("handleTransportError", exception);
-        }
-
-        @Override
-        public void afterConnectionClosed(final WebSocketSession session, final CloseStatus closeStatus) throws Exception {
-            log.debug("afterConnectionClosed " + closeStatus);
-
-            initializeConnection();
-        }
-
-        @Override
-        public boolean supportsPartialMessages() {
-            return false;
-        }
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected abstract void handleMessage(final T message);
 
     private class ReconnectingHandler extends ClientManager.ReconnectHandler {

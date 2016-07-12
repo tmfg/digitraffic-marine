@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = AisApplication.class)
+@SpringApplicationConfiguration(classes = AisTestApplicationConfig.class)
 @WebAppConfiguration
 public abstract class RestTest {
     @Autowired
