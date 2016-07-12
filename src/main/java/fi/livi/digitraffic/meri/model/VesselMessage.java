@@ -30,7 +30,7 @@ public class VesselMessage {
 
         public VesselAttributes(@JsonProperty("mmsi") final int mmsi,
                                 @JsonProperty("imo") final int imo,
-                                @JsonProperty("timestamp") final long timestamp,
+                                @JsonProperty("timestamp_ext") final long timestampExt,
                                 @JsonProperty("call_sign") final String callSign,
                                 @JsonProperty("vessel_name") final String vesselName,
                                 @JsonProperty("ship_and_cargo_type") final int shipAndCargoType,
@@ -40,7 +40,7 @@ public class VesselMessage {
                                 @JsonProperty("dest") final String dest) {
             this.mmsi = mmsi;
             this.imo = imo;
-            this.timestamp = timestamp;
+            this.timestamp = timestampExt;
             this.callSign = callSign;
             this.vesselName = vesselName;
             this.shipAndCargoType = shipAndCargoType;
