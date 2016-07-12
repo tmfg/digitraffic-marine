@@ -21,7 +21,8 @@ public class LockingService {
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool(new CustomizableThreadFactory("executor-"));
 
-    private static final int lockingDuration = 60 * 1000;
+    private static final int DEFAULT_LOCKING_DURATION = 60 * 1000;
+    private int lockingDuration = 60 * 1000;
 
     private final LockingRepository lockingRepository;
     private final PlatformTransactionManager platformTransactionManager;
@@ -30,6 +31,7 @@ public class LockingService {
     public LockingService(final LockingRepository lockingRepository, final PlatformTransactionManager platformTransactionManager) {
         this.lockingRepository = lockingRepository;
         this.platformTransactionManager = platformTransactionManager;
+        this.lockingDuration = DEFAULT_LOCKING_DURATION;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
