@@ -14,7 +14,7 @@ import fi.livi.util.locking.LockingService;
 @Component
 public class VesselLocationReaderController {
     @Autowired
-    public VesselLocationReaderController(
+    private VesselLocationReaderController(
             @Value("${config.test}") final String configTest,
             @Value("${ais.locations.123.url}") final String aisLocations123Url,
             @Value("${ais.locations.27.url}") final String aisLocations27Url,

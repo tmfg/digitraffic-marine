@@ -8,6 +8,7 @@ public abstract class VesselLocationReader extends WebsocketReader<AISMessage> {
         super(aisLocationsUrl);
     }
 
+    @Override
     protected AISMessage convert(final String message) {
         return MessageConverter.convertLocation(message);
     }

@@ -13,7 +13,7 @@ import fi.livi.util.locking.LockingService;
 @Component
 public class VesselMetadataReaderController {
     @Autowired
-    public VesselMetadataReaderController(
+    private VesselMetadataReaderController(
                                           @Value("${config.test}") final String configTest,
                                           @Value("${ais.metadata.5.url}") final String aisLocations5Url,
                                           final LockingService lockingService,
