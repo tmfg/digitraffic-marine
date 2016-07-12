@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
 @Immutable
@@ -51,32 +52,32 @@ public class AISMessage {
         public final long timestamp;
         public final int raim;
 
-        public final double speed;
-        public final double course;
-        public final int utcSec;
+        public final double sog;
+        public final double cog;
 
+        public final long timestampExternal;
 
         @JsonCreator
         public AISAttributes(@JsonProperty("mmsi") final int mmsi,
-                             @JsonProperty("timestamp") final long timestamp,
-                             @JsonProperty("speed") final double speed,
-                             @JsonProperty("course") final double course,
-                             @JsonProperty("utc_sec") final int utcSec,
+                             @JsonProperty("timestamp_ext") final long timestampExternal,
+                             @JsonProperty("SOG") final double speed,
+                             @JsonProperty("COG") final double course,
                              @JsonProperty("nav_stat") final int navStat,
                              @JsonProperty("rot") final int rot,
                              @JsonProperty("pos_acc") final int posAcc,
                              @JsonProperty("heading") final int heading,
-                             @JsonProperty("raim") final int raim) {
+                             @JsonProperty("raim") final int raim,
+                             @JsonProperty("timestamp") final long timestamp) {
             this.mmsi = mmsi;
-            this.timestamp = timestamp;
-            this.speed = speed;
-            this.course = course;
-            this.utcSec = utcSec;
+            this.timestampExternal = timestampExternal;
+            this.sog = speed;
+            this.cog = course;
             this.navStat = navStat;
             this.rot = rot;
             this.posAcc = posAcc;
             this.heading = heading;
             this.raim = raim;
+            this.timestamp = timestamp;
         }
     }
 }
