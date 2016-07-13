@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.websocket.ClientEndpointConfig;
-import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
@@ -28,22 +27,25 @@ public abstract class WebsocketReader<T> {
     }
 
     public void initialize() {
-        try {
-            initializeConnection();
-        } catch (final Exception e) {
-            log.error("error", e);
-        }
+        new Thread(() -> {
+            try {
+                initializeConnection();
+            } catch (final Exception e) {
+                log.error("error", e);
+            }
+        }).start();
     }
 
     private void initializeConnection() throws URISyntaxException, IOException, DeploymentException {
         log.debug("initializing connection to " + locationUrl);
 
         final ClientManager client = ClientManager.createClient();
+        final ReconnectingHandler handler = new ReconnectingHandler(log);
 
-        client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new ReconnectingHandler());
+        client.getProperties().put(ClientProperties.RECONNECT_HANDLER, handler);
         client.connectToServer(new Endpoint() {
             @Override public void onOpen(final Session session, final EndpointConfig endpointConfig) {
-                log.debug("connected");
+                handler.onOpen();
 
                 // for some reason, this does NOT work with lambda or method reference
                 session.addMessageHandler(new MessageHandler.Whole<String>() {
@@ -64,7 +66,7 @@ public abstract class WebsocketReader<T> {
         try {
             handleMessage(msg);
         } catch(final Exception e) {
-            log.error("exception", e);
+            log.error("exception for message " + s, e);
         }
 
     }
@@ -72,20 +74,4 @@ public abstract class WebsocketReader<T> {
     protected abstract T convert(final String message);
 
     protected abstract void handleMessage(final T message);
-
-    private class ReconnectingHandler extends ClientManager.ReconnectHandler {
-        @Override
-        public boolean onDisconnect(final CloseReason closeReason) {
-            log.error("disconnect");
-
-            return true;
-        }
-
-        @Override
-        public boolean onConnectFailure(final Exception exception) {
-            log.error("connectFailure");
-
-            return true;
-        }
-    }
 }
