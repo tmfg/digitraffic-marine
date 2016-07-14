@@ -6,15 +6,13 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import fi.livi.digitraffic.meri.AisApplication;
+import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = AisApplication.class)
+@SpringApplicationConfiguration(classes = AisTestApplicationConfig.class)
 @WebAppConfiguration
 public class AisApplicationTests {
-
 	@Test
 	public void contextLoads() {
 	}
-
 }

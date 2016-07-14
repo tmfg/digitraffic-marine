@@ -57,15 +57,23 @@ public class PookiDummyController {
      * @see PookiDummyController#setResponseQueue(String, Queue) to set up the responses
      * @see NauticalWarningControllerTest#DUMMY_DATA
      *
+     * @param status the api status (layer)
      * @param key the path variable to select the response queue
      * @return the next queued response, if available or DUMMY_DATA if queue is empty
      */
-    @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{key}",
+    @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}/{key}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity dummyPookiNauticalWarnings(@PathVariable("key") String key) {
+    public ResponseEntity dummyPookiNauticalWarnings(@PathVariable String status, @PathVariable("key") String key) {
+
+        try {
+            NauticalWarningController.Status.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException iae) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
         Queue<ResponseEntity> queue = getResponseQueue(key);
-        if (queue ==null) {
+        if (queue == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 

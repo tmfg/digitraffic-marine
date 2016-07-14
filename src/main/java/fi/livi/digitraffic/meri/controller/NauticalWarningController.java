@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,30 +18,40 @@ import fi.livi.digitraffic.util.RestUtil;
 @RestController
 @RequestMapping(API_V1_BASE_PATH)
 public class NauticalWarningController {
+    private final RestTemplate template;
 
-    private RestTemplate template;
+    private String pookiUrl;
 
-    private String POOKI_URL;
-    public void setPOOKI_URL(String POOKI_URL) {
-        this.POOKI_URL = POOKI_URL;
+    public enum Status {
+        DRAFT("merivaroitus_luonnos_dt"),
+        PUBLISHED("merivaroitus_julkaistu_dt"),
+        ARCHIVED("merivaroitus_arkistoitu_dt");
+
+        public final String layer;
+
+        Status(final String layer){
+            this.layer = layer;
+        }
     }
 
     @Autowired
-    public NauticalWarningController(@Value("${ais.pooki.url}") final String pooki_url) {
-        POOKI_URL = pooki_url;
+    public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
+        this.pookiUrl = pookiUrl;
         template = new RestTemplate();
         template.setErrorHandler(new NauticalWarningErrorHandler());
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings",
+    @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity nauticalWarnings() {
+    public ResponseEntity<?> nauticalWarnings(@PathVariable final String status) {
+        final Status s = Status.valueOf(status.toUpperCase());
+        final String url = String.format("%s?layer=%s", pookiUrl, s.layer);
 
-        ResponseEntity<String> response = template.getForEntity(POOKI_URL, String.class);
+        ResponseEntity<String> response = template.getForEntity(url, String.class);
 
         if (RestUtil.isError(response.getStatusCode())) {
-            response = template.getForEntity(POOKI_URL, String.class);
+            response = template.getForEntity(url, String.class);
         }
 
         if (RestUtil.isError(response.getStatusCode())) {
@@ -50,4 +61,7 @@ public class NauticalWarningController {
         return ResponseEntity.ok().body(response.getBody());
     }
 
+    public void setPookiUrl(final String pookiUrl) {
+        this.pookiUrl = pookiUrl;
+    }
 }

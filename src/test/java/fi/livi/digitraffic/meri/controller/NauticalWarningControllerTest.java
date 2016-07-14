@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.NauticalWarningController.Status;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,39 +28,47 @@ import fi.livi.digitraffic.util.RestUtil;
 @WebIntegrationTest({ "server.port=18080", "management.port=18081" })
 @Component
 public class NauticalWarningControllerTest {
-
-    RestTemplate template = new TestRestTemplate();
-
-    @Autowired
-    public PookiDummyController pookiDummyController;
+    private final RestTemplate template = new TestRestTemplate();
 
     @Autowired
-    public NauticalWarningController nauticalWarningController;
+    private PookiDummyController pookiDummyController;
 
-    private String localPath = "http://localhost:18080" + API_V1_BASE_PATH;
-    private static String api = "/nautical-warnings";
+    @Autowired
+    private NauticalWarningController nauticalWarningController;
+
+    private static final String LOCAL_PATH = "http://localhost:18080" + API_V1_BASE_PATH;
+    private static final String API = "nautical-warnings";
 
     @Test
-    public void testNauticalWarnings() throws Exception {
-
+    public void testAllNauticalWarnings() throws Exception {
         // Mock Pooki API identifier for this test
-        String key = new Object() {
+        final String key = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         // Responses
-        ResponseEntity<String> R1 = ResponseEntity.ok().body(DUMMY_DATA);
+        final ResponseEntity<String> R1 = ResponseEntity.ok().body(DUMMY_DATA);
+        final ResponseEntity<String> R2 = ResponseEntity.ok().body(DUMMY_DATA);
+        final ResponseEntity<String> R3 = ResponseEntity.ok().body(DUMMY_DATA);
 
-        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1)));
+        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
 
         // Use Mock Pooki API in implementation
-        nauticalWarningController.setPOOKI_URL("http://localhost:18080/test/nautical-warnings/" + key);
+        for (final Status status : new LinkedList<>(Arrays.asList(Status.DRAFT,
+                Status.PUBLISHED,
+                Status.ARCHIVED))) {
 
-        ResponseEntity<String> response = template.getForEntity(localPath + api, String.class);
+            final String s = status.toString().toLowerCase();
+            final String pooki_url = String.format("http://localhost:18080/test/nautical-warnings/%s/%s", s, key);
+            nauticalWarningController.setPookiUrl(pooki_url);
 
-        assertThat("Expected ok response", !RestUtil.isError(response.getStatusCode()));
+            final String requestUrl = String.format("%s/%s/%s", LOCAL_PATH, API, s);
+            final ResponseEntity<String> response = template.getForEntity(requestUrl, String.class);
 
-        //TODO Assert actual JSON contents
-        assertThat(response.toString(), containsString("{'type':'FeatureCollection','features':[type':'Feature','properties':ID':980,"));
+            assertThat("Expected ok response", !RestUtil.isError(response.getStatusCode()));
+
+            //TODO Assert actual JSON contents
+            assertThat(response.toString(), containsString("{'type':'FeatureCollection','features':[type':'Feature','properties':ID':980,"));
+        }
 
     }
 
@@ -67,53 +76,57 @@ public class NauticalWarningControllerTest {
     public void testForwardErrorIfErrorRepeats() {
 
         // Mock Pooki API identifier for this test
-        String key = new Object() {
+        final String key = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         // Responses
-        ResponseEntity<String> R1 = ResponseEntity.status(405).body(null);
-        ResponseEntity<String> R2 = ResponseEntity.status(405).body(null);
-        ResponseEntity<String> R3 = ResponseEntity.ok().body(DUMMY_DATA);
+        final ResponseEntity<String> R1 = ResponseEntity.status(405).body(null);
+        final ResponseEntity<String> R2 = ResponseEntity.status(405).body(null);
+        final ResponseEntity<String> R3 = ResponseEntity.ok().body(DUMMY_DATA);
 
         pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
 
         // Use Mock Pooki API in implementation
-        nauticalWarningController.setPOOKI_URL("http://localhost:18080/test/nautical-warnings/" + key);
+        nauticalWarningController.setPookiUrl("http://localhost:18080/test/nautical-warnings/draft/" + key);
 
         // Execute get
-        ResponseEntity<String> response = template.getForEntity(localPath + api, String.class);
+        final String requestUrl = String.format("%s/%s/draft", LOCAL_PATH, API);
+        final ResponseEntity<String> response = template.getForEntity(requestUrl, String.class);
 
         assertThat("Expected error status code as result", RestUtil.isError(response.getStatusCode()));
 
-        assertThat("Number of Pooki API calls should be 2 (one get and one retry)", pookiDummyController.getResponseQueue(key).size(), equalTo(1));
+        assertThat("Number of Pooki API calls should be 2 (one get and one retry, so queue should have one response left)",
+                pookiDummyController.getResponseQueue(key).size(), equalTo(1));
 
     }
 
     @Test
     public void testRetryOnceIfErrorAndReturnOKIfRetryIsOk() {
         // Mock Pooki API identifier for this test
-        String key = new Object() {
+        final String key = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         // Responses
-        ResponseEntity<String> R1 = ResponseEntity.status(405).body(null);
-        ResponseEntity<String> R2 = ResponseEntity.ok().body(DUMMY_DATA);
+        final ResponseEntity<String> R1 = ResponseEntity.status(405).body(null);
+        final ResponseEntity<String> R2 = ResponseEntity.ok().body(DUMMY_DATA);
+        final ResponseEntity<String> R3 = ResponseEntity.ok().body(DUMMY_DATA);
 
-        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R2)));
+        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
 
         // Use Mock Pooki API in implementation
-        nauticalWarningController.setPOOKI_URL("http://localhost:18080/test/nautical-warnings/" + key);
+        nauticalWarningController.setPookiUrl("http://localhost:18080/test/nautical-warnings/draft/" + key);
 
         // Execute get
-        ResponseEntity<String> response = template.getForEntity(localPath + api, String.class);
+        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/draft", LOCAL_PATH, API), String.class);
 
         assertThat("Expected ok result", !RestUtil.isError(response.getStatusCode()));
 
-        assertThat("Number of Pooki API calls should be 2 (one get and one retry)", pookiDummyController.getResponseQueue(key).size(), equalTo(1));
+        assertThat("Number of Pooki API calls should be 2 (one get and one retry so queue should have one response left)",
+                pookiDummyController.getResponseQueue(key).size(), equalTo(1));
 
     }
 
-    private static String DUMMY_DATA = "{'type':'FeatureCollection','features':[type':'Feature','properties':ID':980,"
+    private static final String DUMMY_DATA = "{'type':'FeatureCollection','features':[type':'Feature','properties':ID':980,"
             + "{''TOOLTIP':' NAVTEX COASTAL [Tallennettu 01.09.2014]'},"
             + "{''geometry':type':'Point','coordinates':[2327921.0,8469808.99999796,0.0]}},"
             + "{'type':'Feature','properties':ID':1000,'TOOLTIP':' NAVTEX COASTAL"
@@ -145,6 +158,5 @@ public class NauticalWarningControllerTest {
             + "{''properties':ID':1244,'TOOLTIP':'NAVIGATIONAL WARNING [Tallennettu"
             + "{'03.02.2016]'},'geometry':type':'Point','coordinates':[2343413.0,"
             + "{'8468334.9999979548,0.0]}}]}";
-
 
 }

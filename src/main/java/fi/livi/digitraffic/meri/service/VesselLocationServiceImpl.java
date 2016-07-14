@@ -1,53 +1,56 @@
 package fi.livi.digitraffic.meri.service;
 
-import com.mysema.query.types.expr.BooleanExpression;
-import fi.livi.digitraffic.meri.dao.VesselLocationRepository;
-import fi.livi.digitraffic.meri.domain.QVesselLocation;
-import fi.livi.digitraffic.meri.domain.VesselLocation;
+import javax.persistence.EntityManager;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.meri.domain.VesselLocation;
+
 @Service
 @Transactional(readOnly = true)
 public class VesselLocationServiceImpl implements VesselLocationService {
-    private final VesselLocationRepository vesselLocationRepository;
+    private final EntityManager entityManager;
 
     @Autowired
-    public VesselLocationServiceImpl(final VesselLocationRepository vesselLocationRepository) {
-        this.vesselLocationRepository = vesselLocationRepository;
+    public VesselLocationServiceImpl(final EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    private Criteria createCriteria() {
+        return entityManager.unwrap(Session.class).createCriteria(VesselLocation.class)
+                .setFetchSize(1000);
     }
 
     @Override
     public Iterable<VesselLocation> findLocations(final int mmsi, final Long from, final Long to) {
+        return findLocations((Integer)mmsi, from, to);
+    }
 
-        QVesselLocation vesselLocation = QVesselLocation.vesselLocation;
-        BooleanExpression predicate = vesselLocation.mmsi.eq(mmsi);
-        if (from != null) {
-            predicate = predicate.and(vesselLocation.timestamp.goe(from));
-        }
-        if (to != null) {
-            predicate = predicate.and(vesselLocation.timestamp.loe(to));
+    private Iterable<VesselLocation> findLocations(final Integer mmsi, final Long from, final Long to) {
+        final Criteria c = createCriteria();
+
+        if(mmsi != null) {
+            c.add(Restrictions.eq("mmsi", mmsi));
         }
 
-        return vesselLocationRepository.findAll(predicate);
+        if(from != null) {
+            c.add(Restrictions.ge("timestamp", from));
+        }
+
+        if(to != null) {
+            c.add(Restrictions.le("timestamp", from));
+        }
+
+        return c.list();
     }
 
     @Override
     public Iterable<VesselLocation> findLocations(final Long from, final Long to) {
-        QVesselLocation vesselLocation = QVesselLocation.vesselLocation;
-
-        BooleanExpression predicate = QVesselLocation.vesselLocation.isNotNull();
-
-        if (from != null) {
-            predicate = vesselLocation.timestamp.goe(from);
-        }
-        if (from != null) {
-            predicate = predicate == null ?
-                    vesselLocation.timestamp.loe(to) :
-                    predicate.and(vesselLocation.timestamp.loe(to));
-        }
-
-        return vesselLocationRepository.findAll(predicate);
+        return findLocations(null, from, to);
     }
 }
