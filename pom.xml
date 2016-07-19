@@ -8,8 +8,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>AIS</name>
-    <description>AIS</description>
+    <name>dt-ais</name>
+    <description>Digitraffic AIS</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
