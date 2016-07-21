@@ -12,11 +12,11 @@
         <file>ais-daily.log</file>
         <!-- Support multiple-JVM writing to the same log file -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>ais.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>ais-daily.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>92</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%date{yyyy-MM-dd'T'HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex</pattern>
+            <pattern>%d{ISO8601} %p&#9;[%t] - %c: %m%n</pattern>
         </encoder>
     </appender>
 
