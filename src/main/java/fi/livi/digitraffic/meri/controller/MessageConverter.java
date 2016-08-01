@@ -5,16 +5,18 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.model.AISMessage;
 import fi.livi.digitraffic.meri.model.VesselMessage;
 
-public class MessageConverter {
+public final class MessageConverter {
     private static final Logger LOG = LoggerFactory.getLogger(MessageConverter.class);
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-    private MessageConverter() {}
+    private MessageConverter() {
+    }
 
     public static AISMessage convertLocation(final String message) {
         return convert(message, AISMessage.class);

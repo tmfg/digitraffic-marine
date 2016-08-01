@@ -2,37 +2,45 @@ package fi.livi.digitraffic.meri.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
 
 import fi.livi.digitraffic.meri.model.VesselMessage;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity(name = "vessel")
 @DynamicUpdate
+@ApiModel(description="Vessel metadata model")
 public class VesselMetadata {
     @Id
     @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)
     private int mmsi;
 
-    @ApiModelProperty(value = "Name of the vessel", required = true)
+    @ApiModelProperty(value = "Name of the vessel, maximum 20 characters using 6-bit ASCII", required = true)
+    @NotNull
     private String name;
 
-    @ApiModelProperty(value = "Vessel type", required = true)
+    @ApiModelProperty(value = "Vessel type", allowableValues = "range[0,255]", required = true)
     private int shipType;
 
-    @ApiModelProperty(value = "Vessel draught", required = true)
+    @ApiModelProperty(value = "Maximum present static draught in 1/10m", allowableValues = "0,range[1-254],255", required = true)
     private int draught;
 
     @ApiModelProperty(value = "Vessel International Maritime Organization (IMO) number", required = true)
     private int imo;
 
+    @ApiModelProperty(value = "Call sign, maximum 7 6-bit ASCII characters", required = true)
     private String callSign;
 
+    @ApiModelProperty(value = "Estimated time of arrival", required = true)
     private long eta;
 
+    @ApiModelProperty(value = "Record timestamp in milliseconds from Unix epoch", required = true)
     private long timestamp;
 
+    @ApiModelProperty(value = "Destination, maximum 20 characters using 6-bit ASCII", required = true)
     private String destination;
 
     public  VesselMetadata() {
