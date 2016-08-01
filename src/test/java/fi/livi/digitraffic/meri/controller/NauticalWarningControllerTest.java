@@ -12,23 +12,23 @@ import java.util.LinkedList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AisApplication;
 import fi.livi.digitraffic.util.RestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = AisApplication.class)
+@SpringApplicationConfiguration(classes = AisApplication.class)
 @WebIntegrationTest({ "server.port=18080", "management.port=18081" })
 @Component
 public class NauticalWarningControllerTest {
-    private final RestTemplate template = new TestRestTemplate();
+    // TODO: must be converted to spring boot 1.4 style
+    private final TestRestTemplate template = new TestRestTemplate();
 
     @Autowired
     private PookiDummyController pookiDummyController;
