@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
 @Immutable
-public class AISMessage {
+public class AISMessage implements Validatable {
     public final Geometry geometry;
     public final AISAttributes attributes;
 
@@ -14,6 +14,11 @@ public class AISMessage {
     public AISMessage(@JsonProperty("geometry") final Geometry geometry, @JsonProperty("attributes") final AISAttributes attributes) {
         this.geometry = geometry;
         this.attributes = attributes;
+    }
+
+    @Override
+    public boolean validate() {
+        return geometry != null;
     }
 
     @Immutable
@@ -48,7 +53,7 @@ public class AISMessage {
         public final int rot;
         public final int posAcc;
 
-        public final int heading;
+        public final Integer heading;
         public final long timestamp;
         public final int raim;
 
@@ -65,7 +70,7 @@ public class AISMessage {
                              @JsonProperty("nav_stat") final int navStat,
                              @JsonProperty("rot") final int rot,
                              @JsonProperty("pos_acc") final int posAcc,
-                             @JsonProperty("heading") final int heading,
+                             @JsonProperty("heading") final Integer heading,
                              @JsonProperty("raim") final int raim,
                              @JsonProperty("timestamp") final long timestamp) {
             this.mmsi = mmsi;

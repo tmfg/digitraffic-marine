@@ -1,18 +1,24 @@
 package fi.livi.digitraffic.meri.model;
 
 import org.hibernate.annotations.Immutable;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Immutable
-public class VesselMessage {
+public class VesselMessage implements Validatable {
     public final VesselAttributes vesselAttributes;
 
     @JsonCreator
     public VesselMessage(@JsonProperty("attributes") final VesselAttributes vesselAttributes) {
         this.vesselAttributes = vesselAttributes;
+    }
+
+    @Override
+    public boolean validate() {
+        return !StringUtils.isEmpty(vesselAttributes.vesselName);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

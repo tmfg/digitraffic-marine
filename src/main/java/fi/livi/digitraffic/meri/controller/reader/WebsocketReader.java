@@ -16,7 +16,9 @@ import org.glassfish.tyrus.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class WebsocketReader<T> {
+import fi.livi.digitraffic.meri.model.Validatable;
+
+public abstract class WebsocketReader<T extends Validatable> {
     private final Logger log;
 
     private final String locationUrl;
@@ -64,7 +66,11 @@ public abstract class WebsocketReader<T> {
         final T msg = convert(s);
 
         try {
-            handleMessage(msg);
+            if(msg.validate()) {
+                handleMessage(msg);
+            } else {
+                log.debug("could not validate message", msg);
+            }
         } catch(final Exception e) {
             log.error("exception for message " + s, e);
         }
