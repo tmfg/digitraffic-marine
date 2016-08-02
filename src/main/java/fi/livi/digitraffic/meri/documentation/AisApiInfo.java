@@ -10,11 +10,11 @@ public class AisApiInfo extends ApiInfo {
     private BuildVersionService buildVersionService;
     protected MessageService messageService;
 
-    public AisApiInfo(String title, String description, String version, String termsOfServiceUrl, String contact, String license, String licenseUrl) {
+    public AisApiInfo(final String title, final String description, final String version, final String termsOfServiceUrl, final String contact, final String license, final String licenseUrl) {
         super(title, description, version, termsOfServiceUrl, contact, license, licenseUrl);
     }
 
-    public AisApiInfo(MessageService messageService, BuildVersionService buildVersionService) {
+    public AisApiInfo(final MessageService messageService, final BuildVersionService buildVersionService) {
         super(null, //title,
               null, //description,
               null, //version,

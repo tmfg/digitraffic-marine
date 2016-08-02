@@ -22,14 +22,14 @@ public final class MessageConverter {
         return convert(message, AISMessage.class);
     }
 
-    public static VesselMessage convertMetadata(String message) {
+    public static VesselMessage convertMetadata(final String message) {
         return convert(message, VesselMessage.class);
     }
 
     private static <T> T convert(final String message, final Class<T> clazz) {
         try {
             return mapper.readValue(message, clazz);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOG.error("error while parsing", e);
         }
 

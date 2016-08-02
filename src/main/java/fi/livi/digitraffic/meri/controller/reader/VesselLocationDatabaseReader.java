@@ -6,7 +6,7 @@ import fi.livi.digitraffic.meri.model.AISMessage;
 import fi.livi.util.locking.AccessLock;
 
 public class VesselLocationDatabaseReader extends VesselLocationReader {
-    private VesselLocationRepository vesselLocationRepository;
+    private final VesselLocationRepository vesselLocationRepository;
     private final AccessLock accessLock;
 
     public VesselLocationDatabaseReader(final String aisLocationsUrl,

@@ -16,7 +16,7 @@ import fi.livi.digitraffic.meri.annotation.CoverageIgnore;
 @ComponentScan(basePackages = {"fi.livi.util", "fi.livi.digitraffic.meri"})
 public class AisApplication {
     @CoverageIgnore
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(AisApplication.class, args);
     }
 }

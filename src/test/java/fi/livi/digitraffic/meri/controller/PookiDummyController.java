@@ -28,14 +28,14 @@ public class PookiDummyController {
      *  B   ->  ( E1, OK )
      *  C   ->  ()
      */
-    private Map<String, Queue<ResponseEntity>> responseQueues = new HashMap<>();
+    private final Map<String, Queue<ResponseEntity>> responseQueues = new HashMap<>();
 
     /**
      * Set one response queue for key "key"
      * @param key the key (path variable) to set up for requests
      * @param queue Queue of responses that the API will return if called with this "key"
      */
-    public void setResponseQueue(String key, Queue<ResponseEntity> queue) {
+    public void setResponseQueue(final String key, final Queue<ResponseEntity> queue) {
         responseQueues.put(key, queue);
     }
 
@@ -44,7 +44,7 @@ public class PookiDummyController {
      * @param key Key of the queue
      * @return Remaining responses or empty queue or null.
      */
-    public Queue<ResponseEntity> getResponseQueue(String key) {
+    public Queue<ResponseEntity> getResponseQueue(final String key) {
         return responseQueues.get(key);
     }
 
@@ -64,20 +64,20 @@ public class PookiDummyController {
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}/{key}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity dummyPookiNauticalWarnings(@PathVariable String status, @PathVariable("key") String key) {
+    public ResponseEntity dummyPookiNauticalWarnings(@PathVariable final String status, @PathVariable("key") final String key) {
 
         try {
             NauticalWarningController.Status.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException iae) {
+        } catch (final IllegalArgumentException iae) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        Queue<ResponseEntity> queue = getResponseQueue(key);
+        final Queue<ResponseEntity> queue = getResponseQueue(key);
         if (queue == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        ResponseEntity responseEntity = queue.poll();
+        final ResponseEntity responseEntity = queue.poll();
         return responseEntity!=null ? responseEntity : ResponseEntity.ok().body(null);
     }
 

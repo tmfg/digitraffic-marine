@@ -103,7 +103,7 @@ public class VesselMetadata {
         return callSign;
     }
 
-    public void setCallSign(String callSign) {
+    public void setCallSign(final String callSign) {
         this.callSign = callSign;
     }
 
@@ -111,7 +111,7 @@ public class VesselMetadata {
         return eta;
     }
 
-    public void setEta(long eta) {
+    public void setEta(final long eta) {
         this.eta = eta;
     }
 
@@ -119,7 +119,7 @@ public class VesselMetadata {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(final String destination) {
         this.destination = destination;
     }
 
@@ -127,7 +127,7 @@ public class VesselMetadata {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
     }
 }
