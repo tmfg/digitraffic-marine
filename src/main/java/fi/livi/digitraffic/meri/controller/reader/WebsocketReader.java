@@ -15,6 +15,7 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import fi.livi.digitraffic.meri.model.Validatable;
 
@@ -29,13 +30,17 @@ public abstract class WebsocketReader<T extends Validatable> {
     }
 
     public void initialize() {
-        new Thread(() -> {
-            try {
-                initializeConnection();
-            } catch (final Exception e) {
-                log.error("error", e);
-            }
-        }).start();
+        if(StringUtils.isEmpty(locationUrl)) {
+            log.info("Empty location, no reader started");
+        } else {
+            new Thread(() -> {
+                try {
+                    initializeConnection();
+                } catch (final Exception e) {
+                    log.error("error", e);
+                }
+            }).start();
+        }
     }
 
     private void initializeConnection() throws URISyntaxException, IOException, DeploymentException {
