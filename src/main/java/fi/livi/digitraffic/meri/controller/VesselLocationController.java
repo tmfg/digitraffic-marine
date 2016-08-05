@@ -5,10 +5,6 @@ import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import fi.livi.digitraffic.meri.domain.VesselLocation;
-import fi.livi.digitraffic.meri.service.VesselLocationService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import fi.livi.digitraffic.meri.domain.VesselLocation;
+import fi.livi.digitraffic.meri.service.VesselLocationService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 public class VesselLocationController {
@@ -33,7 +34,7 @@ public class VesselLocationController {
         this.vesselLocationService = vesselLocationService;
     }
 
-    @ApiOperation(value = "Find vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
+    @ApiOperation("Find vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
     @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history/{mmsi}",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
@@ -41,10 +42,10 @@ public class VesselLocationController {
             @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
             @PathVariable("mmsi")
             final int mmsi,
-            @ApiParam(value = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+            @ApiParam("From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
             @RequestParam(value = "from", required = false)
             final Long from,
-            @ApiParam(value = "To timestamp")
+            @ApiParam("To timestamp")
             @RequestParam(value = "to", required = false)
             final Long to) {
 
@@ -52,7 +53,7 @@ public class VesselLocationController {
         return IteratorUtils.toList( vesselLocationService.findLocations(mmsi, from, to).iterator() );
     }
 
-    @ApiOperation(value = "Find vessel locations by mmsi and optional timestamp interval in ISO 8601 datetime format.")
+    @ApiOperation("Find vessel locations by mmsi and optional timestamp interval in ISO 8601 datetime format.")
     @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history/datetime/{mmsi}",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
@@ -60,11 +61,11 @@ public class VesselLocationController {
             @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
             @PathVariable("mmsi")
             final int mmsi,
-            @ApiParam(value = "From timestamp in ISO 8601 datetime format. (ie. 2015-05-19T03:28:28.781+03:00)")
+            @ApiParam("From timestamp in ISO 8601 datetime format. (ie. 2015-05-19T03:28:28.781+03:00)")
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             final ZonedDateTime from,
-            @ApiParam(value = "To timestamp in ISO 8601 datetime format. (ie. 2015-05-19T00:28:47.434Z")
+            @ApiParam("To timestamp in ISO 8601 datetime format. (ie. 2015-05-19T00:28:47.434Z")
             @RequestParam(value = "to", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             final ZonedDateTime to) {
@@ -81,15 +82,15 @@ public class VesselLocationController {
         return IteratorUtils.toList( vesselLocationService.findLocations(mmsi, fromMs, toMs).iterator() );
     }
 
-    @ApiOperation(value = "Find vessel locations by timestamp interval in milliseconds from Unix epoch.")
+    @ApiOperation("Find vessel locations by timestamp interval in milliseconds from Unix epoch.")
     @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocation> vesselLocationsByTimestamp(
-            @ApiParam(value = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+            @ApiParam("From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
             @RequestParam(value = "from", required = false)
             final Long from,
-            @ApiParam(value = "To timestamp")
+            @ApiParam("To timestamp")
             @RequestParam(value = "to", required = false)
             final Long to) {
 
@@ -98,16 +99,16 @@ public class VesselLocationController {
     }
 
 
-    @ApiOperation(value = "Find vessel locations by timestamp interval in ISO 8601 datetime format.")
+    @ApiOperation("Find vessel locations by timestamp interval in ISO 8601 datetime format.")
     @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history/datetime",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocation> vesselLocationsByDateTime(
-            @ApiParam(value = "From timestamp in ISO 8601 datetime format. (ie. 2015-05-19T03:28:28.781+03:00)")
+            @ApiParam("From timestamp in ISO 8601 datetime format. (ie. 2015-05-19T03:28:28.781+03:00)")
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             final ZonedDateTime from,
-            @ApiParam(value = "To timestamp in ISO 8601 datetime format. (ie. 2015-05-19T00:28:47.434Z")
+            @ApiParam("To timestamp in ISO 8601 datetime format. (ie. 2015-05-19T00:28:47.434Z")
             @RequestParam(value = "to", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             final ZonedDateTime to) {

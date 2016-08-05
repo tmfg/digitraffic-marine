@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.domain.VesselMetadata;
 import fi.livi.digitraffic.meri.service.VesselMetadataService;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
@@ -28,12 +29,14 @@ public class VesselMetadataController {
         this.vesselMetadataService = vesselMetadataService;
     }
 
+    @ApiOperation("Return vessel metadata by mmsi.")
     @RequestMapping(method = RequestMethod.GET, path = VESSELS_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselMetadata vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
         return vesselMetadataService.findMetadataByMssi(mmsi);
     }
 
+    @ApiOperation("Return vessel metadata for all known vessels.")
     @RequestMapping(method = RequestMethod.GET, path = VESSELS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselMetadata> allVessels() {

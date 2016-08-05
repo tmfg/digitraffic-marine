@@ -25,7 +25,7 @@ public class VesselMetadata {
     @ApiModelProperty(value = "Vessel type", allowableValues = "range[0,255]", required = true)
     private int shipType;
 
-    @ApiModelProperty(value = "Maximum present static draught in 1/10m", allowableValues = "range[1-254], 0, 255", required = true)
+    @ApiModelProperty(value = "Maximum present static draught in 1/10m", allowableValues = "range[0,255]", required = true)
     private int draught;
 
     @ApiModelProperty(value = "Vessel International Maritime Organization (IMO) number", required = true)

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.util.RestUtil;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH)
@@ -41,10 +43,12 @@ public class NauticalWarningController {
         template.setErrorHandler(new NauticalWarningErrorHandler());
     }
 
+    @ApiOperation("Return nautical warnings of given status.")
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> nauticalWarnings(@PathVariable final String status) {
+        public ResponseEntity<?> nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "DRAFT,PUBLISHED,ARCHIVED" )
+                                                  @PathVariable final String status) {
         final Status s = Status.valueOf(status.toUpperCase());
         final String url = String.format("%s?layer=%s", pookiUrl, s.layer);
 
