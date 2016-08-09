@@ -24,7 +24,7 @@ public class LocationSender {
         try {
             template.convertAndSend("/locations", message);
             template.convertAndSend("/locations/" + message.attributes.mmsi, message);
-        } catch (MessagingException me) {
+        } catch (final MessagingException me) {
             LOG.error("error sending", me);
         }
     }

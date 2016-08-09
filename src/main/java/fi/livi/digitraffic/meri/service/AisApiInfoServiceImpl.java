@@ -14,8 +14,8 @@ public class AisApiInfoServiceImpl  implements AisApiInfoService {
     private final BuildVersionService buildVersionService;
 
     @Autowired
-    public AisApiInfoServiceImpl(MessageService messageService,
-                                 BuildVersionService buildVersionService) {
+    public AisApiInfoServiceImpl(final MessageService messageService,
+                                 final BuildVersionService buildVersionService) {
         this.messageService = messageService;
         this.buildVersionService = buildVersionService;
     }

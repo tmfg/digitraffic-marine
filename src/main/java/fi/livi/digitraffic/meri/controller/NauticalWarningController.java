@@ -14,42 +14,44 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.util.RestUtil;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH)
 public class NauticalWarningController {
     private final RestTemplate template;
 
-    private String POOKI_URL;
-    public void setPOOKI_URL(String POOKI_URL) {
-        this.POOKI_URL = POOKI_URL;
-    }
-
-    @Autowired
-    public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
-        POOKI_URL = pookiUrl;
-        template = new RestTemplate();
-        template.setErrorHandler(new NauticalWarningErrorHandler());
-    }
+    private String pookiUrl;
 
     public enum Status {
         DRAFT("merivaroitus_luonnos_dt"),
         PUBLISHED("merivaroitus_julkaistu_dt"),
         ARCHIVED("merivaroitus_arkistoitu_dt");
-        private String layer;
-        Status(String layer){
+
+        public final String layer;
+
+        Status(final String layer){
             this.layer = layer;
         }
     }
 
+    @Autowired
+    public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
+        this.pookiUrl = pookiUrl;
+        template = new RestTemplate();
+        template.setErrorHandler(new NauticalWarningErrorHandler());
+    }
+
+    @ApiOperation("Return nautical warnings of given status.")
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity nauticalWarnings(@PathVariable String status) {
+        public ResponseEntity<?> nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "DRAFT,PUBLISHED,ARCHIVED" )
+                                                  @PathVariable final String status) {
+        final Status s = Status.valueOf(status.toUpperCase());
+        final String url = String.format("%s?layer=%s", pookiUrl, s.layer);
 
-        Status s = Status.valueOf(status.toUpperCase());
-
-        String url = String.format("%s?layer=%s", POOKI_URL, s.layer);
         ResponseEntity<String> response = template.getForEntity(url, String.class);
 
         if (RestUtil.isError(response.getStatusCode())) {
@@ -63,4 +65,7 @@ public class NauticalWarningController {
         return ResponseEntity.ok().body(response.getBody());
     }
 
+    public void setPookiUrl(final String pookiUrl) {
+        this.pookiUrl = pookiUrl;
+    }
 }
