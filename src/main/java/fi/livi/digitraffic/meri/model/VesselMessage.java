@@ -29,6 +29,7 @@ public class VesselMessage implements Validatable {
         public final String callSign;
         public final String vesselName;
         public final int shipAndCargoType;
+        public final long referencePointA, referencePointB, referencePointC, referencePointD;
         public final int posType;
         public final long eta;
         public final int draught;
@@ -40,6 +41,10 @@ public class VesselMessage implements Validatable {
                                 @JsonProperty("call_sign") final String callSign,
                                 @JsonProperty("vessel_name") final String vesselName,
                                 @JsonProperty("ship_and_cargo_type") final int shipAndCargoType,
+                                @JsonProperty("ref_point_a") final long referencePointA,
+                                @JsonProperty("ref_point_b") final long referencePointB,
+                                @JsonProperty("ref_point_c") final long referencePointC,
+                                @JsonProperty("ref_point_d") final long referencePointD,
                                 @JsonProperty("pos_type") final int posType,
                                 @JsonProperty("eta") final int eta,
                                 @JsonProperty("draugh") final int draught,
@@ -50,6 +55,10 @@ public class VesselMessage implements Validatable {
             this.callSign = callSign;
             this.vesselName = vesselName;
             this.shipAndCargoType = shipAndCargoType;
+            this.referencePointA = referencePointA;
+            this.referencePointB = referencePointB;
+            this.referencePointC = referencePointC;
+            this.referencePointD = referencePointD;
             this.posType = posType;
             this.eta = eta;
             this.draught = draught;

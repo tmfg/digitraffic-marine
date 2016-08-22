@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,35 @@ public class VesselMetadata {
     @ApiModelProperty(value = "Vessel type", allowableValues = "range[0,255]", required = true)
     private int shipType;
 
+    @ApiModelProperty(value = "Reference point for reported position dimension A", required = true)
+    @Column(name = "reference_point_a")
+    private long referencePointA;
+
+    @ApiModelProperty(value = "Reference point for reported position dimension B", required = true)
+    @Column(name = "reference_point_b")
+    private long referencePointB;
+
+    @ApiModelProperty(value = "Reference point for reported position dimension C", required = true)
+    @Column(name = "reference_point_c")
+    private long referencePointC;
+
+    @ApiModelProperty(value = "Reference point for reported position dimension D", required = true)
+    @Column(name = "reference_point_d")
+    private long referencePointD;
+
+    @ApiModelProperty(value = "Type of electronic position fixing device: 0 = undefined (default)\n"
+            + "1 = GPS\n"
+            + "2 = GLONASS\n"
+            + "3 = combined GPS/GLONASS\n"
+            + "4 = Loran-C\n"
+            + "5 = Chayka\n"
+            + "6 = integrated navigation system\n"
+            + "7 = surveyed\n"
+            + "8 = Galileo,\n"
+            + "9-14 = not used\n"
+            + "15 = internal GNSS", allowableValues = "range[0,15]", required = true)
+    private int posType;
+
     @ApiModelProperty(value = "Maximum present static draught in 1/10m", allowableValues = "range[0,255]", required = true)
     private int draught;
 
@@ -34,7 +64,12 @@ public class VesselMetadata {
     @ApiModelProperty(value = "Call sign, maximum 7 6-bit ASCII characters", required = true)
     private String callSign;
 
-    @ApiModelProperty(value = "Estimated time of arrival", required = true)
+    @ApiModelProperty(value = "Estimated time of arrival; MMDDHHMM UTC\n"
+            + "Bits 19-16: month; 1-12; 0 = not available = default\n"
+            + "Bits 15-11: day; 1-31; 0 = not available = default\n"
+            + "Bits 10-6: hour; 0-23; 24 = not available = default\n"
+            + "Bits 5-0: minute; 0-59; 60 = not available = default\n"
+            + "For SAR aircraft, the use of this field may be decided by the responsible administration", required = true)
     private long eta;
 
     @ApiModelProperty(value = "Record timestamp in milliseconds from Unix epoch", required = true)
@@ -51,6 +86,11 @@ public class VesselMetadata {
         this.mmsi = attr.mmsi;
         this.name = attr.vesselName;
         this.shipType = attr.shipAndCargoType;
+        this.referencePointA = attr.referencePointA;
+        this.referencePointB = attr.referencePointB;
+        this.referencePointC = attr.referencePointC;
+        this.referencePointD = attr.referencePointD;
+        this.posType = attr.posType;
         this.draught = attr.draught;
         this.imo = attr.imo;
         this.callSign = attr.callSign;
@@ -129,5 +169,45 @@ public class VesselMetadata {
 
     public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public int getPosType() {
+        return posType;
+    }
+
+    public void setPosType(int posType) {
+        this.posType = posType;
+    }
+
+    public long getReferencePointA() {
+        return referencePointA;
+    }
+
+    public void setReferencePointA(long referencePointA) {
+        this.referencePointA = referencePointA;
+    }
+
+    public long getReferencePointB() {
+        return referencePointB;
+    }
+
+    public void setReferencePointB(long referencePointB) {
+        this.referencePointB = referencePointB;
+    }
+
+    public long getReferencePointC() {
+        return referencePointC;
+    }
+
+    public void setReferencePointC(long referencePointC) {
+        this.referencePointC = referencePointC;
+    }
+
+    public long getReferencePointD() {
+        return referencePointD;
+    }
+
+    public void setReferencePointD(long referencePointD) {
+        this.referencePointD = referencePointD;
     }
 }
