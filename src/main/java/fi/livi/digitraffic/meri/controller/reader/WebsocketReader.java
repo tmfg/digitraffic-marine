@@ -15,14 +15,17 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.util.StringUtils;
 
 import fi.livi.digitraffic.meri.model.Validatable;
 
-public abstract class WebsocketReader<T extends Validatable> {
+public abstract class WebsocketReader<T extends Validatable> implements DisposableBean {
     private final Logger log;
 
     private final String locationUrl;
+
+    private volatile ClientManager clientManager = null;
 
     public WebsocketReader(final String locationUrl) {
         this.locationUrl = locationUrl;
@@ -35,7 +38,7 @@ public abstract class WebsocketReader<T extends Validatable> {
         } else {
             new Thread(() -> {
                 try {
-                    initializeConnection();
+                    clientManager = initializeConnection();
                 } catch (final Exception e) {
                     log.error("error", e);
                 }
@@ -43,7 +46,7 @@ public abstract class WebsocketReader<T extends Validatable> {
         }
     }
 
-    private void initializeConnection() throws URISyntaxException, IOException, DeploymentException {
+    private ClientManager initializeConnection() throws URISyntaxException, IOException, DeploymentException {
         log.debug("initializing connection to " + locationUrl);
 
         final ClientManager client = ClientManager.createClient();
@@ -63,6 +66,8 @@ public abstract class WebsocketReader<T extends Validatable> {
                 });
             }
         }, ClientEndpointConfig.Builder.create().build(), new URI(locationUrl));
+
+        return client;
     }
 
     private void receiveMessage(final String s) {
@@ -80,6 +85,15 @@ public abstract class WebsocketReader<T extends Validatable> {
             log.error("exception for message " + s, e);
         }
 
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        log.debug("destroy");
+
+        if(clientManager != null) {
+            clientManager.shutdown();
+        }
     }
 
     protected abstract T convert(final String message);

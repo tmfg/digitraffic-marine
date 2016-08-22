@@ -5,6 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @Component
-public class LockingService {
+public class LockingService implements DisposableBean {
     private static final Logger log = Logger.getLogger(LockingService.class);
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool(new CustomizableThreadFactory("executor-"));
@@ -93,5 +94,12 @@ public class LockingService {
 
             throw new IllegalStateException();
         }
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        log.debug("destroy");
+
+        executorService.shutdownNow();
     }
 }
