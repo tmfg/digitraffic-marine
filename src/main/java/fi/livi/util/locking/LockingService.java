@@ -4,8 +4,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.annotation.PreDestroy;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @Component
-public class LockingService implements DisposableBean {
+public class LockingService {
     private static final Logger log = Logger.getLogger(LockingService.class);
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool(new CustomizableThreadFactory("executor-"));
@@ -27,6 +28,8 @@ public class LockingService implements DisposableBean {
 
     private final LockingRepository lockingRepository;
     private final PlatformTransactionManager platformTransactionManager;
+
+    private AtomicBoolean shutdown = new AtomicBoolean(false);
 
     @Autowired
     public LockingService(final LockingRepository lockingRepository, final PlatformTransactionManager platformTransactionManager) {
@@ -50,13 +53,15 @@ public class LockingService implements DisposableBean {
     }
 
     private void doLock(final String lockName, final AtomicBoolean ab) {
-        while(true) {
+        while(!shutdown.get()) {
             log.debug("Acquiring lock " + lockName);
 
             try {
                 lockAndInvoke(lockName, ab);
             } catch(final Exception e) {
                 log.error(e);
+
+                sleep(1000);
             } finally {
                 ab.set(false);
 
@@ -77,13 +82,17 @@ public class LockingService implements DisposableBean {
 
                 log.debug("Lock acquired " + lockName);
 
-                try {
-                    Thread.sleep(lockingDuration);
-                } catch (final InterruptedException e) {
-                    log.debug(e);
-                }
+                sleep(lockingDuration);
             }
         });
+    }
+
+    private static void sleep(final int duration) {
+        try {
+            Thread.sleep(duration);
+        } catch (final InterruptedException e) {
+            log.debug(e);
+        }
     }
 
     private void acquireLock(final String lockName) {
@@ -96,10 +105,11 @@ public class LockingService implements DisposableBean {
         }
     }
 
-    @Override
+    @PreDestroy
     public void destroy() throws Exception {
         log.debug("destroy");
 
-        executorService.shutdownNow();
+        executorService.shutdown();
+        shutdown.set(true);
     }
 }
