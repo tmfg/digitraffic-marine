@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties("timestampExternal")
 @Entity
-@Immutable
+@DynamicUpdate
 @ApiModel(description="Vessel location model")
 public class VesselLocation {
     @Id

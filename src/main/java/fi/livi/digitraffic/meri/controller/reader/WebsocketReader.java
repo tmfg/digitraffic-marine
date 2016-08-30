@@ -15,12 +15,11 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.util.StringUtils;
 
 import fi.livi.digitraffic.meri.model.Validatable;
 
-public abstract class WebsocketReader<T extends Validatable> implements DisposableBean {
+public abstract class WebsocketReader<T extends Validatable> {
     private final Logger log;
 
     private final String locationUrl;
@@ -71,7 +70,7 @@ public abstract class WebsocketReader<T extends Validatable> implements Disposab
     }
 
     private void receiveMessage(final String s) {
-        log.debug("receiveMessage " + s);
+//        log.debug("receiveMessage " + s);
 
         final T msg = convert(s);
 
@@ -87,8 +86,7 @@ public abstract class WebsocketReader<T extends Validatable> implements Disposab
 
     }
 
-    @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         log.debug("destroy");
 
         if(clientManager != null) {

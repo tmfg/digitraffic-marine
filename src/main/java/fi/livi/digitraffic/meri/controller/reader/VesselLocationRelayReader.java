@@ -1,6 +1,8 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
 import fi.livi.digitraffic.meri.controller.LocationSender;
+import fi.livi.digitraffic.meri.controller.websocket.LocationsEndpoint;
+import fi.livi.digitraffic.meri.controller.websocket.VesselLocationsEndpoint;
 import fi.livi.digitraffic.meri.model.AISMessage;
 
 public class VesselLocationRelayReader extends VesselLocationReader {
@@ -15,5 +17,7 @@ public class VesselLocationRelayReader extends VesselLocationReader {
     @Override
     protected void handleMessage(final AISMessage message) {
         locationSender.sendMessage(message);
+        LocationsEndpoint.sendMessage(message);
+        VesselLocationsEndpoint.sendMessage(message);
     }
 }

@@ -2,13 +2,11 @@ package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +21,22 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
+@RequestMapping(API_V1_BASE_PATH + "/locations")
 public class VesselLocationController {
-
     private static final Logger LOG = Logger.getLogger(VesselLocationController.class);
 
     private final VesselLocationService vesselLocationService;
+
+    public static final String LATEST_PATH =  "/latest";
 
     @Autowired
     public VesselLocationController(final VesselLocationService vesselLocationService) {
         this.vesselLocationService = vesselLocationService;
     }
 
-    @ApiOperation("Find vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
-    @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history/{mmsi}",
-                    produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
+    @RequestMapping(method = RequestMethod.GET, path = LATEST_PATH + "/{mmsi}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocation> vesselLocationsByMssiAndTimestamp(
             @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
@@ -53,37 +53,8 @@ public class VesselLocationController {
         return IteratorUtils.toList( vesselLocationService.findLocations(mmsi, from, to).iterator() );
     }
 
-    @ApiOperation("Find vessel locations by mmsi and optional timestamp interval in ISO 8601 datetime format.")
-    @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history/datetime/{mmsi}",
-                    produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public List<VesselLocation> vesselLocationsByMssiAndDateTime(
-            @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
-            @PathVariable("mmsi")
-            final int mmsi,
-            @ApiParam("From timestamp in ISO 8601 datetime format. (ie. 2015-05-19T03:28:28.781+03:00)")
-            @RequestParam(value = "from", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            final ZonedDateTime from,
-            @ApiParam("To timestamp in ISO 8601 datetime format. (ie. 2015-05-19T00:28:47.434Z")
-            @RequestParam(value = "to", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            final ZonedDateTime to) {
-
-        Long fromMs = null;
-        Long toMs = null;
-        if (from != null) {
-            fromMs = from.toInstant().toEpochMilli();
-        }
-        if (to != null) {
-            toMs = to.toInstant().toEpochMilli();
-        }
-        LOG.info("vesselLocationsByMssiAndDateTime mmsi:\t" + mmsi + "from:\t" + from + " fromMs\t" + fromMs + " to:\t" + to + " toMs\t" + toMs);
-        return IteratorUtils.toList( vesselLocationService.findLocations(mmsi, fromMs, toMs).iterator() );
-    }
-
-    @ApiOperation("Find vessel locations by timestamp interval in milliseconds from Unix epoch.")
-    @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history",
+    @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
+    @RequestMapping(method = RequestMethod.GET, path = LATEST_PATH,
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocation> vesselLocationsByTimestamp(
@@ -96,32 +67,5 @@ public class VesselLocationController {
 
         LOG.info("vesselLocationsByTimestamp from:\t" + from + " to:\t" + to);
         return IteratorUtils.toList( vesselLocationService.findLocations(from, to).iterator() );
-    }
-
-
-    @ApiOperation("Find vessel locations by timestamp interval in ISO 8601 datetime format.")
-    @RequestMapping(method = RequestMethod.GET, path = API_V1_BASE_PATH + "/locations/history/datetime",
-                    produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public List<VesselLocation> vesselLocationsByDateTime(
-            @ApiParam("From timestamp in ISO 8601 datetime format. (ie. 2015-05-19T03:28:28.781+03:00)")
-            @RequestParam(value = "from", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            final ZonedDateTime from,
-            @ApiParam("To timestamp in ISO 8601 datetime format. (ie. 2015-05-19T00:28:47.434Z")
-            @RequestParam(value = "to", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            final ZonedDateTime to) {
-
-        Long fromMs = null;
-        Long toMs = null;
-        if (from != null) {
-            fromMs = from.toInstant().toEpochMilli();
-        }
-        if (to != null) {
-            toMs = to.toInstant().toEpochMilli();
-        }
-        LOG.info("vesselLocationsByDateTime from:\t" + from + " fromMs\t" + fromMs + " to:\t" + to + " toMs\t" + toMs);
-        return IteratorUtils.toList( vesselLocationService.findLocations(fromMs, toMs).iterator() );
     }
 }

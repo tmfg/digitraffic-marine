@@ -11,17 +11,20 @@
         function connect() {
             console.log('trying to connect...');
 
-            //            var socket = new SockJS('http://localhost:9001/api/v1/websockets');
-            var socket = new SockJS('http://meri-test.digitraffic.fi/api/v1/websockets');
+            //var socket = new WebSocket('ws://localhost:9001/api/v1/plain-websockets/locations/230006760');
+            var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/locations');
 
-            var stompClient = Stomp.over(socket);
-            stompClient.connect('', '', function(frame) {
-                console.log('connected');
-                stompClient.subscribe('/locations', function(message) {
-                    addMessage(JSON.parse(message.body));
-                    updateList();
-                });
-            });
+            console.info('Socket is ' + socket.readyState);
+
+            socket.onopen = function (event) {
+                console.info('Socket is open');
+            }
+
+            socket.onmessage = function(message) {
+                console.info("message :" + message.data)
+                addMessage(JSON.parse(message.data));
+                updateList();
+            };
         }
 
         function addMessage(message) {

@@ -22,7 +22,8 @@ public class VesselLocationServiceImpl implements VesselLocationService {
     }
 
     private Criteria createCriteria() {
-        return entityManager.unwrap(Session.class).createCriteria(VesselLocation.class)
+        return entityManager.unwrap(Session.class)
+                .createCriteria(VesselLocation.class)
                 .setFetchSize(1000);
     }
 
