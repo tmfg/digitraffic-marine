@@ -70,8 +70,6 @@ public abstract class WebsocketReader<T extends Validatable> {
     }
 
     private void receiveMessage(final String s) {
-//        log.debug("receiveMessage " + s);
-
         final T msg = convert(s);
 
         try {

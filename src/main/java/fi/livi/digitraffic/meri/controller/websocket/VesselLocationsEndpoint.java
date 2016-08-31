@@ -12,6 +12,8 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
@@ -20,6 +22,8 @@ import fi.livi.digitraffic.meri.model.AISMessage;
 @ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/locations/{mmsi}", encoders = LocationEncoder.class)
 @Component
 public class VesselLocationsEndpoint {
+    private static final Logger LOG = LoggerFactory.getLogger(VesselLocationsEndpoint.class);
+
     private static Map<Integer, Set<Session>> sessions = Collections.synchronizedMap(new HashMap<>());
 
     @OnOpen
@@ -50,7 +54,7 @@ public class VesselLocationsEndpoint {
                         s.getBasicRemote().sendObject(message);
 
                     } catch (final Exception ex) {
-                        System.out.println("exception " + ex);
+                        LOG.error("error sending", ex);
                     }
                 }
             }

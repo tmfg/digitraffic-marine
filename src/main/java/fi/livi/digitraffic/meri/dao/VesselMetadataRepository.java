@@ -13,5 +13,6 @@ import fi.livi.digitraffic.meri.domain.VesselMetadata;
 @Repository
 public interface VesselMetadataRepository extends JpaRepository<VesselMetadata, Integer> {
     @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="1000"))
+    @Override
     List<VesselMetadata> findAll();
 }
