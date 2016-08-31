@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,14 +30,14 @@ public class VesselMetadataController {
     }
 
     @ApiOperation("Return latest vessel metadata by mmsi.")
-    @RequestMapping(method = RequestMethod.GET, path = VESSELS_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = VESSELS_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselMetadata vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
         return vesselMetadataService.findMetadataByMssi(mmsi);
     }
 
     @ApiOperation("Return latest vessel metadata for all known vessels.")
-    @RequestMapping(method = RequestMethod.GET, path = VESSELS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = VESSELS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselMetadata> allVessels() {
         return vesselMetadataService.listAllVesselMetadata();

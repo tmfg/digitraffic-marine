@@ -8,10 +8,12 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 import oracle.jdbc.pool.OracleDataSource;
 
 @Configuration
+@EnableWebSocketMessageBroker
 @EnableJpaRepositories(basePackages = {"fi.livi.digitraffic.meri.dao", "fi.livi.util"})
 public class AisApplicationConfiguration {
     public static final String API_V1_BASE_PATH = "/api/v1";

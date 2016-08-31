@@ -8,9 +8,9 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,8 +35,7 @@ public class VesselLocationController {
     }
 
     @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
-    @RequestMapping(method = RequestMethod.GET, path = LATEST_PATH + "/{mmsi}",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocation> vesselLocationsByMssiAndTimestamp(
             @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
@@ -54,8 +53,7 @@ public class VesselLocationController {
     }
 
     @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
-    @RequestMapping(method = RequestMethod.GET, path = LATEST_PATH,
-                    produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = LATEST_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocation> vesselLocationsByTimestamp(
             @ApiParam("From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
