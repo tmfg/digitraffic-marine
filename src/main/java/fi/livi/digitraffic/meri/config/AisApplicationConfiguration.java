@@ -34,8 +34,8 @@ public class AisApplicationConfiguration {
         dataSource.setUser(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
         dataSource.setURL(properties.getUrl());
-        //        dataSource.setImplicitCachingEnabled(true);
-        //        dataSource.setFastConnectionFailoverEnabled(true);
+        dataSource.setImplicitCachingEnabled(true);
+        dataSource.setFastConnectionFailoverEnabled(true);
         return dataSource;
     }
 }
