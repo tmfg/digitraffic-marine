@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.controller;
 
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.*;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(API_V1_BASE_PATH + "/locations")
+@RequestMapping(API_V1_BASE_PATH + API_LOCATIONS_PATH)
 public class VesselLocationController {
     private static final Logger LOG = Logger.getLogger(VesselLocationController.class);
 

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
@@ -31,6 +32,11 @@ public class LocationsEndpoint {
     @OnClose
     public void onClose(final Session session) {
         sessions.remove(session);
+    }
+
+    @OnError
+    public void onError(final Throwable t) {
+        LOG.info("exception", t);
     }
 
     public static void sendMessage(final AISMessage message) {
