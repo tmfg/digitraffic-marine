@@ -182,6 +182,10 @@
                     <instrumentation>
                         <ignoreTrivial>true</ignoreTrivial>
                         <ignoreMethodAnnotation>fi.livi.digitraffic.meri.annotation.CoverageIgnore</ignoreMethodAnnotation>
+                        <ignores>
+                            <ignore>fi/livi/digitraffic/meri/domain/**/*.class</ignore>
+                            <ignore>fi/livi/digitraffic/meri/model/**/*.class</ignore>
+                        </ignores>
                     </instrumentation>
                 </configuration>
             </plugin>
