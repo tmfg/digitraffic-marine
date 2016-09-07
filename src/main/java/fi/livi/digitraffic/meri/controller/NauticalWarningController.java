@@ -70,7 +70,7 @@ public class NauticalWarningController {
         byte[] body;
         try {
             body = decompress(response.getBody());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             body = response.getBody();
         }
 
@@ -81,8 +81,8 @@ public class NauticalWarningController {
         return ResponseEntity.ok().body(body);
     }
 
-    public static byte[] decompress(byte[] contentBytes) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+    public static byte[] decompress(final byte[] contentBytes) throws IOException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
         IOUtils.copy(new GZIPInputStream(new ByteArrayInputStream(contentBytes)), out);
         return out.toByteArray();
     }

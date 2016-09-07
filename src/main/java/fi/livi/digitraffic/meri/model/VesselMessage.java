@@ -29,7 +29,10 @@ public class VesselMessage implements Validatable {
         public final String callSign;
         public final String vesselName;
         public final int shipAndCargoType;
-        public final long referencePointA, referencePointB, referencePointC, referencePointD;
+        public final long referencePointA;
+        public final long referencePointB;
+        public final long referencePointC;
+        public final long referencePointD;
         public final int posType;
         public final long eta;
         public final int draught;

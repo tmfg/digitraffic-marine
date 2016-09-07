@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.hibernate.Criteria;
@@ -28,11 +30,11 @@ public class VesselLocationServiceImpl implements VesselLocationService {
     }
 
     @Override
-    public Iterable<VesselLocation> findLocations(final int mmsi, final Long from, final Long to) {
+    public List<VesselLocation> findLocations(final int mmsi, final Long from, final Long to) {
         return findLocations((Integer)mmsi, from, to);
     }
 
-    private Iterable<VesselLocation> findLocations(final Integer mmsi, final Long from, final Long to) {
+    private List<VesselLocation> findLocations(final Integer mmsi, final Long from, final Long to) {
         final Criteria c = createCriteria();
 
         if(mmsi != null) {
@@ -51,7 +53,7 @@ public class VesselLocationServiceImpl implements VesselLocationService {
     }
 
     @Override
-    public Iterable<VesselLocation> findLocations(final Long from, final Long to) {
+    public List<VesselLocation> findLocations(final Long from, final Long to) {
         return findLocations(null, from, to);
     }
 }

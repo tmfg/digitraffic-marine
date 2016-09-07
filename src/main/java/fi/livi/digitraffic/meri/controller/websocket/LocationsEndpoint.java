@@ -22,7 +22,7 @@ import fi.livi.digitraffic.meri.model.AISMessage;
 public class LocationsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(LocationsEndpoint.class);
 
-    private static Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
+    private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
     @OnOpen
     public void onOpen(final Session session) {

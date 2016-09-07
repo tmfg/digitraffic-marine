@@ -24,7 +24,7 @@ import fi.livi.digitraffic.meri.model.AISMessage;
 public class VesselLocationsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(VesselLocationsEndpoint.class);
 
-    private static Map<Integer, Set<Session>> sessions = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<Integer, Set<Session>> sessions = Collections.synchronizedMap(new HashMap<>());
 
     @OnOpen
     public void onOpen(final Session session, @PathParam("mmsi") final Integer mmsi) {

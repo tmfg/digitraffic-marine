@@ -24,7 +24,7 @@ public class LocationEncoder implements Encoder.Text<AISMessage> {
     public String encode(final AISMessage message) throws EncodeException {
         try {
             return new ObjectMapper().writeValueAsString(message);
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             LOG.error("Error when encoding", e);
 
             return "";

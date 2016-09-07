@@ -30,7 +30,7 @@ public class LockingService {
     private final LockingRepository lockingRepository;
     private final PlatformTransactionManager platformTransactionManager;
 
-    private AtomicBoolean shutdown = new AtomicBoolean(false);
+    private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     @Autowired
     public LockingService(final LockingRepository lockingRepository, final PlatformTransactionManager platformTransactionManager) {

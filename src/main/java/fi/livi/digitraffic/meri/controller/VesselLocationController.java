@@ -1,10 +1,10 @@
 package fi.livi.digitraffic.meri.controller;
 
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.*;
+import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_LOCATIONS_PATH;
+import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
 import java.util.List;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -48,8 +48,9 @@ public class VesselLocationController {
             @RequestParam(value = "to", required = false)
             final Long to) {
 
-        LOG.info("vesselLocationsByMssiAndTimestamp mmsi:\t" + mmsi + " from:\t" + from + " to:\t" + to);
-        return IteratorUtils.toList( vesselLocationService.findLocations(mmsi, from, to).iterator() );
+        LOG.info(String.format("vesselLocationsByMssiAndTimestamp mmsi:\t%d from:\t%d to:\t%d", mmsi, from, to));
+
+        return vesselLocationService.findLocations(mmsi, from, to);
     }
 
     @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
@@ -63,7 +64,8 @@ public class VesselLocationController {
             @RequestParam(value = "to", required = false)
             final Long to) {
 
-        LOG.info("vesselLocationsByTimestamp from:\t" + from + " to:\t" + to);
-        return IteratorUtils.toList( vesselLocationService.findLocations(from, to).iterator() );
+        LOG.info(String.format("vesselLocationsByTimestamp from:\t%d to:\t%d", from, to));
+
+        return vesselLocationService.findLocations(from, to);
     }
 }
