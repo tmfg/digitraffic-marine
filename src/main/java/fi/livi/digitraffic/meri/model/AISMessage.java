@@ -18,7 +18,7 @@ public class AISMessage implements Validatable {
 
     @Override
     public boolean validate() {
-        return geometry != null;
+        return geometry != null && attributes.mmsi > 0;
     }
 
     @Immutable
