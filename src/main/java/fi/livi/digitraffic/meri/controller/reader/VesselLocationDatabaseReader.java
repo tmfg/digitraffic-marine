@@ -20,7 +20,11 @@ public class VesselLocationDatabaseReader extends VesselLocationReader {
     @Override
     protected void handleMessage(final AISMessage message) {
         if(accessLock.get()) {
-            vesselLocationRepository.save(new VesselLocation(message));
+            try {
+                vesselLocationRepository.save(new VesselLocation(message));
+            } finally {
+                accessLock.release();
+            }
         }
     }
 }

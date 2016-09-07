@@ -1,15 +1,19 @@
 package fi.livi.util.locking;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AccessLock {
-    private final AtomicBoolean lock;
+    private final AtomicInteger lockCount;
 
-    public AccessLock(final AtomicBoolean lock) {
-        this.lock = lock;
+    public AccessLock(final AtomicInteger lockCount) {
+        this.lockCount = lockCount;
     }
 
     public boolean get() {
-        return lock.get();
+        return lockCount.getAndUpdate(current -> current == 0 ? 0 : current+1) > 0;
+    }
+
+    public void release() {
+        lockCount.decrementAndGet();
     }
 }

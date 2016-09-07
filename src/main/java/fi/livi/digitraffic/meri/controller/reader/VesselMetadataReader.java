@@ -26,7 +26,11 @@ public class VesselMetadataReader extends WebsocketReader<VesselMessage> {
     @Override
     protected void handleMessage(final VesselMessage message) {
         if(accessLock.get()) {
-            vesselMetadataRepository.save(new VesselMetadata(message.vesselAttributes));
+            try {
+                vesselMetadataRepository.save(new VesselMetadata(message.vesselAttributes));
+            } finally {
+                accessLock.release();
+            }
         }
     }
 }

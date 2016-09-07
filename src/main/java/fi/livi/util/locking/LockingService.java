@@ -3,6 +3,7 @@ package fi.livi.util.locking;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PreDestroy;
 
@@ -23,8 +24,8 @@ public class LockingService {
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool(new CustomizableThreadFactory("executor-"));
 
-    private static final int DEFAULT_LOCKING_DURATION = 60 * 1000;
-    private int lockingDuration = 60 * 1000;
+    private static final int DEFAULT_LOCKING_DURATION = 1 * 60 * 1000;
+    private final int lockingDuration;
 
     private final LockingRepository lockingRepository;
     private final PlatformTransactionManager platformTransactionManager;
@@ -45,32 +46,30 @@ public class LockingService {
 
     @Transactional(propagation = Propagation.NEVER)
     public AccessLock lock(final String lockName) {
-        final AtomicBoolean ab = new AtomicBoolean(false);
+        final AtomicInteger count = new AtomicInteger(0);
 
-        executorService.execute(() -> doLock(lockName, ab));
+        executorService.execute(() -> doLock(lockName, count));
 
-        return new AccessLock(ab);
+        return new AccessLock(count);
     }
 
-    private void doLock(final String lockName, final AtomicBoolean ab) {
+    private void doLock(final String lockName, final AtomicInteger count) {
         while(!shutdown.get()) {
             log.debug("Acquiring lock " + lockName);
 
             try {
-                lockAndInvoke(lockName, ab);
+                lockAndInvoke(lockName, count);
             } catch(final Exception e) {
                 log.error(e);
 
                 sleep(1000);
             } finally {
-                ab.set(false);
-
-                log.debug("Lock released " + lockName);
+                log.debug(String.format("Lock %s released %d", lockName, count.get()));
             }
         }
     }
 
-    private void lockAndInvoke(final String lockName, final AtomicBoolean ab) {
+    private void lockAndInvoke(final String lockName, final AtomicInteger count) {
         final TransactionTemplate template = new TransactionTemplate(platformTransactionManager);
 
         template.execute(new TransactionCallbackWithoutResult() {
@@ -78,11 +77,15 @@ public class LockingService {
             protected void doInTransactionWithoutResult(final TransactionStatus transactionStatus) {
                 acquireLock(lockName);
 
-                ab.set(true);
-
-                log.debug("Lock acquired " + lockName);
+                final int cc= count.incrementAndGet();
+                log.debug(String.format("Lock %s acquired %d", lockName, cc));
 
                 sleep(lockingDuration);
+
+                while(!count.compareAndSet(1, 0)) {
+                    log.debug(String.format("waiting for %s %d...", lockName, count.get()));
+                    sleep(10);
+                }
             }
         });
     }
