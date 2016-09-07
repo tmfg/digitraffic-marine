@@ -150,16 +150,6 @@
             <artifactId>json-smart</artifactId>
             <version>2.2.1</version>
         </dependency>
-        <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-            <version>2.2.1</version>
-        </dependency>
     </dependencies>
 
     <!-- If you have access to scm then you can place actual url's.
@@ -175,6 +165,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
                 <configuration>
                     <formats>
                         <format>xml</format>
@@ -266,14 +257,6 @@
                             <AisApplication-Build>${buildNumber}</AisApplication-Build>
                         </manifestEntries>
                     </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <executable>true</executable>
                 </configuration>
             </plugin>
         </plugins>
