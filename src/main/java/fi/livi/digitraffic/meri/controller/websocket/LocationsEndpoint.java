@@ -16,10 +16,12 @@ import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.model.AISMessage;
+import fi.livi.digitraffic.meri.model.StatusMessage;
 
-@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/locations", encoders = LocationEncoder.class)
+@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH
+        + "/locations", encoders = {StatusEncoder.class, LocationEncoder.class})
 @Component
-public class LocationsEndpoint {
+public class LocationsEndpoint extends WebsocketEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(LocationsEndpoint.class);
 
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
@@ -41,14 +43,13 @@ public class LocationsEndpoint {
 
     public static void sendMessage(final AISMessage message) {
         synchronized (sessions) {
-            for (final Session s : sessions) {
-                try {
-                    s.getBasicRemote().sendObject(message);
+            sendMessage(LOG, message, sessions);
+        }
+    }
 
-                } catch (final Exception ex) {
-                    LOG.error("error sending", ex);
-                }
-            }
+    public static void sendStatus() {
+        synchronized (sessions) {
+            sendMessage(LOG, StatusMessage.OK, sessions);
         }
     }
 }

@@ -6,28 +6,23 @@ import fi.livi.digitraffic.meri.domain.VesselMetadata;
 import fi.livi.digitraffic.meri.model.VesselMessage;
 import fi.livi.util.locking.AccessLock;
 
-public class VesselMetadataReader extends WebsocketReader<VesselMessage> {
+public class VesselMetadataDatabaseListener implements WebsocketListener {
     private final VesselMetadataRepository vesselMetadataRepository;
     private final AccessLock accessLock;
 
-    public VesselMetadataReader(final String vesselMetadataUrl,
-                                final VesselMetadataRepository vesselMetadataRepository,
-                                final AccessLock accessLock) {
-        super(vesselMetadataUrl);
+    public VesselMetadataDatabaseListener(final VesselMetadataRepository vesselMetadataRepository,
+                                          final AccessLock accessLock) {
         this.vesselMetadataRepository = vesselMetadataRepository;
         this.accessLock = accessLock;
     }
 
     @Override
-    protected VesselMessage convert(final String message) {
-        return MessageConverter.convertMetadata(message);
-    }
+    public void receiveMessage(final String message) {
+        final VesselMessage vm = MessageConverter.convertMetadata(message);
 
-    @Override
-    protected void handleMessage(final VesselMessage message) {
-        if(accessLock.get()) {
+        if(vm.validate() && accessLock.get()) {
             try {
-                vesselMetadataRepository.save(new VesselMetadata(message.vesselAttributes));
+                vesselMetadataRepository.save(new VesselMetadata(vm.vesselAttributes));
             } finally {
                 accessLock.release();
             }

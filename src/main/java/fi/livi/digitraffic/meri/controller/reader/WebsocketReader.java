@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.controller.reader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
@@ -17,17 +18,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import fi.livi.digitraffic.meri.model.Validatable;
-
-public abstract class WebsocketReader<T extends Validatable> {
+public class WebsocketReader {
     private final Logger log;
 
     private final String locationUrl;
 
     private volatile ClientManager clientManager = null;
 
-    public WebsocketReader(final String locationUrl) {
+    private final List<WebsocketListener> listeners;
+
+    public WebsocketReader(final String locationUrl, final List<WebsocketListener> listeners) {
         this.locationUrl = locationUrl;
+        this.listeners = listeners;
+
         this.log = LoggerFactory.getLogger(getClass());
     }
 
@@ -69,19 +72,16 @@ public abstract class WebsocketReader<T extends Validatable> {
         return client;
     }
 
-    private void receiveMessage(final String s) {
-        final T msg = convert(s);
+    private void receiveMessage(final String message) {
+        listeners.parallelStream().forEach(listener -> notifyListener(listener, message));
+    }
 
+    private void notifyListener(final WebsocketListener listener, final String message) {
         try {
-            if(msg.validate()) {
-                handleMessage(msg);
-            } else {
-                log.debug("could not validate message", msg);
-            }
+            listener.receiveMessage(message);
         } catch(final Exception e) {
-            log.error("exception for message " + s, e);
+            log.error("exception for message " + message, e);
         }
-
     }
 
     public void destroy() {
@@ -91,8 +91,4 @@ public abstract class WebsocketReader<T extends Validatable> {
             clientManager.shutdown();
         }
     }
-
-    protected abstract T convert(final String message);
-
-    protected abstract void handleMessage(final T message);
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.model.AISMessage;
+import fi.livi.digitraffic.meri.model.StatusMessage;
 
-@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/locations/{mmsi}", encoders = LocationEncoder.class)
+@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/locations/{mmsi}",
+        encoders = {StatusEncoder.class, LocationEncoder.class})
 @Component
-public class VesselLocationsEndpoint {
+public class VesselLocationsEndpoint extends WebsocketEndpoint{
     private static final Logger LOG = LoggerFactory.getLogger(VesselLocationsEndpoint.class);
 
     private static final Map<Integer, Set<Session>> sessions = Collections.synchronizedMap(new HashMap<>());
@@ -49,15 +52,14 @@ public class VesselLocationsEndpoint {
             final Set<Session> sessionSet = sessions.get(message.attributes.mmsi);
 
             if(sessionSet != null) {
-                for (final Session s : sessionSet) {
-                    try {
-                        s.getBasicRemote().sendObject(message);
-
-                    } catch (final Exception ex) {
-                        LOG.error("error sending", ex);
-                    }
-                }
+                sendMessage(LOG, message, sessionSet);
             }
+        }
+    }
+
+    public static void sendStatus() {
+        synchronized (sessions) {
+            sendMessage(LOG, StatusMessage.OK, sessions.values().stream().flatMap(c -> c.stream()).collect(Collectors.toList()));
         }
     }
 }
