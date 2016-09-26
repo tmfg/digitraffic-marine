@@ -2,6 +2,10 @@ package fi.livi.util.locking;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * if lockCount = 0 -> this vm does not own the lock
+ * if lockCount > 0 -> this vm owns the lock, lockCount equals the number of threads using the lock
+ */
 public class AccessLock {
     private final AtomicInteger lockCount;
 
