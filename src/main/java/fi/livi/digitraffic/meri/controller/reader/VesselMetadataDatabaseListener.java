@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.VesselMetadata;
@@ -17,6 +19,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     }
 
     @Override
+    @Transactional
     public void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
 

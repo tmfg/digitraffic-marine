@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.VesselLocationRepository;
 import fi.livi.digitraffic.meri.domain.VesselLocation;
@@ -17,6 +19,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     }
 
     @Override
+    @Transactional
     public void receiveMessage(final String message) {
         final AISMessage ais = MessageConverter.convertLocation(message);
 
