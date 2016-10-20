@@ -3,9 +3,6 @@ package fi.livi.digitraffic.meri.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
-
-@Immutable
 public class AISMessage implements Validatable {
     public final Geometry geometry;
     public final AISAttributes attributes;
@@ -21,7 +18,6 @@ public class AISMessage implements Validatable {
         return geometry != null && attributes.mmsi > 0;
     }
 
-    @Immutable
     public static class Geometry {
         public final double x;
         public final double y;
@@ -35,7 +31,6 @@ public class AISMessage implements Validatable {
             this.spatialReference = spatialReference;
         }
 
-        @Immutable
         public static class SpatialReference {
             public final int wkid;
 
@@ -46,7 +41,6 @@ public class AISMessage implements Validatable {
         }
     }
 
-    @Immutable
     public static class AISAttributes {
         public final int mmsi;
         public final int navStat;
