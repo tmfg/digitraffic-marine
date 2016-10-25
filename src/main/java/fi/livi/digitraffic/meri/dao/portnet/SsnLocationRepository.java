@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.dao;
+package fi.livi.digitraffic.meri.dao.portnet;
 
 import java.util.stream.Stream;
 

@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.domain.VesselMetadata;
+import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.service.VesselMetadataService;
 
 @RunWith(SpringRunner.class)

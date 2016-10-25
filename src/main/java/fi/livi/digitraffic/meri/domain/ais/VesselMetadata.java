@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.domain;
+package fi.livi.digitraffic.meri.domain.ais;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import fi.livi.digitraffic.meri.model.VesselMessage;
+import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.model.AISMessage;
-import fi.livi.digitraffic.meri.model.VesselMessage;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 
 public final class MessageConverter {
     private static final Logger LOG = LoggerFactory.getLogger(MessageConverter.class);

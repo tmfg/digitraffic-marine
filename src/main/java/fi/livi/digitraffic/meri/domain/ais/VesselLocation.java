@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.domain;
+package fi.livi.digitraffic.meri.domain.ais;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import fi.livi.digitraffic.meri.model.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

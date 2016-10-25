@@ -13,7 +13,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.google.common.collect.Iterables;
 
 import fi.livi.digitraffic.meri.AisApplication;
-import fi.livi.digitraffic.meri.domain.VesselLocation;
+import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = AisApplication.class)

@@ -1,10 +1,12 @@
-package fi.livi.digitraffic.meri.model;
+package fi.livi.digitraffic.meri.model.ais;
 
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import fi.livi.digitraffic.meri.model.Validatable;
 
 public class VesselMessage implements Validatable {
     public final VesselAttributes vesselAttributes;

@@ -27,7 +27,7 @@ public class SsnMetadataController {
     @ApiOperation("Return list of all berths, port areas and locations.")
     @GetMapping(path = SSN_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public PortsAndBerthsJson listAllBerths() {
+    public PortsAndBerthsJson listAllMetadata() {
         return ssnService.listaAllMetadata();
     }
 

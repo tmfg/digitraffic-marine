@@ -3,9 +3,9 @@ package fi.livi.digitraffic.meri.controller.reader;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.dao.VesselLocationRepository;
-import fi.livi.digitraffic.meri.domain.VesselLocation;
-import fi.livi.digitraffic.meri.model.AISMessage;
+import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
+import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.util.locking.AccessLock;
 
 public class VesselLocationDatabaseListener implements WebsocketListener {
