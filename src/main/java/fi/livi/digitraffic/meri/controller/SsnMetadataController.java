@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.portnet.PortsAndBerthsJson;
-import fi.livi.digitraffic.meri.service.SsnService;
+import fi.livi.digitraffic.meri.service.portnet.SsnService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController

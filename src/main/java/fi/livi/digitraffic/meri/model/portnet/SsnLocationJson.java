@@ -14,6 +14,9 @@ public interface SsnLocationJson {
     @ApiModelProperty(value = "Location name", required = true)
     String getLocationName();
 
+    @ApiModelProperty(value = "Country", required = true)
+    String getCountr();
+
     @ApiModelProperty(value = "Wgs84 latitude", required = false)
     Double getWgs84Lat();
 

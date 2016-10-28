@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.service;
+package fi.livi.digitraffic.meri.service.portnet;
 
 import java.util.stream.Collectors;
 

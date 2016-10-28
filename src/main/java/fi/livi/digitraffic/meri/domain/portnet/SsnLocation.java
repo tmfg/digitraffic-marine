@@ -14,6 +14,8 @@ public class SsnLocation {
 
     private String locationName;
 
+    private String country;
+
     @Column(name = "wgs84_lat")
     private Double wgs84Lat;
 
@@ -50,5 +52,13 @@ public class SsnLocation {
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

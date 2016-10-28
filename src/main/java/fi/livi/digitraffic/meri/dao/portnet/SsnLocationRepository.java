@@ -11,6 +11,6 @@ import fi.livi.digitraffic.meri.model.portnet.SsnLocationJson;
 
 @Repository
 public interface SsnLocationRepository extends JpaRepository<SsnLocation, String> {
-    @Query(value = "select locode, location_name, wgs84_lat, wgs84_long from ssn_location", nativeQuery = true)
+    @Query(value = "select locode, location_name, country, wgs84_lat, wgs84_long from ssn_location", nativeQuery = true)
     Stream<SsnLocationJson> streamAllLocations();
 }

@@ -1,0 +1,356 @@
+<!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.8-b13937 svn-revision#13942. --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ptns="http://portnet.fi/PortnetWS/PortnetTypes"
+            targetNamespace="http://portnet.fi/PortnetWS/PortnetTypes"
+            elementFormDefault="qualified">
+   <xsd:complexType name="SecurityMeasures">
+      <xsd:sequence>
+         <xsd:element name="SecurityLevelHistory"
+                      type="ptns:SecurityLevelHistory"
+                      maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="shipCertificateValidity" type="xsd:boolean"/>
+      <xsd:attribute name="certificateIssuer" type="xsd:string"/>
+      <xsd:attribute name="certificateStartDate" type="xsd:dateTime"/>
+      <xsd:attribute name="certificateEndDate" type="xsd:dateTime"/>
+      <xsd:attribute name="currentSecurityLevel" type="xsd:positiveInteger"/>
+   </xsd:complexType>
+   <xsd:complexType name="LocationData">
+      <xsd:sequence/>
+      <xsd:attribute name="latitude" type="xsd:decimal"/>
+      <xsd:attribute name="longitude" type="xsd:decimal"/>
+      <xsd:attribute name="course" type="xsd:decimal"/>
+      <xsd:attribute name="speed" type="xsd:decimal"/>
+      <xsd:attribute name="timeStamp" type="xsd:dateTime"/>
+   </xsd:complexType>
+   <xsd:complexType name="ResponseType">
+      <xsd:sequence>
+         <xsd:element name="Status">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="OK"/>
+                  <xsd:enumeration value="NOT_FOUND"/>
+                  <xsd:enumeration value="INVALID_REQUEST"/>
+                  <xsd:enumeration value="SERVICE_ERROR"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="Reference" type="xsd:string" minOccurs="0"/>
+         <xsd:element name="Description" type="xsd:string" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CargoInfo">
+      <xsd:sequence/>
+      <xsd:attribute name="cargoDischargeCode" type="xsd:integer"/>
+      <xsd:attribute name="cargoDescription" type="xsd:string"/>
+      <xsd:attribute name="cargoAmount" type="xsd:decimal"/>
+   </xsd:complexType>
+   <xsd:complexType name="SecurityLevelHistory">
+      <xsd:sequence/>
+      <xsd:attribute name="order" type="xsd:integer"/>
+      <xsd:attribute name="level" type="xsd:integer"/>
+   </xsd:complexType>
+   <xsd:complexType name="AgentInfo">
+      <xsd:sequence/>
+      <xsd:attribute name="role" type="xsd:integer"/>
+      <xsd:attribute name="portCallDirection" type="ptns:portCallDirection"/>
+      <xsd:attribute name="name" type="xsd:string"/>
+      <xsd:attribute name="ediNumber" type="xsd:string"/>
+   </xsd:complexType>
+   <xsd:complexType name="BerthDetails">
+      <xsd:sequence>
+         <xsd:element name="CargoInfo" type="ptns:CargoInfo" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="berthCode" type="xsd:string"/>
+      <xsd:attribute name="berthName" type="xsd:string"/>
+      <xsd:attribute name="eta" type="xsd:dateTime"/>
+      <xsd:attribute name="etaTimeStamp" type="xsd:dateTime"/>
+      <xsd:attribute name="etaSource" type="ptns:timeSource"/>
+      <xsd:attribute name="etd" type="xsd:dateTime"/>
+      <xsd:attribute name="etdTimeStamp" type="xsd:dateTime"/>
+      <xsd:attribute name="etdSource" type="ptns:timeSource"/>
+      <xsd:attribute name="ata" type="xsd:dateTime"/>
+      <xsd:attribute name="ataTimeStamp" type="xsd:dateTime"/>
+      <xsd:attribute name="ataSource" type="ptns:timeSource"/>
+      <xsd:attribute name="atd" type="xsd:dateTime"/>
+      <xsd:attribute name="atdTimeStamp" type="xsd:dateTime"/>
+      <xsd:attribute name="atdSource" type="ptns:timeSource"/>
+      <xsd:attribute name="arrivalDraught" type="xsd:decimal"/>
+      <xsd:attribute name="departureDraught" type="xsd:decimal"/>
+   </xsd:complexType>
+   <xsd:complexType name="ImoInformation">
+      <xsd:sequence/>
+      <xsd:attribute name="imoGeneralDeclaration" type="xsd:string"/>
+      <xsd:attribute name="briefParticularsVoyage" type="xsd:string"/>
+      <xsd:attribute name="portOfDischarge" type="xsd:string"/>
+      <xsd:attribute name="numberOfCrew" type="xsd:integer"/>
+      <xsd:attribute name="numberOfPassengers" type="xsd:integer"/>
+      <xsd:attribute name="cargoDeclarationsOnBoard" type="xsd:integer"/>
+      <xsd:attribute name="crewListsOnBoard" type="xsd:integer"/>
+      <xsd:attribute name="crewsEffectsDeclarationsOnBoard" type="xsd:integer"/>
+      <xsd:attribute name="shipStoresDeclarationsOnBoard" type="xsd:integer"/>
+      <xsd:attribute name="passengerListsOnBoard" type="xsd:integer"/>
+      <xsd:attribute name="healthDeclarationsOnBoard" type="xsd:integer"/>
+   </xsd:complexType>
+   <xsd:complexType name="PortAreaDetails">
+      <xsd:sequence>
+         <xsd:element name="BerthDetails" type="ptns:BerthDetails"/>
+      </xsd:sequence>
+      <xsd:attribute name="portAreaCode" type="xsd:string"/>
+      <xsd:attribute name="portAreaName" type="xsd:string"/>
+   </xsd:complexType>
+   <xsd:complexType name="PortCallNotification">
+      <xsd:sequence>
+         <xsd:element name="PortCallDetails" type="ptns:PortCallDetails"/>
+      </xsd:sequence>
+      <xsd:attribute name="portCallId" type="xsd:integer"/>
+      <xsd:attribute name="portCallTimestamp" type="xsd:dateTime"/>
+   </xsd:complexType>
+   <xsd:complexType name="PortCallList">
+      <xsd:sequence>
+         <xsd:element name="Header" type="ptns:Header"/>
+         <xsd:element name="PortCallNotification"
+                      type="ptns:PortCallNotification"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="PortCallDetails">
+      <xsd:sequence>
+         <xsd:element name="AgentInfo" type="ptns:AgentInfo" maxOccurs="unbounded"/>
+         <xsd:element name="ImoInformation"
+                      type="ptns:ImoInformation"
+                      maxOccurs="unbounded"/>
+         <xsd:element name="SecurityMeasures" type="ptns:SecurityMeasures"/>
+         <xsd:element name="PortAreaDetails"
+                      type="ptns:PortAreaDetails"
+                      maxOccurs="unbounded"/>
+         <xsd:element name="VesselDetails" type="ptns:VesselDetails"/>
+         <xsd:element name="LocationData" type="ptns:LocationData" minOccurs="0"/>
+      </xsd:sequence>
+      <xsd:attribute name="customsReference" type="xsd:string"/>
+      <xsd:attribute name="portToVisit" type="xsd:string"/>
+      <xsd:attribute name="prevPort" type="xsd:string"/>
+      <xsd:attribute name="nextPort" type="xsd:string"/>
+      <xsd:attribute name="domesticTrafficArrival" type="xsd:boolean"/>
+      <xsd:attribute name="domesticTrafficDeparture" type="xsd:boolean"/>
+      <xsd:attribute name="arrivalWithCargo" type="xsd:boolean"/>
+      <xsd:attribute name="discharge" type="xsd:integer"/>
+      <xsd:attribute name="notLoading" type="xsd:boolean"/>
+      <xsd:attribute name="shipMasterArrival" type="xsd:string"/>
+      <xsd:attribute name="shipMasterDeparture" type="xsd:string"/>
+      <xsd:attribute name="managementNameArrival" type="xsd:string"/>
+      <xsd:attribute name="managementNameDeparture" type="xsd:string"/>
+      <xsd:attribute name="forwarderNameArrival" type="xsd:string"/>
+      <xsd:attribute name="forwarderNameDeparture" type="xsd:string"/>
+      <xsd:attribute name="freeTextArrival" type="xsd:string"/>
+      <xsd:attribute name="freeTextDeparture" type="xsd:string"/>
+   </xsd:complexType>
+   <xsd:complexType name="Header">
+      <xsd:sequence>
+         <xsd:element name="responseType" type="ptns:ResponseType"/>
+      </xsd:sequence>
+      <xsd:attribute name="Version" type="xsd:string" use="required"/>
+      <xsd:attribute name="SentAt" type="xsd:dateTime" use="required"/>
+      <xsd:attribute name="From" type="xsd:string" use="required"/>
+      <xsd:attribute name="lang" type="ptns:lang" use="required"/>
+   </xsd:complexType>
+   <xsd:complexType name="VesselDetails">
+      <xsd:sequence>
+         <xsd:element name="IdentificationData">
+            <xsd:complexType>
+               <xsd:sequence/>
+               <xsd:attribute name="vesselId" type="xsd:integer" use="required"/>
+               <xsd:attribute name="name" type="xsd:string" use="required"/>
+               <xsd:attribute name="namePrefix" type="xsd:string"/>
+               <xsd:attribute name="radioCallSign" type="xsd:string" use="required"/>
+               <xsd:attribute name="radioCallSignType" type="ptns:rcsType" use="required"/>
+               <xsd:attribute name="imoLloyds" type="xsd:integer"/>
+               <xsd:attribute name="mmsi" type="xsd:integer"/>
+               <xsd:attribute name="dataSource" type="xsd:string" fixed="Portnet"/>
+               <xsd:attribute name="updateTimeStamp" type="xsd:dateTime" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RegistrationData">
+            <xsd:complexType>
+               <xsd:sequence/>
+               <xsd:attribute name="nationality" type="xsd:string" use="required"/>
+               <xsd:attribute name="portOfRegistry" type="xsd:string"/>
+               <xsd:attribute name="domicile" type="xsd:string"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ConstructionData">
+            <xsd:complexType>
+               <xsd:sequence/>
+               <xsd:attribute name="vesselTypeCode" type="xsd:integer" use="required"/>
+               <xsd:attribute name="vesselTypeName" type="xsd:string" use="required"/>
+               <xsd:attribute name="iceClassCode" type="ptns:iceClassCde" use="required"/>
+               <xsd:attribute name="iceClassIssueDate" type="xsd:date"/>
+               <xsd:attribute name="iceClassIssuePlace" type="xsd:string"/>
+               <xsd:attribute name="iceClassEndDate" type="xsd:date"/>
+               <xsd:attribute name="classificationSociety" type="xsd:string"/>
+               <xsd:attribute name="doubleBottom" type="xsd:boolean"/>
+               <xsd:attribute name="inertGasSystem" type="xsd:boolean"/>
+               <xsd:attribute name="ballastTank" type="xsd:boolean"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="Dimensions">
+            <xsd:complexType>
+               <xsd:sequence/>
+               <xsd:attribute name="tonnageCertificateIssuer" type="xsd:string"/>
+               <xsd:attribute name="dateOfIssue" type="xsd:date"/>
+               <xsd:attribute name="grossTonnage" type="xsd:integer" use="required"/>
+               <xsd:attribute name="netTonnage" type="xsd:integer" use="required"/>
+               <xsd:attribute name="deathWeight" type="xsd:integer"/>
+               <xsd:attribute name="length" type="xsd:decimal"/>
+               <xsd:attribute name="overallLength" type="xsd:decimal"/>
+               <xsd:attribute name="height" type="xsd:decimal"/>
+               <xsd:attribute name="breadth" type="xsd:decimal"/>
+               <xsd:attribute name="draught" type="xsd:decimal"/>
+               <xsd:attribute name="maxSpeed" type="xsd:decimal"/>
+               <xsd:attribute name="enginePower" type="xsd:string"/>
+               <xsd:attribute name="totalPower" type="xsd:integer"/>
+               <xsd:attribute name="maxPersons" type="xsd:integer"/>
+               <xsd:attribute name="maxPassengers" type="xsd:integer"/>
+               <xsd:attribute name="keelDate" type="xsd:date"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="System">
+            <xsd:complexType>
+               <xsd:sequence/>
+               <xsd:attribute name="shipOwner" type="xsd:string"/>
+               <xsd:attribute name="shipTelephone1" type="xsd:string"/>
+               <xsd:attribute name="shipTelephone2" type="xsd:string"/>
+               <xsd:attribute name="shipFax" type="xsd:string"/>
+               <xsd:attribute name="shipEmail" type="xsd:string"/>
+               <xsd:attribute name="shipVerifier" type="xsd:string"/>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="ConstructionData">
+      <xsd:complexType>
+         <xsd:sequence/>
+         <xsd:attribute name="vesselTypeCode" type="xsd:integer" use="required"/>
+         <xsd:attribute name="vesselTypeName" type="xsd:string" use="required"/>
+         <xsd:attribute name="iceClassCode" type="ptns:iceClassCde" use="required"/>
+         <xsd:attribute name="iceClassIssueDate" type="xsd:date"/>
+         <xsd:attribute name="iceClassIssuePlace" type="xsd:string"/>
+         <xsd:attribute name="iceClassEndDate" type="xsd:date"/>
+         <xsd:attribute name="classificationSociety" type="xsd:string"/>
+         <xsd:attribute name="doubleBottom" type="xsd:boolean"/>
+         <xsd:attribute name="inertGasSystem" type="xsd:boolean"/>
+         <xsd:attribute name="ballastTank" type="xsd:boolean"/>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="RegistrationData">
+      <xsd:complexType>
+         <xsd:sequence/>
+         <xsd:attribute name="nationality" type="xsd:string" use="required"/>
+         <xsd:attribute name="portOfRegistry" type="xsd:string"/>
+         <xsd:attribute name="domicile" type="xsd:string"/>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IdentificationData">
+      <xsd:complexType>
+         <xsd:sequence/>
+         <xsd:attribute name="vesselId" type="xsd:integer" use="required"/>
+         <xsd:attribute name="name" type="xsd:string" use="required"/>
+         <xsd:attribute name="namePrefix" type="xsd:string"/>
+         <xsd:attribute name="radioCallSign" type="xsd:string" use="required"/>
+         <xsd:attribute name="radioCallSignType" type="ptns:rcsType" use="required"/>
+         <xsd:attribute name="imoLloyds" type="xsd:integer"/>
+         <xsd:attribute name="mmsi" type="xsd:integer"/>
+         <xsd:attribute name="dataSource" type="xsd:string" fixed="Portnet"/>
+         <xsd:attribute name="updateTimeStamp" type="xsd:dateTime" use="required"/>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="Header" type="ptns:Header"/>
+   <xsd:element name="Dimensions">
+      <xsd:complexType>
+         <xsd:sequence/>
+         <xsd:attribute name="tonnageCertificateIssuer" type="xsd:string"/>
+         <xsd:attribute name="dateOfIssue" type="xsd:date"/>
+         <xsd:attribute name="grossTonnage" type="xsd:integer" use="required"/>
+         <xsd:attribute name="netTonnage" type="xsd:integer" use="required"/>
+         <xsd:attribute name="deathWeight" type="xsd:integer"/>
+         <xsd:attribute name="length" type="xsd:decimal"/>
+         <xsd:attribute name="overallLength" type="xsd:decimal"/>
+         <xsd:attribute name="height" type="xsd:decimal"/>
+         <xsd:attribute name="breadth" type="xsd:decimal"/>
+         <xsd:attribute name="draught" type="xsd:decimal"/>
+         <xsd:attribute name="maxSpeed" type="xsd:decimal"/>
+         <xsd:attribute name="enginePower" type="xsd:string"/>
+         <xsd:attribute name="totalPower" type="xsd:integer"/>
+         <xsd:attribute name="maxPersons" type="xsd:integer"/>
+         <xsd:attribute name="maxPassengers" type="xsd:integer"/>
+         <xsd:attribute name="keelDate" type="xsd:date"/>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="VesselDetails" type="ptns:VesselDetails"/>
+   <xsd:element name="System">
+      <xsd:complexType>
+         <xsd:sequence/>
+         <xsd:attribute name="shipOwner" type="xsd:string"/>
+         <xsd:attribute name="shipTelephone1" type="xsd:string"/>
+         <xsd:attribute name="shipTelephone2" type="xsd:string"/>
+         <xsd:attribute name="shipFax" type="xsd:string"/>
+         <xsd:attribute name="shipEmail" type="xsd:string"/>
+         <xsd:attribute name="shipVerifier" type="xsd:string"/>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="PortCallListRequest">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="startDte" type="xsd:date"/>
+            <xsd:element name="endDte" type="xsd:date"/>
+            <xsd:element name="startTme" type="xsd:time" minOccurs="0"/>
+            <xsd:element name="endTme" type="xsd:time" minOccurs="0"/>
+            <xsd:element name="searchTarget" type="ptns:searchTarget" minOccurs="0"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:simpleType name="rcsType">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="real"/>
+         <xsd:enumeration value="fake"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="iceClassCde">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="IAS"/>
+         <xsd:enumeration value="IA"/>
+         <xsd:enumeration value="IB"/>
+         <xsd:enumeration value="IC"/>
+         <xsd:enumeration value="II"/>
+         <xsd:enumeration value="III"/>
+         <xsd:enumeration value="Unknown"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="portCallDirection">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="Arrival or whole PortCall"/>
+         <xsd:enumeration value="Departure"/>
+         <xsd:enumeration value="Other"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="searchTarget">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="PORTCALL_UPDATED"/>
+         <xsd:enumeration value="LATEST_PC_TIMETBL_UPDATED"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="lang">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="FI"/>
+         <xsd:enumeration value="SE"/>
+         <xsd:enumeration value="EN"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="timeSource">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="Agent"/>
+         <xsd:enumeration value="Port"/>
+         <xsd:enumeration value="Pilot / VTS"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+</xsd:schema>

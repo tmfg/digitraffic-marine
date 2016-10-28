@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
-import fi.livi.digitraffic.meri.service.VesselLocationService;
+import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AisTestApplicationConfig.class)
