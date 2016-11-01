@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.model.portnet;
+package fi.livi.digitraffic.meri.model.portnet.data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

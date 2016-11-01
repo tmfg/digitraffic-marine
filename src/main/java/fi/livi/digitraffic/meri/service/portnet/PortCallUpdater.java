@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -51,10 +53,11 @@ public class PortCallUpdater {
     public void update() {
         log.info("Fetching port calls from server");
 
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated("PORT_CALLS");
+        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
         final Instant now = Instant.now();
+        final Instant from = lastUpdated == null ? now : lastUpdated;
 
-        final PortCallList list = portCallFetcher.getList(lastUpdated.minus(4, ChronoUnit.DAYS), now);
+        final PortCallList list = portCallFetcher.getList(from.minus(6, ChronoUnit.DAYS), now);
         final String status = getStatusFromResponse(list);
 
         switch(status) {
@@ -68,7 +71,7 @@ public class PortCallUpdater {
             return;
         }
 
-        updatedTimestampRepository.setUpdated("PORT_CALLS", Date.from(now), "PortCallUpdater");
+        updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(now), getClass().getSimpleName());
 
         final List<PortCall> added = new ArrayList<>();
         final List<PortCall> updated = new ArrayList<>();
@@ -121,6 +124,7 @@ public class PortCallUpdater {
         pc.setPortCallId(pcn.getPortCallId().longValue());
         pc.setPortCallTimestamp(getTimestamp(pcn.getPortCallTimestamp()));
 
+        pc.setCustomsReference(det.getCustomsReference());
         pc.setPortToVisit(det.getPortToVisit());
         pc.setNextPort(det.getNextPort());
         pc.setPrevPort(det.getPrevPort());
@@ -145,6 +149,11 @@ public class PortCallUpdater {
         pc.setRadioCallSignType(id.getRadioCallSignType().value());
         pc.setImoLloyds(getInteger(id.getImoLloyds()));
         pc.setMmsi(getInteger(id.getMmsi()));
+
+        pc.setCertificateIssuer(det.getSecurityMeasures().getCertificateIssuer());
+        pc.setCertificateStartDate(getTimestamp(det.getSecurityMeasures().getCertificateStartDate()));
+        pc.setCertificateEndDate(getTimestamp(det.getSecurityMeasures().getCertificateEndDate()));
+        pc.setCurrentSecurityLevel(getInteger(det.getSecurityMeasures().getCurrentSecurityLevel()));
 
         updatePortAreaDetails(pc, pcn);
         updateImoInformation(pc, det);

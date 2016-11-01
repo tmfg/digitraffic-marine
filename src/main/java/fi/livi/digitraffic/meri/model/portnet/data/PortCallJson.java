@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.model.portnet;
+package fi.livi.digitraffic.meri.model.portnet.data;
 
 import java.sql.Timestamp;
 import java.util.Set;
@@ -17,6 +17,8 @@ public interface PortCallJson {
     @ApiModelProperty(value = "Port call information modification time", required = true)
     Timestamp getPortCallTimestamp();
 
+    @ApiModelProperty(value = "Custom's reference")
+    String getCustomsReference();
     @ApiModelProperty(value = "Code of the port to visit")
     String getPortToVisit();
     @ApiModelProperty(value = "Code of the previous port")
@@ -50,6 +52,11 @@ public interface PortCallJson {
     String getRadioCallSignType();
     Integer getImoLloyds();
     Integer getMmsi();
+
+    String getCertificateIssuer();
+    Timestamp getCertificateStartDate();
+    Timestamp getCertificateEndDate();
+    Integer getCurrentSecurityLevel();
 
     Set<AgentInfoJson> getAgentInfo();
     Set<ImoInformationJson> getImoInformation();

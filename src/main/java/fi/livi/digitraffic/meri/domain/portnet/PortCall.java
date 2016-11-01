@@ -20,6 +20,7 @@ public class PortCall {
 
     private Timestamp portCallTimestamp;
 
+    private String customsReference;
     private String portToVisit;
     private String prevPort;
     private String nextPort;
@@ -45,6 +46,11 @@ public class PortCall {
     private String radioCallSignType;
     private Integer imoLloyds;
     private Integer mmsi;
+
+    private String certificateIssuer;
+    private Timestamp certificateStartDate;
+    private Timestamp certificateEndDate;
+    private Integer currentSecurityLevel;
 
     @OneToMany(targetEntity = PortAreaDetails.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "port_call_id", nullable = false)
@@ -272,5 +278,45 @@ public class PortCall {
 
     public void setAgentInfo(Set<AgentInfo> agentInfo) {
         this.agentInfo = agentInfo;
+    }
+
+    public String getCustomsReference() {
+        return customsReference;
+    }
+
+    public void setCustomsReference(String customsReference) {
+        this.customsReference = customsReference;
+    }
+
+    public String getCertificateIssuer() {
+        return certificateIssuer;
+    }
+
+    public void setCertificateIssuer(String certificateIssuer) {
+        this.certificateIssuer = certificateIssuer;
+    }
+
+    public Timestamp getCertificateStartDate() {
+        return certificateStartDate;
+    }
+
+    public void setCertificateStartDate(Timestamp certificateStartDate) {
+        this.certificateStartDate = certificateStartDate;
+    }
+
+    public Timestamp getCertificateEndDate() {
+        return certificateEndDate;
+    }
+
+    public void setCertificateEndDate(Timestamp certificateEndDate) {
+        this.certificateEndDate = certificateEndDate;
+    }
+
+    public Integer getCurrentSecurityLevel() {
+        return currentSecurityLevel;
+    }
+
+    public void setCurrentSecurityLevel(Integer currentSecurityLevel) {
+        this.currentSecurityLevel = currentSecurityLevel;
     }
 }

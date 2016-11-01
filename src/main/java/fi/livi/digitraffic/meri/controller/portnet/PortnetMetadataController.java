@@ -5,11 +5,12 @@ import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import fi.livi.digitraffic.meri.model.portnet.PortsAndBerthsJson;
+import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
 
@@ -29,5 +30,12 @@ public class PortnetMetadataController {
     @ResponseBody
     public PortsAndBerthsJson listAllMetadata() {
         return portnetMetadataService.listaAllMetadata();
+    }
+
+    @ApiOperation("Return one locations by locode.")
+    @GetMapping(path = SSN_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public PortsAndBerthsJson findSsnLocationByLocode(@PathVariable("locode") final String locode) {
+        return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 }
