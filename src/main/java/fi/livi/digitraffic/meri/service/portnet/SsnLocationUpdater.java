@@ -1,34 +1,32 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
+import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
+import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
+import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
+
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
-import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
-
-import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
-import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
-
 @Service
 public class SsnLocationUpdater {
     private final SsnLocationRepository ssnLocationRepository;
-    private final SsnLocationXsfReader ssnLocationReader;
+    private final SsnLocationClient ssnLocationReader;
 
     public SsnLocationUpdater(final SsnLocationRepository ssnLocationRepository,
-                              final SsnLocationXsfReader ssnLocationReader) {
+                              final SsnLocationClient ssnLocationReader) {
         this.ssnLocationRepository = ssnLocationRepository;
         this.ssnLocationReader = ssnLocationReader;
     }
 
-    public void updateSsnLocations(final Path path) throws OpenXML4JException, SAXException, IOException {
+    public void updateSsnLocations() throws OpenXML4JException, SAXException, IOException {
         final List<SsnLocation> oldLocations = ssnLocationRepository.findAll();
-        final List<SsnLocation> newLocations = ssnLocationReader.readLocations(path);
+        final List<SsnLocation> newLocations = ssnLocationReader.getSsnLocations();
 
         mergeLocations(oldLocations, newLocations);
     }
