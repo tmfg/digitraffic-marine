@@ -17,11 +17,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
+import fi.livi.digitraffic.meri.controller.portnet.PortnetMetadataController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AisTestApplicationConfig.class)
 @AutoConfigureMockMvc
-public class SsnMetadataControllerTest {
+public class PortnetMetadataControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -29,7 +30,7 @@ public class SsnMetadataControllerTest {
     public void testGetAllSsnMetadata() throws Exception {
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
-                SsnMetadataController.SSN_PATH))
+                PortnetMetadataController.SSN_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("locations[0].locode", Matchers.notNullValue()))

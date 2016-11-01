@@ -12,17 +12,17 @@ import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.model.portnet.PortsAndBerthsJson;
 
 @Service
-public class SsnService {
+public class PortnetMetadataService {
     private final BerthRepository berthRepository;
     private final PortAreaRepository portAreaRepository;
     private final SsnLocationRepository ssnLocationRepository;
 
     private final CodeDescriptionRepository codeDescriptionRepository;
 
-    public SsnService(final BerthRepository berthRepository,
-                      final PortAreaRepository portAreaRepository,
-                      final SsnLocationRepository ssnLocationRepository,
-                      final CodeDescriptionRepository codeDescriptionRepository) {
+    public PortnetMetadataService(final BerthRepository berthRepository,
+                                  final PortAreaRepository portAreaRepository,
+                                  final SsnLocationRepository ssnLocationRepository,
+                                  final CodeDescriptionRepository codeDescriptionRepository) {
         this.berthRepository = berthRepository;
         this.portAreaRepository = portAreaRepository;
         this.ssnLocationRepository = ssnLocationRepository;
