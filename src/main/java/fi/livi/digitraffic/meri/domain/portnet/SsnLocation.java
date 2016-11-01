@@ -26,7 +26,7 @@ public class SsnLocation {
         return locode;
     }
 
-    public void setLocode(String locode) {
+    public void setLocode(final String locode) {
         this.locode = locode;
     }
 
@@ -34,7 +34,7 @@ public class SsnLocation {
         return wgs84Lat;
     }
 
-    public void setWgs84Lat(Double wgs84Lat) {
+    public void setWgs84Lat(final Double wgs84Lat) {
         this.wgs84Lat = wgs84Lat;
     }
 
@@ -42,7 +42,7 @@ public class SsnLocation {
         return wgs84Long;
     }
 
-    public void setWgs84Long(Double wgs84Long) {
+    public void setWgs84Long(final Double wgs84Long) {
         this.wgs84Long = wgs84Long;
     }
 
@@ -50,7 +50,7 @@ public class SsnLocation {
         return locationName;
     }
 
-    public void setLocationName(String locationName) {
+    public void setLocationName(final String locationName) {
         this.locationName = locationName;
     }
 
@@ -58,7 +58,7 @@ public class SsnLocation {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(final String country) {
         this.country = country;
     }
 }

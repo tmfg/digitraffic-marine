@@ -34,7 +34,7 @@ public class ImoInformation {
         return imoInformationId;
     }
 
-    public void setImoInformationId(long imoInformationId) {
+    public void setImoInformationId(final long imoInformationId) {
         this.imoInformationId = imoInformationId;
     }
 
@@ -42,7 +42,7 @@ public class ImoInformation {
         return imoGeneralDeclaration;
     }
 
-    public void setImoGeneralDeclaration(String imoGeneralDeclaration) {
+    public void setImoGeneralDeclaration(final String imoGeneralDeclaration) {
         this.imoGeneralDeclaration = imoGeneralDeclaration;
     }
 
@@ -50,7 +50,7 @@ public class ImoInformation {
         return briefParticularsVoyage;
     }
 
-    public void setBriefParticularsVoyage(String briefParticularsVoyage) {
+    public void setBriefParticularsVoyage(final String briefParticularsVoyage) {
         this.briefParticularsVoyage = briefParticularsVoyage;
     }
 
@@ -58,7 +58,7 @@ public class ImoInformation {
         return portOfDischarge;
     }
 
-    public void setPortOfDischarge(String portOfDischarge) {
+    public void setPortOfDischarge(final String portOfDischarge) {
         this.portOfDischarge = portOfDischarge;
     }
 
@@ -66,7 +66,7 @@ public class ImoInformation {
         return numberOfCrew;
     }
 
-    public void setNumberOfCrew(Integer numberOfCrew) {
+    public void setNumberOfCrew(final Integer numberOfCrew) {
         this.numberOfCrew = numberOfCrew;
     }
 
@@ -74,7 +74,7 @@ public class ImoInformation {
         return numberOfPassangers;
     }
 
-    public void setNumberOfPassangers(Integer numberOfPassangers) {
+    public void setNumberOfPassangers(final Integer numberOfPassangers) {
         this.numberOfPassangers = numberOfPassangers;
     }
 
@@ -82,7 +82,7 @@ public class ImoInformation {
         return cargoDeclarationOb;
     }
 
-    public void setCargoDeclarationOb(Integer cargoDeclarationOb) {
+    public void setCargoDeclarationOb(final Integer cargoDeclarationOb) {
         this.cargoDeclarationOb = cargoDeclarationOb;
     }
 
@@ -90,7 +90,7 @@ public class ImoInformation {
         return crewListsOb;
     }
 
-    public void setCrewListsOb(Integer crewListsOb) {
+    public void setCrewListsOb(final Integer crewListsOb) {
         this.crewListsOb = crewListsOb;
     }
 
@@ -98,7 +98,7 @@ public class ImoInformation {
         return crewsEffectsDeclarationsOb;
     }
 
-    public void setCrewsEffectsDeclarationsOb(Integer crewsEffectsDeclarationsOb) {
+    public void setCrewsEffectsDeclarationsOb(final Integer crewsEffectsDeclarationsOb) {
         this.crewsEffectsDeclarationsOb = crewsEffectsDeclarationsOb;
     }
 
@@ -106,7 +106,7 @@ public class ImoInformation {
         return shipStoresDeclarationsOb;
     }
 
-    public void setShipStoresDeclarationsOb(Integer shipStoresDeclarationsOb) {
+    public void setShipStoresDeclarationsOb(final Integer shipStoresDeclarationsOb) {
         this.shipStoresDeclarationsOb = shipStoresDeclarationsOb;
     }
 
@@ -114,7 +114,7 @@ public class ImoInformation {
         return passangerListsOb;
     }
 
-    public void setPassangerListsOb(Integer passangerListsOb) {
+    public void setPassangerListsOb(final Integer passangerListsOb) {
         this.passangerListsOb = passangerListsOb;
     }
 
@@ -122,7 +122,7 @@ public class ImoInformation {
         return healthDeclarationsOb;
     }
 
-    public void setHealthDeclarationsOb(Integer healthDeclarationsOb) {
+    public void setHealthDeclarationsOb(final Integer healthDeclarationsOb) {
         this.healthDeclarationsOb = healthDeclarationsOb;
     }
 }

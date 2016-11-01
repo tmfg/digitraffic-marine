@@ -175,7 +175,7 @@ public class VesselMetadata {
         return posType;
     }
 
-    public void setPosType(int posType) {
+    public void setPosType(final int posType) {
         this.posType = posType;
     }
 
@@ -183,7 +183,7 @@ public class VesselMetadata {
         return referencePointA;
     }
 
-    public void setReferencePointA(long referencePointA) {
+    public void setReferencePointA(final long referencePointA) {
         this.referencePointA = referencePointA;
     }
 
@@ -191,7 +191,7 @@ public class VesselMetadata {
         return referencePointB;
     }
 
-    public void setReferencePointB(long referencePointB) {
+    public void setReferencePointB(final long referencePointB) {
         this.referencePointB = referencePointB;
     }
 
@@ -199,7 +199,7 @@ public class VesselMetadata {
         return referencePointC;
     }
 
-    public void setReferencePointC(long referencePointC) {
+    public void setReferencePointC(final long referencePointC) {
         this.referencePointC = referencePointC;
     }
 
@@ -207,7 +207,7 @@ public class VesselMetadata {
         return referencePointD;
     }
 
-    public void setReferencePointD(long referencePointD) {
+    public void setReferencePointD(final long referencePointD) {
         this.referencePointD = referencePointD;
     }
 }

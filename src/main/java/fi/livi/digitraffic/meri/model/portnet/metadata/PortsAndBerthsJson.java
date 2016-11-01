@@ -5,7 +5,7 @@ import static java.util.Collections.emptyList;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -49,6 +49,6 @@ public final class PortsAndBerthsJson {
     }
 
     public PortsAndBerthsJson(final Instant lastUpdated, final SsnLocationJson ssnLocation, final List<PortAreaJson> portAreas, final List<BerthJson> berths) {
-        this(lastUpdated, ssnLocation == null ? emptyList() : Arrays.asList(ssnLocation), portAreas, berths, emptyList(), emptyList(), emptyList());
+        this(lastUpdated, ssnLocation == null ? emptyList() : Collections.singletonList(ssnLocation), portAreas, berths, emptyList(), emptyList(), emptyList());
     }
 }

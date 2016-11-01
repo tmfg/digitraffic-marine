@@ -17,7 +17,7 @@ public class PortArea {
         return portAreaName;
     }
 
-    public void setPortAreaName(String portAreaName) {
+    public void setPortAreaName(final String portAreaName) {
         this.portAreaName = portAreaName;
     }
 
@@ -25,7 +25,7 @@ public class PortArea {
         return portAreaKey;
     }
 
-    public void setPortAreaKey(PortAreaKey portAreaKey) {
+    public void setPortAreaKey(final PortAreaKey portAreaKey) {
         this.portAreaKey = portAreaKey;
     }
 }

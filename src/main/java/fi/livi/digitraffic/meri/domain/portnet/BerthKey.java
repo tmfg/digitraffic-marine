@@ -14,7 +14,7 @@ public class BerthKey implements Serializable{
         return locode;
     }
 
-    public void setLocode(String locode) {
+    public void setLocode(final String locode) {
         this.locode = locode;
     }
 
@@ -22,7 +22,7 @@ public class BerthKey implements Serializable{
         return portAreaCode;
     }
 
-    public void setPortAreaCode(String portAreaCode) {
+    public void setPortAreaCode(final String portAreaCode) {
         this.portAreaCode = portAreaCode;
     }
 
@@ -30,7 +30,7 @@ public class BerthKey implements Serializable{
         return berthCode;
     }
 
-    public void setBerthCode(String berthCode) {
+    public void setBerthCode(final String berthCode) {
         this.berthCode = berthCode;
     }
 }

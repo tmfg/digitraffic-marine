@@ -57,7 +57,7 @@ public class PortAreaDetails {
         return portAreaCode;
     }
 
-    public void setPortAreaCode(String portAreaCode) {
+    public void setPortAreaCode(final String portAreaCode) {
         this.portAreaCode = portAreaCode;
     }
 
@@ -65,7 +65,7 @@ public class PortAreaDetails {
         return portAreaName;
     }
 
-    public void setPortAreaName(String portAreaName) {
+    public void setPortAreaName(final String portAreaName) {
         this.portAreaName = portAreaName;
     }
 
@@ -73,7 +73,7 @@ public class PortAreaDetails {
         return berthCode;
     }
 
-    public void setBerthCode(String berthCode) {
+    public void setBerthCode(final String berthCode) {
         this.berthCode = berthCode;
     }
 
@@ -81,7 +81,7 @@ public class PortAreaDetails {
         return berthName;
     }
 
-    public void setBerthName(String berthName) {
+    public void setBerthName(final String berthName) {
         this.berthName = berthName;
     }
 
@@ -89,7 +89,7 @@ public class PortAreaDetails {
         return portAreaDetailsId;
     }
 
-    public void setPortAreaDetailsId(long portAreaDetailsId) {
+    public void setPortAreaDetailsId(final long portAreaDetailsId) {
         this.portAreaDetailsId = portAreaDetailsId;
     }
 
@@ -97,7 +97,7 @@ public class PortAreaDetails {
         return eta;
     }
 
-    public void setEta(Timestamp eta) {
+    public void setEta(final Timestamp eta) {
         this.eta = eta;
     }
 
@@ -105,7 +105,7 @@ public class PortAreaDetails {
         return etaTimestamp;
     }
 
-    public void setEtaTimestamp(Timestamp etaTimestamp) {
+    public void setEtaTimestamp(final Timestamp etaTimestamp) {
         this.etaTimestamp = etaTimestamp;
     }
 
@@ -113,7 +113,7 @@ public class PortAreaDetails {
         return etaSource;
     }
 
-    public void setEtaSource(String etaSource) {
+    public void setEtaSource(final String etaSource) {
         this.etaSource = etaSource;
     }
 
@@ -121,7 +121,7 @@ public class PortAreaDetails {
         return etd;
     }
 
-    public void setEtd(Timestamp etd) {
+    public void setEtd(final Timestamp etd) {
         this.etd = etd;
     }
 
@@ -129,7 +129,7 @@ public class PortAreaDetails {
         return etdTimestamp;
     }
 
-    public void setEtdTimestamp(Timestamp etdTimestamp) {
+    public void setEtdTimestamp(final Timestamp etdTimestamp) {
         this.etdTimestamp = etdTimestamp;
     }
 
@@ -137,7 +137,7 @@ public class PortAreaDetails {
         return etdSource;
     }
 
-    public void setEtdSource(String etdSource) {
+    public void setEtdSource(final String etdSource) {
         this.etdSource = etdSource;
     }
 
@@ -145,7 +145,7 @@ public class PortAreaDetails {
         return ata;
     }
 
-    public void setAta(Timestamp ata) {
+    public void setAta(final Timestamp ata) {
         this.ata = ata;
     }
 
@@ -153,7 +153,7 @@ public class PortAreaDetails {
         return ataTimestamp;
     }
 
-    public void setAtaTimestamp(Timestamp ataTimestamp) {
+    public void setAtaTimestamp(final Timestamp ataTimestamp) {
         this.ataTimestamp = ataTimestamp;
     }
 
@@ -161,7 +161,7 @@ public class PortAreaDetails {
         return ataSource;
     }
 
-    public void setAtaSource(String ataSource) {
+    public void setAtaSource(final String ataSource) {
         this.ataSource = ataSource;
     }
 
@@ -169,7 +169,7 @@ public class PortAreaDetails {
         return atd;
     }
 
-    public void setAtd(Timestamp atd) {
+    public void setAtd(final Timestamp atd) {
         this.atd = atd;
     }
 
@@ -177,7 +177,7 @@ public class PortAreaDetails {
         return atdTimestamp;
     }
 
-    public void setAtdTimestamp(Timestamp atdTimestamp) {
+    public void setAtdTimestamp(final Timestamp atdTimestamp) {
         this.atdTimestamp = atdTimestamp;
     }
 
@@ -185,7 +185,7 @@ public class PortAreaDetails {
         return atdSource;
     }
 
-    public void setAtdSource(String atdSource) {
+    public void setAtdSource(final String atdSource) {
         this.atdSource = atdSource;
     }
 
@@ -193,7 +193,7 @@ public class PortAreaDetails {
         return arrivalDraught;
     }
 
-    public void setArrivalDraught(BigDecimal arrivalDraught) {
+    public void setArrivalDraught(final BigDecimal arrivalDraught) {
         this.arrivalDraught = arrivalDraught;
     }
 
@@ -201,7 +201,7 @@ public class PortAreaDetails {
         return departureDraught;
     }
 
-    public void setDepartureDraught(BigDecimal departureDraught) {
+    public void setDepartureDraught(final BigDecimal departureDraught) {
         this.departureDraught = departureDraught;
     }
 
@@ -209,7 +209,7 @@ public class PortAreaDetails {
         return cargoInfo;
     }
 
-    public void setCargoInfo(Set<CargoInfo> cargoInfo) {
+    public void setCargoInfo(final Set<CargoInfo> cargoInfo) {
         this.cargoInfo = cargoInfo;
     }
 }

@@ -26,7 +26,7 @@ public class AgentInfo {
         return agentInfoId;
     }
 
-    public void setAgentInfoId(long agentInfoId) {
+    public void setAgentInfoId(final long agentInfoId) {
         this.agentInfoId = agentInfoId;
     }
 
@@ -34,7 +34,7 @@ public class AgentInfo {
         return role;
     }
 
-    public void setRole(Integer role) {
+    public void setRole(final Integer role) {
         this.role = role;
     }
 
@@ -42,7 +42,7 @@ public class AgentInfo {
         return portCallDirection;
     }
 
-    public void setPortCallDirection(String portCallDirection) {
+    public void setPortCallDirection(final String portCallDirection) {
         this.portCallDirection = portCallDirection;
     }
 
@@ -50,7 +50,7 @@ public class AgentInfo {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -58,7 +58,7 @@ public class AgentInfo {
         return editNumber;
     }
 
-    public void setEditNumber(String editNumber) {
+    public void setEditNumber(final String editNumber) {
         this.editNumber = editNumber;
     }
 }

@@ -13,7 +13,7 @@ public class PortAreaKey implements Serializable{
         return locode;
     }
 
-    public void setLocode(String locode) {
+    public void setLocode(final String locode) {
         this.locode = locode;
     }
 
@@ -21,7 +21,7 @@ public class PortAreaKey implements Serializable{
         return portAreaCode;
     }
 
-    public void setPortAreaCode(String portAreaCode) {
+    public void setPortAreaCode(final String portAreaCode) {
         this.portAreaCode = portAreaCode;
     }
 }

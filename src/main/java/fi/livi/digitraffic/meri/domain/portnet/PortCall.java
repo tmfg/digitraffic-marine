@@ -68,7 +68,7 @@ public class PortCall {
         return portCallId;
     }
 
-    public void setPortCallId(long portCallId) {
+    public void setPortCallId(final long portCallId) {
         this.portCallId = portCallId;
     }
 
@@ -76,7 +76,7 @@ public class PortCall {
         return portToVisit;
     }
 
-    public void setPortToVisit(String portToVisit) {
+    public void setPortToVisit(final String portToVisit) {
         this.portToVisit = portToVisit;
     }
 
@@ -84,7 +84,7 @@ public class PortCall {
         return prevPort;
     }
 
-    public void setPrevPort(String prevPort) {
+    public void setPrevPort(final String prevPort) {
         this.prevPort = prevPort;
     }
 
@@ -92,7 +92,7 @@ public class PortCall {
         return nextPort;
     }
 
-    public void setNextPort(String nextPort) {
+    public void setNextPort(final String nextPort) {
         this.nextPort = nextPort;
     }
 
@@ -100,7 +100,7 @@ public class PortCall {
         return domesticTrafficArrival;
     }
 
-    public void setDomesticTrafficArrival(Boolean domesticTrafficArrival) {
+    public void setDomesticTrafficArrival(final Boolean domesticTrafficArrival) {
         this.domesticTrafficArrival = domesticTrafficArrival;
     }
 
@@ -108,7 +108,7 @@ public class PortCall {
         return domesticTrafficDeparture;
     }
 
-    public void setDomesticTrafficDeparture(Boolean domesticTrafficDeparture) {
+    public void setDomesticTrafficDeparture(final Boolean domesticTrafficDeparture) {
         this.domesticTrafficDeparture = domesticTrafficDeparture;
     }
 
@@ -116,7 +116,7 @@ public class PortCall {
         return arrivalWithCargo;
     }
 
-    public void setArrivalWithCargo(Boolean arrivalWithCargo) {
+    public void setArrivalWithCargo(final Boolean arrivalWithCargo) {
         this.arrivalWithCargo = arrivalWithCargo;
     }
 
@@ -124,7 +124,7 @@ public class PortCall {
         return discharge;
     }
 
-    public void setDischarge(Integer discharge) {
+    public void setDischarge(final Integer discharge) {
         this.discharge = discharge;
     }
 
@@ -132,7 +132,7 @@ public class PortCall {
         return portCallTimestamp;
     }
 
-    public void setPortCallTimestamp(Timestamp portCallTimestamp) {
+    public void setPortCallTimestamp(final Timestamp portCallTimestamp) {
         this.portCallTimestamp = portCallTimestamp;
     }
 
@@ -140,7 +140,7 @@ public class PortCall {
         return notLoading;
     }
 
-    public void setNotLoading(Boolean notLoading) {
+    public void setNotLoading(final Boolean notLoading) {
         this.notLoading = notLoading;
     }
 
@@ -148,7 +148,7 @@ public class PortCall {
         return shipMasterArrival;
     }
 
-    public void setShipMasterArrival(String shipMasterArrival) {
+    public void setShipMasterArrival(final String shipMasterArrival) {
         this.shipMasterArrival = shipMasterArrival;
     }
 
@@ -156,7 +156,7 @@ public class PortCall {
         return shipMasterDeparture;
     }
 
-    public void setShipMasterDeparture(String shipMasterDeparture) {
+    public void setShipMasterDeparture(final String shipMasterDeparture) {
         this.shipMasterDeparture = shipMasterDeparture;
     }
 
@@ -164,7 +164,7 @@ public class PortCall {
         return managementNameArrival;
     }
 
-    public void setManagementNameArrival(String managementNameArrival) {
+    public void setManagementNameArrival(final String managementNameArrival) {
         this.managementNameArrival = managementNameArrival;
     }
 
@@ -172,7 +172,7 @@ public class PortCall {
         return managementNameDeparture;
     }
 
-    public void setManagementNameDeparture(String managementNameDeparture) {
+    public void setManagementNameDeparture(final String managementNameDeparture) {
         this.managementNameDeparture = managementNameDeparture;
     }
 
@@ -180,7 +180,7 @@ public class PortCall {
         return forwarderNameArrival;
     }
 
-    public void setForwarderNameArrival(String forwarderNameArrival) {
+    public void setForwarderNameArrival(final String forwarderNameArrival) {
         this.forwarderNameArrival = forwarderNameArrival;
     }
 
@@ -188,7 +188,7 @@ public class PortCall {
         return freeTextArrival;
     }
 
-    public void setFreeTextArrival(String freeTextArrival) {
+    public void setFreeTextArrival(final String freeTextArrival) {
         this.freeTextArrival = freeTextArrival;
     }
 
@@ -196,7 +196,7 @@ public class PortCall {
         return forwarderNameDeparture;
     }
 
-    public void setForwarderNameDeparture(String forwarderNameDeparture) {
+    public void setForwarderNameDeparture(final String forwarderNameDeparture) {
         this.forwarderNameDeparture = forwarderNameDeparture;
     }
 
@@ -204,7 +204,7 @@ public class PortCall {
         return freeTextDeparture;
     }
 
-    public void setFreeTextDeparture(String freeTextDeparture) {
+    public void setFreeTextDeparture(final String freeTextDeparture) {
         this.freeTextDeparture = freeTextDeparture;
     }
 
@@ -212,7 +212,7 @@ public class PortCall {
         return portAreaDetails;
     }
 
-    public void setPortAreaDetails(Set<PortAreaDetails> portAreaDetails) {
+    public void setPortAreaDetails(final Set<PortAreaDetails> portAreaDetails) {
         this.portAreaDetails = portAreaDetails;
     }
 
@@ -220,7 +220,7 @@ public class PortCall {
         return vesselName;
     }
 
-    public void setVesselName(String vesselName) {
+    public void setVesselName(final String vesselName) {
         this.vesselName = vesselName;
     }
 
@@ -228,7 +228,7 @@ public class PortCall {
         return vesselNamePrefix;
     }
 
-    public void setVesselNamePrefix(String vesselNamePrefix) {
+    public void setVesselNamePrefix(final String vesselNamePrefix) {
         this.vesselNamePrefix = vesselNamePrefix;
     }
 
@@ -236,7 +236,7 @@ public class PortCall {
         return radioCallSign;
     }
 
-    public void setRadioCallSign(String radioCallSign) {
+    public void setRadioCallSign(final String radioCallSign) {
         this.radioCallSign = radioCallSign;
     }
 
@@ -244,7 +244,7 @@ public class PortCall {
         return radioCallSignType;
     }
 
-    public void setRadioCallSignType(String radioCallSignType) {
+    public void setRadioCallSignType(final String radioCallSignType) {
         this.radioCallSignType = radioCallSignType;
     }
 
@@ -252,7 +252,7 @@ public class PortCall {
         return imoLloyds;
     }
 
-    public void setImoLloyds(Integer imoLloyds) {
+    public void setImoLloyds(final Integer imoLloyds) {
         this.imoLloyds = imoLloyds;
     }
 
@@ -260,7 +260,7 @@ public class PortCall {
         return mmsi;
     }
 
-    public void setMmsi(Integer mmsi) {
+    public void setMmsi(final Integer mmsi) {
         this.mmsi = mmsi;
     }
 
@@ -268,7 +268,7 @@ public class PortCall {
         return imoInformation;
     }
 
-    public void setImoInformation(Set<ImoInformation> imoInformation) {
+    public void setImoInformation(final Set<ImoInformation> imoInformation) {
         this.imoInformation = imoInformation;
     }
 
@@ -276,7 +276,7 @@ public class PortCall {
         return agentInfo;
     }
 
-    public void setAgentInfo(Set<AgentInfo> agentInfo) {
+    public void setAgentInfo(final Set<AgentInfo> agentInfo) {
         this.agentInfo = agentInfo;
     }
 
@@ -284,7 +284,7 @@ public class PortCall {
         return customsReference;
     }
 
-    public void setCustomsReference(String customsReference) {
+    public void setCustomsReference(final String customsReference) {
         this.customsReference = customsReference;
     }
 
@@ -292,7 +292,7 @@ public class PortCall {
         return certificateIssuer;
     }
 
-    public void setCertificateIssuer(String certificateIssuer) {
+    public void setCertificateIssuer(final String certificateIssuer) {
         this.certificateIssuer = certificateIssuer;
     }
 
@@ -300,7 +300,7 @@ public class PortCall {
         return certificateStartDate;
     }
 
-    public void setCertificateStartDate(Timestamp certificateStartDate) {
+    public void setCertificateStartDate(final Timestamp certificateStartDate) {
         this.certificateStartDate = certificateStartDate;
     }
 
@@ -308,7 +308,7 @@ public class PortCall {
         return certificateEndDate;
     }
 
-    public void setCertificateEndDate(Timestamp certificateEndDate) {
+    public void setCertificateEndDate(final Timestamp certificateEndDate) {
         this.certificateEndDate = certificateEndDate;
     }
 
@@ -316,7 +316,7 @@ public class PortCall {
         return currentSecurityLevel;
     }
 
-    public void setCurrentSecurityLevel(Integer currentSecurityLevel) {
+    public void setCurrentSecurityLevel(final Integer currentSecurityLevel) {
         this.currentSecurityLevel = currentSecurityLevel;
     }
 }

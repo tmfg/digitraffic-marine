@@ -17,7 +17,7 @@ public class Berth {
         return berthName;
     }
 
-    public void setBerthName(String berthName) {
+    public void setBerthName(final String berthName) {
         this.berthName = berthName;
     }
 
@@ -25,7 +25,7 @@ public class Berth {
         return berthKey;
     }
 
-    public void setBerthKey(BerthKey berthKey) {
+    public void setBerthKey(final BerthKey berthKey) {
         this.berthKey = berthKey;
     }
 }

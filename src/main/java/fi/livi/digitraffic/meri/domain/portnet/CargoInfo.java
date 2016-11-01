@@ -28,7 +28,7 @@ public class CargoInfo {
         return cargoInfoId;
     }
 
-    public void setCargoInfoId(long cargoInfoId) {
+    public void setCargoInfoId(final long cargoInfoId) {
         this.cargoInfoId = cargoInfoId;
     }
 
@@ -36,7 +36,7 @@ public class CargoInfo {
         return cargoDischargeCode;
     }
 
-    public void setCargoDischargeCode(Integer cargoDischargeCode) {
+    public void setCargoDischargeCode(final Integer cargoDischargeCode) {
         this.cargoDischargeCode = cargoDischargeCode;
     }
 
@@ -44,7 +44,7 @@ public class CargoInfo {
         return cargoDescription;
     }
 
-    public void setCargoDescription(String cargoDescription) {
+    public void setCargoDescription(final String cargoDescription) {
         this.cargoDescription = cargoDescription;
     }
 
@@ -52,7 +52,7 @@ public class CargoInfo {
         return cargoAmount;
     }
 
-    public void setCargoAmount(BigDecimal cargoAmount) {
+    public void setCargoAmount(final BigDecimal cargoAmount) {
         this.cargoAmount = cargoAmount;
     }
 
