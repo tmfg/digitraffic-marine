@@ -1,17 +1,16 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
-import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
-import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
-import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
+import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 
 @Service
 public class SsnLocationUpdater {
@@ -24,7 +23,7 @@ public class SsnLocationUpdater {
         this.ssnLocationReader = ssnLocationReader;
     }
 
-    public void updateSsnLocations() throws OpenXML4JException, SAXException, IOException {
+    public void updateSsnLocations() throws IOException {
         final List<SsnLocation> oldLocations = ssnLocationRepository.findAll();
         final List<SsnLocation> newLocations = ssnLocationReader.getSsnLocations();
 

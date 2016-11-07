@@ -33,4 +33,39 @@ public class BerthKey implements Serializable{
     public void setBerthCode(final String berthCode) {
         this.berthCode = berthCode;
     }
+
+    public static BerthKey of(final String locode, final String portAreaCode, final String berthCode) {
+        final BerthKey key = new BerthKey();
+
+        key.setLocode(locode);
+        key.setPortAreaCode(portAreaCode);
+        key.setBerthCode(berthCode);
+
+        return key;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        BerthKey berthKey = (BerthKey) o;
+
+        if (!locode.equals(berthKey.locode))
+            return false;
+        if (!portAreaCode.equals(berthKey.portAreaCode))
+            return false;
+        return berthCode.equals(berthKey.berthCode);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = locode.hashCode();
+        result = 31 * result + portAreaCode.hashCode();
+        result = 31 * result + berthCode.hashCode();
+        return result;
+    }
 }

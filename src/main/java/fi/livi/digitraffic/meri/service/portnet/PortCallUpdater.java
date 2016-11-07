@@ -5,7 +5,6 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,16 +36,16 @@ public class PortCallUpdater {
     private final PortCallRepository portCallRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
-    private final PortCallFetcher portCallFetcher;
+    private final PortCallClient portCallClient;
 
     private static final Logger log = LoggerFactory.getLogger(PortCallUpdater.class);
 
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
-                           final PortCallFetcher portCallFetcher) {
+                           final PortCallClient portCallClient) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
-        this.portCallFetcher = portCallFetcher;
+        this.portCallClient = portCallClient;
     }
 
     @Transactional
@@ -57,7 +56,7 @@ public class PortCallUpdater {
         final Instant now = Instant.now();
         final Instant from = lastUpdated == null ? now : lastUpdated;
 
-        final PortCallList list = portCallFetcher.getList(from.minus(6, ChronoUnit.DAYS), now);
+        final PortCallList list = portCallClient.getList(from, now);
         final String status = getStatusFromResponse(list);
 
         switch(status) {

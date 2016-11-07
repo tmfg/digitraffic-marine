@@ -7,7 +7,6 @@ public final class LocationParser {
 
     public static Double parseLatitude(final String value) {
         return parseString(value);
-
     }
 
     public static Double parseLongitude(final String value) {

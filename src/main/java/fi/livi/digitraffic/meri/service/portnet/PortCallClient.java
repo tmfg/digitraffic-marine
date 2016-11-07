@@ -15,15 +15,15 @@ import org.springframework.web.client.RestTemplate;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 
 @Service
-public class PortCallFetcher {
+public class PortCallClient {
     private final String portCallUrl;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmmss");
 
-    private static final Logger log = LoggerFactory.getLogger(PortCallFetcher.class);
+    private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
-    public PortCallFetcher(@Value("${ais.portnet.portcall.url}") final String portCallUrl) {
+    public PortCallClient(@Value("${ais.portnet.portcall.url}") final String portCallUrl) {
         this.portCallUrl = portCallUrl;
     }
 
@@ -40,7 +40,6 @@ public class PortCallFetcher {
         return String.format("%s=%s", datePrefix, timestamp.format(DATE_FORMATTER));
     }
 
-
     private String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
         return timestamp == null ? "" : String.format("%s=%s", timePrefix, timestamp.format(TIME_FORMATTER));
     }
@@ -52,7 +51,7 @@ public class PortCallFetcher {
         final String dateEndParameter = dateToString("endDte", now.atZone(ZoneId.systemDefault()));
         final String timeEndParameter = timeToString("endTme", now.atZone(ZoneId.systemDefault()));
 
-        // order is important, mus be startDte,endDte,startTme,endTme, otherwise 404
+        // order is important, must be startDte,endDte,startTme,endTme, otherwise 404
 
         return String.format("%s%s&%s&%s&%s", portCallUrl, dateStartParameter, dateEndParameter, timeStartparameter, timeEndParameter);
     }

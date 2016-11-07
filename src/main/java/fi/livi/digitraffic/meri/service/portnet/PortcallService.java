@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.service.portnet;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class PortcallService {
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson listAllPortCalls(final String locode, final Timestamp from) {
+    public PortCallsJson listAllPortCalls(final String locode, final ZonedDateTime from) {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
         final List<Long> portCallIds = getPortCallIds(locode, from);
 
@@ -51,7 +52,7 @@ public class PortcallService {
         );
     }
 
-    private List<Long> getPortCallIds(final String locode, final Timestamp from) {
+    private List<Long> getPortCallIds(final String locode, final ZonedDateTime from) {
         final Criteria c = createCriteria().setProjection(Projections.id());
 
         if(locode != null) {
@@ -59,7 +60,7 @@ public class PortcallService {
         }
 
         if(from != null) {
-            c.add(Restrictions.gt("portCallTimestamp", from));
+            c.add(Restrictions.gt("portCallTimestamp", new Timestamp(from.toEpochSecond() * 1000)));
         }
 
         return c.list();

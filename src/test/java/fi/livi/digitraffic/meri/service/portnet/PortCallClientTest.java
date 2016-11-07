@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import fi.livi.digitraffic.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 
-public class PortCallFetcherTest extends AbstractIntegrationTest {
+public class PortCallClientTest extends AbstractIntegrationTest {
     @Autowired
-    private PortCallFetcher portCallFetcher;
+    private PortCallClient portCallClient;
 
     @Before
     public void disableSslCheck() {
@@ -23,7 +23,7 @@ public class PortCallFetcherTest extends AbstractIntegrationTest {
 
     @Test
     public void testGetList() {
-        final PortCallList list = portCallFetcher.getList(null, Instant.now());
+        final PortCallList list = portCallClient.getList(null, Instant.now());
 
         Assert.assertNotNull(list);
     }
