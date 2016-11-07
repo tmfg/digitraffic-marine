@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -52,15 +53,15 @@ public class PortCall {
     private Timestamp certificateEndDate;
     private Integer currentSecurityLevel;
 
-    @OneToMany(targetEntity = PortAreaDetails.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(targetEntity = PortAreaDetails.class, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "port_call_id", nullable = false)
     private Set<PortAreaDetails> portAreaDetails = new HashSet<>();
 
-    @OneToMany(targetEntity = ImoInformation.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(targetEntity = ImoInformation.class, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "port_call_id", nullable = false)
     private Set<ImoInformation> imoInformation = new HashSet<>();
 
-    @OneToMany(targetEntity = AgentInfo.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(targetEntity = AgentInfo.class, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "port_call_id", nullable = false)
     private Set<AgentInfo> agentInfo = new HashSet<>();
 
