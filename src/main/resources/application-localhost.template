@@ -17,6 +17,7 @@ ais.metadata.5.url = ws://ws-address
 ais.pooki.url = http://localhost:18080/test/nautical-warnings
 ais.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List\
 
+metadata.csv.baseUrl = https://raw.githubusercontent.com/finnishtransportagency/metadata/master/csv/
 
 # Logging
 logging.level.fi.livi.digitraffic.meri=INFO
