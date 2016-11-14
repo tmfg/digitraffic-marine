@@ -16,7 +16,7 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         PORT_CALLS, PORT_METADATA
     }
 
-    @Query(value = "select updated_time from updated_timestamp where updated_name = :name", nativeQuery = true)
+    @Query(value = "select cast(updated_time as date) from updated_timestamp where updated_name = :name", nativeQuery = true)
     Instant getLastUpdated(@Param("name") final String name);
 
     @Modifying

@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +32,8 @@ public class PortCallClient {
 
         log.info("fetching port calls from " + url);
 
+        System.out.println("viesti " + template.getForObject(url, String.class));
+
         return template.getForObject(url, PortCallList.class);
     }
 
@@ -45,7 +46,7 @@ public class PortCallClient {
     }
 
     private String buildUrl(final Instant lastUpdated, final Instant now) {
-        final ZonedDateTime lastUpdatedDt = lastUpdated == null ? ZonedDateTime.now().minus(1, ChronoUnit.DAYS) : lastUpdated.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault());
+        final ZonedDateTime lastUpdatedDt = lastUpdated.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault());
         final String dateStartParameter = dateToString("startDte", lastUpdatedDt);
         final String timeStartparameter = timeToString("startTme", lastUpdatedDt);
         final String dateEndParameter = dateToString("endDte", now.atZone(ZoneId.systemDefault()));

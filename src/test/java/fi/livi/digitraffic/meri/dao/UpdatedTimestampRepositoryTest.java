@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dao;
 
-import java.util.Date;
+import java.sql.Date;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,6 @@ public class UpdatedTimestampRepositoryTest extends AbstractIntegrationTest {
     @Test
     @Transactional
     public void testUpdate() {
-        updatedTimestampRepository.setUpdated("test", new Date(), "testi");
+        updatedTimestampRepository.setUpdated("test", new Date(12345), "testi");
     }
 }

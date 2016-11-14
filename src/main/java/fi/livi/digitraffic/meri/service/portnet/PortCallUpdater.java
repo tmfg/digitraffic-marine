@@ -5,12 +5,14 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,40 +56,49 @@ public class PortCallUpdater {
 
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
         final Instant now = Instant.now();
-        final Instant from = lastUpdated == null ? now : lastUpdated;
+        //final Instant from = lastUpdated == null ? now.with(ChronoField.SECOND_OF_DAY, 0) : lastUpdated;
+        final Instant from = lastUpdated == null ? now.minus(1, ChronoUnit.HOURS) : lastUpdated;
 
         final PortCallList list = portCallClient.getList(from, now);
+
+        if(isListOk(list)) {
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(now), getClass().getSimpleName());
+
+            final List<PortCall> added = new ArrayList<>();
+            final List<PortCall> updated = new ArrayList<>();
+            final StopWatch watch = new StopWatch();
+
+            watch.start();
+            list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
+            portCallRepository.save(added);
+            watch.stop();
+
+            log.info(String.format("Added %d port call, updated %d, took %d ms.", added.size(), updated.size(), watch.getTime()));
+        }
+    }
+
+    private boolean isListOk(final PortCallList list) {
         final String status = getStatusFromResponse(list);
 
         switch(status) {
         case "OK":
+            log.info(String.format("fetched %d notifications", CollectionUtils.size(list.getPortCallNotification())));
             break;
         case "NOT_FOUND":
             log.info("No port calls from server");
             break;
         default:
             log.error("error with status " + status);
-            return;
+            return false;
         }
 
-        updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(now), getClass().getSimpleName());
-
-        final List<PortCall> added = new ArrayList<>();
-        final List<PortCall> updated = new ArrayList<>();
-        final StopWatch watch = new StopWatch();
-
-        watch.start();
-        list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
-        portCallRepository.save(added);
-        watch.stop();
-
-        log.info(String.format("Added %d port call, updated %d, took %d ms.", added.size(), updated.size(), watch.getTime()));
+        return true;
     }
 
     private String getStatusFromResponse(final PortCallList list) {
-        if(list.getHeader() == null) return "OK";
+        if(list == null) return "ERROR";
 
-        return list.getHeader().getResponseType().getStatus();
+        return list.getHeader() == null ? "NOT_FOUND" : list.getHeader().getResponseType().getStatus();
     }
 
     private void update(final PortCallNotification pcn, final List<PortCall> added, final List<PortCall> updated) {
