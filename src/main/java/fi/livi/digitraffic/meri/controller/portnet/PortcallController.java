@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
-import fi.livi.digitraffic.meri.service.portnet.PortcallService;
+import fi.livi.digitraffic.meri.service.portnet.PortCallService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_PORT_CALLS_PATH)
 public class PortcallController {
-    private final PortcallService portcallService;
+    private final PortCallService portCallService;
 
-    public PortcallController(final PortcallService portcallService) {
-        this.portcallService = portcallService;
+    public PortcallController(final PortCallService portCallService) {
+        this.portCallService = portCallService;
     }
 
     @ApiOperation("Return list of all port calls.")
@@ -38,6 +38,6 @@ public class PortcallController {
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME)
             final ZonedDateTime from) {
-        return portcallService.listAllPortCalls(locode, from);
+        return portCallService.listAllPortCalls(locode, from);
     }
 }
