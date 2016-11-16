@@ -4,7 +4,7 @@ import fi.livi.digitraffic.meri.controller.LocationSender;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.websocket.LocationsEndpoint;
 import fi.livi.digitraffic.meri.controller.websocket.VesselLocationsEndpoint;
-import fi.livi.digitraffic.meri.model.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
 
 public class VesselLocationRelayListener implements WebsocketListener {
     private final LocationSender locationSender;

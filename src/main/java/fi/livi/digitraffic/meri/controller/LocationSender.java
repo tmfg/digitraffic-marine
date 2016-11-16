@@ -7,7 +7,7 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.model.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
 
 @Component
 public class LocationSender {

@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.model.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.StatusMessage;
 
 @ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH
