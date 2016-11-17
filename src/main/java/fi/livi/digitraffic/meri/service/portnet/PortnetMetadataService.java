@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.service.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
+import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
 
 @Service
 public class PortnetMetadataService {
@@ -55,5 +57,10 @@ public class PortnetMetadataService {
                 portAreaRepository.findByPortAreaKeyLocode(locode).collect(Collectors.toList()),
                 berthRepository.findByBerthKeyLocode(locode).collect(Collectors.toList())
                 );
+    }
+
+    @Transactional(readOnly = true)
+    public List<SsnLocationJson> findSsnLocationsByCountry(final String country) {
+        return ssnLocationRepository.findByCountryIgnoreCase(country);
     }
 }

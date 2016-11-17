@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.dao.portnet;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import javax.persistence.QueryHint;
@@ -17,4 +18,6 @@ public interface SsnLocationRepository extends JpaRepository<SsnLocation, String
     Stream<SsnLocationJson> findAllLocationsProjectedBy();
 
     SsnLocationJson findByLocode(final String locode);
+
+    List<SsnLocationJson> findByCountryIgnoreCase(final String country);
 }

@@ -3,6 +3,8 @@ package fi.livi.digitraffic.meri.controller.portnet;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_METADATA_PART_PATH;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
+import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
 
@@ -37,5 +40,12 @@ public class PortnetMetadataController {
     @ResponseBody
     public PortsAndBerthsJson findSsnLocationByLocode(@PathVariable("locode") final String locode) {
         return portnetMetadataService.findSsnLocationByLocode(locode);
+    }
+
+    @ApiOperation("Return list of locations by country name")
+    @GetMapping(path = "/ssn-by-country/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public List<SsnLocationJson> findSsnLocationsByCountry(@PathVariable("country") final String country) {
+        return portnetMetadataService.findSsnLocationsByCountry(country);
     }
 }
