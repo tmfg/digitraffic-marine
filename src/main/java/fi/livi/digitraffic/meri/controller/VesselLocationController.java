@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,7 +37,7 @@ public class VesselLocationController {
     @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<VesselLocation> vesselLocationsByMssiAndTimestamp(
+    public List<VesselLocationJson> vesselLocationsByMssiAndTimestamp(
             @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
             @PathVariable("mmsi")
             final int mmsi,
@@ -56,7 +56,7 @@ public class VesselLocationController {
     @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<VesselLocation> vesselLocationsByTimestamp(
+    public List<VesselLocationJson> vesselLocationsByTimestamp(
             @ApiParam("From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
             @RequestParam(value = "from", required = false)
             final Long from,

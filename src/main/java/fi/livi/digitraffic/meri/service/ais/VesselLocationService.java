@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,15 +25,15 @@ public class VesselLocationService {
 
     private Criteria createCriteria() {
         return entityManager.unwrap(Session.class)
-                .createCriteria(VesselLocation.class)
+                .createCriteria(VesselLocationJson.class)
                 .setFetchSize(1000);
     }
 
-    public List<VesselLocation> findLocations(final int mmsi, final Long from, final Long to) {
+    public List<VesselLocationJson> findLocations(final int mmsi, final Long from, final Long to) {
         return findLocations((Integer)mmsi, from, to);
     }
 
-    private List<VesselLocation> findLocations(final Integer mmsi, final Long from, final Long to) {
+    private List<VesselLocationJson> findLocations(final Integer mmsi, final Long from, final Long to) {
         final Criteria c = createCriteria();
 
         if(mmsi != null) {
@@ -51,7 +51,7 @@ public class VesselLocationService {
         return c.list();
     }
 
-    public List<VesselLocation> findLocations(final Long from, final Long to) {
+    public List<VesselLocationJson> findLocations(final Long from, final Long to) {
         return findLocations(null, from, to);
     }
 }
