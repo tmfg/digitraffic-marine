@@ -1,7 +1,6 @@
 package fi.livi.digitraffic.meri.config;
 
 import java.sql.SQLException;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
