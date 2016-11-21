@@ -48,12 +48,12 @@ public class PortCallClient {
     private String buildUrl(final Instant lastUpdated, final Instant now) {
         final ZonedDateTime lastUpdatedDt = lastUpdated.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault());
         final String dateStartParameter = dateToString("startDte", lastUpdatedDt);
-        final String timeStartparameter = timeToString("startTme", lastUpdatedDt);
+        final String timeStartParameter = timeToString("startTme", lastUpdatedDt);
         final String dateEndParameter = dateToString("endDte", now.atZone(ZoneId.systemDefault()));
         final String timeEndParameter = timeToString("endTme", now.atZone(ZoneId.systemDefault()));
 
         // order is important, must be startDte,endDte,startTme,endTme, otherwise 404
 
-        return String.format("%s%s&%s&%s&%s", portCallUrl, dateStartParameter, dateEndParameter, timeStartparameter, timeEndParameter);
+        return String.format("%s%s&%s&%s&%s", portCallUrl, dateStartParameter, dateEndParameter, timeStartParameter, timeEndParameter);
     }
 }
