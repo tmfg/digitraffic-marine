@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
+import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
 @RunWith(SpringRunner.class)
@@ -39,7 +39,7 @@ public class VesselMetadataControllerTest {
 
     @Test
     public void testAllVesselsMetadata() throws Exception {
-        given(vesselMetadataService.listAllVesselMetadata()).willReturn(Arrays.asList(generateVesselMetadata()));
+        given(vesselMetadataService.listAllVesselMetadata()).willReturn(Collections.singletonList(generateVesselMetadata()));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
@@ -50,12 +50,64 @@ public class VesselMetadataControllerTest {
                 ;
     }
 
-    private VesselMetadata generateVesselMetadata() {
-        final VesselMetadata metadata = new VesselMetadata();
+    private VesselMetadataJson generateVesselMetadata() {
+        return new VesselMetadataJson() {
+            @Override public int getMmsi() {
+                return MMSI;
+            }
 
-        metadata.setMmsi(MMSI);
+            @Override public String getName() {
+                return null;
+            }
 
-        return metadata;
+            @Override public int getShipType() {
+                return 0;
+            }
+
+            @Override public long getReferencePointA() {
+                return 0;
+            }
+
+            @Override public long getReferencePointB() {
+                return 0;
+            }
+
+            @Override public long getReferencePointC() {
+                return 0;
+            }
+
+            @Override public long getReferencePointD() {
+                return 0;
+            }
+
+            @Override public int getPosType() {
+                return 0;
+            }
+
+            @Override public int getDraught() {
+                return 0;
+            }
+
+            @Override public int getImo() {
+                return 0;
+            }
+
+            @Override public String getCallSign() {
+                return null;
+            }
+
+            @Override public long getEta() {
+                return 0;
+            }
+
+            @Override public long getTimestamp() {
+                return 0;
+            }
+
+            @Override public String getDestination() {
+                return null;
+            }
+        };
     }
 
     @Test

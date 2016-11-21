@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
-import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
+import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,11 +19,11 @@ public class VesselMetadataService {
         this.vesselMetadataRepository = vesselMetadataRepository;
     }
 
-    public VesselMetadata findMetadataByMssi(final int mmsi) {
-        return vesselMetadataRepository.findOne(mmsi);
+    public VesselMetadataJson findMetadataByMssi(final int mmsi) {
+        return vesselMetadataRepository.findByMmsi(mmsi);
     }
 
-    public List<VesselMetadata> listAllVesselMetadata() {
-        return vesselMetadataRepository.findAll();
+    public List<VesselMetadataJson> listAllVesselMetadata() {
+        return vesselMetadataRepository.findAllProjectedBy();
     }
 }

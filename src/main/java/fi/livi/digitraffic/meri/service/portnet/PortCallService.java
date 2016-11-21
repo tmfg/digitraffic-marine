@@ -21,13 +21,13 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 
 @Service
-public class PortcallService {
+public class PortCallService {
     private final PortCallRepository portCallRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     private final EntityManager entityManager;
 
-    public PortcallService(final PortCallRepository portCallRepository,
+    public PortCallService(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
                            final EntityManager entityManager) {
         this.portCallRepository = portCallRepository;

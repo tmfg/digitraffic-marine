@@ -1,15 +1,15 @@
 package fi.livi.digitraffic.meri.controller;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
 @RunWith(SpringRunner.class)
@@ -41,7 +41,8 @@ public class VesselLocationControllerTest {
 
     @Test
     public void testVesselLocationsByMssi() throws Exception {
-        given(vesselLocationService.findLocations(anyInt(), Matchers.any(), Matchers.any())).willReturn(Arrays.asList(generateVesselLocation()));
+        final VesselLocationJson message = generateVesselLocation();
+        when(vesselLocationService.findLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.singletonList(message));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -54,7 +55,8 @@ public class VesselLocationControllerTest {
 
     @Test
     public void testVesselLocationsByTimestamp() throws Exception {
-        given(vesselLocationService.findLocations(anyLong(), anyLong())).willReturn(Arrays.asList(generateVesselLocation()));
+        final VesselLocationJson message = generateVesselLocation();
+        when(vesselLocationService.findLocations(anyLong(), anyLong())).thenReturn(Collections.singletonList(message));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -65,12 +67,56 @@ public class VesselLocationControllerTest {
         ;
     }
 
-    private VesselLocation generateVesselLocation() {
-        final VesselLocation location = new VesselLocation();
+    private VesselLocationJson generateVesselLocation() {
+        return new VesselLocationJson() {
+            @Override public int getMmsi() {
+                return MMSI;
+            }
 
-        location.setMmsi(MMSI);
+            @Override public double getX() {
+                return 0;
+            }
 
-        return location;
+            @Override public double getY() {
+                return 0;
+            }
+
+            @Override public double getSog() {
+                return 0;
+            }
+
+            @Override public double getCog() {
+                return 0;
+            }
+
+            @Override public int getNavStat() {
+                return 0;
+            }
+
+            @Override public int getRot() {
+                return 0;
+            }
+
+            @Override public boolean isPosAcc() {
+                return false;
+            }
+
+            @Override public boolean isRaim() {
+                return false;
+            }
+
+            @Override public Integer getHeading() {
+                return null;
+            }
+
+            @Override public long getTimestamp() {
+                return 0;
+            }
+
+            @Override public long getTimestampExternal() {
+                return 0;
+            }
+        };
     }
 
 }
