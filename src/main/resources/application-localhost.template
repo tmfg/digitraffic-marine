@@ -20,7 +20,9 @@ ais.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
 metadata.csv.baseUrl = https://raw.githubusercontent.com/finnishtransportagency/metadata/master/csv/
 
 quartz.enabled = true
-portCallUpdateJob.frequency = 1800000
+portCallUpdateJob.frequency = 60000
+berthUpdateJob.frequency = 43200000
+ssnLocationUpdateJob.frequency = 43200000
 
 # Logging
 logging.level.fi.livi.digitraffic.meri=INFO
