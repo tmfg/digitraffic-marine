@@ -56,8 +56,7 @@ public class PortCallUpdater {
 
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
         final Instant now = Instant.now();
-        //final Instant from = lastUpdated == null ? now.with(ChronoField.SECOND_OF_DAY, 0) : lastUpdated;
-        final Instant from = lastUpdated == null ? now.minus(1, ChronoUnit.HOURS) : lastUpdated;
+        final Instant from = lastUpdated == null ? now.minus(5, ChronoUnit.MINUTES) : lastUpdated;
 
         final PortCallList list = portCallClient.getList(from, now);
 
