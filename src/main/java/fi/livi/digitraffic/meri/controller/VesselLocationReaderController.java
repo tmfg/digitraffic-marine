@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
+import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
@@ -34,7 +35,9 @@ public class VesselLocationReaderController {
             final AccessLock accessLock = lockingService.lock("AIS-locations");
             final List<WebsocketListener> listeners = Arrays.asList(
                     new VesselLocationDatabaseListener(vesselLocationRepository, accessLock),
-                    new VesselLocationRelayListener(locationSender));
+                    new VesselLocationRelayListener(locationSender),
+                    new WebsocketLoggingListener("LOCATION")
+            );
 
             readerList = Arrays.asList(
                 new WebsocketReader(aisLocations9Url, listeners),
@@ -42,11 +45,11 @@ public class VesselLocationReaderController {
                 new WebsocketReader(aisLocations123Url, listeners)
             );
 
-            readerList.stream().forEach(x -> x.initialize());
+            readerList.stream().forEach(WebsocketReader::initialize);
     }
 
     @PreDestroy
     public void destroy() {
-        readerList.stream().forEach(x -> x.destroy());
+        readerList.stream().forEach(WebsocketReader::destroy);
     }
 }
