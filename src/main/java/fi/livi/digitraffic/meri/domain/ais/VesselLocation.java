@@ -7,10 +7,11 @@ import javax.persistence.Id;
 import org.hibernate.annotations.DynamicUpdate;
 
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 
 @Entity
 @DynamicUpdate
-public class VesselLocation {
+public class VesselLocation implements VesselLocationJson {
     @Id
     private int mmsi;
 

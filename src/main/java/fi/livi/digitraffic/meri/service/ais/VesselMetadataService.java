@@ -20,7 +20,13 @@ public class VesselMetadataService {
     }
 
     public VesselMetadataJson findMetadataByMssi(final int mmsi) {
-        return vesselMetadataRepository.findByMmsi(mmsi);
+        final VesselMetadataJson metadata = vesselMetadataRepository.findByMmsi(mmsi);
+
+        if(metadata == null) {
+            throw new ObjectNotFoundException("VesselMetadata", mmsi);
+        }
+
+        return metadata;
     }
 
     public List<VesselMetadataJson> listAllVesselMetadata() {

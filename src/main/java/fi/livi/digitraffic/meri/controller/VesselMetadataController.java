@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
@@ -30,6 +32,9 @@ public class VesselMetadataController {
     }
 
     @ApiOperation("Return latest vessel metadata by mmsi.")
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel metadata"),
+                    @ApiResponse(code = 404, message = "Vessel metadata not found"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
     @GetMapping(path = VESSELS_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselMetadataJson vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {

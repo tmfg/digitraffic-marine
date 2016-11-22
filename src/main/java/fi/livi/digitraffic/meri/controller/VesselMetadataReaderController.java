@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselMetadataDatabaseListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
+import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.util.locking.AccessLock;
@@ -28,15 +29,18 @@ public class VesselMetadataReaderController {
             final LockingService lockingService,
             final VesselMetadataRepository vesselMetadataRepository) {
         final AccessLock accessLock = lockingService.lock("AIS-metadata");
-        final List<WebsocketListener> listeners = Arrays.asList(new VesselMetadataDatabaseListener(vesselMetadataRepository, accessLock));
+        final List<WebsocketListener> listeners = Arrays.asList(
+                new VesselMetadataDatabaseListener(vesselMetadataRepository, accessLock),
+                new WebsocketLoggingListener("METADATA")
+        );
 
         readerList = Arrays.asList(new WebsocketReader(aisLocations5Url, listeners));
 
-        readerList.stream().forEach(x -> x.initialize());
+        readerList.stream().forEach(WebsocketReader::initialize);
     }
 
     @PreDestroy
     public void destroy() {
-        readerList.stream().forEach(x -> x.destroy());
+        readerList.stream().forEach(WebsocketReader::destroy);
     }
 }
