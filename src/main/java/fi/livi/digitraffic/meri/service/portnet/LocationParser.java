@@ -18,9 +18,9 @@ public final class LocationParser {
             return null;
         }
 
-        final int i2 = value.indexOf(176);
-        final int i3 = value.indexOf('\'');
-        final int i4 = value.indexOf("\'\'");
+        final int i2 = value.indexOf(176); // °
+        final int i3 = value.indexOf('\''); // '
+        final int i4 = value.indexOf("\'\'"); // ''
 
         if (i2 == -1 || i3 == -1 || i4 == -1) {
             return null;
@@ -34,11 +34,15 @@ public final class LocationParser {
         return parseValue(hemisphere, s1, s2, s3);
     }
 
-    private static double parseValue(final char hemisphere, final String d, final String m, final String s) {
-        final double degrees = Integer.valueOf(d);
-        final double minutes = Integer.valueOf(m);
-        final double seconds = Integer.valueOf(s);
+    private static Double parseValue(final char hemisphere, final String d, final String m, final String s) {
+        try {
+            final double degrees = Integer.valueOf(d);
+            final double minutes = Integer.valueOf(m);
+            final double seconds = Integer.valueOf(s);
 
-        return (hemisphere == 'N' || hemisphere == 'E' ? 1 : -1) * (degrees + minutes / 60 + seconds / 3600);
+            return (hemisphere == 'N' || hemisphere == 'E' ? 1 : -1) * (degrees + minutes / 60 + seconds / 3600);
+        } catch(final NumberFormatException nfe) {
+            return null;
+        }
     }
 }
