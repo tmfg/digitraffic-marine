@@ -16,6 +16,8 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
 import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
@@ -37,6 +39,9 @@ public class PortnetMetadataController {
 
     @ApiOperation("Return one locations by locode.")
     @GetMapping(path = SSN_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of ssn location"),
+                    @ApiResponse(code = 404, message = "Ssn location not found"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public PortsAndBerthsJson findSsnLocationByLocode(@PathVariable("locode") final String locode) {
         return portnetMetadataService.findSsnLocationByLocode(locode);

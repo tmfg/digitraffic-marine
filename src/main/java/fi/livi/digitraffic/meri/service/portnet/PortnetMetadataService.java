@@ -15,6 +15,7 @@ import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
 import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
+import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 
 @Service
 public class PortnetMetadataService {
@@ -51,9 +52,15 @@ public class PortnetMetadataService {
 
     @Transactional(readOnly = true)
     public PortsAndBerthsJson findSsnLocationByLocode(final String locode) {
+        final SsnLocationJson location = ssnLocationRepository.findByLocode(locode);
+
+        if(location == null) {
+            throw new ObjectNotFoundException("SsnLocation", locode);
+        }
+
         return new PortsAndBerthsJson(
                 updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
-                ssnLocationRepository.findByLocode(locode),
+                location,
                 portAreaRepository.findByPortAreaKeyLocode(locode).collect(Collectors.toList()),
                 berthRepository.findByBerthKeyLocode(locode).collect(Collectors.toList())
                 );
