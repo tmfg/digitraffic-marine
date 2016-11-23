@@ -20,7 +20,7 @@ public class AgentInfo {
     private Integer role;
     private String portCallDirection;
     private String name;
-    private String editNumber;
+    private String ediNumber;
 
     public long getAgentInfoId() {
         return agentInfoId;
@@ -54,11 +54,11 @@ public class AgentInfo {
         this.name = name;
     }
 
-    public String getEditNumber() {
-        return editNumber;
+    public String getEdiNumber() {
+        return ediNumber;
     }
 
-    public void setEditNumber(final String editNumber) {
-        this.editNumber = editNumber;
+    public void setEdiNumber(final String ediNumber) {
+        this.ediNumber = ediNumber;
     }
 }
