@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description="All metadata associated with port calls")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class PortsAndBerthsJson {
-    @ApiModelProperty(value = "Timestamp when port calls was last updated", required = true)
+    @ApiModelProperty(value = "Timestamp when port calls were last updated", required = true)
     public final ZonedDateTime lastUpdated;
 
     @ApiModelProperty(value = "All UN/LOCODEs(ports)", required = true)

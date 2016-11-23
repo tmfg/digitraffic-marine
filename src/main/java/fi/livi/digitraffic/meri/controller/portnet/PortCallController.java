@@ -21,10 +21,10 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_PORT_CALLS_PATH)
-public class PortcallController {
+public class PortCallController {
     private final PortCallService portCallService;
 
-    public PortcallController(final PortCallService portCallService) {
+    public PortCallController(final PortCallService portCallService) {
         this.portCallService = portCallService;
     }
 

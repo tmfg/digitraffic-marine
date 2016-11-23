@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 
 @Service
@@ -25,7 +26,7 @@ public class VesselLocationService {
 
     private Criteria createCriteria() {
         return entityManager.unwrap(Session.class)
-                .createCriteria(VesselLocationJson.class)
+                .createCriteria(VesselLocation.class)
                 .setFetchSize(1000);
     }
 

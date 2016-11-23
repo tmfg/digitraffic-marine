@@ -37,7 +37,7 @@ public class PortnetMetadataController {
         return portnetMetadataService.listaAllMetadata();
     }
 
-    @ApiOperation("Return one locations by locode.")
+    @ApiOperation("Return one location's berths, port areas and location by locode.")
     @GetMapping(path = SSN_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of ssn location"),
                     @ApiResponse(code = 404, message = "Ssn location not found"),
