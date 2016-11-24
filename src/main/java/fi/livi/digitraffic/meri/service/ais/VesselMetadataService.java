@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
+import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 
 @Service
 @Transactional(readOnly = true)
