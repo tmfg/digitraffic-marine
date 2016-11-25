@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dao.portnet;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaJson;
 
 @Repository
 public interface PortAreaRepository extends JpaRepository<PortArea, PortAreaKey> {
-    Stream<PortAreaJson> findAllProjectedBy();
+    List<PortAreaJson> findAllProjectedBy();
 
-    Stream<PortAreaJson> findByPortAreaKeyLocode(final String locode);
+    List<PortAreaJson> findByPortAreaKeyLocode(final String locode);
 }

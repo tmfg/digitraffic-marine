@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.service.portnet;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,12 +41,13 @@ public class PortnetMetadataService {
     public PortsAndBerthsJson listaAllMetadata() {
         return new PortsAndBerthsJson(
                 updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
-                ssnLocationRepository.findAllLocationsProjectedBy().collect(Collectors.toList()),
-                portAreaRepository.findAllProjectedBy().collect(Collectors.toList()),
-                berthRepository.findAllProjectedBy().collect(Collectors.toList()),
-                codeDescriptionRepository.streamAllCargoTypes().collect(Collectors.toList()),
-                codeDescriptionRepository.streamAllVesselTypes().collect(Collectors.toList()),
-                codeDescriptionRepository.streamAllAgentTypes().collect(Collectors.toList()));
+                ssnLocationRepository.findAllLocationsProjectedBy(),
+                portAreaRepository.findAllProjectedBy(),
+                berthRepository.findAllProjectedBy(),
+                codeDescriptionRepository.listAllCargoTypes(),
+                codeDescriptionRepository.listAllVesselTypes(),
+                codeDescriptionRepository.listAllAgentTypes()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -61,8 +61,8 @@ public class PortnetMetadataService {
         return new PortsAndBerthsJson(
                 updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
                 location,
-                portAreaRepository.findByPortAreaKeyLocode(locode).collect(Collectors.toList()),
-                berthRepository.findByBerthKeyLocode(locode).collect(Collectors.toList())
+                portAreaRepository.findByPortAreaKeyLocode(locode),
+                berthRepository.findByBerthKeyLocode(locode)
                 );
     }
 

@@ -1,7 +1,6 @@
 package fi.livi.digitraffic.meri.dao.portnet;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import javax.persistence.QueryHint;
 
@@ -15,7 +14,7 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
 @Repository
 public interface SsnLocationRepository extends JpaRepository<SsnLocation, String> {
     @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="1000"))
-    Stream<SsnLocationJson> findAllLocationsProjectedBy();
+    List<SsnLocationJson> findAllLocationsProjectedBy();
 
     SsnLocationJson findByLocode(final String locode);
 
