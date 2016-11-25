@@ -43,15 +43,16 @@ public class PortCallUpdater {
 
     private static final Logger log = LoggerFactory.getLogger(PortCallUpdater.class);
 
-    @Value("${portCallUpdateJob.maxTimeFrameToFetch}")
-    private int maxTimeFrameToFetch;
+    private final int maxTimeFrameToFetch;
 
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
-                           final PortCallClient portCallClient) {
+                           final PortCallClient portCallClient,
+                           @Value("${portCallUpdateJob.maxTimeFrameToFetch}") final int maxTimeFrameToFetch) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallClient = portCallClient;
+        this.maxTimeFrameToFetch = maxTimeFrameToFetch;
     }
 
     @Transactional
@@ -77,7 +78,7 @@ public class PortCallUpdater {
             portCallRepository.save(added);
             watch.stop();
 
-            log.info(String.format("Added %d port call, updated %d, took %d ms.", added.size(), updated.size(), watch.getTime()));
+            log.info("Added {} port call, updated {}, took {} ms.", added.size(), updated.size(), watch.getTime());
         }
     }
 
@@ -86,7 +87,7 @@ public class PortCallUpdater {
 
         switch(status) {
         case "OK":
-            log.info(String.format("fetched %d notifications", CollectionUtils.size(list.getPortCallNotification())));
+            log.info("fetched {} notifications", CollectionUtils.size(list.getPortCallNotification()));
             break;
         case "NOT_FOUND":
             log.info("No port calls from server");

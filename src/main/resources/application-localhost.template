@@ -21,7 +21,6 @@ metadata.csv.baseUrl = https://raw.githubusercontent.com/finnishtransportagency/
 
 quartz.enabled = true
 portCallUpdateJob.frequency = 60000
-portCallUpdateJob.maxTimeFrameToFetch = 360000
 berthUpdateJob.frequency = 43200000
 ssnLocationUpdateJob.frequency = 43200000
 
