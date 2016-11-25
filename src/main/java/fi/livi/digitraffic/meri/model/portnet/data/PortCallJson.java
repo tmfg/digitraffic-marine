@@ -42,28 +42,51 @@ public interface PortCallJson {
     @ApiModelProperty(value = "Type of discharge", allowableValues = "range[1..4]")
     Integer getDischarge();
 
+    @ApiModelProperty(value = "Ship master at the moment of arrival")
     String getShipMasterArrival();
+    @ApiModelProperty(value = "Ship master at the moment of departure")
     String getShipMasterDeparture();
+    @ApiModelProperty(value = "Ship management name at moment of arrival")
     String getManagementNameArrival();
+    @ApiModelProperty(value = "Ship management name at moment of departure")
     String getManagementNameDeparture();
+    @ApiModelProperty(value = "Forwarder at moment of arrival")
     String getForwarderNameArrival();
+    @ApiModelProperty(value = "Forwarder at moment of departure")
     String getForwarderNameDeparture();
+
+    @ApiModelProperty(value = "Notes concerning arrival")
     String getFreeTextArrival();
+    @ApiModelProperty(value = "Notes concerning departure")
     String getFreeTextDeparture();
 
+    @ApiModelProperty(value = "Vessel name")
     String getVesselName();
+    @ApiModelProperty(value = "Vessel name prefix")
     String getVesselNamePrefix();
+    @ApiModelProperty(value = "Ship radio call sign")
     String getRadioCallSign();
+    @ApiModelProperty(value = "Ship radio call sign type")
     String getRadioCallSignType();
-    Integer getImoLloyds();
-    Integer getMmsi();
 
+    @ApiModelProperty(value = "Ship IMO / Lloyds")
+    Integer getImoLloyds();
+
+    @ApiModelProperty(value = "Ship MMSI (Maritime Mobile Service Identity)")
+    Integer getMmsi();
+    @ApiModelProperty(value = "Name of certificate issuer")
     String getCertificateIssuer();
+    @ApiModelProperty(value = "Certificate start date")
     Timestamp getCertificateStartDate();
+    @ApiModelProperty(value = "Certificate end date")
     Timestamp getCertificateEndDate();
+    @ApiModelProperty(value = "Current security level. 1 = normal security level, 2 = raised security level, 3 = exceptional security level")
     Integer getCurrentSecurityLevel();
 
+    @ApiModelProperty(value = "Ship agents")
     Set<AgentInfoJson> getAgentInfo();
+    @ApiModelProperty(value = "IMO information")
     Set<ImoInformationJson> getImoInformation();
+    @ApiModelProperty(value = "Port area details")
     Set<PortAreaDetailsJson> getPortAreaDetails();
 }

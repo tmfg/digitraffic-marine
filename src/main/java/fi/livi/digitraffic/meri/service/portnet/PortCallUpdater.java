@@ -16,6 +16,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,9 @@ public class PortCallUpdater {
 
     private static final Logger log = LoggerFactory.getLogger(PortCallUpdater.class);
 
+    @Value("${portCallUpdateJob.maxTimeFrameToFetch}")
+    private int maxTimeFrameToFetch;
+
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallClient portCallClient) {
@@ -57,11 +61,12 @@ public class PortCallUpdater {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
         final Instant now = Instant.now();
         final Instant from = lastUpdated == null ? now.minus(5, ChronoUnit.MINUTES) : lastUpdated;
+        final Instant to = now.toEpochMilli() - from.toEpochMilli() > maxTimeFrameToFetch ? from.plusMillis(maxTimeFrameToFetch) : now;
 
-        final PortCallList list = portCallClient.getList(from, now);
+        final PortCallList list = portCallClient.getList(from, to);
 
         if(isListOk(list)) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(now), getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(to), getClass().getSimpleName());
 
             final List<PortCall> added = new ArrayList<>();
             final List<PortCall> updated = new ArrayList<>();
@@ -175,7 +180,7 @@ public class PortCallUpdater {
         for(final AgentInfo ai : det.getAgentInfo()) {
             final fi.livi.digitraffic.meri.domain.portnet.AgentInfo newAi = new fi.livi.digitraffic.meri.domain.portnet.AgentInfo();
 
-            newAi.setEditNumber(ai.getEdiNumber());
+            newAi.setEdiNumber(ai.getEdiNumber());
             newAi.setName(ai.getName());
             newAi.setPortCallDirection(ai.getPortCallDirection().value());
             newAi.setRole(getInteger(ai.getRole()));
