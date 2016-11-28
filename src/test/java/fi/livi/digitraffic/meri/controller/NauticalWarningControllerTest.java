@@ -35,7 +35,7 @@ public class NauticalWarningControllerTest {
     @Autowired
     private NauticalWarningController nauticalWarningController;
 
-    @Value("${local.server.port}")
+    @Value("${local.server.port:#{null}}")
     private String serverPort;
 
     //private static final String LOCAL_PATH = "http://localhost:18080" + API_V1_BASE_PATH;
