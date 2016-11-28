@@ -27,8 +27,7 @@ import fi.livi.digitraffic.util.RestUtil;
 @SpringBootTest(classes = AisApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Component
 public class NauticalWarningControllerTest {
-    @Autowired
-    private TestRestTemplate template;
+    private TestRestTemplate template = new TestRestTemplate();
 
     @Autowired
     private PookiDummyController pookiDummyController;

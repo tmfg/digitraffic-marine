@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping(API_V1_BASE_PATH)
 public class NauticalWarningController {
-    private final RestTemplate template;
+    private final RestTemplate restTemplate;
 
     private String pookiUrl;
 
@@ -45,9 +45,8 @@ public class NauticalWarningController {
     @Autowired
     public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
         this.pookiUrl = pookiUrl;
-        template = new RestTemplate();
-        //template.getMessageConverters().add(new ByteArrayHttpMessageConverter());
-        template.setErrorHandler(new NauticalWarningErrorHandler());
+        this.restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new NauticalWarningErrorHandler());
     }
 
     @ApiOperation("Return nautical warnings of given status.")
@@ -69,7 +68,7 @@ public class NauticalWarningController {
     // Pooki unexpectedly returns body in GZip format, try to unzip it
     // If that fails, expect body to be "plain"
 
-    private byte[] getBodyFromResponse(final ResponseEntity<byte[]> response) {
+    private static byte[] getBodyFromResponse(final ResponseEntity<byte[]> response) {
         try {
             return decompress(response.getBody());
         } catch (final IOException e) {
@@ -81,9 +80,9 @@ public class NauticalWarningController {
         final Status s = Status.valueOf(status.toUpperCase());
         final String url = String.format("%s?layer=%s", pookiUrl, s.layer);
 
-        final ResponseEntity<byte[]> response = template.getForEntity(url, byte[].class);
+        final ResponseEntity<byte[]> response = restTemplate.getForEntity(url, byte[].class);
 
-        return RestUtil.isError(response.getStatusCode()) ? template.getForEntity(url, byte[].class) : response;
+        return RestUtil.isError(response.getStatusCode()) ? restTemplate.getForEntity(url, byte[].class) : response;
     }
 
     public static byte[] decompress(final byte[] contentBytes) throws IOException {
