@@ -2,9 +2,9 @@ package fi.livi.digitraffic.meri.controller.portnet;
 
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_PORT_CALLS_PATH;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -28,16 +28,16 @@ public class PortCallController {
         this.portCallService = portCallService;
     }
 
-    @ApiOperation("Return list of all port calls.")
+    @ApiOperation("Find port calls by date and port locode.")
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PortCallsJson listAllPortCalls(
             @ApiParam("Return port calls from given port")
-            @RequestParam(value = "locode", required = false)final String locode,
-            @ApiParam("Return port calls received after given timestamp")
-            @RequestParam(value = "from", required = false)
-            @DateTimeFormat(iso = DATE_TIME)
-            final ZonedDateTime from) {
-        return portCallService.listAllPortCalls(locode, from);
+            @RequestParam(value = "locode", required = false) final String locode,
+            @ApiParam("Return port calls received on given date")
+            @RequestParam(value = "date", required = true)
+            @DateTimeFormat(iso = DATE)
+            final Date date) {
+        return portCallService.findPortCalls(locode, date);
     }
 }
