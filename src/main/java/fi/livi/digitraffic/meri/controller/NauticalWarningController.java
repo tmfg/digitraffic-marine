@@ -54,25 +54,10 @@ public class NauticalWarningController {
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "DRAFT,PUBLISHED,ARCHIVED" )
+    public ResponseEntity<byte[]> nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "DRAFT,PUBLISHED,ARCHIVED" )
                                               @PathVariable final String status) {
-        final Status s = Status.valueOf(status.toUpperCase());
-        final String url = String.format("%s?layer=%s", pookiUrl, s.layer);
-
-        ResponseEntity<byte[]> response = template.getForEntity(url, byte[].class);
-
-        if (RestUtil.isError(response.getStatusCode())) {
-            response = template.getForEntity(url, byte[].class);
-        }
-
-        // Pooki unexpectedly returns body in GZip format, try to unzip it
-        // If that fails, expect body to be "plain"
-        byte[] body;
-        try {
-            body = decompress(response.getBody());
-        } catch (final IOException e) {
-            body = response.getBody();
-        }
+        final ResponseEntity<byte[]> response = getResponseFromUrl(status.toUpperCase());
+        final byte[] body = getBodyFromResponse(response);
 
         if (RestUtil.isError(response.getStatusCode())) {
             return ResponseEntity.status(response.getStatusCode()).body(body);
@@ -81,12 +66,31 @@ public class NauticalWarningController {
         return ResponseEntity.ok().body(body);
     }
 
+    // Pooki unexpectedly returns body in GZip format, try to unzip it
+    // If that fails, expect body to be "plain"
+
+    private byte[] getBodyFromResponse(final ResponseEntity<byte[]> response) {
+        try {
+            return decompress(response.getBody());
+        } catch (final IOException e) {
+            return response.getBody();
+        }
+    }
+
+    private ResponseEntity<byte[]> getResponseFromUrl(final String status) {
+        final Status s = Status.valueOf(status.toUpperCase());
+        final String url = String.format("%s?layer=%s", pookiUrl, s.layer);
+
+        final ResponseEntity<byte[]> response = template.getForEntity(url, byte[].class);
+
+        return RestUtil.isError(response.getStatusCode()) ? template.getForEntity(url, byte[].class) : response;
+    }
+
     public static byte[] decompress(final byte[] contentBytes) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         IOUtils.copy(new GZIPInputStream(new ByteArrayInputStream(contentBytes)), out);
         return out.toByteArray();
     }
-
 
     public void setPookiUrl(final String pookiUrl) {
         this.pookiUrl = pookiUrl;

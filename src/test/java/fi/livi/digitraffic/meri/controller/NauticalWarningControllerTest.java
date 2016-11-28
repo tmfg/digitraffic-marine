@@ -9,11 +9,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -23,12 +24,11 @@ import fi.livi.digitraffic.meri.AisApplication;
 import fi.livi.digitraffic.util.RestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = AisApplication.class)
-@WebIntegrationTest({ "server.port=18080", "management.port=18081" })
+@SpringBootTest(classes = AisApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Component
 public class NauticalWarningControllerTest {
-    // TODO: must be converted to spring boot 1.4 style
-    private final TestRestTemplate template = new TestRestTemplate();
+    @Autowired
+    private TestRestTemplate template;
 
     @Autowired
     private PookiDummyController pookiDummyController;
@@ -36,8 +36,20 @@ public class NauticalWarningControllerTest {
     @Autowired
     private NauticalWarningController nauticalWarningController;
 
-    private static final String LOCAL_PATH = "http://localhost:18080" + API_V1_BASE_PATH;
+    @Value("${local.server.port}")
+    private String serverPort;
+
+    //private static final String LOCAL_PATH = "http://localhost:18080" + API_V1_BASE_PATH;
     private static final String API = "nautical-warnings";
+
+    private String pookiBaseUrl;
+    private String localUrl;
+
+    @Before
+    public void createBaseUrl() {
+        pookiBaseUrl = String.format("http://localhost:%s/test/nautical-warnings/", serverPort);
+        localUrl = String.format("http://localhost:%s%s", serverPort, API_V1_BASE_PATH);
+    }
 
     @Test
     public void testAllNauticalWarnings() throws Exception {
@@ -58,10 +70,10 @@ public class NauticalWarningControllerTest {
                 Status.ARCHIVED))) {
 
             final String s = status.toString().toLowerCase();
-            final String pooki_url = String.format("http://localhost:18080/test/nautical-warnings/%s/%s", s, key);
-            nauticalWarningController.setPookiUrl(pooki_url);
+            final String pookiUrl = String.format(pookiBaseUrl + "%s/%s", s, key);
+            nauticalWarningController.setPookiUrl(pookiUrl);
 
-            final String requestUrl = String.format("%s/%s/%s", LOCAL_PATH, API, s);
+            final String requestUrl = String.format("%s/%s/%s", localUrl, API, s);
             final ResponseEntity<String> response = template.getForEntity(requestUrl, String.class);
 
             assertThat("Expected ok response", !RestUtil.isError(response.getStatusCode()));
@@ -87,10 +99,10 @@ public class NauticalWarningControllerTest {
         pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
 
         // Use Mock Pooki API in implementation
-        nauticalWarningController.setPookiUrl("http://localhost:18080/test/nautical-warnings/draft/" + key);
+        nauticalWarningController.setPookiUrl(pookiBaseUrl + "draft/" + key);
 
         // Execute get
-        final String requestUrl = String.format("%s/%s/draft", LOCAL_PATH, API);
+        final String requestUrl = String.format("%s/%s/draft", localUrl, API);
         final ResponseEntity<String> response = template.getForEntity(requestUrl, String.class);
 
         assertThat("Expected error status code as result", RestUtil.isError(response.getStatusCode()));
@@ -114,10 +126,10 @@ public class NauticalWarningControllerTest {
         pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
 
         // Use Mock Pooki API in implementation
-        nauticalWarningController.setPookiUrl("http://localhost:18080/test/nautical-warnings/draft/" + key);
+        nauticalWarningController.setPookiUrl(pookiBaseUrl + "draft/" + key);
 
         // Execute get
-        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/draft", LOCAL_PATH, API), String.class);
+        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/draft", localUrl, API), String.class);
 
         assertThat("Expected ok result", !RestUtil.isError(response.getStatusCode()));
 
