@@ -31,7 +31,7 @@ public class VesselMetadataReaderController {
         final AccessLock accessLock = lockingService.lock("AIS-metadata");
         final List<WebsocketListener> listeners = Arrays.asList(
                 new VesselMetadataDatabaseListener(vesselMetadataRepository, accessLock),
-                new WebsocketLoggingListener("METADATA")
+                new WebsocketLoggingListener("METADATA", false)
         );
 
         readerList = Arrays.asList(new WebsocketReader(aisLocations5Url, listeners));

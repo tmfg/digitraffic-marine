@@ -49,10 +49,10 @@ public class WebsocketReader {
     }
 
     private ClientManager initializeConnection() throws URISyntaxException, IOException, DeploymentException {
-        log.debug("initializing connection to " + locationUrl);
+        log.debug("initializing connection to {} {} listeners", locationUrl, listeners.size());
 
         final ClientManager client = ClientManager.createClient();
-        final ReconnectingHandler handler = new ReconnectingHandler(log);
+        final ReconnectingHandler handler = new ReconnectingHandler(listeners, log);
 
         client.getProperties().put(ClientProperties.RECONNECT_HANDLER, handler);
         client.connectToServer(new Endpoint() {

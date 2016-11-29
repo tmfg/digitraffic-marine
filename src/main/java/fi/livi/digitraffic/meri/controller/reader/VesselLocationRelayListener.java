@@ -23,4 +23,7 @@ public class VesselLocationRelayListener implements WebsocketListener {
             VesselLocationsEndpoint.sendMessage(ais);
         }
     }
+
+    @Override
+    public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) { }
 }
