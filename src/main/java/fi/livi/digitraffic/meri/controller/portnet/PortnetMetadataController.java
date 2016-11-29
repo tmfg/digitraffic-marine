@@ -31,14 +31,14 @@ public class PortnetMetadataController {
         this.portnetMetadataService = portnetMetadataService;
     }
 
-    @ApiOperation("Return list of all berths, port areas and ssn locations.")
+    @ApiOperation("Return list of all berths, port areas and locations.")
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PortsAndBerthsJson listAllMetadata() {
         return portnetMetadataService.listaAllMetadata();
     }
 
-    @ApiOperation("Return one location's berths, port areas and location by locode.")
+    @ApiOperation("Return one location's berths, port areas and location by SafeSeaNet location code.")
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of ssn location"),
                     @ApiResponse(code = 404, message = "Ssn location not found"),
@@ -48,7 +48,7 @@ public class PortnetMetadataController {
         return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 
-    @ApiOperation("Return list of ssn locations by country name")
+    @ApiOperation("Return list of SafeSeaNet locations by country name")
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<SsnLocationJson> findSsnLocationsByCountry(@PathVariable("country") final String country) {
