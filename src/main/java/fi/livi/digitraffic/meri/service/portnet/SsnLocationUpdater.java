@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
@@ -52,9 +53,6 @@ public class SsnLocationUpdater {
     }
 
     private void mergeLocation(final SsnLocation oldLocation, final SsnLocation newLocation) {
-        oldLocation.setLocationName(newLocation.getLocationName());
-        oldLocation.setCountry(newLocation.getCountry());
-        oldLocation.setWgs84Long(newLocation.getWgs84Long());
-        oldLocation.setWgs84Lat(newLocation.getWgs84Lat());
+        BeanUtils.copyProperties(newLocation, oldLocation);
     }
 }
