@@ -22,7 +22,8 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 public class PortnetMetadataController {
-    public static final String SSN_PATH =  "/ssn";
+    public static final String SSN_LOCATIONS_PATH =  "/locations";
+    public static final String SSN_LOCATIONS_BY_COUNTRY_PATH =  "/locations-by-country";
 
     private final PortnetMetadataService portnetMetadataService;
 
@@ -30,15 +31,15 @@ public class PortnetMetadataController {
         this.portnetMetadataService = portnetMetadataService;
     }
 
-    @ApiOperation("Return list of all berths, port areas and locations.")
-    @GetMapping(path = SSN_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation("Return list of all berths, port areas and ssn locations.")
+    @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PortsAndBerthsJson listAllMetadata() {
         return portnetMetadataService.listaAllMetadata();
     }
 
     @ApiOperation("Return one location's berths, port areas and location by locode.")
-    @GetMapping(path = SSN_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of ssn location"),
                     @ApiResponse(code = 404, message = "Ssn location not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
@@ -47,8 +48,8 @@ public class PortnetMetadataController {
         return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 
-    @ApiOperation("Return list of locations by country name")
-    @GetMapping(path = "/ssn-by-country/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation("Return list of ssn locations by country name")
+    @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<SsnLocationJson> findSsnLocationsByCountry(@PathVariable("country") final String country) {
         return portnetMetadataService.findSsnLocationsByCountry(country);

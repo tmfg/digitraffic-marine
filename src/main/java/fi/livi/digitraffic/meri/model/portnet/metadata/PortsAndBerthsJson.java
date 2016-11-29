@@ -21,7 +21,7 @@ public final class PortsAndBerthsJson {
     @ApiModelProperty(value = "Timestamp when port calls were last updated", required = true)
     public final ZonedDateTime lastUpdated;
 
-    @ApiModelProperty(value = "All UN/LOCODEs(ports)", required = true)
+    @ApiModelProperty(value = "All UN/LOCODE locations", required = true)
     public final List<SsnLocationJson> locations;
     @ApiModelProperty(value = "All port areas", required = true)
     public final List<PortAreaJson> portAreas;

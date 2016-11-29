@@ -15,7 +15,7 @@ public class ImoInformation {
             parameters = @Parameter(name = "sequence_name", value = "SEQ_IMO_INFORMATION"))
     @GeneratedValue(generator = "SEQ_IMO_INFORMATION")
     @Id
-    private long imoInformationId;
+    private Long imoInformationId;
 
     private String imoGeneralDeclaration;
     private String briefParticularsVoyage;
@@ -30,11 +30,11 @@ public class ImoInformation {
     private Integer passangerListsOb;
     private Integer healthDeclarationsOb;
 
-    public long getImoInformationId() {
+    public Long getImoInformationId() {
         return imoInformationId;
     }
 
-    public void setImoInformationId(final long imoInformationId) {
+    public void setImoInformationId(final Long imoInformationId) {
         this.imoInformationId = imoInformationId;
     }
 

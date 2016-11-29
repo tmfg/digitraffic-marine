@@ -30,7 +30,7 @@ public class PortnetMetadataControllerTest {
     public void testGetAllSsnMetadata() throws Exception {
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
-                PortnetMetadataController.SSN_PATH))
+                PortnetMetadataController.SSN_LOCATIONS_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("locations[0].locode", Matchers.notNullValue()))

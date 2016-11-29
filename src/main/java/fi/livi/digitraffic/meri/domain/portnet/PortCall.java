@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class PortCall {
     @Id
-    private long portCallId;
+    private Long portCallId;
 
     private Timestamp portCallTimestamp;
 
@@ -65,11 +65,11 @@ public class PortCall {
     @JoinColumn(name = "port_call_id", nullable = false)
     private Set<AgentInfo> agentInfo = new HashSet<>();
 
-    public long getPortCallId() {
+    public Long getPortCallId() {
         return portCallId;
     }
 
-    public void setPortCallId(final long portCallId) {
+    public void setPortCallId(final Long portCallId) {
         this.portCallId = portCallId;
     }
 
