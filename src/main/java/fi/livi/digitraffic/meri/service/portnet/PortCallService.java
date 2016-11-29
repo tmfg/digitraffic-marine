@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +52,10 @@ public class PortCallService {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
 
         final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName);
+
+        if (portCallIds.size() == 0) {
+            return new PortCallsJson(lastUpdated, Collections.emptyList());
+        }
 
         final Criteria c = createCriteria();
 
