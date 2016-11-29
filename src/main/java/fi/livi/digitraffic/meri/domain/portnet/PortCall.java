@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class PortCall {
     @Id
-    private long portCallId;
+    private Long portCallId;
 
     private Timestamp portCallTimestamp;
 

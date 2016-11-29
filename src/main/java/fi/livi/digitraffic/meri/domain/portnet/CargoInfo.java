@@ -18,7 +18,7 @@ public class CargoInfo {
     @GenericGenerator(name = "SEQ_CARGO_INFO", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = @Parameter(name = "sequence_name", value = "SEQ_CARGO_INFO"))
     @GeneratedValue(generator = "SEQ_CARGO_INFO")
-    private long cargoInfoId;
+    private Long cargoInfoId;
 
     private Integer cargoDischargeCode;
     private String cargoDescription;

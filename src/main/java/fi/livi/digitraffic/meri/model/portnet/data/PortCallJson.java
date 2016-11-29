@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 "certificateIssuer", "certificateStartDate", "certificateEndDate", "currentSecurityLevel", "agentInfo", "imoInformation", "portAreaDetails"})
 public interface PortCallJson {
     @ApiModelProperty(value = "Unique identifier for port call", required = true)
-    long getPortCallId();
+    Long getPortCallId();
 
     @ApiModelProperty(value = "Port call information modification time", required = true)
     Timestamp getPortCallTimestamp();

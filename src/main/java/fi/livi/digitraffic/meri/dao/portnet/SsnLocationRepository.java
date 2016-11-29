@@ -18,5 +18,6 @@ public interface SsnLocationRepository extends JpaRepository<SsnLocation, String
 
     SsnLocationJson findByLocode(final String locode);
 
+    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="1000"))
     List<SsnLocationJson> findByCountryIgnoreCase(final String country);
 }

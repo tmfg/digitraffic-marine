@@ -15,7 +15,7 @@ public class AgentInfo {
     @GenericGenerator(name = "SEQ_AGENT_INFO", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = @Parameter(name = "sequence_name", value = "SEQ_AGENT_INFO"))
     @GeneratedValue(generator = "SEQ_AGENT_INFO")
-    private long agentInfoId;
+    private Long agentInfoId;
 
     private Integer role;
     private String portCallDirection;

@@ -23,7 +23,7 @@ public class PortAreaDetails {
     @GenericGenerator(name = "SEQ_PORT_AREA_DETAILS", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = @Parameter(name = "sequence_name", value = "SEQ_PORT_AREA_DETAILS"))
     @GeneratedValue(generator = "SEQ_PORT_AREA_DETAILS")
-    private long portAreaDetailsId;
+    private Long portAreaDetailsId;
 
     private String portAreaCode;
     private String portAreaName;
