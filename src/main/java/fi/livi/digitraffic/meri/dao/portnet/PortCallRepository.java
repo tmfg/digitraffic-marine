@@ -15,6 +15,6 @@ import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 @Repository
 public interface PortCallRepository extends JpaRepository<PortCall, Long> {
 
-    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="1000"))
+    @QueryHints(@QueryHint(name = "org.hibernate.fetchSize", value = "1000"))
     Stream<PortCallJson> findByPortCallIdIn(final List<Long> portCallIds);
 }
