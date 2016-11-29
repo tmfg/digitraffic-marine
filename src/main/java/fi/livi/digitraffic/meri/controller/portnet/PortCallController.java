@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
+import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.portnet.PortCallService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_PORT_CALLS_PATH)
@@ -32,6 +35,9 @@ public class PortCallController {
 
     @ApiOperation("Find port calls")
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
+                    @ApiResponse(code = 400, message = "Bad request. At least one parameter is required."),
+                    @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public PortCallsJson listAllPortCalls(
             @ApiParam("Return port calls from given port")
@@ -47,6 +53,11 @@ public class PortCallController {
 
             @ApiParam("Return port calls from given vessel")
             @RequestParam(value = "vesselName", required = false) final String vesselName) {
+
+        if (locode == null && date == null && from == null && vesselName == null) {
+            throw new BadRequestException("At least one parameter is required");
+        }
+
         return portCallService.findPortCalls(date, from, locode, vesselName);
     }
 }
