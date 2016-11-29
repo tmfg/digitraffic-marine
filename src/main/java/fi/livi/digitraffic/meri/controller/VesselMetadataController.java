@@ -25,6 +25,7 @@ public class VesselMetadataController {
     private final VesselMetadataService vesselMetadataService;
 
     public static final String VESSELS_PATH =  "/vessels";
+    public static final String VESSEL_TYPES_PATH = "/vessel-types";
 
     @Autowired
     public VesselMetadataController(final VesselMetadataService vesselMetadataService) {
@@ -43,8 +44,19 @@ public class VesselMetadataController {
 
     @ApiOperation("Return latest vessel metadata for all known vessels.")
     @GetMapping(path = VESSELS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel metadata"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public List<VesselMetadataJson> allVessels() {
+        return vesselMetadataService.listAllVesselMetadata();
+    }
+
+    @ApiOperation("Return all vessel types.")
+    @GetMapping(path = VESSEL_TYPES_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel types"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ResponseBody
+    public List<VesselMetadataJson> allVesselTypes() {
         return vesselMetadataService.listAllVesselMetadata();
     }
 }

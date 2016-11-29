@@ -57,7 +57,7 @@ public class VesselLocation implements VesselLocationJson {
         this.heading = ais.attributes.heading;
     }
 
-    public int getMmsi() {
+    @Override public int getMmsi() {
         return mmsi;
     }
 
@@ -65,7 +65,7 @@ public class VesselLocation implements VesselLocationJson {
         this.mmsi = mmsi;
     }
 
-    public double getX() {
+    @Override public double getX() {
         return x;
     }
 
@@ -73,7 +73,7 @@ public class VesselLocation implements VesselLocationJson {
         this.x = x;
     }
 
-    public double getY() {
+    @Override public double getY() {
         return y;
     }
 
@@ -81,7 +81,7 @@ public class VesselLocation implements VesselLocationJson {
         this.y = y;
     }
 
-    public double getSog() {
+    @Override public double getSog() {
         return sog;
     }
 
@@ -89,7 +89,7 @@ public class VesselLocation implements VesselLocationJson {
         this.sog = sog;
     }
 
-    public double getCog() {
+    @Override public double getCog() {
         return cog;
     }
 
@@ -97,7 +97,7 @@ public class VesselLocation implements VesselLocationJson {
         this.cog = cog;
     }
 
-    public int getNavStat() {
+    @Override public int getNavStat() {
         return navStat;
     }
 
@@ -105,7 +105,7 @@ public class VesselLocation implements VesselLocationJson {
         this.navStat = navStat;
     }
 
-    public int getRot() {
+    @Override public int getRot() {
         return rot;
     }
 
@@ -113,7 +113,7 @@ public class VesselLocation implements VesselLocationJson {
         this.rot = rot;
     }
 
-    public boolean isPosAcc() {
+    @Override public boolean isPosAcc() {
         return posAcc;
     }
 
@@ -121,7 +121,7 @@ public class VesselLocation implements VesselLocationJson {
         this.posAcc = posAcc;
     }
 
-    public boolean isRaim() {
+    @Override public boolean isRaim() {
         return raim;
     }
 
@@ -129,7 +129,7 @@ public class VesselLocation implements VesselLocationJson {
         this.raim = raim;
     }
 
-    public long getTimestamp() {
+    @Override public long getTimestamp() {
         return timestamp;
     }
 
@@ -137,7 +137,7 @@ public class VesselLocation implements VesselLocationJson {
         this.timestamp = timestamp;
     }
 
-    public long getTimestampExternal() {
+    @Override public long getTimestampExternal() {
         return timestampExternal;
     }
 
@@ -145,7 +145,7 @@ public class VesselLocation implements VesselLocationJson {
         this.timestampExternal = timestampExternal;
     }
 
-    public Integer getHeading() {
+    @Override public Integer getHeading() {
         return heading;
     }
 

@@ -4,6 +4,7 @@ import static com.google.common.base.Predicates.or;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 import static springfox.documentation.builders.PathSelectors.regex;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -37,6 +38,7 @@ public class SwaggerConfiguration {
                 .directModelSubstitute(LocalDateTime.class, String.class)
                 .directModelSubstitute(LocalDate.class, String.class)
                 .directModelSubstitute(Date.class, String.class)
+                .directModelSubstitute(Timestamp.class, String.class)
                 .apiInfo(aisApiInfoService.getApiInfo())
                 .select()
                 .paths(getMetadataApiPaths())

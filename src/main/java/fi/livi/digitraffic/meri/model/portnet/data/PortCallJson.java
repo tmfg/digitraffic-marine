@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 "certificateIssuer", "certificateStartDate", "certificateEndDate", "currentSecurityLevel", "agentInfo", "imoInformation", "portAreaDetails"})
 public interface PortCallJson {
     @ApiModelProperty(value = "Unique identifier for port call", required = true)
-    long getPortCallId();
+    Long getPortCallId();
 
     @ApiModelProperty(value = "Port call information modification time", required = true)
     Timestamp getPortCallTimestamp();
@@ -39,7 +39,7 @@ public interface PortCallJson {
     Boolean getArrivalWithCargo();
     @ApiModelProperty(value = "Does the ship load")
     Boolean getNotLoading();
-    @ApiModelProperty(value = "Type of discharge", allowableValues = "range[1..4]")
+    @ApiModelProperty(value = "Type of discharge", allowableValues = "range[1, 4]")
     Integer getDischarge();
 
     @ApiModelProperty(value = "Ship master at the moment of arrival")
