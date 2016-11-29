@@ -39,7 +39,7 @@ public interface PortCallJson {
     Boolean getArrivalWithCargo();
     @ApiModelProperty(value = "Does the ship load")
     Boolean getNotLoading();
-    @ApiModelProperty(value = "Type of discharge", allowableValues = "range[1..4]")
+    @ApiModelProperty(value = "Type of discharge", allowableValues = "range[1, 4]")
     Integer getDischarge();
 
     @ApiModelProperty(value = "Ship master at the moment of arrival")
