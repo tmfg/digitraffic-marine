@@ -25,5 +25,7 @@ public class VesselLocationRelayListener implements WebsocketListener {
     }
 
     @Override
-    public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) { }
+    public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
+        // no need to do anything
+    }
 }
