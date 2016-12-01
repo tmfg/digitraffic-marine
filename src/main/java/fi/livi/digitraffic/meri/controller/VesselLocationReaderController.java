@@ -36,7 +36,7 @@ public class VesselLocationReaderController {
             final List<WebsocketListener> listeners = Arrays.asList(
                     new VesselLocationDatabaseListener(vesselLocationRepository, accessLock),
                     new VesselLocationRelayListener(locationSender),
-                    new WebsocketLoggingListener("LOCATION")
+                    new WebsocketLoggingListener("LOCATION", true)
             );
 
             readerList = Arrays.asList(

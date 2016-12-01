@@ -31,4 +31,8 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
             }
         }
     }
+
+    @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
+        // no need to do anything
+    }
 }
