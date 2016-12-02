@@ -15,7 +15,7 @@ import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
-import fi.livi.digitraffic.meri.dao.VesselLocationRepository;
+import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.util.locking.AccessLock;
 import fi.livi.util.locking.LockingService;
 

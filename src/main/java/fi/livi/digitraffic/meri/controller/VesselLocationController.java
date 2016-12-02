@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
-import fi.livi.digitraffic.meri.service.VesselLocationService;
+import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
