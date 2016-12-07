@@ -9,7 +9,7 @@ import fi.livi.digitraffic.meri.AisApplication;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = AisApplication.class,
 				webEnvironment = SpringBootTest.WebEnvironment.NONE,
-				properties = {"spring.main.web_environment=false"})
+				properties = {"spring.main.web_environment=false", "quartz.enabled=false"})
 public abstract class AbstractIntegrationTest {
 
 }
