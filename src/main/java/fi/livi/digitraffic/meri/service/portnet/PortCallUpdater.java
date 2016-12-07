@@ -57,12 +57,17 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        log.info("Fetching port calls from server");
-
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
         final Instant now = Instant.now();
         final Instant from = lastUpdated == null ? now.minus(5, ChronoUnit.MINUTES) : lastUpdated;
         final Instant to = now.toEpochMilli() - from.toEpochMilli() > maxTimeFrameToFetch ? from.plusMillis(maxTimeFrameToFetch) : now;
+
+        updatePortCalls(from, to);
+    }
+
+    @Transactional
+    protected void updatePortCalls(final Instant from, final Instant to) {
+        log.info("Fetching port calls from server");
 
         final PortCallList list = portCallClient.getList(from, to);
 

@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 
 @Service
@@ -27,14 +30,30 @@ public class PortCallClient {
     }
 
     public PortCallList getList(final Instant lastUpdated, final Instant now) {
-        final RestTemplate template = new RestTemplate();
+        final RestTemplate template = getRestTemplate();
         final String url = buildUrl(lastUpdated, now);
 
-        log.info("fetching port calls from " + url);
+        log.info("Fetching port calls from " + url);
 
-        System.out.println("viesti " + template.getForObject(url, String.class));
+        PortCallList portCallList = template.getForObject(url, PortCallList.class);
 
-        return template.getForObject(url, PortCallList.class);
+        logInfo(portCallList);
+
+        return portCallList;
+    }
+
+    protected RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
+    private void logInfo(PortCallList portCallList) {
+        log.info("Number of received notifications: " + portCallList.getPortCallNotification().size());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            log.info(mapper.writeValueAsString(portCallList));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     private String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
