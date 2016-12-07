@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.dao;
+package fi.livi.digitraffic.meri.dao.ais;
 
 import java.util.List;
 

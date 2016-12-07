@@ -1,25 +1,26 @@
 package fi.livi.digitraffic.meri.service;
 
-/**
- * Application build information.
- */
-public interface BuildVersionService {
+import org.springframework.stereotype.Service;
 
-    /**
-     * Return app's base version
-     * @return version
-     */
-    String getAppVersion();
+import com.jcabi.manifests.Manifests;
 
-    /**
-     * Return app's build revision
-     * @return revision
-     */
-    String getAppBuildRevision();
+@Service
+public class BuildVersionService {
+    public String getAppVersion() {
+        if (Manifests.exists("AisApplication-Version")) {
+            return Manifests.read("AisApplication-Version");
+        }
+        return "DEV-BUILD";
+    }
 
-    /**
-     * Returns app's base version + build revision
-     * @return  version + revision
-     */
-    String getAppFullVersion();
+    public String getAppBuildRevision() {
+        if (Manifests.exists("AisApplication-Build")) {
+            return Manifests.read("AisApplication-Build");
+        }
+        return "X";
+    }
+
+    public String getAppFullVersion() {
+        return getAppVersion() + "-" + getAppBuildRevision();
+    }
 }

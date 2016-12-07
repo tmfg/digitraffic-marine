@@ -22,6 +22,7 @@ public class AisApplicationConfiguration {
     public static final String API_PLAIN_WEBSOCKETS_PART_PATH = "/plain-websockets";
     public static final String API_METADATA_PART_PATH = "/metadata";
     public static final String API_LOCATIONS_PATH = "/locations";
+    public static final String API_PORT_CALLS_PATH = "/port-calls";
 
     /**
      * Initialize OracleDataSource manually because datasource property spring.datasource.type=oracle.jdbc.pool.OracleDataSource

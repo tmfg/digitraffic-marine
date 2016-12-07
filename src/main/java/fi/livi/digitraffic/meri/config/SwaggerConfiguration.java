@@ -4,6 +4,12 @@ import static com.google.common.base.Predicates.or;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 import static springfox.documentation.builders.PathSelectors.regex;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +34,11 @@ public class SwaggerConfiguration {
     public Docket metadataApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("metadata-api")
+                .directModelSubstitute(ZonedDateTime.class, String.class)
+                .directModelSubstitute(LocalDateTime.class, String.class)
+                .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(Date.class, String.class)
+                .directModelSubstitute(Timestamp.class, String.class)
                 .apiInfo(aisApiInfoService.getApiInfo())
                 .select()
                 .paths(getMetadataApiPaths())

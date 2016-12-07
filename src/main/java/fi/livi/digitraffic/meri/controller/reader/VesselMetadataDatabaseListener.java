@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.controller.reader;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.dao.VesselMetadataRepository;
+import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.util.locking.AccessLock;

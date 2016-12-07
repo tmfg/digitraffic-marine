@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.model;
+package fi.livi.digitraffic.meri.model.ais;
 
 public class StatusMessage {
     public final String status;

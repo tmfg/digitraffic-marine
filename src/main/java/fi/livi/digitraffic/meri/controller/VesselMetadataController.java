@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
-import fi.livi.digitraffic.meri.service.VesselMetadataService;
+import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -43,6 +43,8 @@ public class VesselMetadataController {
 
     @ApiOperation("Return latest vessel metadata for all known vessels.")
     @GetMapping(path = VESSELS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel metadata"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public List<VesselMetadataJson> allVessels() {
         return vesselMetadataService.listAllVesselMetadata();
