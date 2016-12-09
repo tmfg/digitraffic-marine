@@ -5,7 +5,6 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,22 +43,26 @@ public class PortCallUpdater {
     private static final Logger log = LoggerFactory.getLogger(PortCallUpdater.class);
 
     private final int maxTimeFrameToFetch;
+    // To make sure that no data is missed because of update turn changing from a node to another
+    private final int overlapTimeFrame;
 
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallClient portCallClient,
-                           @Value("${portCallUpdateJob.maxTimeFrameToFetch}") final int maxTimeFrameToFetch) {
+                           @Value("${portCallUpdateJob.maxTimeFrameToFetch}") final int maxTimeFrameToFetch,
+                           @Value("${portCallUpdateJob.overlapTimeFrame}") final int overlapTimeFrame) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallClient = portCallClient;
         this.maxTimeFrameToFetch = maxTimeFrameToFetch;
+        this.overlapTimeFrame = overlapTimeFrame;
     }
 
     @Transactional
     public void update() {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
         final Instant now = Instant.now();
-        final Instant from = lastUpdated == null ? now.minus(5, ChronoUnit.MINUTES) : lastUpdated;
+        final Instant from = lastUpdated == null ? now.minusMillis(maxTimeFrameToFetch) : lastUpdated.minusMillis(overlapTimeFrame);
         final Instant to = now.toEpochMilli() - from.toEpochMilli() > maxTimeFrameToFetch ? from.plusMillis(maxTimeFrameToFetch) : now;
 
         updatePortCalls(from, to);
