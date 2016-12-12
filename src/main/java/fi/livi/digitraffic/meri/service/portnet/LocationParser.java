@@ -72,7 +72,7 @@ public final class LocationParser {
         }
 
         // no sign, when 0.0
-        if(dValue.doubleValue() == 0) {
+        if(Math.abs(dValue.doubleValue()) - 0 < 0.0001) {
             return 0.0;
         }
 
@@ -100,11 +100,11 @@ public final class LocationParser {
 
     private static Double parseValue(final String d, final String m, final String s) {
         try {
-            final double degrees = Integer.valueOf(d);
-            final double minutes = Integer.valueOf(m);
-            final double seconds = Integer.valueOf(s);
+            final double degrees = Double.valueOf(d);
+            final double minutes = Double.valueOf(m);
+            final double seconds = Double.valueOf(s);
 
-            return new BigDecimal(degrees + minutes / 60 + seconds / 3600)
+            return BigDecimal.valueOf(degrees + minutes / 60 + seconds / 3600)
                 .setScale(5, RoundingMode.HALF_UP)
                 .doubleValue();
         } catch(final NumberFormatException nfe) {

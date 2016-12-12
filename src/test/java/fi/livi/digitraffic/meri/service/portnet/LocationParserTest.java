@@ -71,6 +71,12 @@ public class LocationParserTest {
         assertLongitude("( E)  23 °  45  '  39' '", 23.76083333334);
     }
 
+    @Test
+    public void testNegativeZero() {
+        assertLongitude("(E) 0°  0'  0''", 0.0);
+        assertLongitude("(W) 0°  0'  0''", 0.0);
+    }
+
     private void assertLatitude(final String s, final double expected) {
         final Double parsed = LocationParser.parseLatitude(s);
         assertCoordinates(expected, parsed);
