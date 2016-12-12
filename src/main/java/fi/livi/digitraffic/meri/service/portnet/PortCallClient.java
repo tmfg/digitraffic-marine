@@ -35,7 +35,7 @@ public class PortCallClient {
 
         log.info("Fetching port calls from " + url);
 
-        PortCallList portCallList = template.getForObject(url, PortCallList.class);
+        final PortCallList portCallList = template.getForObject(url, PortCallList.class);
 
         logInfo(portCallList);
 
@@ -46,12 +46,12 @@ public class PortCallClient {
         return new RestTemplate();
     }
 
-    private void logInfo(PortCallList portCallList) {
+    private void logInfo(final PortCallList portCallList) {
         log.info("Number of received notifications: " + portCallList.getPortCallNotification().size());
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
         try {
             log.info(mapper.writeValueAsString(portCallList));
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
     }

@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -58,16 +59,17 @@ public class BerthUpdater {
             final Berth newBerth = convert(bk, bl);
 
             if(newKeys.contains(bk)) {
-                log.info(String.format("Duplikate key %s,%s,%s", bk.getLocode(), bk.getPortAreaCode(), bk.getBerthCode()));
+                log.info(String.format("Duplicate key %s,%s,%s", bk.getLocode(), bk.getPortAreaCode(), bk.getBerthCode()));
             } else {
                 newKeys.add(bk);
-            }
 
-            if(!oldMap.containsKey(bk)) {
-                newBerths.add(newBerth);
-            } else {
-                mergeBerth(oldMap.get(newBerth.getBerthKey()), newBerth);
-                updates++;
+                if (!oldMap.containsKey(bk)) {
+                    newBerths.add(newBerth);
+                } else {
+                    if(mergeBerth(oldMap.get(newBerth.getBerthKey()), newBerth)) {
+                        updates++;
+                    }
+                }
             }
 
             oldMap.remove(bk);
@@ -76,11 +78,16 @@ public class BerthUpdater {
         berthRepository.delete(oldMap.values());
         berthRepository.save(newBerths);
 
-        log.info(String.format("Added %d berths, updated %d, deleted %d.", newBerths.size(), updates, oldMap.values().size()));
+        log.info("Read {} berths, added {], updated {], deleted {].",
+                berthLines.size(), newBerths.size(), updates, oldMap.values().size());
     }
 
-    private void mergeBerth(final Berth oldBerth, final Berth newBerth) {
+    private boolean mergeBerth(final Berth oldBerth, final Berth newBerth) {
+        final boolean difference = !StringUtils.equals(oldBerth.getBerthName(), newBerth.getBerthName());
+
         oldBerth.setBerthName(newBerth.getBerthName());
+
+        return difference;
     }
 
     private Berth convert(final BerthKey bk, final BerthLine bl) {
@@ -104,8 +111,9 @@ public class BerthUpdater {
             if(!oldMap.containsKey(e.getKey())) {
                 newAreas.add(newArea);
             } else {
-                mergePortArea(oldMap.get(e.getKey()), newArea);
-                updates++;
+                if(mergePortArea(oldMap.get(e.getKey()), newArea)) {
+                    updates++;
+                }
             }
 
             oldMap.remove(e.getKey());
@@ -117,8 +125,12 @@ public class BerthUpdater {
         log.info(String.format("Added %d port areas, updated %d, deleted %d.", newAreas.size(), updates, oldMap.values().size()));
     }
 
-    private void mergePortArea(final PortArea oldArea, final PortArea newArea) {
+    private boolean mergePortArea(final PortArea oldArea, final PortArea newArea) {
+        final boolean difference = !StringUtils.equals(oldArea.getPortAreaName(), newArea.getPortAreaName());
+
         oldArea.setPortAreaName(newArea.getPortAreaName());
+
+        return difference;
     }
 
     private PortArea convert(final PortAreaKey key, final BerthLine value) {

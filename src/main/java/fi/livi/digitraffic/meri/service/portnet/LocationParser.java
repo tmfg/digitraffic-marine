@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 import org.springframework.util.StringUtils;
@@ -40,13 +42,14 @@ public final class LocationParser {
     }
 
     private static Double parse(final String value, final LocationType type) {
-
         final String val = StringUtils.trimAllWhitespace(value);
+
         if (!isValidLength(val)) {
             return null;
         }
 
-        Sign sign = parseHemisphere(val, type);
+        final Sign sign = parseHemisphere(val, type);
+
         if (sign == Sign.INVALID) {
             return null;
         }
@@ -62,8 +65,18 @@ public final class LocationParser {
         final String degrees = val.substring(3, i2);
         final String minutes = val.substring(i2 + 1, i3);
         final String seconds = val.substring(i3 + 1, i4);
+        final Double dValue = parseValue(degrees, minutes, seconds);
 
-        return sign.getValue() * parseValue(degrees, minutes, seconds);
+        if(dValue == null) {
+            return null;
+        }
+
+        // no sign, when 0.0
+        if(dValue.doubleValue() == 0) {
+            return 0.0;
+        }
+
+        return sign.getValue() * dValue;
     }
 
     private static boolean isValidLength(final String val) {
@@ -91,7 +104,9 @@ public final class LocationParser {
             final double minutes = Integer.valueOf(m);
             final double seconds = Integer.valueOf(s);
 
-            return degrees + minutes / 60 + seconds / 3600;
+            return new BigDecimal(degrees + minutes / 60 + seconds / 3600)
+                .setScale(5, RoundingMode.HALF_UP)
+                .doubleValue();
         } catch(final NumberFormatException nfe) {
             return null;
         }
