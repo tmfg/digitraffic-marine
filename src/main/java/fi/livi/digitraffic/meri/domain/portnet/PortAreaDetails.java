@@ -98,7 +98,7 @@ public class PortAreaDetails {
     }
 
     public void setEta(final Timestamp eta) {
-        this.eta = eta;
+        this.eta = new Timestamp(eta.getTime());
     }
 
     public Timestamp getEtaTimestamp() {

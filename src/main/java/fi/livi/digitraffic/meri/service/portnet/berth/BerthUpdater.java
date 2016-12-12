@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
-import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.domain.portnet.Berth;
 import fi.livi.digitraffic.meri.domain.portnet.BerthKey;
 import fi.livi.digitraffic.meri.domain.portnet.PortArea;
@@ -24,16 +23,14 @@ import fi.livi.digitraffic.meri.domain.portnet.PortAreaKey;
 
 @Service
 public class BerthUpdater {
-    private final SsnLocationRepository ssnLocationRepository;
     private final PortAreaRepository portAreaRepository;
     private final BerthRepository berthRepository;
     private final BerthClient berthClient;
 
     private static final Logger log = LoggerFactory.getLogger(BerthUpdater.class);
 
-    public BerthUpdater(final SsnLocationRepository ssnLocationRepository, final PortAreaRepository portAreaRepository,
+    public BerthUpdater(final PortAreaRepository portAreaRepository,
                         final BerthRepository berthRepository, final BerthClient berthClient) {
-        this.ssnLocationRepository = ssnLocationRepository;
         this.portAreaRepository = portAreaRepository;
         this.berthRepository = berthRepository;
         this.berthClient = berthClient;
@@ -82,7 +79,7 @@ public class BerthUpdater {
                 berthLines.size(), newBerths.size(), updates, oldMap.values().size());
     }
 
-    private boolean mergeBerth(final Berth oldBerth, final Berth newBerth) {
+    private static boolean mergeBerth(final Berth oldBerth, final Berth newBerth) {
         final boolean difference = !StringUtils.equals(oldBerth.getBerthName(), newBerth.getBerthName());
 
         oldBerth.setBerthName(newBerth.getBerthName());
@@ -90,7 +87,7 @@ public class BerthUpdater {
         return difference;
     }
 
-    private Berth convert(final BerthKey bk, final BerthLine bl) {
+    private static Berth convert(final BerthKey bk, final BerthLine bl) {
         final Berth berth = new Berth();
 
         berth.setBerthKey(bk);
@@ -125,7 +122,7 @@ public class BerthUpdater {
         log.info(String.format("Added %d port areas, updated %d, deleted %d.", newAreas.size(), updates, oldMap.values().size()));
     }
 
-    private boolean mergePortArea(final PortArea oldArea, final PortArea newArea) {
+    private static boolean mergePortArea(final PortArea oldArea, final PortArea newArea) {
         final boolean difference = !StringUtils.equals(oldArea.getPortAreaName(), newArea.getPortAreaName());
 
         oldArea.setPortAreaName(newArea.getPortAreaName());
@@ -133,7 +130,7 @@ public class BerthUpdater {
         return difference;
     }
 
-    private PortArea convert(final PortAreaKey key, final BerthLine value) {
+    private static PortArea convert(final PortAreaKey key, final BerthLine value) {
         final PortArea newPortArea = new PortArea();
 
         newPortArea.setPortAreaKey(key);

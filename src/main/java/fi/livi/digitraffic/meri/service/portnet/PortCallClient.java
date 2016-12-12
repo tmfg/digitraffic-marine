@@ -46,21 +46,22 @@ public class PortCallClient {
         return new RestTemplate();
     }
 
-    private void logInfo(final PortCallList portCallList) {
+    private static void logInfo(final PortCallList portCallList) {
         log.info("Number of received notifications: " + portCallList.getPortCallNotification().size());
+
         final ObjectMapper mapper = new ObjectMapper();
         try {
             log.info(mapper.writeValueAsString(portCallList));
         } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("Could not parse", e);
         }
     }
 
-    private String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
+    private static String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
         return String.format("%s=%s", datePrefix, timestamp.format(DATE_FORMATTER));
     }
 
-    private String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
+    private static String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
         return timestamp == null ? "" : String.format("%s=%s", timePrefix, timestamp.format(TIME_FORMATTER));
     }
 

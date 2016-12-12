@@ -69,7 +69,7 @@ public class PortCallUpdater {
     }
 
     @Transactional
-    protected void updatePortCalls(final Instant from, final Instant to) {
+    public void updatePortCalls(final Instant from, final Instant to) {
         log.info("Fetching port calls from server");
 
         final PortCallList list = portCallClient.getList(from, to);
@@ -90,7 +90,7 @@ public class PortCallUpdater {
         }
     }
 
-    private boolean isListOk(final PortCallList list) {
+    private static boolean isListOk(final PortCallList list) {
         final String status = getStatusFromResponse(list);
 
         switch(status) {
@@ -108,8 +108,10 @@ public class PortCallUpdater {
         return true;
     }
 
-    private String getStatusFromResponse(final PortCallList list) {
-        if(list == null) return "ERROR";
+    private static String getStatusFromResponse(final PortCallList list) {
+        if(list == null) {
+            return "ERROR";
+        }
 
         return list.getHeader() == null ? "NOT_FOUND" : list.getHeader().getResponseType().getStatus();
     }
@@ -124,7 +126,7 @@ public class PortCallUpdater {
         }
     }
 
-    private PortCall update(final PortCall pc, final PortCallNotification pcn) {
+    private static PortCall update(final PortCall pc, final PortCallNotification pcn) {
         // update timestamp
 
         updateData(pc, pcn);
@@ -132,7 +134,7 @@ public class PortCallUpdater {
         return pc;
     }
 
-    private PortCall addNew(final PortCallNotification pcn) {
+    private static PortCall addNew(final PortCallNotification pcn) {
         final PortCall pc = new PortCall();
 
         updateData(pc, pcn);
@@ -140,7 +142,7 @@ public class PortCallUpdater {
         return pc;
     }
 
-    private void updateData(final PortCall pc, final PortCallNotification pcn) {
+    private static void updateData(final PortCall pc, final PortCallNotification pcn) {
         final PortCallDetails det = pcn.getPortCallDetails();
         final VesselDetails.IdentificationData id = det.getVesselDetails().getIdentificationData();
 
@@ -183,7 +185,7 @@ public class PortCallUpdater {
         updateAgentInfo(pc, det);
     }
 
-    private void updateAgentInfo(final PortCall pc, final PortCallDetails det) {
+    private static void updateAgentInfo(final PortCall pc, final PortCallDetails det) {
         pc.getAgentInfo().clear();
 
         for(final AgentInfo ai : det.getAgentInfo()) {
@@ -198,7 +200,7 @@ public class PortCallUpdater {
         }
     }
 
-    private void updateImoInformation(final PortCall pc, final PortCallDetails det) {
+    private static void updateImoInformation(final PortCall pc, final PortCallDetails det) {
         pc.getImoInformation().clear();
 
         for(final ImoInformation ii : det.getImoInformation()) {
@@ -220,7 +222,7 @@ public class PortCallUpdater {
         }
     }
 
-    private void updatePortAreaDetails(final PortCall pc, final PortCallNotification pcn) {
+    private static void updatePortAreaDetails(final PortCall pc, final PortCallNotification pcn) {
         // port area details have no natural id, so they must be remade every time
         pc.getPortAreaDetails().clear();
 
@@ -258,7 +260,7 @@ public class PortCallUpdater {
         }
     }
 
-    private void updateCargoInfo(final fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails newPad, final BerthDetails bd) {
+    private static void updateCargoInfo(final fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails newPad, final BerthDetails bd) {
         newPad.getCargoInfo().clear();
 
         for(final CargoInfo ci : bd.getCargoInfo()) {
@@ -274,15 +276,15 @@ public class PortCallUpdater {
         }
     }
 
-    private Integer getInteger(final BigInteger bi) {
+    private static Integer getInteger(final BigInteger bi) {
         return bi == null ? null : bi.intValue();
     }
 
-    private String getSource(final TimeSource tc) {
+    private static String getSource(final TimeSource tc) {
         return tc == null ? null : tc.value();
     }
 
-    private Timestamp getTimestamp(final XMLGregorianCalendar cal) {
+    private static Timestamp getTimestamp(final XMLGregorianCalendar cal) {
         return cal == null ? null : new Timestamp(cal.toGregorianCalendar().getTimeInMillis());
     }
 }
