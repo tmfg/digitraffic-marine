@@ -26,7 +26,7 @@ public class SsnLocationClientTest extends AbstractIntegrationTest {
         final SsnLocation ssnLocation = ssnLocations.parallelStream().filter(l -> l.getLocode().equals("DEHEI")).collect(Collectors.toList()).get(0);
         assertEquals("Heidelberg", ssnLocation.getLocationName());
         assertEquals("Germany", ssnLocation.getCountry());
-        assertEquals(new BigDecimal("49.4166667"), BigDecimal.valueOf(ssnLocation.getWgs84Lat()).setScale(7, RoundingMode.HALF_UP));
+        assertEquals(new BigDecimal("49.41667"), BigDecimal.valueOf(ssnLocation.getWgs84Lat()).setScale(5, RoundingMode.HALF_UP));
         assertEquals(Double.valueOf("8.7"), ssnLocation.getWgs84Long());
     }
 }
