@@ -20,8 +20,8 @@ import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 public class PortCallClient {
     private final String portCallUrl;
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmmss");
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmmss");
 
     private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
@@ -42,6 +42,14 @@ public class PortCallClient {
         return portCallList;
     }
 
+    public static String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
+        return String.format("%s=%s", datePrefix, timestamp.format(DATE_FORMATTER));
+    }
+
+    public static String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
+        return timestamp == null ? "" : String.format("%s=%s", timePrefix, timestamp.format(TIME_FORMATTER));
+    }
+
     protected RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
@@ -55,14 +63,6 @@ public class PortCallClient {
         } catch (final JsonProcessingException e) {
             log.error("Could not parse", e);
         }
-    }
-
-    private static String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
-        return String.format("%s=%s", datePrefix, timestamp.format(DATE_FORMATTER));
-    }
-
-    private static String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
-        return timestamp == null ? "" : String.format("%s=%s", timePrefix, timestamp.format(TIME_FORMATTER));
     }
 
     private String buildUrl(final Instant lastUpdated, final Instant now) {

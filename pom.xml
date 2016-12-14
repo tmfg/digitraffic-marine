@@ -317,6 +317,14 @@
                                     <xsd>${basedir}/src/main/resources/portnet/PortnetTypes.xsd</xsd>
                                     <packagename>fi.livi.digitraffic.meri.portnet.xsd</packagename>
                                 </xsdOption>
+                                <xsdOption>
+                                    <xsd>${basedir}/src/main/resources/portnet/vesseldetails/VesselDetails.xsd</xsd>
+                                    <packagename>fi.livi.digitraffic.meri.portnet.vesseldetails.xsd</packagename>
+                                </xsdOption>
+                                <xsdOption>
+                                    <xsd>${basedir}/src/main/resources/portnet/vesseldetails/PortnetTypes.xsd</xsd>
+                                    <packagename>fi.livi.digitraffic.meri.portnet.vesseldetails.xsd</packagename>
+                                </xsdOption>
                             </xsdOptions>
                         </configuration>
                     </execution>
