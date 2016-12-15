@@ -54,12 +54,12 @@ public class VesselDetails {
     public void setAll(final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd) {
         final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails.IdentificationData idData = vd.getIdentificationData();
         this.vesselId = idData.getVesselId().longValue();
-        this.mmsi = idData.getMmsi().intValue();
+        this.mmsi = TypeUtil.getInteger(idData.getMmsi());
         this.name = idData.getName();
         this.namePrefix = idData.getNamePrefix();
-        this.imoLloyds = idData.getImoLloyds().intValue();
+        this.imoLloyds = TypeUtil.getInteger(idData.getImoLloyds());
         this.radioCallSign = idData.getRadioCallSign();
-        this.radioCallSignType = idData.getRadioCallSignType().name();
+        this.radioCallSignType = TypeUtil.getEnum(idData.getRadioCallSignType());
         this.updateTimestamp = TypeUtil.getTimestamp(idData.getUpdateTimeStamp());
         this.dataSource = idData.getDataSource();
         if (this.vesselConstruction == null) {
