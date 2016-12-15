@@ -14,6 +14,7 @@ import fi.livi.digitraffic.meri.controller.reader.VesselMetadataDatabaseListener
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
+import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.util.locking.AccessLock;
 import fi.livi.util.locking.LockingService;
@@ -31,7 +32,7 @@ public class VesselMetadataReaderController {
         final AccessLock accessLock = lockingService.lock("AIS-metadata");
         final List<WebsocketListener> listeners = Arrays.asList(
                 new VesselMetadataDatabaseListener(vesselMetadataRepository, accessLock),
-                new WebsocketLoggingListener("METADATA", false)
+                new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.METADATA)
         );
 
         readerList = Arrays.asList(new WebsocketReader(aisLocations5Url, listeners));

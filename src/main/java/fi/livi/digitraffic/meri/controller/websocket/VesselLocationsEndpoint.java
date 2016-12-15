@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.controller.websocket;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.controller.reader.ReconnectingHandler;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 
@@ -53,14 +53,18 @@ public class VesselLocationsEndpoint extends WebsocketEndpoint{
             final Set<Session> sessionSet = sessions.get(message.attributes.mmsi);
 
             if(sessionSet != null) {
+                WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.VESSEL_LOCATION, sessionSet.size());
+
                 sendMessage(LOG, message, sessionSet);
             }
         }
     }
 
-    public static void sendStatus(final ReconnectingHandler.ConnectionStatus status) {
+    public static void sendStatus(final String status) {
         synchronized (sessions) {
-            sendMessage(LOG, new StatusMessage(status.name()), sessions.values().stream().flatMap(c -> c.stream()).collect(Collectors.toList()));
+            final List<Session> sessionList = sessions.values().stream().flatMap(c -> c.stream()).collect(Collectors.toList());
+
+            sendMessage(LOG, new StatusMessage(status), sessionList);
         }
     }
 }
