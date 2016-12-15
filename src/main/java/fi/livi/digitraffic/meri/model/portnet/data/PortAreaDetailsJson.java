@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.model.portnet.data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -55,6 +54,5 @@ public interface PortAreaDetailsJson {
     @ApiModelProperty(value = "Departure draught")
     BigDecimal getDepartureDraught();
 
-    @ApiModelProperty(value = "Cargo information")
-    Set<CargoInfoJson> getCargoInfo();
+    // no cargo-info here
 }

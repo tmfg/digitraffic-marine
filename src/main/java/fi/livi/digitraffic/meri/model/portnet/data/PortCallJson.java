@@ -12,8 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description="Port call")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"portCallId", "portCallTimestamp", "customsReference", "portToVisit", "prevPort", "nextPort", "domesticTrafficArrival", "domesticTrafficDeparture",
-"arrivalWithCargo", "notLoading", "discharge", "shipMasterArrival", "shipMasterDeparture", "managementNameArrival", "managementNameDeparture", "forwaredNameArrival",
-"forwarderNameDeparture", "freeTextArrival", "freeTextDeparture", "vesselName", "vesselNamePrefix", "radioCallSign", "radioCallSignType", "ImoLloyds", "mmsi",
+"arrivalWithCargo", "notLoading", "discharge", "shipMasterArrival", "shipMasterDeparture", "managementNameArrival", "managementNameDeparture", "forwarderNameArrival",
+"forwarderNameDeparture", "freeTextArrival", "freeTextDeparture", "vesselName", "vesselNamePrefix", "radioCallSign", "radioCallSignType", "imoLloyds", "mmsi",
 "certificateIssuer", "certificateStartDate", "certificateEndDate", "currentSecurityLevel", "agentInfo", "imoInformation", "portAreaDetails"})
 public interface PortCallJson {
     @ApiModelProperty(value = "Unique identifier for port call", required = true)

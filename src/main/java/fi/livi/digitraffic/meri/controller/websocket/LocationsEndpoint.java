@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.controller.reader.ReconnectingHandler;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 
@@ -44,13 +43,15 @@ public class LocationsEndpoint extends WebsocketEndpoint {
 
     public static void sendMessage(final AISMessage message) {
         synchronized (sessions) {
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, sessions.size());
+
             sendMessage(LOG, message, sessions);
         }
     }
 
-    public static void sendStatus(final ReconnectingHandler.ConnectionStatus status) {
+    public static void sendStatus(final String status) {
         synchronized (sessions) {
-            sendMessage(LOG, new StatusMessage(status.name()), sessions);
+            sendMessage(LOG, new StatusMessage(status), sessions);
         }
     }
 }
