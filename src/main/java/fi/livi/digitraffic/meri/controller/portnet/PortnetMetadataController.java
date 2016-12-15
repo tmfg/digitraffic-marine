@@ -44,14 +44,14 @@ public class PortnetMetadataController {
                     @ApiResponse(code = 404, message = "Ssn location not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
-    public PortsAndBerthsJson findSsnLocationByLocode(@PathVariable("locode") final String locode) {
+    public PortsAndBerthsJson findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
         return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 
     @ApiOperation("Return list of SafeSeaNet locations by country name")
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<SsnLocationJson> findSsnLocationsByCountry(@PathVariable("country") final String country) {
+    public List<SsnLocationJson> findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
         return portnetMetadataService.findSsnLocationsByCountry(country);
     }
 }

@@ -74,7 +74,7 @@ public class PortCallServiceTest extends AbstractIntegrationTest {
 
         server.verify();
 
-        List<PortCallJson> portCalls = portCallRepository.findByPortCallIdIn(Arrays.asList(1975743L, 1975010L))
+        List<PortCallJson> portCalls = portCallRepository.findByPortCallIdIn(Arrays.asList(1975743L, 1975010L)).stream()
                 .sorted(Comparator.comparing(PortCallJson::getPortCallId))
                 .collect(Collectors.toList());
 

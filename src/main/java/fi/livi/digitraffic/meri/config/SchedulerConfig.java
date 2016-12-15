@@ -33,12 +33,10 @@ import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
 public class SchedulerConfig {
-
     private static final Logger log = LoggerFactory.getLogger(SchedulerConfig.class);
 
     @Bean
-    public JobFactory jobFactory(final ApplicationContext applicationContext)
-    {
+    public JobFactory jobFactory(final ApplicationContext applicationContext)     {
         final AutowiringSpringBeanJobFactory jobFactory = new AutowiringSpringBeanJobFactory();
         jobFactory.setApplicationContext(applicationContext);
         return jobFactory;
@@ -47,7 +45,7 @@ public class SchedulerConfig {
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean(final DataSource dataSource,
                                                      final JobFactory jobFactory,
-                                                     Optional<List<Trigger>> triggerBeans) throws IOException {
+                                                     final Optional<List<Trigger>> triggerBeans) throws IOException {
 
         final SchedulerFactoryBean factory = new SchedulerFactoryBean();
         // this allows to update triggers in DB when updating settings in config file:

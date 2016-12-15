@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.DateType;
@@ -20,21 +19,25 @@ import org.hibernate.type.StringType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
-
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
+import fi.livi.digitraffic.meri.service.BadRequestException;
 
 @Service
 public class PortCallService {
     private final UpdatedTimestampRepository updatedTimestampRepository;
+    private final PortCallRepository portCallRepository;
 
     private final EntityManager entityManager;
 
     public PortCallService(final UpdatedTimestampRepository updatedTimestampRepository,
+                           final PortCallRepository portCallRepository,
                            final EntityManager entityManager) {
         this.updatedTimestampRepository = updatedTimestampRepository;
+        this.portCallRepository = portCallRepository;
         this.entityManager = entityManager;
     }
 
@@ -45,27 +48,27 @@ public class PortCallService {
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final String locode, final String vesselName) {
+    public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
+                                       final Integer mmsi, final Integer imo) {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
 
-        final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName);
+        final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName, mmsi, imo);
 
         if (CollectionUtils.isEmpty(portCallIds)) {
             return new PortCallsJson(lastUpdated, Collections.emptyList());
         }
 
-        final Criteria c = createCriteria();
-        final Disjunction orConditions = Restrictions.disjunction();
-
-        for (List<Long> ids : Lists.partition(portCallIds, 1000)) {
-            orConditions.add(Restrictions.in("portCallId", ids));
+        if (portCallIds.size() > 1000) {
+            throw new BadRequestException("Too big resultset, try narrow down");
         }
-        c.add(Restrictions.and(orConditions));
 
-        return new PortCallsJson(lastUpdated, c.list());
+        final List<PortCallJson> portCallList = portCallRepository.findByPortCallIdIn(portCallIds);
+
+        return new PortCallsJson(lastUpdated, portCallList);
     }
 
-    private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName) {
+    private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
+                                      final Integer mmsi, Integer imo) {
         final Criteria c = createCriteria().setProjection(Projections.id());
 
         if (date != null) {
@@ -79,6 +82,12 @@ public class PortCallService {
         }
         if (vesselName != null) {
             c.add(Restrictions.sqlRestriction("lower(vessel_name) = lower(?)", vesselName, StringType.INSTANCE));
+        }
+        if(mmsi != null) {
+            c.add(Restrictions.eq("mmsi", mmsi));
+        }
+        if(imo != null) {
+            c.add(Restrictions.eq("imoLloyds", imo));
         }
 
         return c.list();
