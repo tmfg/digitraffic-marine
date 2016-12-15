@@ -67,6 +67,10 @@ public final class LocationParser {
         final String seconds = val.substring(i3 + 1, i4);
         final Double dValue = parseValue(degrees, minutes, seconds);
 
+        return parseValueWithSign(dValue, sign);
+    }
+
+    private static Double parseValueWithSign(final Double dValue, final Sign sign) {
         if(dValue == null) {
             return null;
         }
@@ -100,9 +104,9 @@ public final class LocationParser {
 
     private static Double parseValue(final String d, final String m, final String s) {
         try {
-            final double degrees = Double.valueOf(d);
-            final double minutes = Double.valueOf(m);
-            final double seconds = Double.valueOf(s);
+            final double degrees = Double.parseDouble(d);
+            final double minutes = Double.parseDouble(m);
+            final double seconds = Double.parseDouble(s);
 
             return BigDecimal.valueOf(degrees + minutes / 60 + seconds / 3600)
                 .setScale(5, RoundingMode.HALF_UP)

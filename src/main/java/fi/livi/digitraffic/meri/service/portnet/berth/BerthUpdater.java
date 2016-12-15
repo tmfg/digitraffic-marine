@@ -107,10 +107,8 @@ public class BerthUpdater {
             final PortArea newArea = convert(e.getKey(), e.getValue());
             if(!oldMap.containsKey(e.getKey())) {
                 newAreas.add(newArea);
-            } else {
-                if(mergePortArea(oldMap.get(e.getKey()), newArea)) {
-                    updates++;
-                }
+            } else if(mergePortArea(oldMap.get(e.getKey()), newArea)) {
+                updates++;
             }
 
             oldMap.remove(e.getKey());
@@ -119,7 +117,7 @@ public class BerthUpdater {
         portAreaRepository.delete(oldMap.values());
         portAreaRepository.save(newAreas);
 
-        log.info(String.format("Added %d port areas, updated %d, deleted %d.", newAreas.size(), updates, oldMap.values().size()));
+        log.info("Added {} port areas, updated {}, deleted {}.", newAreas.size(), updates, oldMap.values().size());
     }
 
     private static boolean mergePortArea(final PortArea oldArea, final PortArea newArea) {

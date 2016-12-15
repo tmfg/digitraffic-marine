@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
@@ -22,21 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 
 @Service
 public class PortCallService {
-    private final PortCallRepository portCallRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     private final EntityManager entityManager;
 
-    public PortCallService(final PortCallRepository portCallRepository,
-                           final UpdatedTimestampRepository updatedTimestampRepository,
+    public PortCallService(final UpdatedTimestampRepository updatedTimestampRepository,
                            final EntityManager entityManager) {
-        this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.entityManager = entityManager;
     }
@@ -53,13 +50,13 @@ public class PortCallService {
 
         final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName);
 
-        if (portCallIds.size() == 0) {
+        if (CollectionUtils.isEmpty(portCallIds)) {
             return new PortCallsJson(lastUpdated, Collections.emptyList());
         }
 
         final Criteria c = createCriteria();
+        final Disjunction orConditions = Restrictions.disjunction();
 
-        Disjunction orConditions = Restrictions.disjunction();
         for (List<Long> ids : Lists.partition(portCallIds, 1000)) {
             orConditions.add(Restrictions.in("portCallId", ids));
         }
