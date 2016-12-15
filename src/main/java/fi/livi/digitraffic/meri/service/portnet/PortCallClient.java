@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 
 @Service
@@ -33,7 +30,7 @@ public class PortCallClient {
         final RestTemplate template = getRestTemplate();
         final String url = buildUrl(lastUpdated, now);
 
-        log.info("Fetching port calls from " + url);
+        log.info("Fetching port calls from {}", url);
 
         final PortCallList portCallList = template.getForObject(url, PortCallList.class);
 
@@ -47,14 +44,7 @@ public class PortCallClient {
     }
 
     private static void logInfo(final PortCallList portCallList) {
-        log.info("Number of received notifications: " + portCallList.getPortCallNotification().size());
-
-        final ObjectMapper mapper = new ObjectMapper();
-        try {
-            log.info(mapper.writeValueAsString(portCallList));
-        } catch (final JsonProcessingException e) {
-            log.error("Could not parse", e);
-        }
+        log.info("Number of received notifications: {}", portCallList.getPortCallNotification().size());
     }
 
     private static String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
