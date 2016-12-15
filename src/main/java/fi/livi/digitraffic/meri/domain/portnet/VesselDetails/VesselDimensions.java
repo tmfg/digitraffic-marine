@@ -1,11 +1,15 @@
 package fi.livi.digitraffic.meri.domain.portnet.VesselDetails;
 
-import java.time.ZonedDateTime;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
+import fi.livi.digitraffic.util.TypeUtil;
 
 @Entity
 @DynamicUpdate
@@ -16,7 +20,7 @@ public class VesselDimensions {
 
     private String tonnageCertificateIssuer;
 
-    private ZonedDateTime dateOfIssue;
+    private Timestamp dateOfIssue;
 
     private Integer grossTonnage;
 
@@ -44,7 +48,27 @@ public class VesselDimensions {
 
     private Integer maxPassengers;
 
-    private ZonedDateTime keelDate;
+    private Timestamp keelDate;
+
+    public void setAll(BigInteger vesselId, VesselDetails.Dimensions dimensions) {
+        this.vesselId = vesselId.longValue();
+        this.tonnageCertificateIssuer = dimensions.getTonnageCertificateIssuer();
+        this.dateOfIssue = TypeUtil.getTimestamp(dimensions.getDateOfIssue());
+        this.grossTonnage = TypeUtil.getInteger(dimensions.getGrossTonnage());
+        this.netTonnage = TypeUtil.getInteger(dimensions.getNetTonnage());
+        this.deathWeight = TypeUtil.getInteger(dimensions.getDeathWeight());
+        this.length = TypeUtil.getDouble(dimensions.getLength());
+        this.overallLength = TypeUtil.getDouble(dimensions.getOverallLength());
+        this.height = TypeUtil.getDouble(dimensions.getHeight());
+        this.breadth = TypeUtil.getDouble(dimensions.getBreadth());
+        this.draught = TypeUtil.getDouble(dimensions.getDraught());
+        this.maxSpeed = TypeUtil.getDouble(dimensions.getMaxSpeed());
+        this.enginePower = dimensions.getEnginePower();
+        this.totalPower = TypeUtil.getInteger(dimensions.getTotalPower());
+        this.maxPersons = TypeUtil.getInteger(dimensions.getMaxPersons());
+        this.maxPassengers = TypeUtil.getInteger(dimensions.getMaxPassengers());
+        this.keelDate = TypeUtil.getTimestamp(dimensions.getKeelDate());
+    }
 
     public Long getVesselId() {
         return vesselId;
@@ -62,11 +86,11 @@ public class VesselDimensions {
         this.tonnageCertificateIssuer = tonnageCertificateIssuer;
     }
 
-    public ZonedDateTime getDateOfIssue() {
+    public Timestamp getDateOfIssue() {
         return dateOfIssue;
     }
 
-    public void setDateOfIssue(ZonedDateTime dateOfIssue) {
+    public void setDateOfIssue(Timestamp dateOfIssue) {
         this.dateOfIssue = dateOfIssue;
     }
 
@@ -174,11 +198,11 @@ public class VesselDimensions {
         this.maxPassengers = maxPassengers;
     }
 
-    public ZonedDateTime getKeelDate() {
+    public Timestamp getKeelDate() {
         return keelDate;
     }
 
-    public void setKeelDate(ZonedDateTime keelDate) {
+    public void setKeelDate(Timestamp keelDate) {
         this.keelDate = keelDate;
     }
 }

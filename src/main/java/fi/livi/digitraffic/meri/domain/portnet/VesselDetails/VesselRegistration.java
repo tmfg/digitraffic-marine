@@ -1,9 +1,13 @@
 package fi.livi.digitraffic.meri.domain.portnet.VesselDetails;
 
+import java.math.BigInteger;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 
 @Entity
 @DynamicUpdate
@@ -17,6 +21,13 @@ public class VesselRegistration {
     private String portOfRegistry;
 
     private String domicile;
+
+    public void setAll(BigInteger vesselId, VesselDetails.RegistrationData registrationData) {
+        this.vesselId = vesselId.longValue();
+        this.nationality = registrationData.getNationality();
+        this.portOfRegistry = registrationData.getPortOfRegistry();
+        this.domicile = registrationData.getDomicile();
+    }
 
     public Long getVesselId() {
         return vesselId;

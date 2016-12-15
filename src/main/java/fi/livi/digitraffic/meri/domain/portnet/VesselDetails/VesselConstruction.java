@@ -1,11 +1,15 @@
 package fi.livi.digitraffic.meri.domain.portnet.VesselDetails;
 
-import java.time.ZonedDateTime;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
+import fi.livi.digitraffic.util.TypeUtil;
 
 @Entity
 @DynamicUpdate
@@ -20,11 +24,11 @@ public class VesselConstruction {
 
     private String iceClassCode;
 
-    private ZonedDateTime iceClassIssueDate;
+    private Timestamp iceClassIssueDate;
 
     private String iceClassIssuePlace;
 
-    private ZonedDateTime iceClassEndDate;
+    private Timestamp iceClassEndDate;
 
     private String classificationSociety;
 
@@ -33,6 +37,20 @@ public class VesselConstruction {
     private Boolean inertGasSystem;
 
     private Boolean ballastTank;
+
+    public void setAll(BigInteger vesselId, VesselDetails.ConstructionData cd) {
+        this.vesselId = vesselId.longValue();
+        this.vesselTypeCode = TypeUtil.getInteger(cd.getVesselTypeCode());
+        this.vesselTypeName = cd.getVesselTypeName();
+        this.iceClassCode = TypeUtil.getEnum(cd.getIceClassCode());
+        this.iceClassIssueDate = TypeUtil.getTimestamp(cd.getIceClassIssueDate());
+        this.iceClassIssuePlace = cd.getIceClassIssuePlace();
+        this.iceClassEndDate = TypeUtil.getTimestamp(cd.getIceClassEndDate());
+        this.classificationSociety = cd.getClassificationSociety();
+        this.doubleBottom = cd.isDoubleBottom();
+        this.inertGasSystem = cd.isInertGasSystem();
+        this.ballastTank = cd.isBallastTank();
+    }
 
     public Long getVesselId() {
         return vesselId;
@@ -66,11 +84,11 @@ public class VesselConstruction {
         this.iceClassCode = iceClassCode;
     }
 
-    public ZonedDateTime getIceClassIssueDate() {
+    public Timestamp getIceClassIssueDate() {
         return iceClassIssueDate;
     }
 
-    public void setIceClassIssueDate(ZonedDateTime iceClassIssueDate) {
+    public void setIceClassIssueDate(Timestamp iceClassIssueDate) {
         this.iceClassIssueDate = iceClassIssueDate;
     }
 
@@ -82,11 +100,11 @@ public class VesselConstruction {
         this.iceClassIssuePlace = iceClassIssuePlace;
     }
 
-    public ZonedDateTime getIceClassEndDate() {
+    public Timestamp getIceClassEndDate() {
         return iceClassEndDate;
     }
 
-    public void setIceClassEndDate(ZonedDateTime iceClassEndDate) {
+    public void setIceClassEndDate(Timestamp iceClassEndDate) {
         this.iceClassEndDate = iceClassEndDate;
     }
 

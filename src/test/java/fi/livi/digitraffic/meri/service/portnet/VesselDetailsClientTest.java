@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import fi.livi.digitraffic.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
+import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsClient;
 
 @Ignore("Needs vpn")
 public class VesselDetailsClientTest extends AbstractIntegrationTest {

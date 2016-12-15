@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.domain.portnet.VesselDetails;
 
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import fi.livi.digitraffic.util.TypeUtil;
 
 @Entity
 @DynamicUpdate
@@ -29,7 +31,7 @@ public class VesselDetails {
 
     private String radioCallSignType;
 
-    private ZonedDateTime updateTimeStamp;
+    private Timestamp updateTimestamp;
 
     private String dataSource;
 
@@ -48,6 +50,35 @@ public class VesselDetails {
     @OneToOne(targetEntity = VesselSystem.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselSystem vesselSystem;
+
+    public void setAll(final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd) {
+        final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails.IdentificationData idData = vd.getIdentificationData();
+        this.vesselId = idData.getVesselId().longValue();
+        this.mmsi = idData.getMmsi().intValue();
+        this.name = idData.getName();
+        this.namePrefix = idData.getNamePrefix();
+        this.imoLloyds = idData.getImoLloyds().intValue();
+        this.radioCallSign = idData.getRadioCallSign();
+        this.radioCallSignType = idData.getRadioCallSignType().name();
+        this.updateTimestamp = TypeUtil.getTimestamp(idData.getUpdateTimeStamp());
+        this.dataSource = idData.getDataSource();
+        if (this.vesselConstruction == null) {
+            this.vesselConstruction = new VesselConstruction();
+        }
+        this.vesselConstruction.setAll(idData.getVesselId(), vd.getConstructionData());
+        if (this.vesselDimensions == null) {
+            this.vesselDimensions = new VesselDimensions();
+        }
+        this.vesselDimensions.setAll(idData.getVesselId(), vd.getDimensions());
+        if (this.vesselRegistration == null) {
+            this.vesselRegistration = new VesselRegistration();
+        }
+        this.vesselRegistration.setAll(idData.getVesselId(), vd.getRegistrationData());
+        if (this.vesselSystem == null) {
+            this.vesselSystem = new VesselSystem();
+        }
+        this.vesselSystem.setAll(idData.getVesselId(), vd.getSystem());
+    }
 
     public Long getVesselId() {
         return vesselId;
@@ -105,12 +136,12 @@ public class VesselDetails {
         this.radioCallSignType = radioCallSignType;
     }
 
-    public ZonedDateTime getUpdateTimeStamp() {
-        return updateTimeStamp;
+    public Timestamp getUpdateTimestamp() {
+        return updateTimestamp;
     }
 
-    public void setUpdateTimeStamp(ZonedDateTime updateTimeStamp) {
-        this.updateTimeStamp = updateTimeStamp;
+    public void setUpdateTimestamp(Timestamp updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
     }
 
     public String getDataSource() {

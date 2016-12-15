@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.service.portnet;
+package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
+import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
 
 @Service
 public class VesselDetailsClient {
@@ -26,7 +27,7 @@ public class VesselDetailsClient {
         this.vesselDetailsUrl = vesselDetailsUrl;
     }
 
-    public VesselList getVesselList(final Instant from) throws Exception {
+    public VesselList getVesselList(final Instant from) {
         final String url = buildUrl(from);
         RestTemplate restTemplate = getRestTemplate();
 
