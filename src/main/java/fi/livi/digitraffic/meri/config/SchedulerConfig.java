@@ -87,22 +87,22 @@ public class SchedulerConfig {
         return createJobDetail(SsnLocationUpdateJob.class);
     }
 
-    @Bean(name = "portCallUpdateJobTrigger")
-    public SimpleTriggerFactoryBean cameraUpdateJobTrigger(@Qualifier("portCallUpdateJobDetail") final JobDetail jobDetail,
-                                                           @Value("${portCallUpdateJob.frequency}") final long frequency) {
-        return createTrigger(jobDetail, frequency);
+    @Bean
+    public SimpleTriggerFactoryBean portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail,
+                                                             @Value("${portCallUpdateJob.frequency}") final long frequency) {
+        return createTrigger(portCallUpdateJobDetail, frequency);
     }
 
-    @Bean(name = "berthUpdateJobTrigger")
-    public SimpleTriggerFactoryBean berthUpdateJobTrigger(@Qualifier("berthUpdateJobDetail") final JobDetail jobDetail,
+    @Bean
+    public SimpleTriggerFactoryBean berthUpdateJobTrigger(final JobDetail berthUpdateJobDetail,
                                                           @Value("${berthUpdateJob.frequency}") final long frequency) {
-        return createTrigger(jobDetail, frequency);
+        return createTrigger(berthUpdateJobDetail, frequency);
     }
 
-    @Bean(name = "ssnLocationUpdateJobTrigger")
-    public SimpleTriggerFactoryBean ssnLocationUpdateJobTrigger(@Qualifier("ssnLocationUpdateJobDetail") final JobDetail jobDetail,
-                                                          @Value("${ssnLocationUpdateJob.frequency}") final long frequency) {
-        return createTrigger(jobDetail, frequency);
+    @Bean
+    public SimpleTriggerFactoryBean ssnLocationUpdateJobTrigger(final JobDetail ssnLocationUpdateJobDetail,
+                                                                @Value("${ssnLocationUpdateJob.frequency}") final long frequency) {
+        return createTrigger(ssnLocationUpdateJobDetail, frequency);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {
