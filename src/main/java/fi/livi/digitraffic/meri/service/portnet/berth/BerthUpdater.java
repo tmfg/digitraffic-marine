@@ -75,7 +75,7 @@ public class BerthUpdater {
         berthRepository.delete(oldMap.values());
         berthRepository.save(newBerths);
 
-        log.info("Read {} berths, added {], updated {], deleted {].",
+        log.info("Read {} berths, added {}, updated {}, deleted {}.",
                 berthLines.size(), newBerths.size(), updates, oldMap.values().size());
     }
 

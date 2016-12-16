@@ -9,12 +9,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Port call")
+@ApiModel(description = "Port call")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"portCallId", "portCallTimestamp", "customsReference", "portToVisit", "prevPort", "nextPort", "domesticTrafficArrival", "domesticTrafficDeparture",
-"arrivalWithCargo", "notLoading", "discharge", "shipMasterArrival", "shipMasterDeparture", "managementNameArrival", "managementNameDeparture", "forwarderNameArrival",
-"forwarderNameDeparture", "freeTextArrival", "freeTextDeparture", "vesselName", "vesselNamePrefix", "radioCallSign", "radioCallSignType", "imoLloyds", "mmsi",
-"certificateIssuer", "certificateStartDate", "certificateEndDate", "currentSecurityLevel", "agentInfo", "imoInformation", "portAreaDetails"})
+@JsonPropertyOrder({ "portCallId", "portCallTimestamp", "customsReference", "portToVisit", "prevPort", "nextPort", "domesticTrafficArrival",
+                     "domesticTrafficDeparture",
+                     "arrivalWithCargo", "notLoading", "discharge", "shipMasterArrival", "shipMasterDeparture", "managementNameArrival",
+                     "managementNameDeparture", "forwarderNameArrival",
+                     "forwarderNameDeparture", "freeTextArrival", "freeTextDeparture", "vesselName", "vesselNamePrefix", "radioCallSign",
+                     "radioCallSignType", "imoLloyds", "mmsi",
+                     "nationality", "vesselTypeCode",
+                     "certificateIssuer", "certificateStartDate", "certificateEndDate", "currentSecurityLevel", "agentInfo", "imoInformation",
+                     "portAreaDetails" })
 public interface PortCallJson {
     @ApiModelProperty(value = "Unique identifier for port call", required = true)
     Long getPortCallId();
@@ -71,6 +76,11 @@ public interface PortCallJson {
 
     @ApiModelProperty(value = "Ship IMO / Lloyds")
     Integer getImoLloyds();
+
+    @ApiModelProperty(value = "Ship nationality")
+    String getNationality();
+    @ApiModelProperty(value = "Ship Vessel Type Code")
+    Integer getVesselTypeCode();
 
     @ApiModelProperty(value = "Ship MMSI (Maritime Mobile Service Identity)")
     Integer getMmsi();

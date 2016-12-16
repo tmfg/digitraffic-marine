@@ -49,10 +49,10 @@ public class PortCallService {
 
     @Transactional(readOnly = true)
     public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
-                                       final Integer mmsi, final Integer imo) {
+                                       final Integer mmsi, final Integer imo, final String nationality, final Integer vesselTypeCode) {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
 
-        final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName, mmsi, imo);
+        final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
 
         if (CollectionUtils.isEmpty(portCallIds)) {
             return new PortCallsJson(lastUpdated, Collections.emptyList());
@@ -68,7 +68,7 @@ public class PortCallService {
     }
 
     private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
-                                      final Integer mmsi, Integer imo) {
+                                      final Integer mmsi, final Integer imo, final String nationality, final Integer vesselTypeCode) {
         final Criteria c = createCriteria().setProjection(Projections.id());
 
         if (date != null) {
@@ -88,6 +88,12 @@ public class PortCallService {
         }
         if(imo != null) {
             c.add(Restrictions.eq("imoLloyds", imo));
+        }
+        if(nationality != null) {
+            c.add(Restrictions.eq("nationality", nationality));
+        }
+        if(vesselTypeCode != null) {
+            c.add(Restrictions.eq("vesselTypeCode", vesselTypeCode));
         }
 
         return c.list();

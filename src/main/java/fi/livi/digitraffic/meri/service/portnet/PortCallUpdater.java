@@ -174,6 +174,8 @@ public class PortCallUpdater {
         pc.setRadioCallSignType(id.getRadioCallSignType().value());
         pc.setImoLloyds(getInteger(id.getImoLloyds()));
         pc.setMmsi(getInteger(id.getMmsi()));
+        pc.setNationality(det.getVesselDetails().getRegistrationData().getNationality());
+        pc.setVesselTypeCode(getInteger(det.getVesselDetails().getConstructionData().getVesselTypeCode()));
 
         pc.setCertificateIssuer(det.getSecurityMeasures().getCertificateIssuer());
         pc.setCertificateStartDate(getTimestamp(det.getSecurityMeasures().getCertificateStartDate()));

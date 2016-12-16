@@ -57,14 +57,20 @@ public class PortCallController {
             @RequestParam(value = "mmsi", required = false) final Integer mmsi,
 
             @ApiParam("Return port calls from given IMO/LLOYDS")
-            @RequestParam(value = "imo", required = false) final Integer imo
+            @RequestParam(value = "imo", required = false) final Integer imo,
+
+            @ApiParam("Return port calls for vessels with given nationality")
+            @RequestParam(value = "nationality", required = false) final String nationality,
+
+            @ApiParam("Return port calls with given vessel type code")
+            @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
             ) {
 
-        if(!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo)) {
+        if(!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
             throw new BadRequestException("At least one parameter is required");
         }
 
-        return portCallService.findPortCalls(date, from, null, vesselName, mmsi, imo);
+        return portCallService.findPortCalls(date, from, null, vesselName, mmsi, imo, nationality, vesselTypeCode);
     }
 
     @ApiOperation("Find port calls")
@@ -92,13 +98,19 @@ public class PortCallController {
             @RequestParam(value = "mmsi", required = false) final Integer mmsi,
 
             @ApiParam("Return port calls from given IMO/LLOYDS")
-            @RequestParam(value = "imo", required = false) final Integer imo
+            @RequestParam(value = "imo", required = false) final Integer imo,
+
+            @ApiParam("Return port calls for vessels with given nationality")
+            @RequestParam(value = "nationality", required = false) final String nationality,
+
+            @ApiParam("Return port calls with given vessel type code")
+            @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
 
-        if(!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo)) {
+        if(!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
             throw new BadRequestException("At least one parameter is required");
         }
 
-        return portCallService.findPortCalls(date, from, locode, vesselName, mmsi, imo);
+        return portCallService.findPortCalls(date, from, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
     }
 }
