@@ -45,6 +45,9 @@ public class PortCall {
     private String vesselNamePrefix;
     private String radioCallSign;
     private String radioCallSignType;
+    private String nationality;
+    private Integer vesselTypeCode;
+
     private Integer imoLloyds;
     private Integer mmsi;
 
@@ -319,5 +322,21 @@ public class PortCall {
 
     public void setCurrentSecurityLevel(final Integer currentSecurityLevel) {
         this.currentSecurityLevel = currentSecurityLevel;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public Integer getVesselTypeCode() {
+        return vesselTypeCode;
+    }
+
+    public void setVesselTypeCode(Integer vesselTypeCode) {
+        this.vesselTypeCode = vesselTypeCode;
     }
 }
