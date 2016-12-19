@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -98,5 +100,10 @@ public class WebsocketStatistics {
             this.messages = messages;
             this.status = status;
         }
+    }
+
+    @PreDestroy
+    public void destroy() {
+        executor.shutdown();
     }
 }
