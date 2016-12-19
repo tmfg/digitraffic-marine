@@ -1,15 +1,22 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+import static org.hibernate.criterion.Restrictions.eq;
+import static org.hibernate.criterion.Restrictions.in;
+import static org.hibernate.criterion.Restrictions.not;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
@@ -49,7 +56,7 @@ public class PortCallService {
 
     @Transactional(readOnly = true)
     public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
-                                       final Integer mmsi, final Integer imo, final String nationality, final Integer vesselTypeCode) {
+                                       final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
 
         final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
@@ -68,7 +75,7 @@ public class PortCallService {
     }
 
     private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
-                                      final Integer mmsi, final Integer imo, final String nationality, final Integer vesselTypeCode) {
+                                      final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
         final Criteria c = createCriteria().setProjection(Projections.id());
 
         if (date != null) {
@@ -78,24 +85,39 @@ public class PortCallService {
             c.add(Restrictions.gt("portCallTimestamp", new Timestamp(from.toEpochSecond() * 1000)));
         }
         if (locode != null) {
-            c.add(Restrictions.eq("portToVisit", locode));
+            c.add(eq("portToVisit", locode));
         }
         if (vesselName != null) {
             c.add(Restrictions.sqlRestriction("lower(vessel_name) = lower(?)", vesselName, StringType.INSTANCE));
         }
         if(mmsi != null) {
-            c.add(Restrictions.eq("mmsi", mmsi));
+            c.add(eq("mmsi", mmsi));
         }
         if(imo != null) {
-            c.add(Restrictions.eq("imoLloyds", imo));
+            c.add(eq("imoLloyds", imo));
         }
-        if(nationality != null) {
-            c.add(Restrictions.eq("nationality", nationality));
+
+        if(isNotEmpty(nationality)) {
+            addNationalityRestriction(c, nationality);
         }
+
         if(vesselTypeCode != null) {
-            c.add(Restrictions.eq("vesselTypeCode", vesselTypeCode));
+            c.add(eq("vesselTypeCode", vesselTypeCode));
         }
 
         return c.list();
+    }
+
+    private void addNationalityRestriction(final Criteria c, final List<String> nationality) {
+        final List<String> notInList = nationality.stream().filter(n -> StringUtils.startsWith(n, "!")).map(z -> z.substring(1)).collect(Collectors.toList());
+        final List<String> inList = nationality.stream().filter(n -> !StringUtils.startsWith(n, "!")).collect(Collectors.toList());
+
+        if(isNotEmpty(inList)) {
+            c.add(in("nationality", inList));
+    }
+
+        if(isNotEmpty(notInList)) {
+            c.add(not(in("nationality", notInList)));
+        }
     }
 }
