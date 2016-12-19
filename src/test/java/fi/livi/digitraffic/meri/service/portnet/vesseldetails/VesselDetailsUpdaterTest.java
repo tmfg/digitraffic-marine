@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
-import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
+import fi.livi.digitraffic.meri.model.portnet.metadata.VesselDetailsJson;
 
 public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
 
@@ -70,7 +70,7 @@ public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
 
         vesselDetailsUpdater.updateVesselDetails(from);
 
-        List<VesselDetails> vessels = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L, 99995524L, 99995388L));
+        List<VesselDetailsJson> vessels = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L, 99995524L, 99995388L));
 
         assertEquals(4, vessels.size());
         assertEquals(358L, vessels.get(0).getVesselId().longValue());
