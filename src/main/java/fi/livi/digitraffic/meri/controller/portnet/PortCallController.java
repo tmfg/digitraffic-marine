@@ -7,6 +7,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,19 +51,19 @@ public class PortCallController {
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
 
-            @ApiParam("Return port calls from given vessel name")
+            @ApiParam("Return port calls for given vessel name")
             @RequestParam(value = "vesselName", required = false) final String vesselName,
 
-            @ApiParam("Return port calls from given mmsi")
+            @ApiParam("Return port calls for given mmsi")
             @RequestParam(value = "mmsi", required = false) final Integer mmsi,
 
-            @ApiParam("Return port calls from given IMO/LLOYDS")
+            @ApiParam("Return port calls for given IMO/LLOYDS")
             @RequestParam(value = "imo", required = false) final Integer imo,
 
             @ApiParam("Return port calls for vessels with given nationality")
-            @RequestParam(value = "nationality", required = false) final String nationality,
+            @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
-            @ApiParam("Return port calls with given vessel type code")
+            @ApiParam("Return port calls for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
             ) {
 
@@ -91,19 +92,19 @@ public class PortCallController {
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
 
-            @ApiParam("Return port calls from given vessel name")
+            @ApiParam("Return port calls for given vessel name")
             @RequestParam(value = "vesselName", required = false) final String vesselName,
 
-            @ApiParam("Return port calls from given mmsi")
+            @ApiParam("Return port calls for given mmsi")
             @RequestParam(value = "mmsi", required = false) final Integer mmsi,
 
-            @ApiParam("Return port calls from given IMO/LLOYDS")
+            @ApiParam("Return port calls for given IMO/LLOYDS")
             @RequestParam(value = "imo", required = false) final Integer imo,
 
             @ApiParam("Return port calls for vessels with given nationality")
-            @RequestParam(value = "nationality", required = false) final String nationality,
+            @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
-            @ApiParam("Return port calls with given vessel type code")
+            @ApiParam("Return port calls for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
 
