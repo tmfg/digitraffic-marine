@@ -43,8 +43,13 @@ public class VesselDetailsUpdater {
 
     @Transactional
     public void update() {
-
         Instant lastUpdated = updatedTimestampRepository.getLastUpdated(VESSEL_DETAILS.toString());
+
+        updateVesselDetails(lastUpdated);
+    }
+
+    @Transactional
+    protected void updateVesselDetails(Instant lastUpdated) {
 
         final Instant now = Instant.now();
         final Instant from = lastUpdated == null ? now.minus(1, ChronoUnit.DAYS) : lastUpdated;

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VesselList xmlns="http://portnet.fi/VesselDetails" xmlns:ptns="http://portnet.fi/PortnetWS/PortnetTypes">
+    <ptns:Header From="Portnet" SentAt="2016-12-19T12:33:45.884+02:00" Version="1.0" lang="EN">
+        <ptns:responseType>
+            <ptns:Status>OK</ptns:Status>
+        </ptns:responseType>
+    </ptns:Header>
+    <ptns:VesselDetails>
+        <ptns:IdentificationData dataSource="Portnet" mmsi="0" name="Kosti" namePrefix="pr" radioCallSign="-" radioCallSignType="real" updateTimeStamp="2016-12-17T15:17:57+02:00" vesselId="358"/>
+        <ptns:RegistrationData nationality="FI" portOfRegistry="Oulu"/>
+        <ptns:ConstructionData ballastTank="false" doubleBottom="false" iceClassCode="Unknown" iceClassEndDate="9999-12-31+02:00" iceClassIssuePlace="0" inertGasSystem="false" vesselTypeCode="93" vesselTypeName="Barge"/>
+        <ptns:Dimensions breadth="18" dateOfIssue="2006-08-09+03:00" deathWeight="0" draught="2.7" enginePower=" " grossTonnage="1042" height="3.5" length="57.7" netTonnage="313" overallLength="60" tonnageCertificateIssuer="merenkulkuhallitus"/>
+        <ptns:System shipEmail=" " shipOwner=" " shipTelephone1=" " shipVerifier="CUST"/>
+    </ptns:VesselDetails>
+    <ptns:VesselDetails>
+        <ptns:IdentificationData dataSource="Portnet" imoLloyds="8411621" mmsi="236018000" name="Mirva" namePrefix="ms" radioCallSign="OJPE" radioCallSignType="real" updateTimeStamp="2016-12-16T07:57:17+02:00" vesselId="4637"/>
+        <ptns:RegistrationData nationality="FI" portOfRegistry="Turku"/>
+        <ptns:ConstructionData ballastTank="false" doubleBottom="false" iceClassCode="IA" iceClassIssuePlace=" " inertGasSystem="false" vesselTypeCode="70" vesselTypeName="Dry cargo vessel"/>
+        <ptns:Dimensions breadth="15.93" dateOfIssue="2011-12-14+02:00" deathWeight="5414" draught="5.97" enginePower="2648" grossTonnage="3951" height="7.8" length="99.83" netTonnage="2236" overallLength="105.01" tonnageCertificateIssuer="Helsinki"/>
+        <ptns:System shipEmail=" " shipOwner=" " shipTelephone1=" " shipVerifier="CUST"/>
+    </ptns:VesselDetails>
+    <ptns:VesselDetails>
+        <ptns:IdentificationData dataSource="Portnet" imoLloyds="9197478" mmsi="304140000" name="Wiebke" namePrefix="mv" radioCallSign="DPEK" radioCallSignType="real" updateTimeStamp="2016-12-19T11:48:57+02:00" vesselId="99995524"/>
+        <ptns:RegistrationData nationality="DE" portOfRegistry="Hamburg"/>
+        <ptns:ConstructionData ballastTank="false" doubleBottom="false" iceClassCode="II" iceClassEndDate="2020-09-30+03:00" iceClassIssueDate="2015-10-14+03:00" iceClassIssuePlace="Bremerhaven" inertGasSystem="false" vesselTypeCode="70" vesselTypeName="Dry cargo vessel"/>
+        <ptns:Dimensions breadth="20.4" dateOfIssue="2004-04-16+03:00" deathWeight="8966" draught="7.84" enginePower="4995" grossTonnage="8397" height="10.5" length="143.32" netTonnage="4178" overallLength="151.58" tonnageCertificateIssuer="Hamburg"/>
+        <ptns:System shipEmail=" " shipOwner="HLL Heavy Lift + Load WIEBKE GmbH &amp; Co" shipTelephone1=" " shipVerifier="CUST"/>
+    </ptns:VesselDetails>
+    <ptns:VesselDetails>
+        <ptns:IdentificationData dataSource="Portnet" imoLloyds="9163582" mmsi="245932000" name="Kristin D" namePrefix="MV" radioCallSign="C6XA6" radioCallSignType="real" updateTimeStamp="2016-12-15T07:52:20+02:00" vesselId="99995388"/>
+        <ptns:RegistrationData nationality="BS" portOfRegistry="Nassau"/>
+        <ptns:ConstructionData ballastTank="false" doubleBottom="false" iceClassCode="II" iceClassEndDate="2017-09-11+03:00" iceClassIssueDate="2012-09-12+03:00" iceClassIssuePlace="Szczecin" inertGasSystem="false" vesselTypeCode="70" vesselTypeName="Dry cargo vessel"/>
+        <ptns:Dimensions breadth="13.75" dateOfIssue="2008-07-09+03:00" deathWeight="2800" draught="4.29" enginePower="1800" grossTonnage="2035" height="5.5" length="84.64" netTonnage="1168" overallLength="90.6" tonnageCertificateIssuer="Hampuri"/>
+        <ptns:System shipEmail=" " shipOwner=" " shipTelephone1=" " shipVerifier="CUST"/>
+    </ptns:VesselDetails>
+</VesselList>
