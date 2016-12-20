@@ -6,7 +6,9 @@ import javax.websocket.Session;
 
 import org.slf4j.Logger;
 
-public abstract class WebsocketEndpoint {
+public abstract class WebsocketMessageSender {
+    private WebsocketMessageSender() {}
+
     protected static void sendMessage(final Logger log, final Object message, final Collection<Session> sessions) {
         for (final Session s : sessions) {
             try {

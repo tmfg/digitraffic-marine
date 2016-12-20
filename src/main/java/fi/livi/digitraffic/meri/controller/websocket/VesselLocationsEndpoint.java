@@ -25,7 +25,7 @@ import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 @ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/locations/{mmsi}",
         encoders = {StatusEncoder.class, LocationEncoder.class})
 @Component
-public class VesselLocationsEndpoint extends WebsocketEndpoint{
+public class VesselLocationsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(VesselLocationsEndpoint.class);
 
     private static final Map<Integer, Set<Session>> sessions = Collections.synchronizedMap(new HashMap<>());
@@ -55,7 +55,7 @@ public class VesselLocationsEndpoint extends WebsocketEndpoint{
             if(sessionSet != null) {
                 WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.VESSEL_LOCATION, sessionSet.size());
 
-                sendMessage(LOG, message, sessionSet);
+                WebsocketMessageSender.sendMessage(LOG, message, sessionSet);
             }
         }
     }
@@ -64,7 +64,7 @@ public class VesselLocationsEndpoint extends WebsocketEndpoint{
         synchronized (sessions) {
             final List<Session> sessionList = sessions.values().stream().flatMap(c -> c.stream()).collect(Collectors.toList());
 
-            sendMessage(LOG, new StatusMessage(status), sessionList);
+            WebsocketMessageSender.sendMessage(LOG, new StatusMessage(status), sessionList);
         }
     }
 }

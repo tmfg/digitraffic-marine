@@ -7,7 +7,4 @@ import org.springframework.stereotype.Repository;
 public interface LockingRepository extends SqlRepository {
     @Query(nativeQuery = true, value = "select lock_name from locking_table where lock_name = ?1 for update")
     String acquireLock(final String lockName);
-
-    @Query(nativeQuery = true, value = "select lock_name from locking_table where lock_name = ?1 for update skip locked")
-    String tryAcquireLock(final String lockName);
 }

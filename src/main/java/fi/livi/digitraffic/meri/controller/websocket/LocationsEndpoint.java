@@ -21,7 +21,7 @@ import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 @ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH
         + "/locations", encoders = {StatusEncoder.class, LocationEncoder.class})
 @Component
-public class LocationsEndpoint extends WebsocketEndpoint {
+public class LocationsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(LocationsEndpoint.class);
 
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
@@ -45,13 +45,13 @@ public class LocationsEndpoint extends WebsocketEndpoint {
         synchronized (sessions) {
             WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, sessions.size());
 
-            sendMessage(LOG, message, sessions);
+            WebsocketMessageSender.sendMessage(LOG, message, sessions);
         }
     }
 
     public static void sendStatus(final String status) {
         synchronized (sessions) {
-            sendMessage(LOG, new StatusMessage(status), sessions);
+            WebsocketMessageSender.sendMessage(LOG, new StatusMessage(status), sessions);
         }
     }
 }

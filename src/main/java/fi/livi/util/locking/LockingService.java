@@ -39,11 +39,6 @@ public class LockingService {
         this.lockingDuration = DEFAULT_LOCKING_DURATION;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    public boolean tryLock(final String lockName) {
-        return lockingRepository.tryAcquireLock(lockName) != null;
-    }
-
     @Transactional(propagation = Propagation.NEVER)
     public AccessLock lock(final String lockName) {
         final AtomicInteger count = new AtomicInteger(0);
@@ -109,7 +104,7 @@ public class LockingService {
     }
 
     @PreDestroy
-    public void destroy() throws Exception {
+    public void destroy() {
         log.debug("destroy");
 
         executorService.shutdown();

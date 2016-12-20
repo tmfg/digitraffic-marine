@@ -21,7 +21,7 @@ public class WebsocketStatistics {
 
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-    private static final Logger log = LoggerFactory.getLogger(WebsocketEndpoint.class);
+    private static final Logger log = LoggerFactory.getLogger(WebsocketStatistics.class);
 
     private static final String UNDEFINED = "UNDEFINED";
 
@@ -30,11 +30,11 @@ public class WebsocketStatistics {
     }
 
     public WebsocketStatistics() {
-        executor.scheduleAtFixedRate(this::logMessageCount, 0, 1, TimeUnit.MINUTES);
-        executor.scheduleAtFixedRate(this::notifyStatus, 0, 10, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(WebsocketStatistics::logMessageCount, 0, 1, TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(WebsocketStatistics::notifyStatus, 0, 10, TimeUnit.SECONDS);
     }
 
-    private synchronized void notifyStatus() {
+    private static synchronized void notifyStatus() {
         final ReadStatistics locationStatus = readStatisticsMap.get(WebsocketType.LOCATIONS);
         final String status = locationStatus == null ? UNDEFINED : locationStatus.status;
 
@@ -42,7 +42,7 @@ public class WebsocketStatistics {
         VesselLocationsEndpoint.sendStatus(status);
     }
 
-    private synchronized void logMessageCount() {
+    private static synchronized void logMessageCount() {
         for(final Map.Entry<WebsocketType, SentStatistics> e : sentStatisticsMap.entrySet()) {
             log.info("Sent websocket statistics for {} sessions {} messages {}",
                     e.getKey(), e.getValue().sessions, e.getValue().messages);
@@ -58,7 +58,7 @@ public class WebsocketStatistics {
         }
     }
 
-    public synchronized static void sentWebsocketStatistics(final WebsocketType type, final int sessions) {
+    public static synchronized void sentWebsocketStatistics(final WebsocketType type, final int sessions) {
         final SentStatistics sam = sentStatisticsMap.get(type);
 
         final SentStatistics newSam = new SentStatistics(sessions, sam == null ? sessions : sam.messages + sessions);
@@ -66,7 +66,7 @@ public class WebsocketStatistics {
         sentStatisticsMap.put(type, newSam);
     }
 
-    public synchronized static void readWebsocketStatistics(final WebsocketType type) {
+    public static synchronized void readWebsocketStatistics(final WebsocketType type) {
         final ReadStatistics rs = readStatisticsMap.get(type);
 
         final ReadStatistics newRs = rs == null ? new ReadStatistics(1, UNDEFINED) : new ReadStatistics(rs.messages + 1, rs.status);
