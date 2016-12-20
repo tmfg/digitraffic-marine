@@ -52,7 +52,7 @@ public class SsnLocationUpdater {
 
             // remove from oldMap, if added or modified
             oldMap.remove(l.getLocode());
-        };
+        }
 
         // values in oldMap can be removed, they no longes exist
         ssnLocationRepository.delete(oldMap.values());
@@ -62,7 +62,7 @@ public class SsnLocationUpdater {
                 newLocations.size(), newList.size(), updates, oldMap.values().size());
     }
 
-    private boolean mergeLocation(final SsnLocation oldLocation, final SsnLocation newLocation) {
+    private static boolean mergeLocation(final SsnLocation oldLocation, final SsnLocation newLocation) {
         final boolean difference = !EqualsBuilder.reflectionEquals(oldLocation, newLocation);
 
         BeanUtils.copyProperties(newLocation, oldLocation, "locode");
