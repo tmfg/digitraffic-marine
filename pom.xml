@@ -209,6 +209,7 @@
                         <ignoreMethodAnnotation>fi.livi.digitraffic.meri.annotation.CoverageIgnore</ignoreMethodAnnotation>
                         <excludes>
                             <exclude>fi/livi/digitraffic/meri/controller/reader/**/*.class</exclude>
+                            <exclude>fi/livi/digitraffic/meri/config/**/*.class</exclude>
                             <exclude>fi/livi/digitraffic/meri/quartz/**/*.class</exclude>
                             <exclude>fi/livi/digitraffic/meri/portnet/**/*.class</exclude>
                             <exclude>fi/livi/digitraffic/meri/domain/**/*.class</exclude>
