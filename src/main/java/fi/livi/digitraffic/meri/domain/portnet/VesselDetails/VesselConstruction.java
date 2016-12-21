@@ -8,34 +8,54 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 import fi.livi.digitraffic.util.TypeUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(description="Vessel construction", value = "VesselConstruction")
+@JsonPropertyOrder({ "vesselId", "vesselTypeCode", "vesselTypeName", "iceClassCode", "iceClassIssueDate", "iceClassIssuePlace",
+                     "iceClassEndDate", "classificationSociety", "doubleBottom", "inertGasSystem", "ballastTank" })
 @Entity
 @DynamicUpdate
 public class VesselConstruction {
 
+    @JsonIgnore
     @Id
     private Long vesselId;
 
+    @ApiModelProperty(value = "Ship Vessel Type Code")
     private Integer vesselTypeCode;
 
+    @ApiModelProperty(value = "Ship Vessel Type Name")
     private String vesselTypeName;
 
+    @ApiModelProperty(value = "Ship ice class code")
     private String iceClassCode;
 
+    @ApiModelProperty(value = "Date when ice class endorsement was issued")
     private Timestamp iceClassIssueDate;
 
+    @ApiModelProperty(value = "Place where ice class endorsement was issued")
     private String iceClassIssuePlace;
 
+    @ApiModelProperty(value = "Date when ice class endorsement ends")
     private Timestamp iceClassEndDate;
 
+    @ApiModelProperty(value = "Always null")
+    @JsonIgnore
     private String classificationSociety;
 
+    @ApiModelProperty(value = "Tells whether vessel has a double bottom")
     private Boolean doubleBottom;
 
+    @ApiModelProperty(value = "Tells whether vessel has an Inert gas system")
     private Boolean inertGasSystem;
 
+    @ApiModelProperty(value = "Tells whether vessel has a ballast tank")
     private Boolean ballastTank;
 
     public void setAll(BigInteger vesselId, VesselDetails.ConstructionData cd) {
@@ -56,87 +76,43 @@ public class VesselConstruction {
         return vesselId;
     }
 
-    public void setVesselId(Long vesselId) {
-        this.vesselId = vesselId;
-    }
-
     public Integer getVesselTypeCode() {
         return vesselTypeCode;
-    }
-
-    public void setVesselTypeCode(Integer vesselTypeCode) {
-        this.vesselTypeCode = vesselTypeCode;
     }
 
     public String getVesselTypeName() {
         return vesselTypeName;
     }
 
-    public void setVesselTypeName(String vesselTypeName) {
-        this.vesselTypeName = vesselTypeName;
-    }
-
     public String getIceClassCode() {
         return iceClassCode;
-    }
-
-    public void setIceClassCode(String iceClassCode) {
-        this.iceClassCode = iceClassCode;
     }
 
     public Timestamp getIceClassIssueDate() {
         return iceClassIssueDate;
     }
 
-    public void setIceClassIssueDate(Timestamp iceClassIssueDate) {
-        this.iceClassIssueDate = iceClassIssueDate;
-    }
-
     public String getIceClassIssuePlace() {
         return iceClassIssuePlace;
-    }
-
-    public void setIceClassIssuePlace(String iceClassIssuePlace) {
-        this.iceClassIssuePlace = iceClassIssuePlace;
     }
 
     public Timestamp getIceClassEndDate() {
         return iceClassEndDate;
     }
 
-    public void setIceClassEndDate(Timestamp iceClassEndDate) {
-        this.iceClassEndDate = iceClassEndDate;
-    }
-
     public String getClassificationSociety() {
         return classificationSociety;
-    }
-
-    public void setClassificationSociety(String classificationSociety) {
-        this.classificationSociety = classificationSociety;
     }
 
     public Boolean getDoubleBottom() {
         return doubleBottom;
     }
 
-    public void setDoubleBottom(Boolean doubleBottom) {
-        this.doubleBottom = doubleBottom;
-    }
-
     public Boolean getInertGasSystem() {
         return inertGasSystem;
     }
 
-    public void setInertGasSystem(Boolean inertGasSystem) {
-        this.inertGasSystem = inertGasSystem;
-    }
-
     public Boolean getBallastTank() {
         return ballastTank;
-    }
-
-    public void setBallastTank(Boolean ballastTank) {
-        this.ballastTank = ballastTank;
     }
 }

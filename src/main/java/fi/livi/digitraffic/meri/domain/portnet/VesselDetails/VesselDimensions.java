@@ -8,46 +8,76 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 import fi.livi.digitraffic.util.TypeUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(description="Vessel dimensions", value = "VesselDimensions")
+@JsonPropertyOrder({ "vesselId", "tonnageCertificateIssuer", "dateOfIssue", "grossTonnage", "netTonnage", "deathWeight", "length",
+                     "overallLength", "height", "breadth", "draught", "maxSpeed", "enginePower", "totalPower", "maxPersons",
+                     "maxPassengers", "keelDate" })
 @Entity
 @DynamicUpdate
 public class VesselDimensions {
 
+    @JsonIgnore
     @Id
     private Long vesselId;
 
+    @ApiModelProperty(value = "Tonnage certificate issuer")
     private String tonnageCertificateIssuer;
 
+    @ApiModelProperty(value = "Date when tonnage certificate was issued")
     private Timestamp dateOfIssue;
 
+    @ApiModelProperty(value = "Ship gross tonnage")
     private Integer grossTonnage;
 
+    @ApiModelProperty(value = "Ship net tonnage")
     private Integer netTonnage;
 
+    @ApiModelProperty(value = "Ship death weight")
     private Integer deathWeight;
 
+    @ApiModelProperty(value = "Ship length")
     private Double length;
 
+    @ApiModelProperty(value = "Ship overall length")
     private Double overallLength;
 
+    @ApiModelProperty(value = "Ship height")
     private Double height;
 
+    @ApiModelProperty(value = "Ship breadth")
     private Double breadth;
 
+    @ApiModelProperty(value = "Ship draught")
     private Double draught;
 
+    @ApiModelProperty(value = "Ship max speed")
     private Double maxSpeed;
 
+    @ApiModelProperty(value = "Ship engine power")
     private String enginePower;
 
+    @ApiModelProperty(value = "Always null")
+    @JsonIgnore
     private Integer totalPower;
 
+    @ApiModelProperty(value = "Always null")
+    @JsonIgnore
     private Integer maxPersons;
 
+    @ApiModelProperty(value = "Always null")
+    @JsonIgnore
     private Integer maxPassengers;
 
+    @ApiModelProperty(value = "Always null")
+    @JsonIgnore
     private Timestamp keelDate;
 
     public void setAll(BigInteger vesselId, VesselDetails.Dimensions dimensions) {
@@ -74,135 +104,67 @@ public class VesselDimensions {
         return vesselId;
     }
 
-    public void setVesselId(Long vesselId) {
-        this.vesselId = vesselId;
-    }
-
     public String getTonnageCertificateIssuer() {
         return tonnageCertificateIssuer;
-    }
-
-    public void setTonnageCertificateIssuer(String tonnageCertificateIssuer) {
-        this.tonnageCertificateIssuer = tonnageCertificateIssuer;
     }
 
     public Timestamp getDateOfIssue() {
         return dateOfIssue;
     }
 
-    public void setDateOfIssue(Timestamp dateOfIssue) {
-        this.dateOfIssue = dateOfIssue;
-    }
-
     public Integer getGrossTonnage() {
         return grossTonnage;
-    }
-
-    public void setGrossTonnage(Integer grossTonnage) {
-        this.grossTonnage = grossTonnage;
     }
 
     public Integer getNetTonnage() {
         return netTonnage;
     }
 
-    public void setNetTonnage(Integer netTonnage) {
-        this.netTonnage = netTonnage;
-    }
-
     public Integer getDeathWeight() {
         return deathWeight;
-    }
-
-    public void setDeathWeight(Integer deathWeight) {
-        this.deathWeight = deathWeight;
     }
 
     public Double getLength() {
         return length;
     }
 
-    public void setLength(Double length) {
-        this.length = length;
-    }
-
     public Double getOverallLength() {
         return overallLength;
-    }
-
-    public void setOverallLength(Double overallLength) {
-        this.overallLength = overallLength;
     }
 
     public Double getHeight() {
         return height;
     }
 
-    public void setHeight(Double height) {
-        this.height = height;
-    }
-
     public Double getBreadth() {
         return breadth;
-    }
-
-    public void setBreadth(Double breadth) {
-        this.breadth = breadth;
     }
 
     public Double getDraught() {
         return draught;
     }
 
-    public void setDraught(Double draught) {
-        this.draught = draught;
-    }
-
     public Double getMaxSpeed() {
         return maxSpeed;
-    }
-
-    public void setMaxSpeed(Double maxSpeed) {
-        this.maxSpeed = maxSpeed;
     }
 
     public String getEnginePower() {
         return enginePower;
     }
 
-    public void setEnginePower(String enginePower) {
-        this.enginePower = enginePower;
-    }
-
     public Integer getTotalPower() {
         return totalPower;
-    }
-
-    public void setTotalPower(Integer totalPower) {
-        this.totalPower = totalPower;
     }
 
     public Integer getMaxPersons() {
         return maxPersons;
     }
 
-    public void setMaxPersons(Integer maxPersons) {
-        this.maxPersons = maxPersons;
-    }
-
     public Integer getMaxPassengers() {
         return maxPassengers;
     }
 
-    public void setMaxPassengers(Integer maxPassengers) {
-        this.maxPassengers = maxPassengers;
-    }
-
     public Timestamp getKeelDate() {
         return keelDate;
-    }
-
-    public void setKeelDate(Timestamp keelDate) {
-        this.keelDate = keelDate;
     }
 }

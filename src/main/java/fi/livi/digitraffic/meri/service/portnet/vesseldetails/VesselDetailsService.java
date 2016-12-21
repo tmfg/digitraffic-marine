@@ -7,7 +7,6 @@ import static org.hibernate.criterion.Restrictions.not;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,18 +16,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
-
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.VesselDetailsJson;
 
 @Service
 public class VesselDetailsService {
@@ -44,23 +39,9 @@ public class VesselDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public List<VesselDetailsJson> findVesselDetails(final ZonedDateTime from, final String vesselName, final Integer mmsi, final Integer imo,
-                                                     final List<String> nationalities, final Integer vesselTypeCode) {
-
-        final List<Long> vesselIds = getVesselDetailsIds(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
-
-        List<VesselDetailsJson> ret = new ArrayList<>();
-        for (List<Long> ids : Lists.partition(vesselIds, 1000)) {
-            ret.addAll(vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(ids));
-        }
-
-        return ret;
-    }
-
-    private List<Long> getVesselDetailsIds(ZonedDateTime from, String vesselName, Integer mmsi, Integer imo, List<String> nationalities,
+    public List<VesselDetails> findVesselDetails(ZonedDateTime from, String vesselName, Integer mmsi, Integer imo, List<String> nationalities,
                                            Integer vesselTypeCode) {
-        Criteria c = createCriteria().setProjection(Projections.id())
-                                     .createAlias("vesselConstruction", "vesselConstruction")
+        Criteria c = createCriteria().createAlias("vesselConstruction", "vesselConstruction")
                                      .createAlias("vesselRegistration", "vesselRegistration");
 
         if (from != null) {

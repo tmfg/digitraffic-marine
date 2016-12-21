@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
 import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
-import fi.livi.digitraffic.meri.model.portnet.metadata.VesselDetailsJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
@@ -70,7 +70,7 @@ public class PortnetMetadataController {
                     @ApiResponse(code = 400, message = "Bad request. At least one parameter is required."),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
-    public List<VesselDetailsJson> findVesselDetails(
+    public List<VesselDetails> findVesselDetails(
             @ApiParam("Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
@@ -84,7 +84,7 @@ public class PortnetMetadataController {
             @ApiParam("Return vessel details for given IMO/LLOYDS")
             @RequestParam(value = "imo", required = false) final Integer imo,
 
-            @ApiParam("Return vessel details for vessels with given nationality or nationalities")
+            @ApiParam("Return vessel details for vessels with given nationality or nationalities (e.g. FI)")
             @RequestParam(value = "nationality", required = false) final List<String> nationalities,
 
             @ApiParam("Return vessel details for given vessel type code")

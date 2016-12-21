@@ -13,9 +13,9 @@ import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
+import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
 import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
-import fi.livi.digitraffic.meri.model.portnet.metadata.VesselDetailsJson;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsService;
 
@@ -78,8 +78,8 @@ public class PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public List<VesselDetailsJson> findVesselDetails(final ZonedDateTime from, final String vesselName, final Integer mmsi, final Integer imo,
-                                                     final List<String> nationalities, final Integer vesselTypeCode) {
+    public List<VesselDetails> findVesselDetails(final ZonedDateTime from, final String vesselName, final Integer mmsi, final Integer imo,
+                                                 final List<String> nationalities, final Integer vesselTypeCode) {
         return vesselDetailsService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }
