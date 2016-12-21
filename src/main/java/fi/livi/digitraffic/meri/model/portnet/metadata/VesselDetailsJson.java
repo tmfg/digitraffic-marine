@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Vessel details", value = "vesselDetails")
+@ApiModel(description="Vessel details", value = "VesselDetails")
 @JsonPropertyOrder({ "vesselId", "mmsi", "name", "namePrefix", "imoLloyds", "radioCallSign", "radioCallSignType", "updateTimestamp",
                      "dataSource", "vesselConstruction", "vesselDimensions", "vesselRegistration", "vesselSystem" })
 public interface VesselDetailsJson {

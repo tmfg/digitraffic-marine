@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Vessel dimensions", value = "vesselDimensions")
+@ApiModel(description="Vessel dimensions", value = "VesselDimensions")
 @JsonPropertyOrder({ "vesselId", "tonnageCertificateIssuer", "dateOfIssue", "grossTonnage", "netTonnage", "deathWeight", "length",
                      "overallLength", "height", "breadth", "draught", "maxSpeed", "enginePower", "totalPower", "maxPersons",
                      "maxPassengers", "keelDate" })
