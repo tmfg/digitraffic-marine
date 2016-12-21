@@ -7,33 +7,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.controller.portnet.PortnetMetadataController;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = AisTestApplicationConfig.class)
-@AutoConfigureMockMvc
-public class PortnetMetadataControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-
+public class PortnetMetadataControllerTest extends AbstractControllerTest {
     @Test
-    public void testGetAllSsnMetadata() throws Exception {
+    public void listAllMetadata() throws Exception {
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
                 PortnetMetadataController.SSN_LOCATIONS_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("locations[0].locode", Matchers.notNullValue()))
+        ;
+    }
+
+    @Test
+    public void findSsnLocationByLocode() throws Exception {
+        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
+                AisApplicationConfiguration.API_METADATA_PART_PATH +
+                PortnetMetadataController.SSN_LOCATIONS_PATH +
+                "/FIHKO"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("locations[0].locode", Matchers.notNullValue()))
+        ;
+    }
+
+    @Test
+    public void findSsnLocationsByCountry() throws Exception {
+        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
+                AisApplicationConfiguration.API_METADATA_PART_PATH +
+                PortnetMetadataController.SSN_LOCATIONS_BY_COUNTRY_PATH +
+                "/Finland"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("[0].locode", Matchers.notNullValue()))
         ;
     }
 
