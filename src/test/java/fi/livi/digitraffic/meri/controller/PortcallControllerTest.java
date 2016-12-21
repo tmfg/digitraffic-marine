@@ -35,7 +35,6 @@ public class PortcallControllerTest extends AbstractControllerTest {
                 "?vesselName=test"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("portCallsUpdated", Matchers.notNullValue()))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }
@@ -47,7 +46,6 @@ public class PortcallControllerTest extends AbstractControllerTest {
                 "?vesselName=test"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("portCallsUpdated", Matchers.notNullValue()))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }
