@@ -10,11 +10,13 @@ import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.ReconnectingHandler;
 
 @Component
+@ConditionalOnExpression("'${config.test}' != 'true'")
 public class WebsocketStatistics {
     private static final Map<WebsocketType, SentStatistics> sentStatisticsMap = new ConcurrentHashMap<>();
     private static final Map<WebsocketType, ReadStatistics> readStatisticsMap = new ConcurrentHashMap<>();
