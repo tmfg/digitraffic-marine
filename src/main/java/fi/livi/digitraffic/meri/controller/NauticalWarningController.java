@@ -86,6 +86,10 @@ public class NauticalWarningController {
     }
 
     public static byte[] decompress(final byte[] contentBytes) throws IOException {
+        if(contentBytes == null) {
+            return null;
+        }
+
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         IOUtils.copy(new GZIPInputStream(new ByteArrayInputStream(contentBytes)), out);
         return out.toByteArray();
