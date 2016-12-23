@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.controller;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_LOCATIONS_PATH;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -34,7 +35,7 @@ public class VesselLocationController {
         this.vesselLocationService = vesselLocationService;
     }
 
-    @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
+    @ApiOperation("OFFLINE Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocationJson> vesselLocationsByMssiAndTimestamp(
@@ -50,10 +51,11 @@ public class VesselLocationController {
 
         LOG.info(String.format("vesselLocationsByMssiAndTimestamp mmsi:\t%d from:\t%d to:\t%d", mmsi, from, to));
 
-        return vesselLocationService.findLocations(mmsi, from, to);
+        return Collections.emptyList();
+//        return vesselLocationService.findLocations(mmsi, from, to);
     }
 
-    @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
+    @ApiOperation("OFFLINE Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocationJson> vesselLocationsByTimestamp(
@@ -66,6 +68,7 @@ public class VesselLocationController {
 
         LOG.info(String.format("vesselLocationsByTimestamp from:\t%d to:\t%d", from, to));
 
-        return vesselLocationService.findLocations(from, to);
+        return Collections.emptyList();
+        //return vesselLocationService.findLocations(from, to);
     }
 }
