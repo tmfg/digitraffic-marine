@@ -34,6 +34,10 @@ Download Oracle JDBC driver and add it to your local Maven repository.
 
 ### Running the application
 
+    # tunnel ie. port 18080 to server that has access to pooki
+    $ ssh user@server -L18080:remote.server.ip:80
+
+    # Start application
 	$ mvn spring-boot:run -Dspring.profiles.active=localhost
 
 Or build the JAR file with:

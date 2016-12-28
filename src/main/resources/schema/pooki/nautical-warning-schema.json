@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "type": "integer"
+              },
+              "ALUEET_FI": {
+                "type": "string"
+              },
+              "ALUEET_SV": {
+                "type": "string"
+              },
+              "ALUEET_EN": {
+                "type": "string"
+              },
+              "NUMERO": {
+                "type": "integer"
+              },
+              "SIJAINTI_FI": {
+                "type": "string"
+              },
+              "SIJAINTI_SV": {
+                "type": "string"
+              },
+              "SIJAINTI_EN": {
+                "type": "string"
+              },
+              "SISALTO_FI": {
+                "type": "string"
+              },
+              "SISALTO_SV": {
+                "type": "null"
+              },
+              "SISALTO_EN": {
+                "type": "null"
+              },
+              "PAIVAYS": {
+                "type": "string"
+              },
+              "TYYPPI_FI": {
+                "type": "string"
+              },
+              "TYYPPI_SV": {
+                "type": "string"
+              },
+              "TYYPPI_EN": {
+                "type": "string"
+              },
+              "VOIMASSA_ALKAA": {
+                "type": "null"
+              },
+              "VOIMASSA_PAATTYY": {
+                "type": "null"
+              },
+              "VALITTUKOHDE_TOOLTIP": {
+                "type": "string"
+              },
+              "VIRTUAALINENTURVALAITE": {
+                "type": "integer"
+              },
+              "NAVTEX": {
+                "type": "integer"
+              },
+              "TALLENNUSPAIVA": {
+                "type": "string"
+              },
+              "TURVALAITE_TXT": {
+                "type": "string"
+              },
+              "VAYLAALUE_TXT": {
+                "type": "null"
+              },
+              "NAVIGOINTILINJA_TXT": {
+                "type": "null"
+              },
+              "ANTOPAIVA": {
+                "type": "null"
+              },
+              "TIEDOKSIANTAJA": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "ID",
+              "ALUEET_FI",
+              "ALUEET_SV",
+              "ALUEET_EN",
+              "NUMERO",
+              "SIJAINTI_FI",
+              "SIJAINTI_SV",
+              "SIJAINTI_EN",
+              "SISALTO_FI",
+              "SISALTO_SV",
+              "SISALTO_EN",
+              "PAIVAYS",
+              "TYYPPI_FI",
+              "TYYPPI_SV",
+              "TYYPPI_EN",
+              "VOIMASSA_ALKAA",
+              "VOIMASSA_PAATTYY",
+              "VALITTUKOHDE_TOOLTIP",
+              "VIRTUAALINENTURVALAITE",
+              "NAVTEX",
+              "TALLENNUSPAIVA",
+              "TURVALAITE_TXT",
+              "VAYLAALUE_TXT",
+              "NAVIGOINTILINJA_TXT",
+              "ANTOPAIVA",
+              "TIEDOKSIANTAJA"
+            ]
+          },
+          "geometry": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "coordinates": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            },
+            "required": [
+              "type",
+              "coordinates"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "properties",
+          "geometry"
+        ]
+      }
+    }
+  },
+  "required": [
+    "type",
+    "features"
+  ]
+}
