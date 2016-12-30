@@ -26,7 +26,7 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAllVesselsMetadata() throws Exception {
-        given(vesselMetadataService.listAllVesselMetadata()).willReturn(Collections.singletonList(generateVesselMetadata()));
+        given(vesselMetadataService.listAllowedVesselMetadata()).willReturn(Collections.singletonList(generateVesselMetadata()));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
@@ -110,7 +110,7 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
 
     @Test
     public void testVesselMetadataMetadataFound() throws Exception {
-        given(vesselMetadataService.findMetadataByMssi(anyInt())).willReturn(generateVesselMetadata());
+        given(vesselMetadataService.findAllowedMetadataByMssi(anyInt())).willReturn(generateVesselMetadata());
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +

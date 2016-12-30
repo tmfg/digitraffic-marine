@@ -29,7 +29,7 @@ public class VesselLocationControllerTest extends AbstractControllerTest {
     @Test
     public void testVesselLocationsByMssi() throws Exception {
         final VesselLocationJson message = generateVesselLocation();
-        when(vesselLocationService.findLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.singletonList(message));
+        when(vesselLocationService.findAllowedLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.singletonList(message));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -43,7 +43,7 @@ public class VesselLocationControllerTest extends AbstractControllerTest {
     @Test
     public void testVesselLocationsByTimestamp() throws Exception {
         final VesselLocationJson message = generateVesselLocation();
-        when(vesselLocationService.findLocations(anyLong(), anyLong())).thenReturn(Collections.singletonList(message));
+        when(vesselLocationService.findAllowedLocations(anyLong(), anyLong())).thenReturn(Collections.singletonList(message));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
