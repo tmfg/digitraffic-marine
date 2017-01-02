@@ -1,21 +1,27 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
+import java.util.UUID;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
-import fi.livi.util.locking.AccessLock;
+import fi.livi.digitraffic.util.service.LockingService;
 
 public class VesselMetadataDatabaseListener implements WebsocketListener {
     private final VesselMetadataRepository vesselMetadataRepository;
-    private final AccessLock accessLock;
+    private final LockingService lockingService;
+
+    private final String instanceId;
 
     public VesselMetadataDatabaseListener(final VesselMetadataRepository vesselMetadataRepository,
-                                          final AccessLock accessLock) {
+                                          final LockingService lockingService) {
         this.vesselMetadataRepository = vesselMetadataRepository;
-        this.accessLock = accessLock;
+        this.lockingService = lockingService;
+
+        this.instanceId = UUID.randomUUID().toString();
     }
 
     @Override
@@ -23,13 +29,13 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
 
-        if(vm.validate() && accessLock.get()) {
-            try {
-                vesselMetadataRepository.save(new VesselMetadata(vm.vesselAttributes));
-            } finally {
-                accessLock.release();
-            }
+        if(vm.validate() && getLock()) {
+            vesselMetadataRepository.save(new VesselMetadata(vm.vesselAttributes));
         }
+    }
+
+    private boolean getLock() {
+        return lockingService.acquireLock("AIS", instanceId, 2);
     }
 
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {

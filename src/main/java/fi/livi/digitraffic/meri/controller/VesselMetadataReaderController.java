@@ -16,8 +16,7 @@ import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
-import fi.livi.util.locking.AccessLock;
-import fi.livi.util.locking.LockingService;
+import fi.livi.digitraffic.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -29,9 +28,8 @@ public class VesselMetadataReaderController {
             @Value("${ais.metadata.5.url}") final String aisLocations5Url,
             final LockingService lockingService,
             final VesselMetadataRepository vesselMetadataRepository) {
-        final AccessLock accessLock = lockingService.lock("AIS-metadata");
         final List<WebsocketListener> listeners = Arrays.asList(
-                new VesselMetadataDatabaseListener(vesselMetadataRepository, accessLock),
+                new VesselMetadataDatabaseListener(vesselMetadataRepository, lockingService),
                 new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.METADATA)
         );
 

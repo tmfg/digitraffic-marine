@@ -12,8 +12,8 @@ import fi.livi.digitraffic.meri.annotation.CoverageIgnore;
 @SpringBootApplication
 @EnableScheduling
 @EnableTransactionManagement
-@EntityScan(basePackages = { "fi.livi.util", "fi.livi.digitraffic.meri"})
-@ComponentScan(basePackages = {"fi.livi.util", "fi.livi.digitraffic.meri"})
+@EntityScan(basePackages = { "fi.livi.digitraffic.util", "fi.livi.digitraffic.meri"})
+@ComponentScan(basePackages = {"fi.livi.digitraffic.util", "fi.livi.digitraffic.meri"})
 public class AisApplication {
     @CoverageIgnore
     public static void main(final String[] args) {
