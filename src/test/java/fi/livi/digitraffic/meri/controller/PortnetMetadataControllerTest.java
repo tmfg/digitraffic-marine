@@ -9,6 +9,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
+import fi.livi.digitraffic.meri.AbstractControllerTest;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.controller.portnet.PortnetMetadataController;
 

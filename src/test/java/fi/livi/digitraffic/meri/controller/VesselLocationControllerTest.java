@@ -16,6 +16,7 @@ import org.mockito.Matchers;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import fi.livi.digitraffic.meri.AbstractControllerTest;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;

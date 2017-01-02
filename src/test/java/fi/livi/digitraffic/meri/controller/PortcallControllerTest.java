@@ -7,18 +7,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import fi.livi.digitraffic.meri.AisTestApplicationConfig;
+import fi.livi.digitraffic.meri.AbstractControllerTest;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = AisTestApplicationConfig.class)
-@AutoConfigureMockMvc
+
 public class PortcallControllerTest extends AbstractControllerTest {
     @Test
     public void listAllPortCallsFail() throws Exception {

@@ -30,26 +30,15 @@ public class VesselLocationRelayListener implements WebsocketListener {
             locationSender.sendMessage(ais);
             LocationsEndpoint.sendMessage(ais);
             VesselLocationsEndpoint.sendMessage(ais);
-        } else {
-            System.out.println("Fishing boat " + ais);
         }
     }
 
     private boolean isAllowedMmsi(int mmsi) {
-        return getAllowedMmsisCached().contains(mmsi);
+        return vesselMetadataService.findAllowedMmsis().contains(mmsi);
     }
 
     @Override
     public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
         // no need to do anything
-    }
-
-    public Collection<Integer> getAllowedMmsisCached() {
-        // fetch from db if more than minute is gone from last fetch
-        if (allowedMmsisCached == null || allowedMmsisCacheRefreshedMs < (System.currentTimeMillis() - 1000 * 60)) {
-            allowedMmsisCached = vesselMetadataService.findAllowedMmsis();
-            allowedMmsisCacheRefreshedMs = System.currentTimeMillis();
-        }
-        return allowedMmsisCached;
     }
 }

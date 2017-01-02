@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service.ais;
 
+import static fi.livi.digitraffic.meri.config.AisCacheConfiguration.ALLOWED_MMSI_CACHE;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +14,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +64,7 @@ public class VesselMetadataService {
         return SublistFetcher.fetch(c.list(), vesselMetadataRepository::findByMmsiIn);
     }
 
+    @Cacheable(value = ALLOWED_MMSI_CACHE)
     public Collection<Integer> findAllowedMmsis() {
         final Criteria c = createCriteria().setProjection(Projections.id());
         c.add(getAllowedShipTypeCriteria());

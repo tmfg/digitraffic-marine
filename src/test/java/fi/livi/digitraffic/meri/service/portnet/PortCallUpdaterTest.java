@@ -7,7 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 
 @Ignore("Needs vpn")
 public class PortCallUpdaterTest extends AbstractIntegrationTest {
