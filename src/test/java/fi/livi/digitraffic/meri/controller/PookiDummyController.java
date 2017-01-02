@@ -55,7 +55,6 @@ public class PookiDummyController {
      * If the queue is empty it will return the default "DUMMY_DATA"
      *
      * @see PookiDummyController#setResponseQueue(String, Queue) to set up the responses
-     * @see NauticalWarningControllerTest#DUMMY_DATA
      *
      * @param status the api status (layer)
      * @param key the path variable to select the response queue
