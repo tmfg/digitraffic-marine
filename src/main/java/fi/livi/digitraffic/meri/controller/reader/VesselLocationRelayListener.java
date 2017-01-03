@@ -1,7 +1,5 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import java.util.Collection;
-
 import fi.livi.digitraffic.meri.controller.LocationSender;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.websocket.LocationsEndpoint;
@@ -12,8 +10,6 @@ import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 public class VesselLocationRelayListener implements WebsocketListener {
     private final LocationSender locationSender;
     private final VesselMetadataService vesselMetadataService;
-    private Collection<Integer> allowedMmsisCached;
-    private long allowedMmsisCacheRefreshedMs = 0L;
 
     public VesselLocationRelayListener(final LocationSender locationSender,
                                        final VesselMetadataService vesselMetadataService) {
