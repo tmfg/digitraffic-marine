@@ -39,7 +39,7 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
         String dateString = node.asText();
 
         if (StringUtils.isNotBlank(dateString)) {
-            log.info("From " + dateString + " to " + parseDateQuietly(dateString));
+            log.debug("From " + dateString + " to " + parseDateQuietly(dateString));
         }
 
         return parseDateQuietly(dateString);
