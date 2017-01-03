@@ -1,12 +1,9 @@
 package fi.livi.digitraffic.meri.model.portnet.data;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description="IMO information")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public interface ImoInformationJson {
 
     @ApiModelProperty(value = "Tells whether information concerns Departure or Arrival")
