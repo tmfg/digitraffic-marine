@@ -76,7 +76,7 @@ public class WebsocketStatistics {
         readStatisticsMap.put(type, newRs);
     }
 
-    public synchronized static void readWebsocketStatus(final WebsocketType type, final ReconnectingHandler.ConnectionStatus status) {
+    public static synchronized void readWebsocketStatus(final WebsocketType type, final ReconnectingHandler.ConnectionStatus status) {
         final ReadStatistics rs = readStatisticsMap.get(type);
 
         final ReadStatistics newRs = new ReadStatistics(rs == null ? 1 : rs.messages, status.name());

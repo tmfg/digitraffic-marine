@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class PookiException extends IOException {
+    private final Map<String, Object> properties;
 
-    private Map<String, Object> properties;
-
-    public PookiException(String message) {
+    public PookiException(final String message, final Map<String,Object> properties) {
         super(message);
-    }
 
-    public void setProperties(Map<String,Object> properties) {
         this.properties = properties;
     }
 }
