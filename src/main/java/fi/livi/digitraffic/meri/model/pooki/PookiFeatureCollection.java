@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.model.geojson.GeoJsonObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -19,13 +20,13 @@ import io.swagger.annotations.ApiModelProperty;
     "features"
 })
 @ApiModel(description = "GeoJSON FeatureCollection object")
-public class FeatureCollection extends GeoJsonObject {
+public class PookiFeatureCollection extends GeoJsonObject {
 
     @ApiModelProperty(required = true)
     @JsonProperty("features")
-    private List<Feature> features = new ArrayList<Feature>();
+    private List<PookiFeature> features = new ArrayList<>();
 
-    public void setFeatures(List<Feature> features) {
+    public void setFeatures(List<PookiFeature> features) {
         this.features = features;
     }
 

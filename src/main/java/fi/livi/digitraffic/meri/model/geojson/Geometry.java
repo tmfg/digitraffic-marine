@@ -1,5 +1,5 @@
 
-package fi.livi.digitraffic.meri.model.pooki;
+package fi.livi.digitraffic.meri.model.geojson;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
     "coordinates"
 })
 @JsonSubTypes({ @JsonSubTypes.Type(Point.class), @JsonSubTypes.Type(Polygon.class), @JsonSubTypes.Type(MultiPoint.class)})
-@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class, subTypes = {Point.class, LineString.class, MultiPoint.class, Polygon.class})
+@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class, subTypes = { Point.class, LineString.class, MultiPoint.class, Polygon.class})
 public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     @ApiModelProperty(value = "WGS84 coordinates in decimal degrees. [LONGITUDE, LATITUDE, ALTITUDE]", required = true)

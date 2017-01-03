@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.controller.exception.NauticalWarningErrorHandler;
-import fi.livi.digitraffic.meri.model.pooki.FeatureCollection;
+import fi.livi.digitraffic.meri.model.pooki.PookiFeatureCollection;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -52,7 +52,7 @@ public class NauticalWarningController {
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public FeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "DRAFT,PUBLISHED,ARCHIVED" )
+    public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "DRAFT,PUBLISHED,ARCHIVED" )
                                               @PathVariable final String status) {
         try {
             return getObjectFromUrl(status.toUpperCase());
@@ -62,10 +62,10 @@ public class NauticalWarningController {
         }
     }
 
-    private FeatureCollection getObjectFromUrl(final String status) {
+    private PookiFeatureCollection getObjectFromUrl(final String status) {
         final Status s = Status.valueOf(status.toUpperCase());
         final String url = String.format("%s?crs=EPSG:4326&layer=%s", pookiUrl, s.layer);
-        return restTemplate.getForObject(url, FeatureCollection.class);
+        return restTemplate.getForObject(url, PookiFeatureCollection.class);
     }
 
     public void setPookiUrl(final String pookiUrl) {

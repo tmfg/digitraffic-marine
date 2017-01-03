@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(description = "GeoJSON Properties object")
 @JsonPropertyOrder({"type", "id"})
-public class Properties implements Serializable {
+public class PookiProperties implements Serializable {
 
     @ApiModelProperty(required = true)
     @JsonProperty("id")
