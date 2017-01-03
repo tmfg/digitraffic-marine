@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.service.ais;
 
 import static fi.livi.digitraffic.meri.model.ais.VesselMessage.VesselAttributes;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -10,45 +9,59 @@ import javax.transaction.Transactional;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 
 @Transactional
 public class VesselMetadataServiceTest extends AbstractIntegrationTest {
 
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(MessageConverter.class);
+
+    @SpyBean
     private VesselMetadataService vesselMetadataService;
 
     @Autowired
     private VesselMetadataRepository vesselMetadataRepository;
 
     @Test
-    public void testCache() throws IOException, InterruptedException {
+    public void testAllowedMmsisCache() throws Exception {
 
         vesselMetadataRepository.save(createNewVesselMetadata(-1, 30));
         vesselMetadataRepository.save(createNewVesselMetadata(-2, 40));
 
+        Mockito.verify(vesselMetadataService, Mockito.times(0)).findAllowedMmsis();
         Collection<Integer> initial = vesselMetadataService.findAllowedMmsis();
+        Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
         Assert.assertFalse(initial.contains(-1));
         Assert.assertTrue(initial.contains(-2));
 
         vesselMetadataRepository.save(createNewVesselMetadata(-3, 30));
         vesselMetadataRepository.save(createNewVesselMetadata(-4, 40));
 
+        Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
+
         // from cache
         Collection<Integer> cache = vesselMetadataService.findAllowedMmsis();
+        Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
         Assert.assertFalse(cache.contains(-1));
         Assert.assertTrue(cache.contains(-2));
         Assert.assertFalse(cache.contains(-3));
         Assert.assertFalse(cache.contains(-4));
 
-        Thread.sleep(1000*60);
+        log.info("Wait for 11 seconds to expire cache");
+        Thread.sleep(1000*11);
 
         // from cache
         Collection<Integer> cache2 = vesselMetadataService.findAllowedMmsis();
+        Mockito.verify(vesselMetadataService, Mockito.times(2)).findAllowedMmsis();
         Assert.assertFalse(cache2.contains(-1));
         Assert.assertTrue(cache2.contains(-2));
         Assert.assertFalse(cache2.contains(-3));
