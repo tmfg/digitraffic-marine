@@ -24,17 +24,15 @@ public class NauticalWarningErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(final ClientHttpResponse response) throws IOException {
         log.info("Pooki response error: {} {}", response.getStatusCode(), response.getStatusText());
-        PookiException exception =
-                new PookiException(String.format("Pooki response error: %s %s",
-                                                 response.getStatusCode(), response.getStatusText()));
-        Map<String, Object> errorAttributes = new LinkedHashMap<>();
+
+        final Map<String, Object> errorAttributes = new LinkedHashMap<>();
         errorAttributes.put("timestamp", new Date());
         errorAttributes.put("status", response.getStatusCode().value());
         errorAttributes.put("error", response.getStatusCode().getReasonPhrase());
-        errorAttributes.put("exception", exception.getClass().getSimpleName());
+        errorAttributes.put("exception", PookiException.class.getSimpleName());
         errorAttributes.put("message", IOUtils.toString(response.getBody(), "UTF-8"));
         errorAttributes.put("path", response.getHeaders().getLocation());
-        exception.setProperties(errorAttributes);
-        throw exception;
+
+        throw new PookiException(String.format("Pooki response error: %s %s", response.getStatusCode(), response.getStatusText()), errorAttributes);
     }
 }
