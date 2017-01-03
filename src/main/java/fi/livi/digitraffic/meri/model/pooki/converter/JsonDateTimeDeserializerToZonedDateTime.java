@@ -45,7 +45,7 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
         return parseDateQuietly(dateString);
     }
 
-    protected static ZonedDateTime parseDateQuietly(final String dateTime) {
+    public static ZonedDateTime parseDateQuietly(final String dateTime) {
         if (StringUtils.isBlank(dateTime)) {
             return null;
         }
@@ -57,6 +57,7 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
                 log.debug("Parse of " + dateTime + " failed", e);
             }
         }
+        log.warn("Could not parse dateTime " + dateTime);
         return null;
     }
 }

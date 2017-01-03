@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.controller;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_METADATA_PART_PATH;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,25 +31,22 @@ public class VesselMetadataController {
         this.vesselMetadataService = vesselMetadataService;
     }
 
-    @ApiOperation("OFFLINE Return latest vessel metadata by mmsi.")
+    @ApiOperation("Return latest vessel metadata by mmsi.")
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel metadata"),
                     @ApiResponse(code = 404, message = "Vessel metadata not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @GetMapping(path = VESSELS_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselMetadataJson vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
-        return null;
-        //return vesselMetadataService.findMetadataByMssi(mmsi);
+        return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
-    @ApiOperation("OFFLINE Return latest vessel metadata for all known vessels.")
+    @ApiOperation("Return latest vessel metadata for all known vessels.")
     @GetMapping(path = VESSELS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel metadata"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public List<VesselMetadataJson> allVessels() {
-        return Collections.emptyList();
-
-//        return vesselMetadataService.listAllVesselMetadata();
+        return vesselMetadataService.listAllowedVesselMetadata();
     }
 }

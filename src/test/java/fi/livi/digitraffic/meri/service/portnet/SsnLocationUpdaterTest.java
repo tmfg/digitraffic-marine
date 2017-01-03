@@ -9,7 +9,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.SAXException;
 
-import fi.livi.digitraffic.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 
 public class SsnLocationUpdaterTest extends AbstractIntegrationTest {
     @Autowired

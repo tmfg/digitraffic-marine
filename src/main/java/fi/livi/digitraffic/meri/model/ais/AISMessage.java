@@ -40,7 +40,22 @@ public class AISMessage implements Validatable {
             public SpatialReference(@JsonProperty("wkid") final int wkid) {
                 this.wkid = wkid;
             }
+
+            @Override
+            public String toString() {
+                return "SpatialReference{" +
+                        "wkid=" + wkid +
+                        '}';
+            }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AISMessage{" +
+                "geometry=" + geometry +
+                ", attributes=" + attributes +
+                '}';
     }
 
     public static class AISAttributes {
@@ -79,6 +94,22 @@ public class AISMessage implements Validatable {
             this.heading = heading;
             this.raim = raim;
             this.timestamp = timestamp;
+        }
+
+        @Override
+        public String toString() {
+            return "AISAttributes{" +
+                    "mmsi=" + mmsi +
+                    ", navStat=" + navStat +
+                    ", rot=" + rot +
+                    ", posAcc=" + posAcc +
+                    ", heading=" + heading +
+                    ", timestamp=" + timestamp +
+                    ", raim=" + raim +
+                    ", sog=" + sog +
+                    ", cog=" + cog +
+                    ", timestampExternal=" + timestampExternal +
+                    '}';
         }
     }
 }

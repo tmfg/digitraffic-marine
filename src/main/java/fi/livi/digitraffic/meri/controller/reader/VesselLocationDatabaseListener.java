@@ -37,7 +37,8 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
         return lockingService.acquireLock("AIS", instanceId, 2);
     }
 
-    @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
+    @Override
+    public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
         // no need to do anything
     }
 }

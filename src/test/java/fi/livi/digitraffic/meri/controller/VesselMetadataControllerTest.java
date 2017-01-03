@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import fi.livi.digitraffic.meri.AbstractControllerTest;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
@@ -26,7 +27,7 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAllVesselsMetadata() throws Exception {
-        given(vesselMetadataService.listAllVesselMetadata()).willReturn(Collections.singletonList(generateVesselMetadata()));
+        given(vesselMetadataService.listAllowedVesselMetadata()).willReturn(Collections.singletonList(generateVesselMetadata()));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
@@ -110,7 +111,7 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
 
     @Test
     public void testVesselMetadataMetadataFound() throws Exception {
-        given(vesselMetadataService.findMetadataByMssi(anyInt())).willReturn(generateVesselMetadata());
+        given(vesselMetadataService.findAllowedMetadataByMssi(anyInt())).willReturn(generateVesselMetadata());
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
@@ -27,6 +28,8 @@ public class WebsocketReader {
 
     private final List<WebsocketListener> listeners;
 
+    private final AtomicBoolean running = new AtomicBoolean(true);
+
     public WebsocketReader(final String locationUrl, final List<WebsocketListener> listeners) {
         this.locationUrl = locationUrl;
         this.listeners = listeners;
@@ -49,7 +52,7 @@ public class WebsocketReader {
     }
 
     private ClientManager initializeConnection() throws URISyntaxException, IOException, DeploymentException {
-        log.debug("initializing connection to {} {} listeners", locationUrl, listeners.size());
+        log.info("Initializing connection to {} {} listeners", locationUrl, listeners.size());
 
         final ClientManager client = ClientManager.createClient();
         final ReconnectingHandler handler = new ReconnectingHandler(listeners, log);
@@ -73,7 +76,11 @@ public class WebsocketReader {
     }
 
     private void receiveMessage(final String message) {
-        listeners.parallelStream().forEach(listener -> notifyListener(listener, message));
+        if (running.get()) {
+            listeners.parallelStream().forEach(listener -> notifyListener(listener, message));
+        } else {
+            log.warn("Not handling messages received after shutdown hook");
+        }
     }
 
     private void notifyListener(final WebsocketListener listener, final String message) {
@@ -86,7 +93,7 @@ public class WebsocketReader {
 
     public void destroy() {
         log.debug("destroy");
-
+        running.set(false);
         if(clientManager != null) {
             clientManager.shutdown();
         }

@@ -12,23 +12,16 @@ import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.AisApplication;
+import fi.livi.digitraffic.meri.AbstractControllerTest;
 import fi.livi.digitraffic.util.RestUtil;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = AisApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Component
-public class NauticalWarningControllerTest extends AbstractTestBase {
+
+public class NauticalWarningControllerTest extends AbstractControllerTest {
     private TestRestTemplate template = new TestRestTemplate();
 
     @Autowired

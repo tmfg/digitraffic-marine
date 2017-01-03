@@ -17,6 +17,7 @@ import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
+import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 import fi.livi.digitraffic.util.service.LockingService;
 
 @Component
@@ -31,10 +32,11 @@ public class VesselLocationReaderController {
             @Value("${ais.locations.9.url}") final String aisLocations9Url,
             final VesselLocationRepository vesselLocationRepository,
             final LockingService lockingService,
+            final VesselMetadataService vesselMetadataService,
             final LocationSender locationSender) {
             final List<WebsocketListener> listeners = Arrays.asList(
                     new VesselLocationDatabaseListener(vesselLocationRepository, lockingService),
-                    new VesselLocationRelayListener(locationSender),
+                    new VesselLocationRelayListener(locationSender, vesselMetadataService),
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 

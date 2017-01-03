@@ -3,14 +3,12 @@ package fi.livi.digitraffic.meri.model.portnet.data;
 import java.sql.Timestamp;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description = "Port call")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "portCallId", "portCallTimestamp", "customsReference", "portToVisit", "prevPort", "nextPort", "domesticTrafficArrival",
                      "domesticTrafficDeparture",
                      "arrivalWithCargo", "notLoading", "discharge", "shipMasterArrival", "shipMasterDeparture", "managementNameArrival",
