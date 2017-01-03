@@ -34,7 +34,7 @@ public class VesselLocationController {
         this.vesselLocationService = vesselLocationService;
     }
 
-    @ApiOperation("OFFLINE Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
+    @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocationJson> vesselLocationsByMssiAndTimestamp(
@@ -53,7 +53,7 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(mmsi, from, to);
     }
 
-    @ApiOperation("OFFLINE Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
+    @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<VesselLocationJson> vesselLocationsByTimestamp(
