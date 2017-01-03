@@ -37,11 +37,15 @@ public class WebsocketStatistics {
     }
 
     private static synchronized void notifyStatus() {
-        final ReadStatistics locationStatus = readStatisticsMap.get(WebsocketType.LOCATIONS);
-        final String status = locationStatus == null ? UNDEFINED : locationStatus.status;
+        try {
+            final ReadStatistics locationStatus = readStatisticsMap.get(WebsocketType.LOCATIONS);
+            final String status = locationStatus == null ? UNDEFINED : locationStatus.status;
 
-        LocationsEndpoint.sendStatus(status);
-        VesselLocationsEndpoint.sendStatus(status);
+            LocationsEndpoint.sendStatus(status);
+            VesselLocationsEndpoint.sendStatus(status);
+        } catch(final Exception e) {
+            log.info("Exception notifying", e);
+        }
     }
 
     private static synchronized void logMessageCount() {
