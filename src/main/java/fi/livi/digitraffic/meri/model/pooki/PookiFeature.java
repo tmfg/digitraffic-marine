@@ -3,31 +3,31 @@ package fi.livi.digitraffic.meri.model.pooki;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.model.geojson.GeoJsonObject;
+import fi.livi.digitraffic.meri.model.geojson.Geometry;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "type",
     "geometry",
     "properties"
 })
 @ApiModel(description = "GeoJSON Feature object")
-public class Feature extends GeoJsonObject {
+public class PookiFeature extends GeoJsonObject {
 
     @ApiModelProperty("GeoJSON Properties object")
     @JsonProperty("properties")
-    private Properties properties;
+    private PookiProperties properties;
 
     @ApiModelProperty("GeoJSON Geometry object")
     @JsonProperty("geometry")
     private Geometry geometry;
 
-    public void setProperties(Properties properties) {
+    public void setProperties(PookiProperties properties) {
         this.properties = properties;
     }
 

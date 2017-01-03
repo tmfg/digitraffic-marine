@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.model.pooki;
+package fi.livi.digitraffic.meri.model.geojson;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,11 +15,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
+import fi.livi.digitraffic.meri.model.pooki.PookiFeature;
+import fi.livi.digitraffic.meri.model.pooki.PookiFeatureCollection;
+import fi.livi.digitraffic.meri.model.pooki.PookiProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(subTypes = {LineString.class})
-@JsonSubTypes({ @Type(Geometry.class), @Type(FeatureCollection.class), @Type(Feature.class), @Type(Properties.class), @Type(Point.class)})
+@JsonSubTypes({ @Type(Geometry.class), @Type(PookiFeatureCollection.class), @Type(PookiFeature.class), @Type(PookiProperties.class), @Type(Point.class)})
 @JsonPropertyOrder({ "type", "id"})
 public abstract class GeoJsonObject implements Serializable {
 

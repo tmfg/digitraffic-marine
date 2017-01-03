@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.model.pooki;
+package fi.livi.digitraffic.meri.model.geojson;
 
 import java.util.List;
 
