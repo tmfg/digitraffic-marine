@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 
 public class SsnLocationClientTest extends AbstractIntegrationTest {

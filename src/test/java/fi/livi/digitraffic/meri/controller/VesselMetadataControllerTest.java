@@ -14,8 +14,9 @@ import org.junit.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import fi.livi.digitraffic.meri.AbstractControllerTest;
+import fi.livi.digitraffic.meri.VesselMetadataBuilder;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
 public class VesselMetadataControllerTest extends AbstractControllerTest {
@@ -25,8 +26,21 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
     private static final int MMSI = 12345;
 
     @Test
-    public void testAllVesselsMetadata() throws Exception {
-        given(vesselMetadataService.listAllVesselMetadata()).willReturn(Collections.singletonList(generateVesselMetadata()));
+    public void allVesselsEmpty() throws Exception {
+        given(vesselMetadataService.listAllowedVesselMetadata()).willReturn(Collections.emptyList());
+
+        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
+                AisApplicationConfiguration.API_METADATA_PART_PATH +
+                VesselMetadataController.VESSELS_PATH))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().string("[]"))
+        ;
+    }
+
+    @Test
+    public void allVessels() throws Exception {
+        given(vesselMetadataService.listAllowedVesselMetadata()).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
@@ -35,66 +49,6 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
                 ;
-    }
-
-    private VesselMetadataJson generateVesselMetadata() {
-        return new VesselMetadataJson() {
-            @Override public int getMmsi() {
-                return MMSI;
-            }
-
-            @Override public String getName() {
-                return null;
-            }
-
-            @Override public int getShipType() {
-                return 0;
-            }
-
-            @Override public long getReferencePointA() {
-                return 0;
-            }
-
-            @Override public long getReferencePointB() {
-                return 0;
-            }
-
-            @Override public long getReferencePointC() {
-                return 0;
-            }
-
-            @Override public long getReferencePointD() {
-                return 0;
-            }
-
-            @Override public int getPosType() {
-                return 0;
-            }
-
-            @Override public int getDraught() {
-                return 0;
-            }
-
-            @Override public int getImo() {
-                return 0;
-            }
-
-            @Override public String getCallSign() {
-                return null;
-            }
-
-            @Override public long getEta() {
-                return 0;
-            }
-
-            @Override public long getTimestamp() {
-                return 0;
-            }
-
-            @Override public String getDestination() {
-                return null;
-            }
-        };
     }
 
     @Test
@@ -110,7 +64,7 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
 
     @Test
     public void testVesselMetadataMetadataFound() throws Exception {
-        given(vesselMetadataService.findMetadataByMssi(anyInt())).willReturn(generateVesselMetadata());
+        given(vesselMetadataService.findAllowedMetadataByMssi(anyInt())).willReturn(new VesselMetadataBuilder(MMSI).build());
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +

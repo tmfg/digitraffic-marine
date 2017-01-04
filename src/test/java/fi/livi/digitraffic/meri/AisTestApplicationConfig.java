@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableScheduling
 @EnableTransactionManagement
-@EntityScan(basePackages = { "fi.livi.util", "fi.livi.digitraffic.meri"})
+@EntityScan(basePackages = { "fi.livi.digitraffic.util", "fi.livi.digitraffic.meri"})
 @ComponentScan(basePackages = "fi.livi.digitraffic.meri")
 public class AisTestApplicationConfig {
 }

@@ -50,7 +50,7 @@ public class VesselLocationController {
 
         LOG.info(String.format("vesselLocationsByMssiAndTimestamp mmsi:\t%d from:\t%d to:\t%d", mmsi, from, to));
 
-        return vesselLocationService.findLocations(mmsi, from, to);
+        return vesselLocationService.findAllowedLocations(mmsi, from, to);
     }
 
     @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
@@ -66,6 +66,6 @@ public class VesselLocationController {
 
         LOG.info(String.format("vesselLocationsByTimestamp from:\t%d to:\t%d", from, to));
 
-        return vesselLocationService.findLocations(from, to);
+        return vesselLocationService.findAllowedLocations(from, to);
     }
 }

@@ -38,7 +38,7 @@ public class VesselMetadataController {
     @GetMapping(path = VESSELS_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselMetadataJson vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
-        return vesselMetadataService.findMetadataByMssi(mmsi);
+        return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
     @ApiOperation("Return latest vessel metadata for all known vessels.")
@@ -47,6 +47,6 @@ public class VesselMetadataController {
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public List<VesselMetadataJson> allVessels() {
-        return vesselMetadataService.listAllVesselMetadata();
+        return vesselMetadataService.listAllowedVesselMetadata();
     }
 }

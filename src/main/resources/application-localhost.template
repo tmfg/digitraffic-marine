@@ -28,6 +28,9 @@ berthUpdateJob.frequency = 43200000
 ssnLocationUpdateJob.frequency = 43200000
 vesselDetailsUpdateJob.frequency = 1800000
 
+# Allowed mmsis cache time in millis
+cache.allowedMmsis = #{60*1000}
+
 # Logging
 logging.level.fi.livi.digitraffic.meri=INFO
 #logging.level.org.hibernate.SQL=DEBUG

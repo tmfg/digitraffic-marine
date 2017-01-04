@@ -12,7 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 
 @Ignore("Needs vpn")

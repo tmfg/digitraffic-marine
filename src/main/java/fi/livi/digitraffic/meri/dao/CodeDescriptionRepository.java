@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import fi.livi.digitraffic.meri.model.CodeDescriptionJson;
-import fi.livi.util.locking.SqlRepository;
+import fi.livi.digitraffic.util.dao.SqlRepository;
 
 @Repository
 public interface CodeDescriptionRepository extends SqlRepository {

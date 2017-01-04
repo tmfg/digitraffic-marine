@@ -10,11 +10,13 @@ import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.ReconnectingHandler;
 
 @Component
+@ConditionalOnExpression("'${config.test}' != 'true'")
 public class WebsocketStatistics {
     private static final Map<WebsocketType, SentStatistics> sentStatisticsMap = new ConcurrentHashMap<>();
     private static final Map<WebsocketType, ReadStatistics> readStatisticsMap = new ConcurrentHashMap<>();
@@ -35,11 +37,15 @@ public class WebsocketStatistics {
     }
 
     private static synchronized void notifyStatus() {
-        final ReadStatistics locationStatus = readStatisticsMap.get(WebsocketType.LOCATIONS);
-        final String status = locationStatus == null ? UNDEFINED : locationStatus.status;
+        try {
+            final ReadStatistics locationStatus = readStatisticsMap.get(WebsocketType.LOCATIONS);
+            final String status = locationStatus == null ? UNDEFINED : locationStatus.status;
 
-        LocationsEndpoint.sendStatus(status);
-        VesselLocationsEndpoint.sendStatus(status);
+            LocationsEndpoint.sendStatus(status);
+            VesselLocationsEndpoint.sendStatus(status);
+        } catch(final Exception e) {
+            log.info("Exception notifying", e);
+        }
     }
 
     private static synchronized void logMessageCount() {
@@ -74,7 +80,7 @@ public class WebsocketStatistics {
         readStatisticsMap.put(type, newRs);
     }
 
-    public synchronized static void readWebsocketStatus(final WebsocketType type, final ReconnectingHandler.ConnectionStatus status) {
+    public static synchronized void readWebsocketStatus(final WebsocketType type, final ReconnectingHandler.ConnectionStatus status) {
         final ReadStatistics rs = readStatisticsMap.get(type);
 
         final ReadStatistics newRs = new ReadStatistics(rs == null ? 1 : rs.messages, status.name());

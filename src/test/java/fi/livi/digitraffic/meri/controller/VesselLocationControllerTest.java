@@ -12,24 +12,50 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collections;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
+import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
-public class VesselLocationControllerTest extends AbstractControllerTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = AisTestApplicationConfig.class)
+@AutoConfigureMockMvc
+public class VesselLocationControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
+
     @MockBean
     private VesselLocationService vesselLocationService;
 
     private static final int MMSI = 12345;
 
     @Test
-    public void testVesselLocationsByMssi() throws Exception {
+    public void vesselLocationsByMssiEmpty() throws Exception {
+        when(vesselLocationService.findAllowedLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
+                AisApplicationConfiguration.API_LOCATIONS_PATH +
+                VesselLocationController.LATEST_PATH + "/" + MMSI))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().string("[]"))
+        ;
+    }
+
+    @Test
+    public void vesselLocationsByMssi() throws Exception {
         final VesselLocationJson message = generateVesselLocation();
-        when(vesselLocationService.findLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.singletonList(message));
+        when(vesselLocationService.findAllowedLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.singletonList(message));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -41,9 +67,22 @@ public class VesselLocationControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testVesselLocationsByTimestamp() throws Exception {
+    public void vesselLocationsByTimestampEmpty() throws Exception {
+        when(vesselLocationService.findAllowedLocations(anyLong(), anyLong())).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
+                AisApplicationConfiguration.API_LOCATIONS_PATH +
+                VesselLocationController.LATEST_PATH))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().string("[]"))
+        ;
+    }
+
+    @Test
+    public void vesselLocationsByTimestamp() throws Exception {
         final VesselLocationJson message = generateVesselLocation();
-        when(vesselLocationService.findLocations(anyLong(), anyLong())).thenReturn(Collections.singletonList(message));
+        when(vesselLocationService.findAllowedLocations(anyLong(), anyLong())).thenReturn(Collections.singletonList(message));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +

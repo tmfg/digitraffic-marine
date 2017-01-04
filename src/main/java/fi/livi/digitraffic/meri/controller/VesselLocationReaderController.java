@@ -11,14 +11,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
-import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
+import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
-import fi.livi.util.locking.AccessLock;
-import fi.livi.util.locking.LockingService;
+import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
+import fi.livi.digitraffic.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -32,11 +32,11 @@ public class VesselLocationReaderController {
             @Value("${ais.locations.9.url}") final String aisLocations9Url,
             final VesselLocationRepository vesselLocationRepository,
             final LockingService lockingService,
+            final VesselMetadataService vesselMetadataService,
             final LocationSender locationSender) {
-            final AccessLock accessLock = lockingService.lock("AIS-locations");
             final List<WebsocketListener> listeners = Arrays.asList(
-                    new VesselLocationDatabaseListener(vesselLocationRepository, accessLock),
-                    new VesselLocationRelayListener(locationSender),
+                    new VesselLocationDatabaseListener(vesselLocationRepository, lockingService),
+                    new VesselLocationRelayListener(locationSender, vesselMetadataService),
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 

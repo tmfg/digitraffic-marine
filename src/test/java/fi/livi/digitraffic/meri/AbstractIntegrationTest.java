@@ -1,20 +1,15 @@
-package fi.livi.digitraffic;
+package fi.livi.digitraffic.meri;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fi.livi.digitraffic.meri.AisApplication;
-
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = AisApplication.class,
 				webEnvironment = SpringBootTest.WebEnvironment.NONE,
 				properties = {"spring.main.web_environment=false", "quartz.enabled=false"})
-public abstract class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest extends AbstractTestBase {
 
 	protected String readFile(String filename) throws FileNotFoundException {
 		ClassLoader classLoader = getClass().getClassLoader();

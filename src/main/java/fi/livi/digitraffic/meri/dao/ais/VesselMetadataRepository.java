@@ -14,7 +14,7 @@ import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 @Repository
 public interface VesselMetadataRepository extends JpaRepository<VesselMetadata, Integer> {
     @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="1000"))
-    List<VesselMetadataJson> findAllProjectedBy();
+    List<VesselMetadataJson> findByMmsiIn(final List<Integer> ids);
 
     VesselMetadataJson findByMmsi(final Integer mmsi);
 }
