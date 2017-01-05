@@ -28,6 +28,7 @@ import fi.livi.digitraffic.meri.quartz.AutowiringSpringBeanJobFactory;
 import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
+import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
 
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
@@ -87,6 +88,11 @@ public class SchedulerConfig {
     }
 
     @Bean
+    public JobDetailFactoryBean vesselDetailsUpdateJobDetail() {
+        return createJobDetail(VesselDetailsUpdateJob.class);
+    }
+
+    @Bean
     public SimpleTriggerFactoryBean portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail,
                                                              @Value("${portCallUpdateJob.frequency}") final long frequency) {
         return createTrigger(portCallUpdateJobDetail, frequency);
@@ -102,6 +108,12 @@ public class SchedulerConfig {
     public SimpleTriggerFactoryBean ssnLocationUpdateJobTrigger(final JobDetail ssnLocationUpdateJobDetail,
                                                                 @Value("${ssnLocationUpdateJob.frequency}") final long frequency) {
         return createTrigger(ssnLocationUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean vesselDetailUpdateJobTrigger(final JobDetail vesselDetailsUpdateJobDetail,
+                                                                 @Value("${vesselDetailsUpdateJob.frequency}") final long frequency) {
+        return createTrigger(vesselDetailsUpdateJobDetail, frequency);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {
