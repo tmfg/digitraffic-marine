@@ -16,8 +16,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +48,7 @@ public class VesselDetailsService {
             c.add(Restrictions.gt("updateTimestamp", new Timestamp(from.toEpochSecond() * 1000)));
         }
         if (vesselName != null) {
-            c.add(Restrictions.sqlRestriction("lower(name) = lower(?)", vesselName, StringType.INSTANCE));
+            c.add(Restrictions.ilike("name", vesselName, MatchMode.ANYWHERE));
         }
         if (mmsi != null) {
             c.add(eq("mmsi", mmsi));
