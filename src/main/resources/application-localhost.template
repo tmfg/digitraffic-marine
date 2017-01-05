@@ -16,6 +16,7 @@ ais.locations.9.url = ws://ws-address
 ais.metadata.5.url = ws://ws-address
 ais.pooki.url = http://localhost:18080/test/nautical-warnings
 ais.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
+ais.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetails/List/
 
 metadata.csv.baseUrl = https://raw.githubusercontent.com/finnishtransportagency/metadata/master/csv/
 
@@ -25,6 +26,7 @@ portCallUpdateJob.maxTimeFrameToFetch = 360000
 portCallUpdateJob.overlapTimeFrame = 2000
 berthUpdateJob.frequency = 43200000
 ssnLocationUpdateJob.frequency = 43200000
+vesselDetailsUpdateJob.frequency = 1800000
 
 # Allowed mmsis cache time in millis
 cache.allowedMmsis = #{60*1000}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VesselList xmlns="http://portnet.fi/VesselDetails" xmlns:ptns="http://portnet.fi/PortnetWS/PortnetTypes">
+    <ptns:Header From="Portnet" SentAt="2016-12-19T12:33:45.884+02:00" Version="1.0" lang="EN">
+        <ptns:responseType>
+            <ptns:Status>OK</ptns:Status>
+        </ptns:responseType>
+    </ptns:Header>
+    <ptns:VesselDetails>
+        <ptns:IdentificationData dataSource="Portnet" mmsi="0" name="Kosti" namePrefix="pr" radioCallSign="-" radioCallSignType="real" updateTimeStamp="2016-12-17T15:17:57+02:00" vesselId="358"/>
+        <ptns:RegistrationData nationality="FI" portOfRegistry="Turku"/>
+        <ptns:ConstructionData ballastTank="false" doubleBottom="false" iceClassCode="Unknown" iceClassEndDate="9999-12-31+02:00" iceClassIssuePlace="0" inertGasSystem="false" vesselTypeCode="95" vesselTypeName="Barge"/>
+        <ptns:Dimensions breadth="18" dateOfIssue="2006-08-09+03:00" deathWeight="0" draught="2.7" enginePower=" " grossTonnage="666" height="3.5" length="57.7" netTonnage="313" overallLength="60" tonnageCertificateIssuer="merenkulkuhallitus"/>
+        <ptns:System shipEmail=" " shipOwner=" " shipTelephone1=" " shipVerifier="CUST"/>
+    </ptns:VesselDetails>
+</VesselList>

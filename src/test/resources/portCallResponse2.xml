@@ -1,0 +1,44 @@
+<PortCallList xmlns="http://portnet.fi/PortCallNotification" xmlns:ptns="http://portnet.fi/PortnetWS/PortnetTypes">
+    <ptns:Header Version="1.0" SentAt="2016-11-23T14:39:19.505+02:00" From="Portnet" lang="EN">
+        <ptns:responseType>
+            <ptns:Status>OK</ptns:Status>
+        </ptns:responseType>
+    </ptns:Header>
+    <ptns:PortCallNotification portCallId="1975743" portCallTimestamp="2016-11-23T14:39:15+02:00">
+        <ptns:PortCallDetails customsReference="0/548836" portToVisit="FOO" prevPort="SEHLD" nextPort="SEHLD" domesticTrafficArrival="false"
+                              domesticTrafficDeparture="false" arrivalWithCargo="true" discharge="1" notLoading="false"
+                              shipMasterArrival="JARKKO RINNE" shipMasterDeparture="JARKKO RINNE" managementNameArrival=" "
+                              managementNameDeparture=" " forwarderNameArrival=" " forwarderNameDeparture=" " freeTextArrival=" "
+                              freeTextDeparture=" ">
+            <ptns:AgentInfo role="1" portCallDirection="Arrival or whole PortCall" name="NLC Ferry Ab Oy" ediNumber="003724907328"/>
+            <ptns:AgentInfo role="2" portCallDirection="Arrival or whole PortCall" name="NLC Ferry Ab Oy"/>
+            <ptns:ImoInformation imoGeneralDeclaration="Arrival" briefParticularsVoyage="-" portOfDischarge=" " numberOfCrew="40"
+                                 cargoDeclarationsOnBoard="0" crewListsOnBoard="0" crewsEffectsDeclarationsOnBoard="0"
+                                 shipStoresDeclarationsOnBoard="0" passengerListsOnBoard="0" healthDeclarationsOnBoard="0"/>
+            <ptns:ImoInformation imoGeneralDeclaration="Departure" briefParticularsVoyage="-" portOfDischarge=" " numberOfCrew="40"
+                                 cargoDeclarationsOnBoard="0" crewListsOnBoard="0" crewsEffectsDeclarationsOnBoard="0"
+                                 shipStoresDeclarationsOnBoard="0" passengerListsOnBoard="0" healthDeclarationsOnBoard="0"/>
+            <ptns:SecurityMeasures certificateIssuer="Suomi/Trafi" certificateStartDate="2013-06-12T00:00:00+03:00"
+                                   certificateEndDate="2018-05-23T00:00:00+03:00" currentSecurityLevel="1">
+                <ptns:SecurityLevelHistory/>
+            </ptns:SecurityMeasures>
+            <ptns:PortAreaDetails portAreaCode="04" portAreaName="Ro-Ro 3">
+                <ptns:BerthDetails berthCode="04" berthName="Ro-Ro 3" eta="2016-11-23T13:30:00+02:00" etaTimeStamp="2016-11-22T08:45:06+02:00"
+                                   etaSource="Agent" etd="2016-11-23T14:30:00+02:00" etdTimeStamp="2016-11-22T08:45:25+02:00" etdSource="Agent"
+                                   ata="2016-11-23T13:30:00+02:00" ataTimeStamp="2016-11-23T14:38:37+02:00" ataSource="Agent"
+                                   atd="2016-11-23T14:30:00+02:00" atdTimeStamp="2016-11-23T14:39:00+02:00" atdSource="Agent" arrivalDraught="0"
+                                   departureDraught="0">
+                    <ptns:CargoInfo/>
+                </ptns:BerthDetails>
+            </ptns:PortAreaDetails>
+            <ptns:VesselDetails>
+                <ptns:IdentificationData vesselId="1509" name="Vessel name" namePrefix="ms" radioCallSign="OJQB" radioCallSignType="real"
+                                         imoLloyds="8000226" mmsi="230636000" dataSource="Portnet" updateTimeStamp="2016-05-30T13:20:04+03:00"/>
+                <ptns:RegistrationData nationality="FI"/>
+                <ptns:ConstructionData vesselTypeCode="20" vesselTypeName="Passenger-car ferry" iceClassCode="IA" doubleBottom="false"/>
+                <ptns:Dimensions grossTonnage="17053" netTonnage="5178" length="126.74" overallLength="137.42"/>
+                <ptns:System/>
+            </ptns:VesselDetails>
+        </ptns:PortCallDetails>
+    </ptns:PortCallNotification>
+</PortCallList>

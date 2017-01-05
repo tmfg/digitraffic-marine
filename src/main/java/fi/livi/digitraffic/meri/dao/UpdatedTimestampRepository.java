@@ -13,7 +13,7 @@ import fi.livi.digitraffic.util.dao.SqlRepository;
 @Repository
 public interface UpdatedTimestampRepository extends SqlRepository {
     enum UpdatedName {
-        PORT_CALLS, PORT_METADATA
+        PORT_CALLS, PORT_METADATA, VESSEL_DETAILS
     }
 
     @Query(value = "select cast(updated_time as date) from updated_timestamp where updated_name = :name", nativeQuery = true)
