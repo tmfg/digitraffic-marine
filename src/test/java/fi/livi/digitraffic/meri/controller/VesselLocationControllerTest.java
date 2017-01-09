@@ -24,7 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import fi.livi.digitraffic.meri.AisTestApplicationConfig;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
 @RunWith(SpringRunner.class)
@@ -41,7 +42,7 @@ public class VesselLocationControllerTest {
 
     @Test
     public void vesselLocationsByMssiEmpty() throws Exception {
-        when(vesselLocationService.findAllowedLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.emptyList());
+        when(vesselLocationService.findAllowedLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(new VesselLocationFeatureCollection(Collections.emptyList()));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -54,8 +55,8 @@ public class VesselLocationControllerTest {
 
     @Test
     public void vesselLocationsByMssi() throws Exception {
-        final VesselLocationJson message = generateVesselLocation();
-        when(vesselLocationService.findAllowedLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(Collections.singletonList(message));
+        final VesselLocationFeature message = generateVesselLocation();
+        when(vesselLocationService.findAllowedLocations(anyInt(), Matchers.any(), Matchers.any())).thenReturn(new VesselLocationFeatureCollection(Collections.singletonList(message)));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -68,7 +69,7 @@ public class VesselLocationControllerTest {
 
     @Test
     public void vesselLocationsByTimestampEmpty() throws Exception {
-        when(vesselLocationService.findAllowedLocations(anyLong(), anyLong())).thenReturn(Collections.emptyList());
+        when(vesselLocationService.findAllowedLocations(anyLong(), anyLong())).thenReturn(new VesselLocationFeatureCollection(Collections.emptyList()));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -81,8 +82,8 @@ public class VesselLocationControllerTest {
 
     @Test
     public void vesselLocationsByTimestamp() throws Exception {
-        final VesselLocationJson message = generateVesselLocation();
-        when(vesselLocationService.findAllowedLocations(anyLong(), anyLong())).thenReturn(Collections.singletonList(message));
+        final VesselLocationFeature message = generateVesselLocation();
+        when(vesselLocationService.findAllowedLocations(anyLong(), anyLong())).thenReturn(new VesselLocationFeatureCollection(Collections.singletonList(message)));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_LOCATIONS_PATH +
@@ -93,56 +94,7 @@ public class VesselLocationControllerTest {
         ;
     }
 
-    private VesselLocationJson generateVesselLocation() {
-        return new VesselLocationJson() {
-            @Override public int getMmsi() {
-                return MMSI;
-            }
-
-            @Override public double getX() {
-                return 0;
-            }
-
-            @Override public double getY() {
-                return 0;
-            }
-
-            @Override public double getSog() {
-                return 0;
-            }
-
-            @Override public double getCog() {
-                return 0;
-            }
-
-            @Override public int getNavStat() {
-                return 0;
-            }
-
-            @Override public int getRot() {
-                return 0;
-            }
-
-            @Override public boolean isPosAcc() {
-                return false;
-            }
-
-            @Override public boolean isRaim() {
-                return false;
-            }
-
-            @Override public Integer getHeading() {
-                return null;
-            }
-
-            @Override public long getTimestamp() {
-                return 0;
-            }
-
-            @Override public long getTimestampExternal() {
-                return 0;
-            }
-        };
+    private VesselLocationFeature generateVesselLocation() {
+        return new VesselLocationFeature(0, null, null);
     }
-
 }

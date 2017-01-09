@@ -39,7 +39,8 @@
         }
 
         function convert(message) {
-            return 'mmsi: ' + message.attributes.mmsi + ':\t ' + JSON.stringify(message);
+            return JSON.stringify(message);
+            return 'mmsi: ' + message.mmsi + ':\t ' + JSON.stringify(message);
         }
 
         connect();

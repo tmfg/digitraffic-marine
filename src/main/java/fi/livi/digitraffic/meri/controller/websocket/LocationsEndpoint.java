@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.StatusMessage;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH
         + "/locations", encoders = {StatusEncoder.class, LocationEncoder.class})
@@ -41,7 +41,7 @@ public class LocationsEndpoint {
         LOG.info("exception", t);
     }
 
-    public static void sendMessage(final AISMessage message) {
+    public static void sendMessage(final VesselLocationFeature message) {
         synchronized (sessions) {
             WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, sessions.size());
 
