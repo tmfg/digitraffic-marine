@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
@@ -22,16 +23,15 @@ import net.minidev.json.JSONValue;
 public class LocationCoordinateReader {
     private static final Logger log = LoggerFactory.getLogger(LocationCoordinateReader.class);
 
-    private final URL portAreaLocationUrl;
-    //private final String portAreaLocationUrl = "https://services1.arcgis.com/rhs5fjYxdOG1Et61/ArcGIS/rest/services/Satamat/FeatureServer/2/query?where=1%3D1&outFields=port_cod,p_area_cod&f=pgeojson&outSr=4326";
+    private final URL ssnLocationCoordinatesUrl;
 
-    public LocationCoordinateReader() throws MalformedURLException { //final String portAreaLocationUrl) {
-        this.portAreaLocationUrl = new URL("https://services1.arcgis.com/rhs5fjYxdOG1Et61/ArcGIS/rest/services/Satamat/FeatureServer/0/query?where=1%3D1&outFields=port_cod&f=pgeojson&outSr=4326");
+    public LocationCoordinateReader(@Value("${ais.liikennetilanne.ssn_location.url}")final String ssnLocationCoordinatesUrl) throws MalformedURLException { //final String portAreaLocationUrl) {
+        this.ssnLocationCoordinatesUrl = new URL(ssnLocationCoordinatesUrl);
     }
 
     public List<SsnLocation> readCoordinates() {
         try {
-            final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(portAreaLocationUrl, Charset.forName("UTF-8")));
+            final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(ssnLocationCoordinatesUrl, Charset.forName("UTF-8")));
 
             return ((JSONArray)o.get("features")).stream().map(this::convert).collect(Collectors.toList());
         } catch (final IOException e) {
