@@ -3,8 +3,6 @@ package fi.livi.digitraffic.meri.controller;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_LOCATIONS_PATH;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

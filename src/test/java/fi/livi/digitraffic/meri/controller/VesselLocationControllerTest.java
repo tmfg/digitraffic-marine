@@ -49,7 +49,7 @@ public class VesselLocationControllerTest {
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string("[]"))
+                .andExpect(jsonPath("$.features").isEmpty())
         ;
     }
 
@@ -63,7 +63,9 @@ public class VesselLocationControllerTest {
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
+                .andExpect(jsonPath("$.type", is("FeatureCollection")))
+                .andExpect(jsonPath("$.features").isNotEmpty())
+                .andExpect(jsonPath("$.features[0].mmsi", is(MMSI)))
         ;
     }
 
@@ -76,7 +78,8 @@ public class VesselLocationControllerTest {
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string("[]"))
+                .andExpect(jsonPath("$.type", is("FeatureCollection")))
+                .andExpect(jsonPath("$.features").isEmpty())
         ;
     }
 
@@ -90,11 +93,13 @@ public class VesselLocationControllerTest {
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
+                .andExpect(jsonPath("$.type", is("FeatureCollection")))
+                .andExpect(jsonPath("$.features").isNotEmpty())
+                .andExpect(jsonPath("$.features[0].mmsi", is(MMSI)))
         ;
     }
 
     private VesselLocationFeature generateVesselLocation() {
-        return new VesselLocationFeature(0, null, null);
+        return new VesselLocationFeature(MMSI, null, null);
     }
 }

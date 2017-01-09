@@ -7,11 +7,10 @@ import javax.persistence.Id;
 import org.hibernate.annotations.DynamicUpdate;
 
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
 
 @Entity
 @DynamicUpdate
-public class VesselLocation implements VesselLocationJson {
+public class VesselLocation {
     @Id
     private int mmsi;
 
@@ -57,7 +56,7 @@ public class VesselLocation implements VesselLocationJson {
         this.heading = ais.attributes.heading;
     }
 
-    @Override public int getMmsi() {
+    public int getMmsi() {
         return mmsi;
     }
 
@@ -65,7 +64,7 @@ public class VesselLocation implements VesselLocationJson {
         this.mmsi = mmsi;
     }
 
-    @Override public double getX() {
+    public double getX() {
         return x;
     }
 
@@ -73,7 +72,7 @@ public class VesselLocation implements VesselLocationJson {
         this.x = x;
     }
 
-    @Override public double getY() {
+    public double getY() {
         return y;
     }
 
@@ -81,7 +80,7 @@ public class VesselLocation implements VesselLocationJson {
         this.y = y;
     }
 
-    @Override public double getSog() {
+    public double getSog() {
         return sog;
     }
 
@@ -89,7 +88,7 @@ public class VesselLocation implements VesselLocationJson {
         this.sog = sog;
     }
 
-    @Override public double getCog() {
+    public double getCog() {
         return cog;
     }
 
@@ -97,7 +96,7 @@ public class VesselLocation implements VesselLocationJson {
         this.cog = cog;
     }
 
-    @Override public int getNavStat() {
+    public int getNavStat() {
         return navStat;
     }
 
@@ -105,7 +104,7 @@ public class VesselLocation implements VesselLocationJson {
         this.navStat = navStat;
     }
 
-    @Override public int getRot() {
+    public int getRot() {
         return rot;
     }
 
@@ -113,7 +112,7 @@ public class VesselLocation implements VesselLocationJson {
         this.rot = rot;
     }
 
-    @Override public boolean isPosAcc() {
+    public boolean isPosAcc() {
         return posAcc;
     }
 
@@ -121,7 +120,7 @@ public class VesselLocation implements VesselLocationJson {
         this.posAcc = posAcc;
     }
 
-    @Override public boolean isRaim() {
+    public boolean isRaim() {
         return raim;
     }
 
@@ -129,7 +128,7 @@ public class VesselLocation implements VesselLocationJson {
         this.raim = raim;
     }
 
-    @Override public long getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
@@ -137,7 +136,7 @@ public class VesselLocation implements VesselLocationJson {
         this.timestamp = timestamp;
     }
 
-    @Override public long getTimestampExternal() {
+    public long getTimestampExternal() {
         return timestampExternal;
     }
 
@@ -145,7 +144,7 @@ public class VesselLocation implements VesselLocationJson {
         this.timestampExternal = timestampExternal;
     }
 
-    @Override public Integer getHeading() {
+    public Integer getHeading() {
         return heading;
     }
 
