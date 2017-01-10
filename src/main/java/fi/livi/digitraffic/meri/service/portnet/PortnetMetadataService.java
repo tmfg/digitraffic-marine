@@ -3,19 +3,23 @@ package fi.livi.digitraffic.meri.service.portnet;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.meri.controller.portnet.SsnLocationConverter;
 import fi.livi.digitraffic.meri.dao.CodeDescriptionRepository;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
+import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
-import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
+import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
+import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsService;
 
@@ -44,37 +48,51 @@ public class PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public PortsAndBerthsJson listaAllMetadata() {
-        return new PortsAndBerthsJson(
+    public CodeDescriptions listCodeDescriptions() {
+        return new CodeDescriptions(
                 updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
-                ssnLocationRepository.findAllLocationsProjectedBy(),
-                portAreaRepository.findAllProjectedBy(),
-                berthRepository.findAllProjectedBy(),
-                codeDescriptionRepository.listAllCargoTypes(),
-                codeDescriptionRepository.listAllVesselTypes(),
-                codeDescriptionRepository.listAllAgentTypes()
+                                codeDescriptionRepository.listAllCargoTypes(),
+                                codeDescriptionRepository.listAllVesselTypes(),
+                                codeDescriptionRepository.listAllAgentTypes()
+                        );
+    }
+
+    @Transactional(readOnly = true)
+    public FeatureCollectionList listaAllMetadata() {
+        return SsnLocationConverter.convert(
+                updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
+                ssnLocationRepository.findAll(),
+                portAreaRepository.findAll(),
+                berthRepository.findAll()
         );
     }
 
     @Transactional(readOnly = true)
-    public PortsAndBerthsJson findSsnLocationByLocode(final String locode) {
-        final SsnLocationJson location = ssnLocationRepository.findByLocode(locode);
+    public FeatureCollectionList findSsnLocationByLocode(final String locode) {
+        final SsnLocation location = ssnLocationRepository.findByLocode(locode);
 
         if(location == null) {
             throw new ObjectNotFoundException("SsnLocation", locode);
         }
 
-        return new PortsAndBerthsJson(
+        return SsnLocationConverter.convert(
                 updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
-                location,
+                Collections.singletonList(location),
                 portAreaRepository.findByPortAreaKeyLocode(locode),
                 berthRepository.findByBerthKeyLocode(locode)
                 );
     }
 
     @Transactional(readOnly = true)
-    public List<SsnLocationJson> findSsnLocationsByCountry(final String country) {
-        return ssnLocationRepository.findByCountryIgnoreCase(country);
+    public FeatureCollectionList findSsnLocationsByCountry(final String country) {
+        // Only Finland has port areas and berths defined
+        final boolean isFinland = StringUtils.equals(country, "Finland");
+
+        return SsnLocationConverter.convert(
+                updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
+                ssnLocationRepository.findByCountryIgnoreCase(country),
+                isFinland ? portAreaRepository.findAll() : Collections.emptyList(),
+                isFinland ? berthRepository.findAll() : Collections.emptyList());
     }
 
     @Transactional(readOnly = true)
