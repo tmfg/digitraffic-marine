@@ -28,6 +28,7 @@
          -Dversion=12.1.0.2 -Dpackaging=jar  -DgeneratePom=true -Dfile=<filename>
          OR add repository below that contains the drivers -->
     <repositories>
+        <repository><id>digitraffic</id><name>Digitraffic Solita Repository</name><url>http://dtmvn.solita.fi/repository/internal/</url></repository>
         <!-- PLACEHOLDER -->
     </repositories>
 
