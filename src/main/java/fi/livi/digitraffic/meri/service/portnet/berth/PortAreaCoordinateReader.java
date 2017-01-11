@@ -26,7 +26,7 @@ public class PortAreaCoordinateReader {
 
     private final URL portAreaCoordinatesUrl;
 
-    public PortAreaCoordinateReader(@Value("${ais.liikennetilanne.port_area.url}")final String portAreaCoordinatesUrl) throws MalformedURLException { //final String portAreaLocationUrl) {
+    public PortAreaCoordinateReader(@Value("${ais.liikennetilanne.port_area.url}")final String portAreaCoordinatesUrl) throws MalformedURLException {
             this.portAreaCoordinatesUrl = new URL(portAreaCoordinatesUrl);
     }
 

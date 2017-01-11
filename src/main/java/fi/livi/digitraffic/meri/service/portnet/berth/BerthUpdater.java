@@ -64,7 +64,7 @@ public class BerthUpdater {
             final PortArea portArea = oldMap.get(nc.getPortAreaKey());
 
             if(portArea == null) {
-                log.info("Can't find port area {}", nc.getPortAreaKey());
+                log.error("Can't find port area {}", nc.getPortAreaKey());
             } else {
                 portArea.setWgs84Lat(nc.getWgs84Lat());
                 portArea.setWgs84Long(nc.getWgs84Long());
