@@ -1,8 +1,10 @@
-package fi.livi.digitraffic.meri.service.portnet;
+package fi.livi.digitraffic.meri.service.portnet.location;
 
 import org.apache.commons.lang3.StringUtils;
 
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
+import fi.livi.digitraffic.meri.service.portnet.AbstractReader;
+import fi.livi.digitraffic.meri.service.portnet.LocationParser;
 
 public class SsnLocationReader extends AbstractReader<SsnLocation> {
     @Override

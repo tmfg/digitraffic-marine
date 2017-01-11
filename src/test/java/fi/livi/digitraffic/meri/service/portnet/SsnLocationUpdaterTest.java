@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.SAXException;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationUpdater;
 
 public class SsnLocationUpdaterTest extends AbstractIntegrationTest {
     @Autowired
@@ -17,9 +18,8 @@ public class SsnLocationUpdaterTest extends AbstractIntegrationTest {
 
     @Test
     @Transactional(readOnly = false)
-    @Rollback(false)
+    @Rollback(true)
     public void testUpdateLocations() throws IOException, SAXException, URISyntaxException {
-
         ssnLocationUpdater.updateSsnLocations();
     }
 }

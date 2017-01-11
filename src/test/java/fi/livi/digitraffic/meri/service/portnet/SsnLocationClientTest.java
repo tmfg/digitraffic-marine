@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
+import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationClient;
 
 public class SsnLocationClientTest extends AbstractIntegrationTest {
     @Autowired

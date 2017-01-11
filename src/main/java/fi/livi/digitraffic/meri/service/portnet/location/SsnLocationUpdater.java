@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.service.portnet;
+package fi.livi.digitraffic.meri.service.portnet.location;
 
 import java.io.IOException;
 import java.util.ArrayList;
