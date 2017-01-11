@@ -32,8 +32,6 @@ public class PortCallClient {
         final RestTemplate template = getRestTemplate();
         final String url = buildUrl(lastUpdated, now);
 
-        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-
         log.info("Fetching port calls from {}", url);
 
         final PortCallList portCallList = template.getForObject(url, PortCallList.class);
