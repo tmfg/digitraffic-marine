@@ -30,7 +30,16 @@ public class NauticalWarningErrorHandler implements ResponseErrorHandler {
         errorAttributes.put("status", response.getStatusCode().value());
         errorAttributes.put("error", response.getStatusCode().getReasonPhrase());
         errorAttributes.put("exception", PookiException.class.getSimpleName());
-        errorAttributes.put("message", IOUtils.toString(response.getBody(), "UTF-8"));
+        String body;
+        try {
+            body = IOUtils.toString(response.getBody(), "UTF-8");
+        } catch(Exception ex) {
+            // Do not raise exception out of handleError.
+            // This has happened during 500 errors when the message body was not GZipped, but Spring framework
+            // fails to regognize this and throws. - DPO-90 .
+            body = "There was an error handling error parsing Pooki message: Missing error message, error response body was garbled. Exception message: " + ex.getMessage();
+        }
+        errorAttributes.put("message", body);
         errorAttributes.put("path", response.getHeaders().getLocation());
 
         throw new PookiException(String.format("Pooki response error: %s %s", response.getStatusCode(), response.getStatusText()), errorAttributes);
