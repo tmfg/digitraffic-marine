@@ -56,4 +56,11 @@ public class PortAreaKey implements Serializable{
         result = 31 * result + portAreaCode.hashCode();
         return result;
     }
+
+    @Override public String toString() {
+        return "PortAreaKey{" +
+                "locode='" + locode + '\'' +
+                ", portAreaCode='" + portAreaCode + '\'' +
+                '}';
+    }
 }
