@@ -54,7 +54,7 @@ public final class SsnLocationConverter {
 
     private static PortAreaFeature convertPortArea(final PortArea pa) {
         final PortAreaProperties p = new PortAreaProperties(pa.getPortAreaName());
-        final Point g = null; // TODO: DPO-89
+        final Point g = geometry(pa.getWgs84Long(), pa.getWgs84Lat());
         return new PortAreaFeature(pa.getPortAreaKey().getLocode(), pa.getPortAreaKey().getPortAreaCode(), p, g);
     }
 
