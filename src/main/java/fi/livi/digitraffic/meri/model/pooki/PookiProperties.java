@@ -24,17 +24,17 @@ public class PookiProperties implements Serializable {
     private Integer id;
 
     // Merialueet suomeksi
-    @ApiModelProperty("Marine area in Finnish")
+    @ApiModelProperty("Area in Finnish")
     private String areasFi;
 
-    @ApiModelProperty("Marine area in Swedish")
+    @ApiModelProperty("Area in Swedish")
     private String areasSv;
 
-    @ApiModelProperty("Marine area in English")
+    @ApiModelProperty("Area in English")
     private String areasEn;
 
     // Numerointi alkaa jokaisen vuoden alussa aina ykkösestä ja annetaan vasta sitten kun varoituksen tila muuttuu julkaistuksi
-    @ApiModelProperty("Nautical warning number. Starts with the digit 1 at the begining of the year. Set when warning state is changed from draft to published.")
+    @ApiModelProperty("Nautical warning number. Starts with the digit 1 at the begining of the year. Set when warning was published.")
     private Integer number;
 
     // Sijainnin tarkennus suomeksi
@@ -58,8 +58,8 @@ public class PookiProperties implements Serializable {
     private String contentsEn;
 
     // Päiväys ja aika
-    @ApiModelProperty("When nautical warning was given")
-    private ZonedDateTime givenTime;
+    @ApiModelProperty("Set when nautical warning was created")
+    private ZonedDateTime creationTime;
 
     // Merivaroitustyypin selite suomeksi
     @ApiModelProperty("Nautical warning type in Finnish")
@@ -68,7 +68,7 @@ public class PookiProperties implements Serializable {
     @ApiModelProperty("Nautical warning type in Swedish")
     private String typeSv;
 
-    @ApiModelProperty("Nautical warning contents in English")
+    @ApiModelProperty("Nautical warning type in English")
     private String typeEn;
 
     @ApiModelProperty("Beginning of validity time")
@@ -81,27 +81,23 @@ public class PookiProperties implements Serializable {
     @ApiModelProperty("Nautical warning contents for tooltip")
     private String tooltip;
 
-    @ApiModelProperty("Is safety equipment virtual")
-    private Boolean virtualSafetyEquipment;
+    @ApiModelProperty("Are there virtual navaids related to this warning")
+    private Boolean virtualNavaids;
 
     @ApiModelProperty("Is navtex message")
     private Boolean navtex;
 
-    // Järjestelmän antama päivämäärä jolloin merivaroituksen luonnos on tallennettu
-    @ApiModelProperty("Time when draft of the nautical warning was created")
-    private ZonedDateTime recordingTime;
-
     // Merivaroitukseen liittyvän turvalaitteen ominaisuustiedot  (rivinvaihdoilla eroteltuina)
-    @ApiModelProperty("Safety device features related to the nautical warning (separated by line breaks)")
-    private String safetyEquipmentText;
+    @ApiModelProperty("Aids to navigation related to the nautical warning")
+    private String navaidInfo;
 
     // Merivaroitukseen liittyvän väyläalueen ominaisuustiedot (rivinvaihdoilla eroteltuina)
     @ApiModelProperty("Fairway features related to the nautical warning (separated by line breaks)")
-    private String fairwaySpaceText;
+    private String fairwayInfo;
 
     // Merivaroitukseen liittyvän navigointilinjan ominaisuustiedot (rivinvaihdoilla eroteltuina)
     @ApiModelProperty("Navigation line features related to the nautical warning (separated by line breaks)")
-    private String navigationLineText;
+    private String navigationLineInfo;
 
     @ApiModelProperty("Nautical warning publishing time")
     private ZonedDateTime publishingTime;
@@ -120,19 +116,19 @@ public class PookiProperties implements Serializable {
                            @JsonProperty("SISALTO_FI") final String contentsFi,
                            @JsonProperty("SISALTO_SV") final String contentsSv,
                            @JsonProperty("SISALTO_EN") final String contentsEn,
-                           @JsonProperty("PAIVAYS") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime givenTime,
+                           @JsonProperty("PAIVAYS") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime creationTime,
                            @JsonProperty("TYYPPI_FI") final String typeFi,
                            @JsonProperty("TYYPPI_SV") final String typeSv,
                            @JsonProperty("TYYPPI_EN") final String typeEn,
                            @JsonProperty("VOIMASSA_ALKAA") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime validityStartTime,
                            @JsonProperty("VOIMASSA_PAATTYY") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime validityEndTime,
                            @JsonProperty("VALITTUKOHDE_TOOLTIP") final String tooltip,
-                           @JsonProperty("VIRTUAALINENTURVALAITE") final Boolean virtualSafetyEquipment,
+                           @JsonProperty("VIRTUAALINENTURVALAITE") final Boolean virtualNavaids,
                            @JsonProperty("NAVTEX") final Boolean navtex,
-                           @JsonProperty("TALLENNUSPAIVA") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime recordingTime,
-                           @JsonProperty("TURVALAITE_TXT") final String safetyEquipmentText,
-                           @JsonProperty("VAYLAALUE_TXT") final String fairwaySpaceText,
-                           @JsonProperty("NAVIGOINTILINJA_TXT") final String navigationLineText,
+                           @JsonProperty("asdfTALLENNUSPAIVA") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime recordingTime,
+                           @JsonProperty("TURVALAITE_TXT") final String navaidInfo,
+                           @JsonProperty("VAYLAALUE_TXT") final String fairwayInfo,
+                           @JsonProperty("NAVIGOINTILINJA_TXT") final String navigationLineInfo,
                            @JsonProperty("ANTOPAIVA") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime publishingTime,
                            @JsonProperty("TIEDOKSIANTAJA") final String notificator) {
         this.id = id;
@@ -146,19 +142,18 @@ public class PookiProperties implements Serializable {
         this.contentsFi = contentsFi;
         this.contentsSv = contentsSv;
         this.contentsEn = contentsEn;
-        this.givenTime = givenTime;
+        this.creationTime = creationTime;
         this.typeFi = typeFi;
         this.typeSv = typeSv;
         this.typeEn = typeEn;
         this.validityStartTime = validityStartTime;
         this.validityEndTime = validityEndTime;
         this.tooltip = tooltip;
-        this.virtualSafetyEquipment = virtualSafetyEquipment;
+        this.virtualNavaids = virtualNavaids;
         this.navtex = navtex;
-        this.recordingTime = recordingTime;
-        this.safetyEquipmentText = safetyEquipmentText;
-        this.fairwaySpaceText = fairwaySpaceText;
-        this.navigationLineText = navigationLineText;
+        this.navaidInfo = navaidInfo;
+        this.fairwayInfo = fairwayInfo;
+        this.navigationLineInfo = navigationLineInfo;
         this.publishingTime = publishingTime;
         this.notificator = notificator;
     }

@@ -27,7 +27,6 @@ public class NauticalWarningController {
     private String pookiUrl;
 
     public enum Status {
-        DRAFT("merivaroitus_luonnos_dt"),
         PUBLISHED("merivaroitus_julkaistu_dt"),
         ARCHIVED("merivaroitus_arkistoitu_dt");
 
@@ -52,7 +51,7 @@ public class NauticalWarningController {
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "DRAFT,PUBLISHED,ARCHIVED" )
+    public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "PUBLISHED,ARCHIVED" )
                                               @PathVariable final String status) {
         try {
             return getObjectFromUrl(status.toUpperCase());
