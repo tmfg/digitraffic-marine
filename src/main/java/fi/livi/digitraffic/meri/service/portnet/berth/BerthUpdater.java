@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,23 +29,47 @@ public class BerthUpdater {
     private final PortAreaRepository portAreaRepository;
     private final BerthRepository berthRepository;
     private final BerthClient berthClient;
+    private final PortAreaCoordinateReader portAreaCoordinateReader;
 
     private static final Logger log = LoggerFactory.getLogger(BerthUpdater.class);
 
     public BerthUpdater(final PortAreaRepository portAreaRepository,
-                        final BerthRepository berthRepository, final BerthClient berthClient) {
+                        final BerthRepository berthRepository, final BerthClient berthClient,
+                        final PortAreaCoordinateReader portAreaCoordinateReader) {
         this.portAreaRepository = portAreaRepository;
         this.berthRepository = berthRepository;
         this.berthClient = berthClient;
+        this.portAreaCoordinateReader = portAreaCoordinateReader;
     }
 
+    @Transactional
     public void updatePortsAreasAndBerths() throws IOException {
         final List<PortArea> oldPortAreas = portAreaRepository.findAll();
         final List<Berth> oldBerths = berthRepository.findAll();
         final List<BerthLine> berthLines = berthClient.getBerthLines();
 
-        mergePortAreas(oldPortAreas, berthLines);
+        final boolean portAreasMerged = mergePortAreas(oldPortAreas, berthLines);
         mergeBerths(oldBerths, berthLines);
+
+        if(portAreasMerged) {
+            updatePortAreaCoordinates(oldPortAreas);
+        }
+    }
+
+    private void updatePortAreaCoordinates(final List<PortArea> oldPortAreas) {
+        final Map<PortAreaKey, PortArea> oldMap = oldPortAreas.stream().collect(Collectors.toMap(PortArea::getPortAreaKey, Function.identity()));
+        final List<PortArea> newCoordinates = portAreaCoordinateReader.readCoordinates();
+
+        newCoordinates.stream().forEach(nc -> {
+            final PortArea portArea = oldMap.get(nc.getPortAreaKey());
+
+            if(portArea == null) {
+                log.error("Can't find port area {}", nc.getPortAreaKey());
+            } else {
+                portArea.setWgs84Lat(nc.getWgs84Lat());
+                portArea.setWgs84Long(nc.getWgs84Long());
+            }
+        });
     }
 
     private void mergeBerths(final List<Berth> oldBerths, final List<BerthLine> berthLines) {
@@ -96,7 +123,7 @@ public class BerthUpdater {
         return berth;
     }
 
-    private void mergePortAreas(final List<PortArea> oldPortAreas, final List<BerthLine> berthLines) {
+    private boolean mergePortAreas(final List<PortArea> oldPortAreas, final List<BerthLine> berthLines) {
         final Map<PortAreaKey, PortArea> oldMap = oldPortAreas.stream().collect(Collectors.toMap(PortArea::getPortAreaKey, Function.identity()));
         final Map<PortAreaKey, BerthLine> portMap =
                 berthLines.stream().collect(Collectors.toMap(x -> PortAreaKey.of(x.portCode, x.portAreaCode), Function.identity(), (p1, p2) -> p2));
@@ -118,6 +145,8 @@ public class BerthUpdater {
         portAreaRepository.save(newAreas);
 
         log.info("Added {} port areas, updated {}, deleted {}.", newAreas.size(), updates, oldMap.values().size());
+
+        return CollectionUtils.isNotEmpty(newAreas) || updates > 0;
     }
 
     private static boolean mergePortArea(final PortArea oldArea, final PortArea newArea) {

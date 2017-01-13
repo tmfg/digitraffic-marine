@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,23 +23,45 @@ import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 public class SsnLocationUpdater {
     private final SsnLocationRepository ssnLocationRepository;
     private final SsnLocationClient ssnLocationReader;
+    private final LocationCoordinateReader locationCoordinateReader;
 
     private static final Logger log = LoggerFactory.getLogger(SsnLocationUpdater.class);
 
     public SsnLocationUpdater(final SsnLocationRepository ssnLocationRepository,
-                              final SsnLocationClient ssnLocationReader) {
+                              final SsnLocationClient ssnLocationReader,
+                              final LocationCoordinateReader locationCoordinateReader) {
         this.ssnLocationRepository = ssnLocationRepository;
         this.ssnLocationReader = ssnLocationReader;
+        this.locationCoordinateReader = locationCoordinateReader;
     }
 
+    @Transactional
     public void updateSsnLocations() throws IOException {
         final List<SsnLocation> oldLocations = ssnLocationRepository.findAll();
         final List<SsnLocation> newLocations = ssnLocationReader.getSsnLocations();
 
-        mergeLocations(oldLocations, newLocations);
+        if(mergeLocations(oldLocations, newLocations)) {
+            updateCoordinates(oldLocations);
+        }
     }
 
-    private void mergeLocations(final List<SsnLocation> oldLocations, final List<SsnLocation> newLocations) {
+    private void updateCoordinates(final List<SsnLocation> oldLocations) {
+        final Map<String, SsnLocation> oldMap = oldLocations.stream().collect(Collectors.toMap(SsnLocation::getLocode, Function.identity()));
+        final List<SsnLocation> newCoordinates = locationCoordinateReader.readCoordinates();
+
+        newCoordinates.stream().forEach(nc -> {
+            final SsnLocation location = oldMap.get(nc.getLocode());
+
+            if(location == null) {
+                log.info("Can't find ssn location {}", nc.getLocode());
+            } else {
+                location.setWgs84Lat(nc.getWgs84Lat());
+                location.setWgs84Long(nc.getWgs84Long());
+            }
+        });
+    }
+
+    private boolean mergeLocations(final List<SsnLocation> oldLocations, final List<SsnLocation> newLocations) {
         final Map<String, SsnLocation> oldMap = oldLocations.stream().collect(Collectors.toMap(SsnLocation::getLocode, Function.identity()));
         final List<SsnLocation> newList = new ArrayList<>();
         int updates = 0;
@@ -60,6 +85,8 @@ public class SsnLocationUpdater {
 
         log.info("Read {} locations, added {}, updated {}, deleted {}.",
                 newLocations.size(), newList.size(), updates, oldMap.values().size());
+
+        return CollectionUtils.isNotEmpty(newList) || updates > 0;
     }
 
     private static boolean mergeLocation(final SsnLocation oldLocation, final SsnLocation newLocation) {
