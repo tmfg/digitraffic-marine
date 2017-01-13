@@ -19,8 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationJson;
-import fi.livi.digitraffic.util.SublistFetcher;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,16 +40,16 @@ public class VesselLocationService {
                 .setFetchSize(1000);
     }
 
-    public List<VesselLocationJson> findAllowedLocations(final int mmsi, final Long from, final Long to) {
-        return findAllowedLocations((Integer)mmsi, from, to);
+    public VesselLocationFeatureCollection findAllowedLocations(final int mmsi, final Long from, final Long to) {
+        return VesselLocationConverter.createFeatureCollection(findAllowedLocations((Integer)mmsi, from, to));
     }
 
-    public List<VesselLocationJson> findAllowedLocations(final Long from, final Long to) {
-        return findAllowedLocations(null, from, to);
+    public VesselLocationFeatureCollection findAllowedLocations(final Long from, final Long to) {
+        return VesselLocationConverter.createFeatureCollection(findAllowedLocations(null, from, to));
     }
 
-    private List<VesselLocationJson> findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
-        final Criteria c = createCriteria().setProjection(Projections.id());
+    private List<VesselLocation> findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
+        final Criteria c = createCriteria();
 
         if(mmsi != null) {
             c.add(Restrictions.eq("mmsi", mmsi));
@@ -69,6 +68,6 @@ public class VesselLocationService {
                 .setProjection(Projections.id());
         c.add(Property.forName("mmsi").in(subQuery));
 
-        return SublistFetcher.fetch(c.list(), vesselLocationRepository::findByMmsiIn);
+        return c.list();
     }
 }

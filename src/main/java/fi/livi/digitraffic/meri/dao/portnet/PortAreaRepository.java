@@ -7,11 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import fi.livi.digitraffic.meri.domain.portnet.PortArea;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaKey;
-import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaJson;
 
 @Repository
 public interface PortAreaRepository extends JpaRepository<PortArea, PortAreaKey> {
-    List<PortAreaJson> findAllProjectedBy();
-
-    List<PortAreaJson> findByPortAreaKeyLocode(final String locode);
+    List<PortArea> findByPortAreaKeyLocode(final String locode);
 }

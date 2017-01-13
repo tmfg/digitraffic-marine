@@ -5,6 +5,8 @@ import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.websocket.LocationsEndpoint;
 import fi.livi.digitraffic.meri.controller.websocket.VesselLocationsEndpoint;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
+import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
 public class VesselLocationRelayListener implements WebsocketListener {
@@ -23,9 +25,11 @@ public class VesselLocationRelayListener implements WebsocketListener {
 
         // Send only allowed mmsis to WebSocket, ship type 30 fishing boat filtered
         if (ais.validate() && isAllowedMmsi(ais.attributes.mmsi)) {
-            locationSender.sendMessage(ais);
-            LocationsEndpoint.sendMessage(ais);
-            VesselLocationsEndpoint.sendMessage(ais);
+            final VesselLocationFeature feature = VesselLocationConverter.convert(ais);
+
+            locationSender.sendMessage(feature);
+            LocationsEndpoint.sendMessage(feature);
+            VesselLocationsEndpoint.sendMessage(feature);
         }
     }
 

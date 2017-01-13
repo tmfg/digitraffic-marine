@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.PortsAndBerthsJson;
-import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationJson;
+import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
+import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
+import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 public class PortnetMetadataController {
+    public static final String CODE_DESCRIPTIONS = "/code-descriptions";
     public static final String SSN_LOCATIONS_PATH =  "/locations";
     public static final String SSN_LOCATIONS_BY_COUNTRY_PATH =  "/locations-by-country";
     public static final String VESSEL_DETAILS_PATH = "/vessel-details";
@@ -40,10 +42,17 @@ public class PortnetMetadataController {
         this.portnetMetadataService = portnetMetadataService;
     }
 
+    @ApiOperation("Return all code descriptions.")
+    @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public CodeDescriptions listCodeDescriptions() {
+        return portnetMetadataService.listCodeDescriptions();
+    }
+
     @ApiOperation("Return list of all berths, port areas and locations.")
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public PortsAndBerthsJson listAllMetadata() {
+    public FeatureCollectionList listAllMetadata() {
         return portnetMetadataService.listaAllMetadata();
     }
 
@@ -53,14 +62,14 @@ public class PortnetMetadataController {
                     @ApiResponse(code = 404, message = "Ssn location not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
-    public PortsAndBerthsJson findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
+    public FeatureCollectionList findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
         return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 
     @ApiOperation("Return list of SafeSeaNet locations by country name")
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<SsnLocationJson> findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
+    public FeatureCollectionList findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
         return portnetMetadataService.findSsnLocationsByCountry(country);
     }
 

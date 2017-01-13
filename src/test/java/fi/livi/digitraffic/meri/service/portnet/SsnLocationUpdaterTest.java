@@ -18,9 +18,8 @@ public class SsnLocationUpdaterTest extends AbstractIntegrationTest {
 
     @Test
     @Transactional(readOnly = false)
-    @Rollback(false)
+    @Rollback(true)
     public void testUpdateLocations() throws IOException, SAXException, URISyntaxException {
-
         ssnLocationUpdater.updateSsnLocations();
     }
 }

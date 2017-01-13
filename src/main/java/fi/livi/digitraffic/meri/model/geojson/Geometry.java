@@ -24,6 +24,10 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     public Geometry() {}
 
+    public Geometry(final T coordinates) {
+        this.coordinates = coordinates;
+    }
+
     public T getCoordinates() {
         return coordinates;
     }
