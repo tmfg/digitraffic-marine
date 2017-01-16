@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
@@ -25,13 +24,10 @@ import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 @Transactional(readOnly = true)
 public class VesselLocationService {
     private final EntityManager entityManager;
-    private final VesselLocationRepository vesselLocationRepository;
 
     @Autowired
-    public VesselLocationService(final EntityManager entityManager,
-                                 final VesselLocationRepository vesselLocationRepository) {
+    public VesselLocationService(final EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.vesselLocationRepository = vesselLocationRepository;
     }
 
     private Criteria createCriteria() {
@@ -40,10 +36,12 @@ public class VesselLocationService {
                 .setFetchSize(1000);
     }
 
+    @Transactional(readOnly = true)
     public VesselLocationFeatureCollection findAllowedLocations(final int mmsi, final Long from, final Long to) {
         return VesselLocationConverter.createFeatureCollection(findAllowedLocations((Integer)mmsi, from, to));
     }
 
+    @Transactional(readOnly = true)
     public VesselLocationFeatureCollection findAllowedLocations(final Long from, final Long to) {
         return VesselLocationConverter.createFeatureCollection(findAllowedLocations(null, from, to));
     }
@@ -63,7 +61,7 @@ public class VesselLocationService {
             c.add(Restrictions.le("timestamp", from));
         }
 
-        DetachedCriteria subQuery = DetachedCriteria.forClass(VesselMetadata.class)
+        final DetachedCriteria subQuery = DetachedCriteria.forClass(VesselMetadata.class)
                 .add(getAllowedShipTypeCriteria())
                 .setProjection(Projections.id());
         c.add(Property.forName("mmsi").in(subQuery));
