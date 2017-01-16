@@ -56,13 +56,11 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
         // Responses
         final ResponseEntity<String> R1 = ResponseEntity.ok().body(dummyData);
         final ResponseEntity<String> R2 = ResponseEntity.ok().body(dummyData);
-        final ResponseEntity<String> R3 = ResponseEntity.ok().body(dummyData);
 
-        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
+        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2)));
 
         // Use Mock Pooki API in implementation
-        for (final Status status : new LinkedList<>(Arrays.asList(Status.DRAFT,
-                Status.PUBLISHED,
+        for (final Status status : new LinkedList<>(Arrays.asList( Status.PUBLISHED,
                 Status.ARCHIVED))) {
 
             final String s = status.toString().toLowerCase();
@@ -78,7 +76,7 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
             System.out.println(response.toString());
             assertThat(response.toString(), containsString("{\"id\":1162"));
             assertThat(response.toString(), containsString("\"areasFi\":\"AHVENANMERI\""));
-            assertThat(response.toString(), containsString("\"givenTime\":\"2015-08-19T00:00:00+03:00\""));
+            assertThat(response.toString(), containsString("\"creationTime\":\"2015-08-19T00:00:00+03:00\""));
             assertThat(response.toString(), containsString("\"type\":\"FeatureCollection\""));
             assertThat(response.toString(), containsString("\"type\":\"Feature\""));
             assertThat(response.toString(), containsString("\"type\":\"Polygon\""));
@@ -102,10 +100,10 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
         pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
 
         // Use Mock Pooki API in implementation
-        nauticalWarningController.setPookiUrl(pookiBaseUrl + "draft/" + key);
+        nauticalWarningController.setPookiUrl(pookiBaseUrl + "published/" + key);
 
         // Execute get
-        final String requestUrl = String.format("%s/%s/draft", localUrl, API);
+        final String requestUrl = String.format("%s/%s/published", localUrl, API);
         final ResponseEntity<String> response = template.getForEntity(requestUrl, String.class);
 
         assertThat("Expected error status code as result", RestUtil.isError(response.getStatusCode()));
@@ -129,10 +127,10 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
         pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2, R3)));
 
         // Use Mock Pooki API in implementation
-        nauticalWarningController.setPookiUrl(pookiBaseUrl + "draft/" + key);
+        nauticalWarningController.setPookiUrl(pookiBaseUrl + "published/" + key);
 
         // Execute get
-        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/draft", localUrl, API), String.class);
+        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/published", localUrl, API), String.class);
 
         assertThat("Expected ok result", !RestUtil.isError(response.getStatusCode()));
 
@@ -140,7 +138,5 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
                 pookiDummyController.getResponseQueue(key).size(), equalTo(1));
 
     }
-
-
 
 }
