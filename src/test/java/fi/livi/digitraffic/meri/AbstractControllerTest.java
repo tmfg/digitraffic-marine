@@ -5,7 +5,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(classes = AisApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = AisApplication.class,
+                webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+                properties = { "quartz.enabled=false" })
 @AutoConfigureMockMvc
 public abstract class AbstractControllerTest extends AbstractTestBase {
     @Autowired
