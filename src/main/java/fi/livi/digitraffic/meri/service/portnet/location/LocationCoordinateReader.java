@@ -33,7 +33,7 @@ public class LocationCoordinateReader {
         try {
             final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(ssnLocationCoordinatesUrl, Charset.forName("UTF-8")));
 
-            return ((JSONArray)o.get("features")).stream().map(this::convert).collect(Collectors.toList());
+            return ((JSONArray)o.get("features")).stream().map(LocationCoordinateReader::convert).collect(Collectors.toList());
         } catch (final IOException e) {
             log.error("error", e);
         }
