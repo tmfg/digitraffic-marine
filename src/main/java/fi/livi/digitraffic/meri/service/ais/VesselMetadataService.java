@@ -27,11 +27,10 @@ import fi.livi.digitraffic.util.SublistFetcher;
 @Service
 @Transactional(readOnly = true)
 public class VesselMetadataService {
-
     // 30 = fishing boat
-    public static final Collection<Integer> FORBIDDEN_SHIP_TYPES = Collections.singletonList(30);
+    private static final Collection<Integer> FORBIDDEN_SHIP_TYPES = Collections.singletonList(30);
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     private final VesselMetadataRepository vesselMetadataRepository;
 
     @Autowired
@@ -64,7 +63,7 @@ public class VesselMetadataService {
         return SublistFetcher.fetch(c.list(), vesselMetadataRepository::findByMmsiIn);
     }
 
-    @Cacheable(value = ALLOWED_MMSI_CACHE)
+    @Cacheable(ALLOWED_MMSI_CACHE)
     public Collection<Integer> findAllowedMmsis() {
         final Criteria c = createCriteria().setProjection(Projections.id());
         c.add(getAllowedShipTypeCriteria());

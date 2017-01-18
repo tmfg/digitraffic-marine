@@ -25,7 +25,7 @@ public class LocationCoordinateReader {
 
     private final URL ssnLocationCoordinatesUrl;
 
-    public LocationCoordinateReader(@Value("${ais.liikennetilanne.ssn_location.url}")final String ssnLocationCoordinatesUrl) throws MalformedURLException { //final String portAreaLocationUrl) {
+    public LocationCoordinateReader(@Value("${ais.liikennetilanne.ssn_location.url}")final String ssnLocationCoordinatesUrl) throws MalformedURLException {
         this.ssnLocationCoordinatesUrl = new URL(ssnLocationCoordinatesUrl);
     }
 
@@ -41,7 +41,7 @@ public class LocationCoordinateReader {
         return Collections.emptyList();
     }
 
-    private SsnLocation convert(final Object o) {
+    private static SsnLocation convert(final Object o) {
         final JSONObject jo = (JSONObject)o;
         final JSONObject properties = (JSONObject) jo.get("properties");
         final JSONObject geometry = (JSONObject) jo.get("geometry");
