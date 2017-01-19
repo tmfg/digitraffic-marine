@@ -21,6 +21,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 import com.google.common.collect.Iterables;
 
+import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -63,16 +64,25 @@ public class DefaultExceptionHandler {
                                     HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ ObjectNotFoundException.class })
+    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class })
     @ResponseBody
-    public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final ObjectNotFoundException exception, final ServletWebRequest request) {
+    public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final Exception exception, final ServletWebRequest request) {
+
+        HttpStatus status;
+        if (exception instanceof ObjectNotFoundException) {
+            status = HttpStatus.NOT_FOUND;
+        } else if (exception instanceof BadRequestException) {
+            status = HttpStatus.BAD_REQUEST;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
 
         return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
-                                                      HttpStatus.NOT_FOUND.value(),
-                                                      HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                                      status.value(),
+                                                      status.getReasonPhrase(),
                                                       exception.getMessage(),
                                                       request.getRequest().getRequestURI()),
-                                    HttpStatus.NOT_FOUND);
+                                    status);
     }
 
     @ExceptionHandler({ Exception.class })
