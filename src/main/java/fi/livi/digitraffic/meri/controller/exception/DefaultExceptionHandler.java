@@ -2,13 +2,11 @@ package fi.livi.digitraffic.meri.controller.exception;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -17,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import com.google.common.collect.Iterables;
@@ -36,8 +35,8 @@ public class DefaultExceptionHandler {
         final String parameterValue = exception.getValue().toString();
         final String requiredType = exception.getRequiredType().getSimpleName();
 
-        log.info(String.format("Query parameter type mismatch. Uri: %s, query string: %s, required type: %s",
-                               request.getRequest().getRequestURI(), request.getRequest().getQueryString(), requiredType));
+        log.info("Query parameter type mismatch. Uri: {}, query string: {}, required type: {}",
+                 request.getRequest().getRequestURI(), request.getRequest().getQueryString(), requiredType);
 
         return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                                                       HttpStatus.BAD_REQUEST.value(),
@@ -51,20 +50,20 @@ public class DefaultExceptionHandler {
     @ExceptionHandler({ ConstraintViolationException.class })
     public ResponseEntity<ErrorResponse> handleConstraintViolation(final ConstraintViolationException exception, final ServletWebRequest request) {
 
-        final List<String> errors = exception.getConstraintViolations().stream().map(v -> resolveErrorMessage(v)).collect(Collectors.toList());
+        String message = exception.getConstraintViolations().stream().map(v -> getViolationMessage(v)).collect(Collectors.joining(", "));
 
-        log.info(String.format("Constraint violation. Uri: %s, query string: %s, violations: %s",
-                               request.getRequest().getRequestURI(), request.getRequest().getQueryString(), errors));
+        log.info("Constraint violation. Uri: {}, query string: {}, violations: {}",
+                 request.getRequest().getRequestURI(), request.getRequest().getQueryString(), message);
 
         return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                                                       HttpStatus.BAD_REQUEST.value(),
                                                       HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                                                      StringUtils.join(errors, ", "),
+                                                      message,
                                                       request.getRequest().getRequestURI()),
                                     HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class })
+    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class, ResourceAccessException.class })
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final Exception exception, final ServletWebRequest request) {
 
@@ -99,7 +98,7 @@ public class DefaultExceptionHandler {
                                     HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private static String resolveErrorMessage(final ConstraintViolation<?> violation) {
+    private static String getViolationMessage(final ConstraintViolation<?> violation) {
         return String.format("Violation: %s = %s - %s", Iterables.getLast(violation.getPropertyPath()), violation.getInvalidValue(), violation.getMessage());
     }
 }
