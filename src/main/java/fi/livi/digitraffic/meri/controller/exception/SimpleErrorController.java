@@ -16,7 +16,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
 @RequestMapping("/error")
-@ConditionalOnProperty("spring.main.web_environment")
+@ConditionalOnProperty(value = "spring.main.web_environment", matchIfMissing = true)
 public class SimpleErrorController implements ErrorController {
 
     private final ErrorAttributes errorAttributes;
