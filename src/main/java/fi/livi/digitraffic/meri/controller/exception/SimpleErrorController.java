@@ -21,6 +21,8 @@ public class SimpleErrorController implements ErrorController {
 
     private final ErrorAttributes errorAttributes;
 
+    private final static boolean includeStackTrace = false;
+
     @Autowired
     public SimpleErrorController(final ErrorAttributes errorAttributes) {
         Assert.notNull(errorAttributes, "ErrorAttributes must not be null");
@@ -34,24 +36,10 @@ public class SimpleErrorController implements ErrorController {
 
     @RequestMapping
     public Map<String, Object> error(final HttpServletRequest aRequest) {
-        final Map<String, Object> body = getErrorAttributes(aRequest, getTraceParameter(aRequest));
-        final String trace = (String) body.get("trace");
-        if (trace != null) {
-            final String[] lines = trace.split("\n\t");
-            body.put("trace", lines);
-        }
-        return body;
+        return getErrorAttributes(aRequest);
     }
 
-    private boolean getTraceParameter(final HttpServletRequest request) {
-        final String parameter = request.getParameter("trace");
-        if (parameter == null) {
-            return false;
-        }
-        return !"false".equals(parameter.toLowerCase());
-    }
-
-    private Map<String, Object> getErrorAttributes(final HttpServletRequest aRequest, final boolean includeStackTrace) {
+    private Map<String, Object> getErrorAttributes(final HttpServletRequest aRequest) {
         final RequestAttributes requestAttributes = new ServletRequestAttributes(aRequest);
         return errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace);
     }
