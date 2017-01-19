@@ -139,4 +139,24 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
 
     }
 
+    @Test public void testPooki500WithWrongCompressionHeadersWillNotBreakErrorHandlerDPO_90() {
+        // Key for PookiMock to assign the responses for this test case
+        final String key = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        // Responses. Two errors are needed, because controller makes one retry on error
+        final ResponseEntity<String> R1 = ResponseEntity.status(500)
+                .header("Content-Encoding", "gzip").body("this body is not gzipped");
+        final ResponseEntity<String> R2 = ResponseEntity.status(500)
+                .header("Content-Encoding", "gzip").body("this body is not gzipped");
+
+        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2)));
+        nauticalWarningController.setPookiUrl(pookiBaseUrl + "published/" + key);
+
+        final ResponseEntity<String> response = template
+                .getForEntity(String.format("%s/%s/published", localUrl, API), String.class);
+        final String body = response.getBody();
+        assertThat(body, containsString("\"status\":500"));
+        assertThat(body, containsString("\"message\":\"I/O error on GET request"));
+    }
 }

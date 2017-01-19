@@ -25,6 +25,8 @@ public class NauticalWarningErrorHandler implements ResponseErrorHandler {
     public void handleError(final ClientHttpResponse response) throws IOException {
         log.info("Pooki response error: {} {}", response.getStatusCode(), response.getStatusText());
 
+        // All these properties are lost like tears in the rain.
+        // See the RestTemplate.doExecute try catch:662...
         final Map<String, Object> errorAttributes = new LinkedHashMap<>();
         errorAttributes.put("timestamp", new Date());
         errorAttributes.put("status", response.getStatusCode().value());
@@ -37,7 +39,7 @@ public class NauticalWarningErrorHandler implements ResponseErrorHandler {
             // Do not raise exception out of handleError.
             // This has happened during 500 errors when the message body was not GZipped, but Spring framework
             // fails to regognize this and throws. - DPO-90 .
-            body = "There was an error handling error parsing Pooki message: Missing error message, error response body was garbled. Exception message: " + ex.getMessage();
+            body = "Error response body was garbled. Exception message: " + ex.getMessage();
         }
         errorAttributes.put("message", body);
         errorAttributes.put("path", response.getHeaders().getLocation());
