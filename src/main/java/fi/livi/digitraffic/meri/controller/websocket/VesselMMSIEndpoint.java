@@ -19,14 +19,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
+import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
-@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/locations/{mmsi}",
-        encoders = {StatusEncoder.class, LocationEncoder.class})
+@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/vessels/{mmsi}",
+                encoders = {StatusEncoder.class, LocationEncoder.class, MetadataEncoder.class})
 @Component
-public class VesselLocationsEndpoint {
-    private static final Logger LOG = LoggerFactory.getLogger(VesselLocationsEndpoint.class);
+public class VesselMMSIEndpoint {
+    private static final Logger LOG = LoggerFactory.getLogger(VesselMMSIEndpoint.class);
 
     private static final Map<Integer, Set<Session>> sessions = Collections.synchronizedMap(new HashMap<>());
 
@@ -48,12 +49,24 @@ public class VesselLocationsEndpoint {
         }
     }
 
-    public static void sendMessage(final VesselLocationFeature message) {
+    public static void sendLocationMessage(final VesselLocationFeature message) {
         synchronized (sessions) {
             final Set<Session> sessionSet = sessions.get(message.mmsi);
 
             if(sessionSet != null) {
                 WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.VESSEL_LOCATION, sessionSet.size());
+
+                WebsocketMessageSender.sendMessage(LOG, message, sessionSet);
+            }
+        }
+    }
+
+    public static void sendMetadataMessage(final VesselMetadata message) {
+        synchronized (sessions) {
+            final Set<Session> sessionSet = sessions.get(message.getMmsi());
+
+            if(sessionSet != null) {
+                WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA, sessionSet.size());
 
                 WebsocketMessageSender.sendMessage(LOG, message, sessionSet);
             }

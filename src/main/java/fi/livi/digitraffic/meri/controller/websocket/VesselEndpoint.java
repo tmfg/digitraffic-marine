@@ -15,14 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
+import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH
-        + "/locations", encoders = {StatusEncoder.class, LocationEncoder.class})
+                + "/vessels", encoders = {StatusEncoder.class, LocationEncoder.class, MetadataEncoder.class})
 @Component
-public class LocationsEndpoint {
-    private static final Logger LOG = LoggerFactory.getLogger(LocationsEndpoint.class);
+public class VesselEndpoint {
+    private static final Logger LOG = LoggerFactory.getLogger(VesselEndpoint.class);
 
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
@@ -41,9 +42,17 @@ public class LocationsEndpoint {
         LOG.info("exception", t);
     }
 
-    public static void sendMessage(final VesselLocationFeature message) {
+    public static void sendLocationMessage(final VesselLocationFeature message) {
         synchronized (sessions) {
             WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, sessions.size());
+
+            WebsocketMessageSender.sendMessage(LOG, message, sessions);
+        }
+    }
+
+    public static void sendMetadataMessage(final VesselMetadata message) {
+        synchronized (sessions) {
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA, sessions.size());
 
             WebsocketMessageSender.sendMessage(LOG, message, sessions);
         }

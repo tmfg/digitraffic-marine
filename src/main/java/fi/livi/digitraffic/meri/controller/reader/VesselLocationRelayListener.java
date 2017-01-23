@@ -1,21 +1,21 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import fi.livi.digitraffic.meri.controller.LocationSender;
+import fi.livi.digitraffic.meri.controller.VesselsSender;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.controller.websocket.LocationsEndpoint;
-import fi.livi.digitraffic.meri.controller.websocket.VesselLocationsEndpoint;
+import fi.livi.digitraffic.meri.controller.websocket.VesselEndpoint;
+import fi.livi.digitraffic.meri.controller.websocket.VesselMMSIEndpoint;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
 public class VesselLocationRelayListener implements WebsocketListener {
-    private final LocationSender locationSender;
+    private final VesselsSender vesselsSender;
     private final VesselMetadataService vesselMetadataService;
 
-    public VesselLocationRelayListener(final LocationSender locationSender,
+    public VesselLocationRelayListener(final VesselsSender vesselsSender,
                                        final VesselMetadataService vesselMetadataService) {
-        this.locationSender = locationSender;
+        this.vesselsSender = vesselsSender;
         this.vesselMetadataService = vesselMetadataService;
     }
 
@@ -27,9 +27,9 @@ public class VesselLocationRelayListener implements WebsocketListener {
         if (ais.validate() && isAllowedMmsi(ais.attributes.mmsi)) {
             final VesselLocationFeature feature = VesselLocationConverter.convert(ais);
 
-            locationSender.sendMessage(feature);
-            LocationsEndpoint.sendMessage(feature);
-            VesselLocationsEndpoint.sendMessage(feature);
+            vesselsSender.sendLocationMessage(feature);
+            VesselEndpoint.sendLocationMessage(feature);
+            VesselMMSIEndpoint.sendLocationMessage(feature);
         }
     }
 
