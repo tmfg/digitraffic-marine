@@ -30,7 +30,7 @@ public class VesselMetadataReaderController {
                                            final LockingService lockingService,
                                            final VesselMetadataRepository vesselMetadataRepository,
                                            final VesselMetadataService vesselMetadataService,
-                                           final VesselsSender vesselSender) {
+                                           final VesselSender vesselSender) {
 
         final List<WebsocketListener> listeners = Arrays.asList(new VesselMetadataDatabaseListener(vesselMetadataRepository, lockingService),
                                                                 new VesselMetadataRelayListener(vesselMetadataService, vesselSender),

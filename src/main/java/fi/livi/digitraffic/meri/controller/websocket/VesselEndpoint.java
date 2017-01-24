@@ -20,7 +20,7 @@ import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH
-                + "/vessels", encoders = {StatusEncoder.class, LocationEncoder.class, MetadataEncoder.class})
+                + "/locations", encoders = {StatusEncoder.class, LocationEncoder.class, MetadataEncoder.class})
 @Component
 public class VesselEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(VesselEndpoint.class);
