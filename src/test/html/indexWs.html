@@ -11,8 +11,8 @@
         function connect() {
             console.log('trying to connect...');
 
-            var socket = new WebSocket('ws://localhost:9001/api/v1/plain-websockets/locations');
-            //var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/locations');
+            var socket = new WebSocket('ws://localhost:9001/api/v1/plain-websockets/vessels');
+//            var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/vessels');
 
             console.info('Socket is ' + socket.readyState);
 
@@ -38,7 +38,7 @@
         }
 
         function updateList() {
-            $(".locations").html(lines.join('<br/>'));
+            $(".vessels").html(lines.join('<br/>'));
         }
 
         function convert(message) {
@@ -46,16 +46,14 @@
                 return 'Status: ' + message.status;
             }
 
-            return 'mmsi: ' + mmsi + ':\t ' + JSON.stringify(message);
+            return 'mmsi: ' + message.mmsi + ':\t ' + JSON.stringify(message);
         }
-
-
 
         connect();
     </script>
 </head>
 <body>
-    Vessel locations:
-    <div class="locations" />
+    Vessels:
+    <div class="vessels" />
 </body>
 </html>

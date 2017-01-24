@@ -36,13 +36,13 @@ public class WebsocketStatistics {
         executor.scheduleAtFixedRate(WebsocketStatistics::notifyStatus, 0, 10, TimeUnit.SECONDS);
     }
 
-    private static synchronized void notifyStatus() {
+    private static void notifyStatus() {
         try {
             final ReadStatistics locationStatus = readStatisticsMap.get(WebsocketType.LOCATIONS);
             final String status = locationStatus == null ? UNDEFINED : locationStatus.status;
 
-            LocationsEndpoint.sendStatus(status);
-            VesselLocationsEndpoint.sendStatus(status);
+            VesselEndpoint.sendStatus(status);
+            VesselMMSIEndpoint.sendStatus(status);
         } catch(final Exception e) {
             log.info("Exception notifying", e);
         }
