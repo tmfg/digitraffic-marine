@@ -11,13 +11,13 @@
         function connect() {
             console.log('trying to connect...');
 
-            //            var socket = new SockJS('http://localhost:9001/api/v1/websockets');
-            var socket = new SockJS('http://meri-test.digitraffic.fi/api/v1/websockets');
+             var socket = new SockJS('http://localhost:9001/api/v1/websockets');
+//            var socket = new SockJS('http://meri-test.digitraffic.fi/api/v1/websockets');
 
             var stompClient = Stomp.over(socket);
             stompClient.connect('', '', function(frame) {
                 console.log('connected');
-                stompClient.subscribe('/locations', function(message) {
+                stompClient.subscribe('/vessels', function(message) {
                     addMessage(JSON.parse(message.body));
                     updateList();
                 });
@@ -35,7 +35,7 @@
         }
 
         function updateList() {
-            $(".locations").html(lines.join('<br/>'));
+            $(".vessels").html(lines.join('<br/>'));
         }
 
         function convert(message) {
@@ -47,7 +47,7 @@
     </script>
 </head>
 <body>
-    Vessel locations:
-    <div class="locations" />
+    Vessels:
+    <div class="vessels" />
 </body>
 </html>
