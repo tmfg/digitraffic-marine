@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import fi.livi.digitraffic.meri.controller.VesselsSender;
+import fi.livi.digitraffic.meri.controller.VesselSender;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.websocket.VesselEndpoint;
 import fi.livi.digitraffic.meri.controller.websocket.VesselMMSIEndpoint;
@@ -10,12 +10,12 @@ import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
 public class VesselLocationRelayListener implements WebsocketListener {
-    private final VesselsSender vesselsSender;
+    private final VesselSender vesselSender;
     private final VesselMetadataService vesselMetadataService;
 
-    public VesselLocationRelayListener(final VesselsSender vesselsSender,
+    public VesselLocationRelayListener(final VesselSender vesselSender,
                                        final VesselMetadataService vesselMetadataService) {
-        this.vesselsSender = vesselsSender;
+        this.vesselSender = vesselSender;
         this.vesselMetadataService = vesselMetadataService;
     }
 
@@ -27,7 +27,7 @@ public class VesselLocationRelayListener implements WebsocketListener {
         if (ais.validate() && isAllowedMmsi(ais.attributes.mmsi)) {
             final VesselLocationFeature feature = VesselLocationConverter.convert(ais);
 
-            vesselsSender.sendLocationMessage(feature);
+            vesselSender.sendLocationMessage(feature);
             VesselEndpoint.sendLocationMessage(feature);
             VesselMMSIEndpoint.sendLocationMessage(feature);
         }

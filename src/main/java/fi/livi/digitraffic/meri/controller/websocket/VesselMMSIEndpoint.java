@@ -23,7 +23,7 @@ import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
-@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/vessels/{mmsi}",
+@ServerEndpoint(value = AisApplicationConfiguration.API_V1_BASE_PATH + AisApplicationConfiguration.API_PLAIN_WEBSOCKETS_PART_PATH + "/locations/{mmsi}",
                 encoders = {StatusEncoder.class, LocationEncoder.class, MetadataEncoder.class})
 @Component
 public class VesselMMSIEndpoint {

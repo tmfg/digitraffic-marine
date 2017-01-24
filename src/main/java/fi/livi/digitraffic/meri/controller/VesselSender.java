@@ -11,20 +11,20 @@ import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @Component
-public class VesselsSender {
-    private static final Logger LOG = LoggerFactory.getLogger(VesselsSender.class);
+public class VesselSender {
+    private static final Logger LOG = LoggerFactory.getLogger(VesselSender.class);
 
     private final SimpMessagingTemplate template;
 
     @Autowired
-    public VesselsSender(final SimpMessagingTemplate template) {
+    public VesselSender(final SimpMessagingTemplate template) {
         this.template = template;
     }
 
     public void sendLocationMessage(final VesselLocationFeature message) {
         try {
-            template.convertAndSend("/vessels", message);
-            template.convertAndSend("/vessels/" + message.mmsi, message);
+            template.convertAndSend("/locations", message);
+            template.convertAndSend("/locations/" + message.mmsi, message);
         } catch (final MessagingException me) {
             LOG.error("error sending", me);
         }
@@ -32,8 +32,8 @@ public class VesselsSender {
 
     public void sendMetadataMessage(final VesselMetadata message) {
         try {
-            template.convertAndSend("/vessels", message);
-            template.convertAndSend("/vessels/" + message.getMmsi(), message);
+            template.convertAndSend("/locations", message);
+            template.convertAndSend("/locations/" + message.getMmsi(), message);
         } catch (final MessagingException me) {
             LOG.error("error sending", me);
         }
