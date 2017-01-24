@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.controller.websocket;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +40,12 @@ public class VesselEndpoint {
 
     @OnError
     public void onError(final Throwable t) {
-        LOG.info("exception", t);
+        final String message = t.getCause().getMessage();
+        if (t instanceof IOException && (message.contains("Broken pipe") || message.contains("connection was aborted"))) {
+            LOG.info("Established connection was aborted by client. Message: {}", t.getCause().getMessage());
+        } else {
+            LOG.error("Exception", t);
+        }
     }
 
     public static void sendLocationMessage(final VesselLocationFeature message) {
