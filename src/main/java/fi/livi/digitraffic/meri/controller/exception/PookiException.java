@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller.exception;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -14,5 +15,11 @@ public class PookiException extends IOException {
         super(message);
 
         this.properties = properties;
+    }
+
+    public PookiException(String message) {
+        super(message);
+
+        this.properties = new HashMap<>();
     }
 }
