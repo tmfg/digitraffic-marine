@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import fi.livi.digitraffic.meri.AbstractControllerTest;
@@ -139,6 +140,57 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
 
     }
 
+    @Test
+    public void testReturnErrorIfIllegalStatusArgumentIsGiven() {
+        // Mock Pooki API identifier for this test
+        final String key = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        // Responses
+        final ResponseEntity<String> R1 = ResponseEntity.ok().body(dummyData);
+
+        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1)));
+
+        // Use Mock Pooki API in implementation
+        nauticalWarningController.setPookiUrl(pookiBaseUrl + "published/" + key);
+
+        // Execute get with missing status argument
+        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/draft",
+                localUrl, API), String.class);
+
+        assertThat("Expected 404 result", response.getStatusCode().is4xxClientError());
+
+        assertThat("Number of Pooki API calls should be 0 (since the argument is illegal"
+                        + "no calls to Pooki are made)",
+                pookiDummyController.getResponseQueue(key).size(), equalTo(1));
+
+    }
+
+    @Test
+    public void testReturnError404IfStatusArgumentIsMissing() {
+        // Mock Pooki API identifier for this test
+        final String key = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        // Responses
+        final ResponseEntity<String> R1 = ResponseEntity.ok().body(dummyData);
+
+        pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1)));
+
+        // Use Mock Pooki API in implementation
+        nauticalWarningController.setPookiUrl(pookiBaseUrl + "published/" + key);
+
+        // Execute get with missing status argument
+        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/", localUrl, API), String.class);
+
+        assertThat("Expected 404 result", response.getStatusCode().is4xxClientError());
+
+        assertThat("Number of Pooki API calls should be 0 (since the RequestMapping does not "
+                        + "match when status argument is missing, no calls to Pooki are made)",
+                pookiDummyController.getResponseQueue(key).size(), equalTo(1));
+
+    }
+
     @Test public void testPooki500WithWrongCompressionHeadersWillNotBreakErrorHandlerDPO_90() {
         // Key for PookiMock to assign the responses for this test case
         final String key = new Object() {
@@ -156,7 +208,7 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
         final ResponseEntity<String> response = template
                 .getForEntity(String.format("%s/%s/published", localUrl, API), String.class);
         final String body = response.getBody();
-        assertThat(body, containsString("\"status\":500"));
-        assertThat(body, containsString("\"message\":\"I/O error on GET request"));
+        assertThat(body, containsString(String.format("\"status\":%s", HttpStatus.BAD_GATEWAY)));
+        assertThat(body, containsString("\"message\":\"Bad Gateway. Pooki responded twice with error response.\""));
     }
 }

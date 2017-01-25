@@ -14,8 +14,8 @@ import io.swagger.annotations.ApiModelProperty;
     "type",
     "coordinates"
 })
-@JsonSubTypes({ @JsonSubTypes.Type(Point.class), @JsonSubTypes.Type(Polygon.class), @JsonSubTypes.Type(MultiPoint.class)})
-@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class, subTypes = { Point.class, LineString.class, MultiPoint.class, Polygon.class})
+@JsonSubTypes({ @JsonSubTypes.Type(MultiLineString.class), @JsonSubTypes.Type(MultiPoint.class), @JsonSubTypes.Type(MultiPolygon.class), @JsonSubTypes.Type(Point.class) , @JsonSubTypes.Type(Polygon.class)})
+@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class, subTypes = { LineString.class, MultiLineString.class, MultiPoint.class, MultiPolygon.class, Point.class, Polygon.class})
 public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     @ApiModelProperty(value = "WGS84 coordinates in decimal degrees. [LONGITUDE, LATITUDE, ALTITUDE]", required = true)
@@ -44,7 +44,7 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     @Override
     public String toString() {
-        return "Geometry{" + "coordinates=" + coordinates + "} " + super.toString();
+        return "Geometry { type=" + getType() + ", coordinates=" + coordinates + " }";
     }
 
 }

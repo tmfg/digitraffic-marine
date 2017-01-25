@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import fi.livi.digitraffic.meri.controller.exception.NauticalWarningErrorHandler;
+import fi.livi.digitraffic.meri.controller.exception.PookiException;
 import fi.livi.digitraffic.meri.model.pooki.PookiFeatureCollection;
+import fi.livi.digitraffic.meri.service.BadRequestException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -35,6 +37,15 @@ public class NauticalWarningController {
         Status(final String layer){
             this.layer = layer;
         }
+
+        public static boolean contains(String needle) {
+            for (Status status : values()) {
+                if (StringUtils.equalsIgnoreCase(status.name(), needle)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     @Autowired
@@ -44,7 +55,6 @@ public class NauticalWarningController {
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =
                 new HttpComponentsClientHttpRequestFactory(HttpClientBuilder.create().build());
         this.restTemplate = new RestTemplate(clientHttpRequestFactory);
-        restTemplate.setErrorHandler(new NauticalWarningErrorHandler());
     }
 
     @ApiOperation("BETA: Return nautical warnings of given status.")
@@ -52,18 +62,29 @@ public class NauticalWarningController {
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "PUBLISHED,ARCHIVED" )
-                                              @PathVariable final String status) {
+                                              @PathVariable final String status) throws BadRequestException, PookiException {
+
+        // Parse status argument
+        if (!Status.contains(status)) {
+            throw new BadRequestException("Illegal argument for status");
+        }
+        final Status s = Status.valueOf(status.toUpperCase());
+
+        // Call Pooki and parse response to GeoJSON
         try {
-            return getObjectFromUrl(status.toUpperCase());
+            return getObjectFromUrl(s);
         } catch (Exception e) {
-            // Retry once
-            return getObjectFromUrl(status.toUpperCase());
+            // Retry once, because Pooki sometimes responds first time with error.
+            try {
+                return getObjectFromUrl(s);
+            } catch(Exception e1) {
+                throw new PookiException("Bad Gateway. Pooki responded twice with error response.");
+            }
         }
     }
 
-    private PookiFeatureCollection getObjectFromUrl(final String status) {
-        final Status s = Status.valueOf(status.toUpperCase());
-        final String url = String.format("%s?crs=EPSG:4326&layer=%s", pookiUrl, s.layer);
+    private PookiFeatureCollection getObjectFromUrl(final Status status) {
+        final String url = String.format("%s?crs=EPSG:4326&layer=%s", pookiUrl, status.layer);
         return restTemplate.getForObject(url, PookiFeatureCollection.class);
     }
 
