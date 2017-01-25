@@ -63,7 +63,7 @@ public class DefaultExceptionHandler {
                                     HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class, ResourceAccessException.class })
+    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class, ResourceAccessException.class , PookiException.class })
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final Exception exception, final ServletWebRequest request) {
 
@@ -72,6 +72,8 @@ public class DefaultExceptionHandler {
             status = HttpStatus.NOT_FOUND;
         } else if (exception instanceof BadRequestException) {
             status = HttpStatus.BAD_REQUEST;
+        } else if (exception instanceof PookiException) {
+            status = HttpStatus.BAD_GATEWAY;
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }

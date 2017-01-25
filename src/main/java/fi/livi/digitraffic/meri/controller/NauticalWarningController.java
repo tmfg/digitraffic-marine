@@ -78,7 +78,7 @@ public class NauticalWarningController {
             try {
                 return getObjectFromUrl(s);
             } catch(Exception e1) {
-                throw new PookiException("Pooki response error. Pooki failed twice.");
+                throw new PookiException("Bad Gateway. Pooki responded twice with error response.");
             }
         }
     }

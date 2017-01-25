@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import fi.livi.digitraffic.meri.AbstractControllerTest;
@@ -207,7 +208,7 @@ public class NauticalWarningControllerTest extends AbstractControllerTest {
         final ResponseEntity<String> response = template
                 .getForEntity(String.format("%s/%s/published", localUrl, API), String.class);
         final String body = response.getBody();
-        assertThat(body, containsString("\"status\":500"));
-        assertThat(body, containsString("\"message\":\"Pooki response error. Pooki failed twice.\""));
+        assertThat(body, containsString(String.format("\"status\":%s", HttpStatus.BAD_GATEWAY)));
+        assertThat(body, containsString("\"message\":\"Bad Gateway. Pooki responded twice with error response.\""));
     }
 }
