@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -30,6 +31,7 @@ public abstract class GeoJsonObject implements Serializable {
 
     @ApiModelProperty(required = true, value = "Type of GeoJSON object")
     @JsonProperty(value = "type", required = true)
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private String type;
 
     private Map<String, Object> additionalProperties = new HashMap<>();

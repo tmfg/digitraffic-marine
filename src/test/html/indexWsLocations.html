@@ -3,25 +3,19 @@
     <title>Testiclient for vessel locations</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" ></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.0.3/sockjs.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
     <script>
+
         var lines = [];
 
         function connect() {
             console.log('trying to connect...');
-
-            var socket = new WebSocket('ws://localhost:9001/api/v1/plain-websockets/vessels');
-//            var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/vessels');
-
+            var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/locations');
             console.info('Socket is ' + socket.readyState);
-
             socket.onopen = function (event) {
                 console.info('Socket is open');
             }
-
             socket.onmessage = function(message) {
-                console.info("message :" + message.data)
                 addMessage(JSON.parse(message.data));
                 updateList();
             };
@@ -38,22 +32,18 @@
         }
 
         function updateList() {
-            $(".vessels").html(lines.join('<br/>'));
+            $(".locations").html(lines.join('<br/>'));
         }
 
         function convert(message) {
-            if(message.mmsi == undefined) {
-                return 'Status: ' + message.status;
-            }
-
-            return 'mmsi: ' + message.mmsi + ':\t ' + JSON.stringify(message);
+            return JSON.stringify(message);
         }
 
         connect();
     </script>
 </head>
 <body>
-    Vessels:
-    <div class="vessels" />
+    Vessel locations:
+    <div class="locations" />
 </body>
 </html>

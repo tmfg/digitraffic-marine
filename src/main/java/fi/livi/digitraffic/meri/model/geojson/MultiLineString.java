@@ -10,15 +10,11 @@ import io.swagger.annotations.ApiModel;
 @JsonSubTypes({ @JsonSubTypes.Type(LineString.class)})
 public class MultiLineString extends Geometry<List<List<List<Double>>>> {
 
-    public MultiLineString() {};
+    public MultiLineString() {
+        setType("MultiLineString");
+    };
 
     public void setCoordinates(List<List<List<Double>>> coordinates) {
         super.setCoordinates(coordinates);
     }
-
-    @Override
-    public String toString() {
-        return "MultiPoint{} " + super.toString();
-    }
-
 }

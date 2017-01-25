@@ -18,9 +18,4 @@ public class Point extends Geometry<List<Double>> {
     public void setCoordinates(final List<Double> coordinates) {
         this.coordinates = coordinates;
     }
-
-    @Override
-    public String toString() {
-        return "Point{" + "coordinates=" + coordinates + "} " + super.toString();
-    }
 }
