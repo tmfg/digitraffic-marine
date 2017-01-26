@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
-import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
+import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 
 public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
 

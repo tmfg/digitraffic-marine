@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.domain.portnet.VesselDetails;
+package fi.livi.digitraffic.meri.domain.portnet.vesseldetails;
 
 import java.math.BigInteger;
 
