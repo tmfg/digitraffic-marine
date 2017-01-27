@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import fi.livi.digitraffic.meri.controller.VesselSender;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
+import fi.livi.digitraffic.meri.controller.VesselSender;
 import fi.livi.digitraffic.meri.controller.websocket.VesselEndpoint;
 import fi.livi.digitraffic.meri.controller.websocket.VesselMMSIEndpoint;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
