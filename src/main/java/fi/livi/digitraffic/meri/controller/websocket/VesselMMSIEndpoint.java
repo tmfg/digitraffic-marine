@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
@@ -53,6 +54,11 @@ public class VesselMMSIEndpoint {
         synchronized (sessions) {
             sessions.get(mmsi).remove(session);
         }
+    }
+
+    @OnError
+    public void onError(final Throwable t) {
+        EndPointErrorLogger.logError(t, getClass());
     }
 
     public static void sendLocationMessage(final VesselLocationFeature vesselLocation) {

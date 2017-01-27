@@ -1,10 +1,7 @@
 package fi.livi.digitraffic.meri.controller.websocket;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.websocket.OnClose;
@@ -37,8 +34,6 @@ public class VesselEndpoint {
 
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
-    private static final List<String> connectionClosedMessages = Arrays.asList("Broken pipe", "Connection reset by peer", "connection was aborted");
-
     @OnOpen
     public void onOpen(final Session session) {
         sessions.add(session);
@@ -51,13 +46,7 @@ public class VesselEndpoint {
 
     @OnError
     public void onError(final Throwable t) {
-        final String message = t.getCause().getMessage();
-
-        if (t instanceof IOException && connectionClosedMessages.stream().anyMatch(m -> message.contains(m))) {
-            LOG.info("Established connection was aborted by client. Message: {}", t.getCause().getMessage());
-        } else {
-            LOG.error("Exception", t);
-        }
+        EndPointErrorLogger.logError(t, getClass());
     }
 
     public static void sendLocationMessage(final VesselLocationFeature vesselLocation) {
