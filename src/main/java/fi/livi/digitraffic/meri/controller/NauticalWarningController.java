@@ -61,7 +61,7 @@ public class NauticalWarningController {
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "PUBLISHED,ARCHIVED" )
+    public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "published,archived" )
                                               @PathVariable final String status) throws BadRequestException, PookiException {
 
         // Parse status argument
