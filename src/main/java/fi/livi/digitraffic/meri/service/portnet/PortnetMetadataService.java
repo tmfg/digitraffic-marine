@@ -17,7 +17,7 @@ import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
-import fi.livi.digitraffic.meri.domain.portnet.VesselDetails.VesselDetails;
+import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
 import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
