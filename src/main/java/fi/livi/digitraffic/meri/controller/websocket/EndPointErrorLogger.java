@@ -18,10 +18,10 @@ public class EndPointErrorLogger {
 
         final Logger LOG = LoggerFactory.getLogger(clazz);
 
-        final String message = t.getCause().getMessage();
+        final String message = t.getCause() != null ? t.getCause().getMessage() : t.getMessage();
 
         if (t instanceof IOException && connectionClosedMessages.stream().anyMatch(m -> message.contains(m))) {
-            LOG.info("Established connection was aborted by client. Message: {}", t.getCause().getMessage());
+            LOG.info("Established connection was aborted by client. Message: {}", message);
         } else {
             LOG.error("Exception", t);
         }
