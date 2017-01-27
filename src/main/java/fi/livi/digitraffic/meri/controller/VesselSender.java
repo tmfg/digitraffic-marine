@@ -7,6 +7,8 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import fi.livi.digitraffic.meri.controller.websocket.dto.VesselLocationFeatureDto;
+import fi.livi.digitraffic.meri.controller.websocket.dto.VesselMetadataDto;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
@@ -21,19 +23,21 @@ public class VesselSender {
         this.template = template;
     }
 
-    public void sendLocationMessage(final VesselLocationFeature message) {
+    public void sendLocationMessage(final VesselLocationFeature vesselLocation) {
+        final VesselLocationFeatureDto message = new VesselLocationFeatureDto(vesselLocation);
         try {
             template.convertAndSend("/locations", message);
-            template.convertAndSend("/locations/" + message.mmsi, message);
+            template.convertAndSend("/locations/" + message.data.mmsi, message);
         } catch (final MessagingException me) {
             LOG.error("error sending", me);
         }
     }
 
-    public void sendMetadataMessage(final VesselMetadata message) {
+    public void sendMetadataMessage(final VesselMetadata vessel) {
+        final VesselMetadataDto message = new VesselMetadataDto(vessel);
         try {
             template.convertAndSend("/locations", message);
-            template.convertAndSend("/locations/" + message.getMmsi(), message);
+            template.convertAndSend("/locations/" + message.data.getMmsi(), message);
         } catch (final MessagingException me) {
             LOG.error("error sending", me);
         }

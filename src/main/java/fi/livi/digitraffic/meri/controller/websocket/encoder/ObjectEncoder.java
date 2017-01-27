@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.controller.websocket;
+package fi.livi.digitraffic.meri.controller.websocket.encoder;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
