@@ -34,7 +34,7 @@ public class PortAreaCoordinateReader {
         try {
             final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(portAreaCoordinatesUrl, Charset.forName("UTF-8")));
 
-            return ((JSONArray)o.get("features")).stream().map(this::convert).collect(Collectors.toList());
+            return ((JSONArray)o.get("features")).stream().map(PortAreaCoordinateReader::convert).collect(Collectors.toList());
         } catch (final IOException e) {
             log.error("error", e);
         }
@@ -42,7 +42,7 @@ public class PortAreaCoordinateReader {
         return Collections.emptyList();
     }
 
-    private PortArea convert(final Object o) {
+    private static PortArea convert(final Object o) {
         final JSONObject jo = (JSONObject)o;
         final JSONObject properties = (JSONObject) jo.get("properties");
         final JSONObject geometry = (JSONObject) jo.get("geometry");
@@ -51,9 +51,9 @@ public class PortAreaCoordinateReader {
 
         // some names are lower case for some reason!
         final String locode = properties.getAsString("PORT_COD").toUpperCase();
-        final String port_area_code = properties.getAsString("P_AREA_COD").toUpperCase();
+        final String portAreaCode = properties.getAsString("P_AREA_COD").toUpperCase();
 
-        pa.setPortAreaKey(PortAreaKey.of(locode, port_area_code));
+        pa.setPortAreaKey(PortAreaKey.of(locode, portAreaCode));
         pa.setWgs84Long(getDouble(coordinates.get(0)));
         pa.setWgs84Lat(getDouble(coordinates.get(1)));
 
