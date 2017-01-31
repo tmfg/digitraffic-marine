@@ -1,10 +1,9 @@
-package fi.livi.digitraffic.meri.dao;
+package fi.livi.digitraffic.meri.service.ais;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +17,11 @@ import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
+import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
-import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
+import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
-public class VesselLocationRepositoryTest extends AbstractIntegrationTest {
+public class VesselLocationServiceTest extends AbstractIntegrationTest {
 
     private class Point {
         public final double x;
@@ -37,6 +37,9 @@ public class VesselLocationRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired
     private VesselMetadataRepository vesselMetadataRepository;
+
+    @Autowired
+    private VesselLocationService vesselLocationService;
 
     private static final long now = ZonedDateTime.now().toEpochSecond();
 
@@ -73,15 +76,16 @@ public class VesselLocationRepositoryTest extends AbstractIntegrationTest {
     @Rollback
     public void findVesselsWithinRadiusSucceeds() {
 
-        List<VesselLocation> vessels = vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius1, p2.y, p2.x, now, VesselMetadataService.FORBIDDEN_SHIP_TYPES);
+        VesselLocationFeatureCollection featureCollection =
+                vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius1, p2.y, p2.x, now);
 
         assertFalse("Vessel should not be found withing radius " + radius1,
-                    vessels.stream().anyMatch(v -> v.getMmsi() == MMSItoBeFound));
+                    featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
 
-        vessels = vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius2, p2.y, p2.x, now, VesselMetadataService.FORBIDDEN_SHIP_TYPES);
+        featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius2, p2.y, p2.x, now);
 
         assertTrue("Vessel should be found withing radius " + radius2,
-                   vessels.stream().anyMatch(v -> v.getMmsi() == MMSItoBeFound));
+                   featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
     }
 
     @Test
@@ -104,14 +108,14 @@ public class VesselLocationRepositoryTest extends AbstractIntegrationTest {
                                                             now)));
         vesselLocationRepository.save(vessel);
 
-        List<VesselLocation> vessels = vesselLocationRepository.findAllVesselsWithinRadiusFromMMSI(radius1, MMSI, now, VesselMetadataService.FORBIDDEN_SHIP_TYPES);
+        VesselLocationFeatureCollection featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius1, MMSI, now);
 
         assertFalse("Vessel should not be found withing radius " + radius1,
-                    vessels.stream().anyMatch(v -> v.getMmsi() == MMSItoBeFound));
+                    featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
 
-        vessels = vesselLocationRepository.findAllVesselsWithinRadiusFromMMSI(radius2, MMSI, now, VesselMetadataService.FORBIDDEN_SHIP_TYPES);
+        featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius2, MMSI, now);
 
         assertTrue("Vessel should be found withing radius " + radius2,
-                   vessels.stream().anyMatch(v -> v.getMmsi() == MMSItoBeFound));
+                   featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
     }
 }

@@ -26,8 +26,6 @@ public class VesselLocationController {
     private final VesselLocationService vesselLocationService;
 
     public static final String LATEST_PATH =  "/latest";
-    public static final String BY_POINT_PATH =  "/by-point";
-    public static final String BY_MMSI_PATH =  "/by-mmsi";
 
     @Autowired
     public VesselLocationController(final VesselLocationService vesselLocationService) {
@@ -70,41 +68,41 @@ public class VesselLocationController {
     }
 
     @ApiOperation("Find vessel locations within a circle surrounding a point. " +
-                  "(CAUTION: Data is not reliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
+                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
                   "boats without the AIS system, vessels outside of the AIS range and so on.)")
-    @GetMapping(path = BY_POINT_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromPoint(
             @ApiParam("Radius of search circle in kilometers (km) using haversine formula.")
-            @RequestParam(value = "radius", required = true)
+            @PathVariable(value = "radius")
             final double radius,
             @ApiParam("Latitude of the point")
-            @RequestParam(value = "latitude", required = true)
+            @PathVariable(value = "latitude")
             final double latitude,
             @ApiParam("Longitude of the point")
-            @RequestParam(value = "longitude", required = true)
+            @PathVariable(value = "longitude")
             final double longitude,
             @ApiParam("From timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
-            @RequestParam(value = "from", required = true)
+            @PathVariable(value = "from")
             final long from) {
 
         return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from);
     }
 
     @ApiOperation("Find vessel locations within a circle surrounding a vessel. " +
-                  "(CAUTION: Data is not reliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
+                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
                   "boats without the AIS system, vessels outside of the AIS range and so on.)")
-    @GetMapping(path = BY_MMSI_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromMMSI(
             @ApiParam("Radius of search circle in kilometers (km) using haversine formula.")
-            @RequestParam(value = "radius", required = true)
+            @PathVariable(value = "radius")
             final double radius,
             @ApiParam("MMSI of the vessel")
-            @RequestParam(value = "mmsi", required = true)
+            @PathVariable(value = "mmsi")
             final int mmsi,
             @ApiParam("From timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
-            @RequestParam(value = "from", required = true)
+            @PathVariable(value = "from")
             final long from) {
 
         return vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius, mmsi, from);
