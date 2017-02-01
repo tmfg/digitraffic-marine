@@ -28,7 +28,7 @@ import fi.livi.digitraffic.util.SublistFetcher;
 @Transactional(readOnly = true)
 public class VesselMetadataService {
     // 30 = fishing boat
-    private static final Collection<Integer> FORBIDDEN_SHIP_TYPES = Collections.singletonList(30);
+    public static final Collection<Integer> FORBIDDEN_SHIP_TYPES = Collections.singletonList(30);
 
     private final EntityManager entityManager;
     private final VesselMetadataRepository vesselMetadataRepository;
