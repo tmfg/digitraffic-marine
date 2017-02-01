@@ -58,7 +58,7 @@ public class VesselLocationService {
         }
 
         if(to != null) {
-            c.add(Restrictions.le("timestamp", from));
+            c.add(Restrictions.le("timestamp", to));
         }
 
         final DetachedCriteria subQuery = DetachedCriteria.forClass(VesselMetadata.class)
