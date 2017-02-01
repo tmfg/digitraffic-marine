@@ -3,8 +3,11 @@ package fi.livi.digitraffic.meri.controller;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_LOCATIONS_PATH;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
+import java.time.ZonedDateTime;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,11 +85,12 @@ public class VesselLocationController {
             @ApiParam("Longitude of the point")
             @PathVariable(value = "longitude")
             final double longitude,
-            @ApiParam("From timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+            @ApiParam("Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
             @PathVariable(value = "from")
-            final long from) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            final ZonedDateTime from) {
 
-        return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from);
+        return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from.toInstant().toEpochMilli());
     }
 
     @ApiOperation("Find vessel locations within a circle surrounding a vessel. " +
@@ -101,10 +105,11 @@ public class VesselLocationController {
             @ApiParam("MMSI of the vessel")
             @PathVariable(value = "mmsi")
             final int mmsi,
-            @ApiParam("From timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+            @ApiParam("Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
             @PathVariable(value = "from")
-            final long from) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            final ZonedDateTime from) {
 
-        return vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius, mmsi, from);
+        return vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius, mmsi, from.toInstant().toEpochMilli());
     }
 }
