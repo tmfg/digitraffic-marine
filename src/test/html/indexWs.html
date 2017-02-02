@@ -10,7 +10,8 @@
 
         function connect() {
             console.log('trying to connect...');
-            var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/locations');
+            var socket = new WebSocket('ws://localhost:9001/api/v1/plain-websockets/locations');
+//            var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/locations');
             console.info('Socket is ' + socket.readyState);
             socket.onopen = function (event) {
                 console.info('Socket is open');
