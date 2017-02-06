@@ -3,8 +3,11 @@ package fi.livi.digitraffic.meri.controller;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_LOCATIONS_PATH;
 import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
 
+import java.time.ZonedDateTime;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,5 +68,48 @@ public class VesselLocationController {
         LOG.info(String.format("vesselLocationsByTimestamp from:\t%d to:\t%d", from, to));
 
         return vesselLocationService.findAllowedLocations(from, to);
+    }
+
+    @ApiOperation("Find vessel locations within a circle surrounding a point. " +
+                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
+                  "boats without the AIS system, vessels outside of the AIS range and so on.)")
+    @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromPoint(
+            @ApiParam("Radius of search circle in kilometers (km) using haversine formula.")
+            @PathVariable(value = "radius")
+            final double radius,
+            @ApiParam("Latitude of the point")
+            @PathVariable(value = "latitude")
+            final double latitude,
+            @ApiParam("Longitude of the point")
+            @PathVariable(value = "longitude")
+            final double longitude,
+            @ApiParam("Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
+            @PathVariable(value = "from")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            final ZonedDateTime from) {
+
+        return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from.toInstant().toEpochMilli());
+    }
+
+    @ApiOperation("Find vessel locations within a circle surrounding a vessel. " +
+                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
+                  "boats without the AIS system, vessels outside of the AIS range and so on.)")
+    @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromMMSI(
+            @ApiParam("Radius of search circle in kilometers (km) using haversine formula.")
+            @PathVariable(value = "radius")
+            final double radius,
+            @ApiParam("MMSI of the vessel")
+            @PathVariable(value = "mmsi")
+            final int mmsi,
+            @ApiParam("Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
+            @PathVariable(value = "from")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            final ZonedDateTime from) {
+
+        return vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius, mmsi, from.toInstant().toEpochMilli());
     }
 }
