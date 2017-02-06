@@ -16,9 +16,9 @@ public class EndPointErrorLogger {
     public static void logError(final Throwable t, final Class clazz) {
         final Logger logger = LoggerFactory.getLogger(clazz);
 
-        final String message = t.getCause() != null ? t.getCause().getMessage() : t.getMessage();
+        final String message = t.getMessage();
 
-        if (t instanceof IOException && connectionClosedMessages.stream().anyMatch(m -> message.contains(m))) {
+        if (t instanceof IOException && message != null && connectionClosedMessages.stream().anyMatch(m -> message.contains(m))) {
             logger.info("Established connection was aborted by client. Message: {}", message);
         } else {
             logger.error("Exception", t);
