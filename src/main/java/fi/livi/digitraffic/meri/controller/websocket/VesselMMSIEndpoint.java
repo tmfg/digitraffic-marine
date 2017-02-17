@@ -58,7 +58,7 @@ public class VesselMMSIEndpoint {
 
     @OnError
     public void onError(final Throwable t) {
-        EndPointErrorLogger.logError(t, getClass());
+        EndPointErrorLogger.logError(LOG, t);
     }
 
     public static void sendLocationMessage(final VesselLocationFeature vesselLocation) {
