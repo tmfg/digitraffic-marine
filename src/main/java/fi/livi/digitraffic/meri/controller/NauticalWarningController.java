@@ -57,7 +57,7 @@ public class NauticalWarningController {
         this.restTemplate = new RestTemplate(clientHttpRequestFactory);
     }
 
-    @ApiOperation("BETA: Return nautical warnings of given status.")
+    @ApiOperation("Return nautical warnings of given status.")
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
