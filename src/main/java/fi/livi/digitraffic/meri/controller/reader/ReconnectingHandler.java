@@ -22,7 +22,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
     }
 
     public void onOpen() {
-        log.debug("connected");
+        log.info("connected");
 
         notifyStatus(ConnectionStatus.CONNECTED);
 
