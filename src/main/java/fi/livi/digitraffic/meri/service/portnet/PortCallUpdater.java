@@ -28,6 +28,7 @@ import fi.livi.digitraffic.meri.portnet.xsd.CargoInfo;
 import fi.livi.digitraffic.meri.portnet.xsd.ImoInformation;
 import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.PortCallDirection;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
@@ -101,7 +102,7 @@ public class PortCallUpdater {
             log.info("No port calls from server");
             break;
         default:
-            log.error("error with status " + status);
+            log.error("error with status {}", status);
             return false;
         }
 
@@ -195,11 +196,15 @@ public class PortCallUpdater {
 
             newAi.setEdiNumber(ai.getEdiNumber());
             newAi.setName(ai.getName());
-            newAi.setPortCallDirection(ai.getPortCallDirection().value());
+            newAi.setPortCallDirection(portCallDirection(ai.getPortCallDirection()));
             newAi.setRole(getInteger(ai.getRole()));
 
             pc.getAgentInfo().add(newAi);
         }
+    }
+
+    private static String portCallDirection(final PortCallDirection pcd) {
+        return pcd == null ? null : pcd.value();
     }
 
     private static void updateImoInformation(final PortCall pc, final PortCallDetails det) {
@@ -266,7 +271,7 @@ public class PortCallUpdater {
         newPad.getCargoInfo().clear();
 
         for(final CargoInfo ci : bd.getCargoInfo()) {
-            fi.livi.digitraffic.meri.domain.portnet.CargoInfo newCi = new fi.livi.digitraffic.meri.domain.portnet.CargoInfo();
+            final fi.livi.digitraffic.meri.domain.portnet.CargoInfo newCi = new fi.livi.digitraffic.meri.domain.portnet.CargoInfo();
 
             newCi.setCargoAmount(ci.getCargoAmount());
             newCi.setCargoDescription(ci.getCargoDescription());
