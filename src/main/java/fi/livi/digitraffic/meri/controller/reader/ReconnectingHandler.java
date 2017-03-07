@@ -31,7 +31,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     @Override
     public boolean onDisconnect(final CloseReason closeReason) {
-        log.error("disconnect");
+        log.error("disconnect: {} {}", closeReason.getCloseCode(), closeReason.getReasonPhrase());
 
         notifyStatus(ConnectionStatus.DISCONNECTED);
 
@@ -40,7 +40,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     @Override
     public boolean onConnectFailure(final Exception exception) {
-        log.error("connectFailure");
+        log.error("connectFailure", exception);
 
         notifyStatus(ConnectionStatus.CONNECT_FAILURE);
 
