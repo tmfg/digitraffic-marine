@@ -39,9 +39,9 @@ Download Oracle JDBC driver and add it to your local Maven repository.
 
     # Start application
 	$ mvn spring-boot:run -Dspring.profiles.active=localhost
-	
-	Some errors will show on the console, because of some integrations are not reachable. The 
-	integrations are configured 
+
+	Some errors will show on the console, because of some integrations are not reachable. The
+	integrations are configured
 
 Or build the JAR file with:
 
@@ -56,3 +56,8 @@ Or build the JAR file with:
 Check for Maven dependency updates
 
     $ mvn versions:display-dependency-updates
+
+### GitFlow
+
+See http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/
+
