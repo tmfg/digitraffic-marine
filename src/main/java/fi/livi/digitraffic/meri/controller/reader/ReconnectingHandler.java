@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.websocket.CloseReason;
 
@@ -16,7 +17,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     private static final long MAX_WAIT_SECONDS = 120;
 
-    private long failureCount = 0;
+    private AtomicInteger failureCount = new AtomicInteger(0);
 
     public ReconnectingHandler(final String locationUrl, final List<WebsocketListener> listeners, final Logger log) {
         this.locationUrl = locationUrl;
@@ -29,7 +30,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
         notifyStatus(ConnectionStatus.CONNECTED);
 
-        failureCount = 0;
+        failureCount.set(0);
     }
 
     @Override
@@ -47,22 +48,12 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
         notifyStatus(ConnectionStatus.CONNECT_FAILURE);
 
-        sleep();
-
         return true;
     }
 
-    private void sleep() {
-        // wait up to maximum seconds, increasing 6 seconds for every failure
-        final long millis = Math.min(MAX_WAIT_SECONDS, failureCount * 6) * 1000;
-
-        try {
-            Thread.sleep(millis);
-        } catch (final InterruptedException e) {
-            log.error("error while sleeping", e);
-        }
-
-        failureCount++;
+    @Override
+    public long getDelay() {
+        return Math.min(MAX_WAIT_SECONDS, failureCount.getAndIncrement() * 1);
     }
 
     private void notifyStatus(final ConnectionStatus status) {
