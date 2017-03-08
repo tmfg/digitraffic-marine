@@ -10,20 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
-import fi.livi.digitraffic.meri.model.pooki.PookiFeature;
-import fi.livi.digitraffic.meri.model.pooki.PookiFeatureCollection;
-import fi.livi.digitraffic.meri.model.pooki.PookiProperties;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(subTypes = {LineString.class})
-@JsonSubTypes({ @Type(Geometry.class), @Type(PookiFeatureCollection.class), @Type(PookiFeature.class), @Type(PookiProperties.class), @Type(Point.class)})
 @JsonPropertyOrder({ "type", "id"})
 public abstract class GeoJsonObject implements Serializable {
 
@@ -31,7 +22,6 @@ public abstract class GeoJsonObject implements Serializable {
 
     @ApiModelProperty(required = true, value = "Type of GeoJSON object")
     @JsonProperty(value = "type", required = true)
-    @JsonInclude(JsonInclude.Include.ALWAYS)
     private String type;
 
     private Map<String, Object> additionalProperties = new HashMap<>();
