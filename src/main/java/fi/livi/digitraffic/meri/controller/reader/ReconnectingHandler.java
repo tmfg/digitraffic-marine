@@ -10,19 +10,22 @@ import org.slf4j.Logger;
 public class ReconnectingHandler extends ClientManager.ReconnectHandler {
     private final Logger log;
 
+    private final String locationUrl; // for debugging
+
     private final List<WebsocketListener> listeners;
 
     private static final long MAX_WAIT_SECONDS = 120;
 
     private long failureCount = 0;
 
-    public ReconnectingHandler(final List<WebsocketListener> listeners, final Logger log) {
+    public ReconnectingHandler(final String locationUrl, final List<WebsocketListener> listeners, final Logger log) {
+        this.locationUrl = locationUrl;
         this.listeners = listeners;
         this.log= log;
     }
 
     public void onOpen() {
-        log.info("connected");
+        log.info("connected {}", locationUrl);
 
         notifyStatus(ConnectionStatus.CONNECTED);
 
@@ -31,7 +34,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     @Override
     public boolean onDisconnect(final CloseReason closeReason) {
-        log.error("disconnect: {} {}", closeReason.getCloseCode(), closeReason.getReasonPhrase());
+        log.error("disconnect {}: {} {}", locationUrl, closeReason.getCloseCode(), closeReason.getReasonPhrase());
 
         notifyStatus(ConnectionStatus.DISCONNECTED);
 
@@ -40,7 +43,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     @Override
     public boolean onConnectFailure(final Exception exception) {
-        log.error("connectFailure", exception);
+        log.error("connectFailure " + locationUrl, exception);
 
         notifyStatus(ConnectionStatus.CONNECT_FAILURE);
 
