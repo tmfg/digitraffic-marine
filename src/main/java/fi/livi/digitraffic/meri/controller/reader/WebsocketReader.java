@@ -55,7 +55,7 @@ public class WebsocketReader {
         log.info("Initializing connection to {} {} listeners", locationUrl, listeners.size());
 
         final ClientManager client = ClientManager.createClient();
-        final ReconnectingHandler handler = new ReconnectingHandler(listeners, log);
+        final ReconnectingHandler handler = new ReconnectingHandler(locationUrl, listeners, log);
 
         client.getProperties().put(ClientProperties.RECONNECT_HANDLER, handler);
         client.connectToServer(new Endpoint() {
