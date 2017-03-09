@@ -15,8 +15,7 @@ public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBas
 
     @Test
     public void testJsonParsing() throws IOException {
-
-        List<Pair<String, String >> values =
+        final List<Pair<String, String >> values =
                 Arrays.asList(
                         // expected, parsed
                         Pair.of("2016-01-01T01:01:01+02:00[Europe/Helsinki]", "1.1.2016 1:1:1"),
@@ -24,11 +23,15 @@ public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBas
                         Pair.of("2016-01-01T01:01:00+02:00[Europe/Helsinki]", "1.1.2016 1:1"),
                         Pair.of("2016-01-01T01:01:00+02:00[Europe/Helsinki]", "01.01.2016 01:01"),
                         Pair.of("2016-01-01T00:00:00+02:00[Europe/Helsinki]", "1.1.2016"),
-                        Pair.of("2016-01-01T00:00:00+02:00[Europe/Helsinki]", "01.01.2016"));
+                        Pair.of("2016-01-01T00:00:00+02:00[Europe/Helsinki]", "01.01.2016"),
+                        Pair.of(null, "rubbish"));
+
+        final JsonDateTimeDeserializerToZonedDateTime deserializer = new JsonDateTimeDeserializerToZonedDateTime();
 
         values.stream().forEach(p -> {
-            ZonedDateTime expected = ZonedDateTime.parse(p.getLeft());
-            ZonedDateTime actual = JsonDateTimeDeserializerToZonedDateTime.parseDateQuietly(p.getRight());
+            final ZonedDateTime expected = p.getLeft() == null ? null : ZonedDateTime.parse(p.getLeft());
+            final ZonedDateTime actual = deserializer.parseDateQuietly(p.getRight());
+
             Assert.assertEquals(expected, actual);
         });
     }
