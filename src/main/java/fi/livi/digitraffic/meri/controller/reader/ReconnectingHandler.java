@@ -15,7 +15,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     private final List<WebsocketListener> listeners;
 
-    private static final long MAX_WAIT_SECONDS = 120;
+    private static final int MAX_WAIT_SECONDS = 120;
 
     private AtomicInteger failureCount = new AtomicInteger(0);
 
@@ -53,7 +53,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     @Override
     public long getDelay() {
-        return Math.min(MAX_WAIT_SECONDS, failureCount.getAndIncrement() * 1);
+        return Math.min(MAX_WAIT_SECONDS, failureCount.getAndIncrement());
     }
 
     private void notifyStatus(final ConnectionStatus status) {
