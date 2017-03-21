@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiModelProperty;
     "type",
     "coordinates"
 })
-@JsonSubTypes({ @JsonSubTypes.Type(MultiLineString.class), @JsonSubTypes.Type(MultiPoint.class), @JsonSubTypes.Type(MultiPolygon.class), @JsonSubTypes.Type(Point.class) , @JsonSubTypes.Type(Polygon.class)})
 @ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class, subTypes = { LineString.class, MultiLineString.class, MultiPoint.class, MultiPolygon.class, Point.class, Polygon.class})
 public class Geometry<T extends List<?>> extends GeoJsonObject {
 

@@ -22,42 +22,42 @@ import fi.livi.digitraffic.meri.config.SchedulerConfig;
 
 @Component
 public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<ZonedDateTime> {
-
     private static final Logger log = LoggerFactory.getLogger(SchedulerConfig.class);
 
-    protected static SimpleDateFormat[] DATE_FORMATS =
+    private final SimpleDateFormat[] DATE_FORMATS =
             new SimpleDateFormat[] { new SimpleDateFormat("d.M.yyyy h:m:s"),
                                      new SimpleDateFormat("d.M.yyyy h:m"),
                                      new SimpleDateFormat("d.M.yyyy") };
 
     @Override
-    public ZonedDateTime deserialize(JsonParser jp, DeserializationContext ctxt)
+    public ZonedDateTime deserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException {
 
-        ObjectCodec oc = jp.getCodec();
-        JsonNode node = oc.readTree(jp);
-        String dateString = node.asText();
+        final ObjectCodec oc = jp.getCodec();
+        final JsonNode node = oc.readTree(jp);
+        final String dateString = node.asText();
 
         if (StringUtils.isNotBlank(dateString)) {
-            log.debug("From " + dateString + " to " + parseDateQuietly(dateString));
+            log.debug("From {} to {}", dateString, parseDateQuietly(dateString));
         }
 
         return parseDateQuietly(dateString);
     }
 
-    public static ZonedDateTime parseDateQuietly(final String dateTime) {
+    public ZonedDateTime parseDateQuietly(final String dateTime) {
         if (StringUtils.isBlank(dateTime)) {
             return null;
         }
-        for (SimpleDateFormat dateFormat : DATE_FORMATS)  {
+        for (final SimpleDateFormat dateFormat : DATE_FORMATS)  {
             try {
-                Date date = dateFormat.parse(dateTime);
+                final Date date = dateFormat.parse(dateTime);
                 return ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 log.debug("Parse of " + dateTime + " failed", e);
             }
         }
-        log.warn("Could not parse dateTime " + dateTime);
+        log.warn("Could not parse dateTime {}", dateTime);
+
         return null;
     }
 }

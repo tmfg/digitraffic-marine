@@ -54,3 +54,5 @@ crashlytics-build.properties
 /target/
 **/*.log
 buildNumber.properties
+*.log.gz
+/javamelody
