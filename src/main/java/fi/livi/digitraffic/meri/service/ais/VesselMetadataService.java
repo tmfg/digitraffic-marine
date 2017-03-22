@@ -22,13 +22,12 @@ import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
-import fi.livi.digitraffic.util.SublistFetcher;
 
 @Service
 @Transactional(readOnly = true)
 public class VesselMetadataService {
     // 30 = fishing boat
-    public static final Collection<Integer> FORBIDDEN_SHIP_TYPES = Collections.singletonList(30);
+    public static final List<Integer> FORBIDDEN_SHIP_TYPES = Collections.singletonList(30);
 
     private final EntityManager entityManager;
     private final VesselMetadataRepository vesselMetadataRepository;
@@ -58,9 +57,7 @@ public class VesselMetadataService {
     }
 
     public List<VesselMetadataJson> listAllowedVesselMetadata() {
-        final Criteria c = createCriteria().setProjection(Projections.id());
-        c.add(getAllowedShipTypeCriteria());
-        return SublistFetcher.fetch(c.list(), vesselMetadataRepository::findByMmsiIn);
+        return vesselMetadataRepository.findByShipTypeNotIn(FORBIDDEN_SHIP_TYPES);
     }
 
     @Cacheable(ALLOWED_MMSI_CACHE)
