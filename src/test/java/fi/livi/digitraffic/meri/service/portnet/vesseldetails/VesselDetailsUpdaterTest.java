@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -52,7 +52,7 @@ public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
     @Test
     @Transactional
     @Rollback
-    public void updateVesselDetailsSucceeds() throws FileNotFoundException {
+    public void updateVesselDetailsSucceeds() throws IOException {
 
         String response = readFile("vesselDetailsResponse1.xml");
 
