@@ -85,11 +85,11 @@ public class VesselLocationService {
         }
 
         if(from != null) {
-            c.add(Restrictions.ge("timestamp", from));
+            c.add(Restrictions.ge("timestampExternal", from));
         }
 
         if(to != null) {
-            c.add(Restrictions.le("timestamp", to));
+            c.add(Restrictions.le("timestampExternal", to));
         }
 
         final DetachedCriteria subQuery = DetachedCriteria.forClass(VesselMetadata.class)
