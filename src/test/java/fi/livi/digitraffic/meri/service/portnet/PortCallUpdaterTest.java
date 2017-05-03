@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -56,7 +56,7 @@ public class PortCallUpdaterTest extends AbstractIntegrationTest {
     @Test
     @Transactional
     @Rollback
-    public void updatePortCallsSucceeds() throws FileNotFoundException {
+    public void updatePortCallsSucceeds() throws IOException {
 
         String response = readFile("portCallResponse1.xml");
 
