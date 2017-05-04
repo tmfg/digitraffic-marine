@@ -15,11 +15,9 @@ import fi.livi.digitraffic.meri.aop.PerformanceMonitorAspect;
 public class AopConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(AopConfiguration.class);
-    private PerformanceMonitorAspect performanceMonitorAspect;
 
     @Bean
     public PerformanceMonitorAspect performanceMonitorAspect() {
-        this.performanceMonitorAspect = new PerformanceMonitorAspect();
-        return performanceMonitorAspect;
+        return new PerformanceMonitorAspect();
     }
 }
