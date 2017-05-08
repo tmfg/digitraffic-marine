@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,6 +28,8 @@ public class WinterNavigationPort {
     private Double latitude;
 
     private String seaArea;
+
+    private Date obsoleteDate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "portRestrictionPK.locode", cascade = CascadeType.ALL)
     private List<PortRestriction> portRestrictions = new ArrayList<>();
@@ -81,5 +84,13 @@ public class WinterNavigationPort {
 
     public List<PortRestriction> getPortRestrictions() {
         return portRestrictions;
+    }
+
+    public Date getObsoleteDate() {
+        return obsoleteDate;
+    }
+
+    public void setObsoleteDate(Date obsoleteDate) {
+        this.obsoleteDate = obsoleteDate;
     }
 }

@@ -57,6 +57,11 @@ public class WinterNavigationPortUpdater {
                      ports.get(false).size(), ports.get(false).stream().map(p -> p.portInfo.locode).collect(Collectors.joining(", ")));
         }
 
+        final List<String> locodes = ports.get(true).stream().map(p -> p.portInfo.locode).collect(Collectors.toList());
+        if (!locodes.isEmpty()) {
+            winterNavigationRepository.setRemovedPortsObsolete(locodes);
+        }
+
         final List<WinterNavigationPort> added = new ArrayList<>();
         final List<WinterNavigationPort> updated = new ArrayList<>();
 
@@ -104,6 +109,7 @@ public class WinterNavigationPortUpdater {
         p.setLatitude(port.portInfo.lat);
         p.setNationality(port.portInfo.nationality);
         p.setSeaArea(port.portInfo.seaArea);
+        p.setObsoleteDate(null);
         if (port.restrictions != null) {
             updatePortRestrictions(p, port.restrictions);
         }
