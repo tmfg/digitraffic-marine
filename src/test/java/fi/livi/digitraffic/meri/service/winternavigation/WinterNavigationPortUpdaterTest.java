@@ -1,8 +1,12 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.junit.Before;
@@ -22,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationRepository;
+import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 
 public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
@@ -64,5 +69,25 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
 
         List<WinterNavigationPort> ports = winterNavigationRepository.findAll();
         assertEquals(156, ports.size());
+        final WinterNavigationPort port = ports.get(90);
+        assertEquals("SEGÄV", port.getLocode());
+        assertEquals("GÄVLE", port.getName());
+        assertEquals("SE", port.getNationality());
+        assertEquals(Double.valueOf("17.18333333"), port.getLongitude(), 0.00000001);
+        assertEquals(Double.valueOf("60.68333333"), port.getLatitude(), 0.00000001);
+        assertEquals("Sea of Åland and its archipelago", port.getSeaArea());
+        assertEquals(1, port.getPortRestrictions().size());
+
+        final PortRestriction restriction = port.getPortRestrictions().get(0);
+        assertEquals(1, restriction.getPortRestrictionPK().getOrderNumber().intValue());
+        assertTrue(restriction.getCurrent());
+        assertFalse(restriction.getPortRestricted());
+        assertNull(restriction.getPortClosed());
+        assertEquals(Timestamp.valueOf("2017-03-20 08:10:39.127"), restriction.getIssueTime());
+        assertEquals(Timestamp.valueOf("2017-03-20 08:10:39.127"), restriction.getLastModified());
+        assertNull(restriction.getValidFrom());
+        assertNull(restriction.getValidUntil());
+        assertNull(restriction.getRawText());
+        assertNull(restriction.getFormattedText());
     }
 }

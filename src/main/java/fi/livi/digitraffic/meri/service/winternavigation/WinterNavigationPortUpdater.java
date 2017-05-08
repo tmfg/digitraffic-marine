@@ -125,6 +125,7 @@ public class WinterNavigationPortUpdater {
             pr.setValidUntil(restriction.validUntil);
             pr.setRawText(restriction.rawText);
             pr.setFormattedText(restriction.formattedText);
+            p.getPortRestrictions().add(pr);
             orderNumber++;
         }
     }

@@ -1685,7 +1685,6 @@
             <restriction>
                 <isCurrent>true</isCurrent>
                 <portRestricted>false</portRestricted>
-                <portClosed>false</portClosed>
                 <issueTime>2017-03-20T06:10:39.127+00:00</issueTime>
                 <timeStamp>2017-03-20T06:10:39.127+00:00</timeStamp>
                 <rawText/>

@@ -17,6 +17,9 @@ public class PortRestrictionPK implements Serializable {
     @Column(name = "order_number", nullable = false)
     private Integer orderNumber;
 
+    public PortRestrictionPK() {
+    }
+
     public PortRestrictionPK(String locode, Integer orderNumber) {
         this.locode = locode.toCharArray();
         this.orderNumber = orderNumber;
