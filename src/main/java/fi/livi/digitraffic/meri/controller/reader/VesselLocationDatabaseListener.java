@@ -34,7 +34,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     }
 
     private boolean getLock() {
-        return lockingService.acquireLock("AIS", instanceId, 2);
+        return lockingService.acquireLock("AIS-LOCATIONS", instanceId, 2);
     }
 
     @Override

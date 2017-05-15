@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
         "geometry",
         "properties"
 })
-@ApiModel(description = "GeoJSON Feature object")
+@ApiModel(description = "GeoJSON SafeSeaNet Location Feature object")
 public class SsnLocationFeature {
     @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)
     public final String locode;
