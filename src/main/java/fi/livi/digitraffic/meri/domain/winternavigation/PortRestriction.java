@@ -43,7 +43,10 @@ public class PortRestriction {
     @ApiModelProperty(value = "Date when this restriction ceased to be in effect")
     private Date validUntil;
 
-    @ApiModelProperty(value = "Raw text of the port traffic restriction")
+    @ApiModelProperty(value = "Raw text of the port traffic restriction.\n" +
+                              "Finnish-Swedish ice classes are IA Super, IA, IB, IC, II and I.\n" +
+                              "The number following the ice class code stands for minimum required ship deadweight tonnage.\n" +
+                              "'2000 t' in 'IA 4000 | 2000 t' code stands for minimum cargo the ship has to load or unload.")
     private String rawText;
 
     @ApiModelProperty(value = "Traffic restriction text pre-formatted (HTML)")
