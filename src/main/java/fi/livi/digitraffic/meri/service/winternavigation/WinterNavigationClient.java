@@ -27,4 +27,9 @@ public class WinterNavigationClient {
 
         return restTemplate.getForObject(winterNavigationUrl, WinterNavigationPortsDto.class);
     }
+
+    public WinterNavigationShipsDto getWinterNavigationShips() {
+
+        return restTemplate.getForObject(winterNavigationUrl + "/ships", WinterNavigationShipsDto.class);
+    }
 }

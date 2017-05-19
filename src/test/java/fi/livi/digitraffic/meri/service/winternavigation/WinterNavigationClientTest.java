@@ -11,11 +11,9 @@ import org.mockito.Answers;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
@@ -38,8 +36,6 @@ public class WinterNavigationClientTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
     public void getWinterNavigationPortsSucceeds() throws IOException {
 
         server.expect(MockRestRequestMatchers.requestTo(expectedUri))
@@ -53,4 +49,26 @@ public class WinterNavigationClientTest extends AbstractIntegrationTest {
         assertEquals(ZonedDateTime.parse("2017-03-20T06:10:39.127Z[UTC]"), ports.ports.get(90).restrictions.get(0).timeStamp);
     }
 
+    @Test
+    public void getWinterNavigationShipsSucceeds() throws IOException {
+
+        server.expect(MockRestRequestMatchers.requestTo(expectedUri + "/ships"))
+            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
+            .andRespond(MockRestResponseCreators.withSuccess(readFile("winterNavigationShipsResponse.xml"), MediaType.APPLICATION_XML));
+
+        final WinterNavigationShipsDto ships = winterNavigationClient.getWinterNavigationShips();
+
+        assertEquals(1599, ships.ships.size());
+        final WinterNavigationShipDto ship = ships.ships.parallelStream().filter(s -> s.shipData.mmsi.equals("230645000")).findFirst().get();
+        assertEquals("IMO-9319064", ship.vesselPk);
+        assertEquals("Kallio", ship.shipData.name);
+        assertEquals("Finland", ship.shipData.nationality);
+        assertEquals("GC", ship.shipData.shipType);
+        assertEquals(ZonedDateTime.parse("2017-04-11T10:48:03Z[UTC]"), ship.shipState.timestamp);
+        assertEquals(23.24446666, ship.shipState.longitude, 0.00001);
+        assertEquals(64.50175, ship.shipState.latitude, 0.00001);
+        assertEquals("RAAHE", ship.shipState.aisDestination);
+        assertEquals("Moving freely", ship.shipActivities.get(0).activityText);
+        assertEquals("IMO-7359656", ship.plannedActivities.get(0).planningVesselPK);
+    }
 }
