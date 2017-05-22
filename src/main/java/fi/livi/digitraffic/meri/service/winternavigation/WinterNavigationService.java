@@ -37,7 +37,7 @@ public class WinterNavigationService {
     @Transactional
     public WinterNavigationPortFeatureCollection getWinterNavigationPorts() {
 
-        final List<WinterNavigationPort> ports = winterNavigationRepository.findDistinctLocodeByObsoleteDateIsNullOrderByLocode();
+        final List<WinterNavigationPort> ports = winterNavigationRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
 
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_PORTS.name());
 

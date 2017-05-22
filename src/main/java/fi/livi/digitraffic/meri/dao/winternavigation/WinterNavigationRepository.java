@@ -23,5 +23,5 @@ public interface WinterNavigationRepository extends JpaRepository<WinterNavigati
 
     @QueryHints(@QueryHint(name = "org.hibernate.fetchSize", value = "1000"))
     @EntityGraph(attributePaths = { "portRestrictions" })
-    List<WinterNavigationPort> findDistinctLocodeByObsoleteDateIsNullOrderByLocode();
+    List<WinterNavigationPort> findDistinctByObsoleteDateIsNullOrderByLocode();
 }

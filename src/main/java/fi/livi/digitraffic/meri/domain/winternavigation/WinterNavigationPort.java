@@ -12,8 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Entity
 @DynamicUpdate
@@ -35,7 +33,6 @@ public class WinterNavigationPort {
     private Date obsoleteDate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "portRestrictionPK.locode", cascade = CascadeType.ALL)
-    @Fetch(FetchMode.JOIN)
     @OrderBy(value = "portRestrictionPK.orderNumber")
     private List<PortRestriction> portRestrictions = new ArrayList<>();
 
