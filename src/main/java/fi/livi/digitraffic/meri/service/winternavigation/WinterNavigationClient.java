@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import fi.livi.digitraffic.meri.service.winternavigation.dto.PortsDto;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipsDto;
+
 @Service
 public class WinterNavigationClient {
 
@@ -23,13 +26,13 @@ public class WinterNavigationClient {
         this.restTemplate = restTemplate;
     }
 
-    public WinterNavigationPortsDto getWinterNavigationPorts() {
+    public PortsDto getWinterNavigationPorts() {
 
-        return restTemplate.getForObject(winterNavigationUrl, WinterNavigationPortsDto.class);
+        return restTemplate.getForObject(winterNavigationUrl, PortsDto.class);
     }
 
-    public WinterNavigationShipsDto getWinterNavigationShips() {
+    public ShipsDto getWinterNavigationShips() {
 
-        return restTemplate.getForObject(winterNavigationUrl + "/ships", WinterNavigationShipsDto.class);
+        return restTemplate.getForObject(winterNavigationUrl + "/ships", ShipsDto.class);
     }
 }

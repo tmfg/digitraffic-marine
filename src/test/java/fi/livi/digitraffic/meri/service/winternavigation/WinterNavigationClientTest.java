@@ -17,6 +17,9 @@ import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.PortsDto;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipDto;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipsDto;
 
 public class WinterNavigationClientTest extends AbstractIntegrationTest {
 
@@ -42,7 +45,7 @@ public class WinterNavigationClientTest extends AbstractIntegrationTest {
             .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
             .andRespond(MockRestResponseCreators.withSuccess(readFile("winterNavigationPortsResponse.xml"), MediaType.APPLICATION_XML));
 
-        final WinterNavigationPortsDto ports = winterNavigationClient.getWinterNavigationPorts();
+        final PortsDto ports = winterNavigationClient.getWinterNavigationPorts();
 
         assertEquals(156, ports.ports.size());
         assertEquals("SEGÄV", ports.ports.get(90).portInfo.locode);
@@ -56,10 +59,10 @@ public class WinterNavigationClientTest extends AbstractIntegrationTest {
             .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
             .andRespond(MockRestResponseCreators.withSuccess(readFile("winterNavigationShipsResponse.xml"), MediaType.APPLICATION_XML));
 
-        final WinterNavigationShipsDto ships = winterNavigationClient.getWinterNavigationShips();
+        final ShipsDto ships = winterNavigationClient.getWinterNavigationShips();
 
         assertEquals(1599, ships.ships.size());
-        final WinterNavigationShipDto ship = ships.ships.parallelStream().filter(s -> s.shipData.mmsi.equals("230645000")).findFirst().get();
+        final ShipDto ship = ships.ships.parallelStream().filter(s -> s.shipData.mmsi.equals("230645000")).findFirst().get();
         assertEquals("IMO-9319064", ship.vesselPk);
         assertEquals("Kallio", ship.shipData.name);
         assertEquals("Finland", ship.shipData.nationality);

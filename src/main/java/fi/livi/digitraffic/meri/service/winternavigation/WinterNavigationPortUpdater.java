@@ -23,6 +23,9 @@ import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestrictionPK;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.PortDto;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.PortRestrictionDto;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.PortsDto;
 
 @Service
 public class WinterNavigationPortUpdater {
@@ -47,9 +50,9 @@ public class WinterNavigationPortUpdater {
     @Transactional
     public void updateWinterNavigationPorts() {
 
-        final WinterNavigationPortsDto data = winterNavigationClient.getWinterNavigationPorts();
+        final PortsDto data = winterNavigationClient.getWinterNavigationPorts();
 
-        final Map<Boolean, List<WinterNavigationPortDto>> ports =
+        final Map<Boolean, List<PortDto>> ports =
                 data.ports.stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.portInfo.locode)));
 
         if (!ports.get(false).isEmpty()) {
@@ -77,7 +80,7 @@ public class WinterNavigationPortUpdater {
                                               getClass().getSimpleName());
     }
 
-    private void update(final WinterNavigationPortDto port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
+    private void update(final PortDto port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
         final WinterNavigationPort old = winterNavigationRepository.findOne(port.portInfo.portId);
 
         if (old == null) {
@@ -87,7 +90,7 @@ public class WinterNavigationPortUpdater {
         }
     }
 
-    private static WinterNavigationPort addNew(final WinterNavigationPortDto port) {
+    private static WinterNavigationPort addNew(final PortDto port) {
         WinterNavigationPort p = new WinterNavigationPort();
 
         updateData(p, port);
@@ -95,14 +98,14 @@ public class WinterNavigationPortUpdater {
         return p;
     }
 
-    private static WinterNavigationPort update(final WinterNavigationPort p, final WinterNavigationPortDto port) {
+    private static WinterNavigationPort update(final WinterNavigationPort p, final PortDto port) {
 
         updateData(p, port);
 
         return p;
     }
 
-    private static void updateData(final WinterNavigationPort p, final WinterNavigationPortDto port) {
+    private static void updateData(final WinterNavigationPort p, final PortDto port) {
         p.setLocode(port.portInfo.locode);
         p.setName(port.portInfo.name);
         p.setLongitude(port.portInfo.lon);
@@ -115,11 +118,11 @@ public class WinterNavigationPortUpdater {
         }
     }
 
-    private static void updatePortRestrictions(final WinterNavigationPort p, final List<WinterNavigationPortRestrictionDto> restrictions) {
+    private static void updatePortRestrictions(final WinterNavigationPort p, final List<PortRestrictionDto> restrictions) {
         p.getPortRestrictions().clear();
 
         int orderNumber = 1;
-        for (final WinterNavigationPortRestrictionDto restriction : restrictions) {
+        for (final PortRestrictionDto restriction : restrictions) {
             PortRestriction pr = new PortRestriction();
             pr.setPortRestrictionPK(new PortRestrictionPK(p.getLocode(), orderNumber));
             pr.setCurrent(restriction.isCurrent);
