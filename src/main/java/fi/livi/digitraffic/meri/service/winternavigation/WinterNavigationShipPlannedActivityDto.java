@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WinterNavigationShipPlannedActivityDto {
 
-    // FIXME: Enum
     public final String activityType;
 
     public final String activityText;

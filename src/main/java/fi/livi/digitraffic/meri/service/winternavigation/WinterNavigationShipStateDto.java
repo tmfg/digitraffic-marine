@@ -14,11 +14,9 @@ public class WinterNavigationShipStateDto {
 
     public final String posPrintable;
 
-    // FIXME: Enum
-    public final Integer posAccuracy;
+    public final PositionAccuracy posAccuracy;
 
-    // FIXME: Enum
-    public final String posSource;
+    public final PositionSource posSource;
 
     public final String posArea;
 
@@ -46,8 +44,8 @@ public class WinterNavigationShipStateDto {
                                         @JsonProperty("lon") final Double longitude,
                                         @JsonProperty("lat") final Double latitude,
                                         @JsonProperty("pos_printable") final String posPrintable,
-                                        @JsonProperty("pos_accuracy") final Integer posAccuracy,
-                                        @JsonProperty("pos_source") final String posSource,
+                                        @JsonProperty("pos_accuracy") final PositionAccuracy posAccuracy,
+                                        @JsonProperty("pos_source") final PositionSource posSource,
                                         @JsonProperty("pos_area") final String posArea,
                                         @JsonProperty("speed") final Double speed,
                                         @JsonProperty("course") final Double course,
