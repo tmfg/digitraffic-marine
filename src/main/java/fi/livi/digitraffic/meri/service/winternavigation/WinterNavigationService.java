@@ -9,12 +9,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
+import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
 import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
@@ -23,21 +26,25 @@ import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortPrope
 @Service
 public class WinterNavigationService {
 
-    private final WinterNavigationPortRepository winterNavigationRepository;
+    private final WinterNavigationPortRepository winterNavigationPortRepository;
+
+    private final WinterNavigationShipRepository winterNavigationShipRepository;
 
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
-    public WinterNavigationService(final WinterNavigationPortRepository winterNavigationRepository,
+    public WinterNavigationService(final WinterNavigationPortRepository winterNavigationPortRepository,
+                                   final WinterNavigationShipRepository winterNavigationShipRepository,
                                    final UpdatedTimestampRepository updatedTimestampRepository) {
-        this.winterNavigationRepository = winterNavigationRepository;
+        this.winterNavigationPortRepository = winterNavigationPortRepository;
+        this.winterNavigationShipRepository = winterNavigationShipRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
     @Transactional
     public WinterNavigationPortFeatureCollection getWinterNavigationPorts() {
 
-        final List<WinterNavigationPort> ports = winterNavigationRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
+        final List<WinterNavigationPort> ports = winterNavigationPortRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
 
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_PORTS.name());
 

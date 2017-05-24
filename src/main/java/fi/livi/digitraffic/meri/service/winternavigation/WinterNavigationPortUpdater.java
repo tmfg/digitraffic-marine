@@ -140,7 +140,7 @@ public class WinterNavigationPortUpdater {
         }
     }
 
-    private static Timestamp findTimestamp(final ZonedDateTime issueTime) {
+    public static Timestamp findTimestamp(final ZonedDateTime issueTime) {
         return issueTime == null ? null : Timestamp.from(issueTime.toInstant());
     }
 }
