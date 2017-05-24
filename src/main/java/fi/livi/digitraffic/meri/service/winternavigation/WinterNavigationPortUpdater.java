@@ -55,9 +55,10 @@ public class WinterNavigationPortUpdater {
         final Map<Boolean, List<PortDto>> ports =
                 data.ports.stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.portInfo.locode)));
 
-        if (!ports.get(false).isEmpty()) {
+        final List<PortDto> portsWithoutLocode = ports.get(false);
+        if (!portsWithoutLocode.isEmpty()) {
             log.info("Received {} winter navigation port(s) with missing locode. PortIds: {}",
-                     ports.get(false).size(), ports.get(false).stream().map(p -> p.portInfo.locode).collect(Collectors.joining(", ")));
+                     portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.portInfo.portId).collect(Collectors.joining(", ")));
         }
 
         final List<String> locodes = ports.get(true).stream().map(p -> p.portInfo.locode).collect(Collectors.toList());
