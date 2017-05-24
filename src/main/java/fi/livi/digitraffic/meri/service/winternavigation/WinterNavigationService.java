@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;
@@ -23,12 +23,12 @@ import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortPrope
 @Service
 public class WinterNavigationService {
 
-    private final WinterNavigationRepository winterNavigationRepository;
+    private final WinterNavigationPortRepository winterNavigationRepository;
 
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
-    public WinterNavigationService(final WinterNavigationRepository winterNavigationRepository,
+    public WinterNavigationService(final WinterNavigationPortRepository winterNavigationRepository,
                                    final UpdatedTimestampRepository updatedTimestampRepository) {
         this.winterNavigationRepository = winterNavigationRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;

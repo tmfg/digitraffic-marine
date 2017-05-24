@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 
 @Repository
-public interface WinterNavigationRepository extends JpaRepository<WinterNavigationPort, String> {
+public interface WinterNavigationPortRepository extends JpaRepository<WinterNavigationPort, String> {
 
     @Query(value = "UPDATE WINTER_NAVIGATION_PORT SET obsolete_date = sysdate WHERE locode NOT IN (:locodes)", nativeQuery = true)
     @Modifying

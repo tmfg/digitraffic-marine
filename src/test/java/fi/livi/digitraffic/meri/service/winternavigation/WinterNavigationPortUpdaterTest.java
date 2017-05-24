@@ -25,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 
@@ -38,7 +38,7 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
     private WinterNavigationPortUpdater winterNavigationPortUpdater;
 
     @Autowired
-    private WinterNavigationRepository winterNavigationRepository;
+    private WinterNavigationPortRepository winterNavigationRepository;
 
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;

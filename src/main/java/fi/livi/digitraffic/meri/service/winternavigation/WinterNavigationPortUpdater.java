@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestrictionPK;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
@@ -32,7 +32,7 @@ public class WinterNavigationPortUpdater {
 
     private final WinterNavigationClient winterNavigationClient;
 
-    private final WinterNavigationRepository winterNavigationRepository;
+    private final WinterNavigationPortRepository winterNavigationRepository;
 
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
@@ -40,7 +40,7 @@ public class WinterNavigationPortUpdater {
 
     @Autowired
     public WinterNavigationPortUpdater(final WinterNavigationClient winterNavigationClient,
-                                       final WinterNavigationRepository winterNavigationRepository,
+                                       final WinterNavigationPortRepository winterNavigationRepository,
                                        final UpdatedTimestampRepository updatedTimestampRepository) {
         this.winterNavigationClient = winterNavigationClient;
         this.winterNavigationRepository = winterNavigationRepository;
