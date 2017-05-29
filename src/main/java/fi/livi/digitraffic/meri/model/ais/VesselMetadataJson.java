@@ -1,9 +1,12 @@
 package fi.livi.digitraffic.meri.model.ais;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description="Vessel metadata model")
+@JsonSerialize(as = VesselMetadataJson.class)
 public interface VesselMetadataJson {
     @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)
     int getMmsi();
