@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -30,7 +32,7 @@ import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipsDto;
 @Service
 public class WinterNavigationShipUpdater {
 
-    private final static Logger log = LoggerFactory.getLogger(WinterNavigationPortUpdater.class);
+    private final static Logger log = LoggerFactory.getLogger(WinterNavigationShipUpdater.class);
 
     private final WinterNavigationClient winterNavigationClient;
     private final WinterNavigationShipRepository winterNavigationShipRepository;
@@ -53,8 +55,11 @@ public class WinterNavigationShipUpdater {
         final List<WinterNavigationShip> added = new ArrayList<>();
         final List<WinterNavigationShip> updated = new ArrayList<>();
 
+        final Map<String, WinterNavigationShip> shipsByVesselPK =
+            winterNavigationShipRepository.findAllByOrderByVesselPK().stream().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
+
         final StopWatch stopWatch = StopWatch.createStarted();
-        data.ships.forEach(ship -> update(ship, added, updated));
+        data.ships.forEach(ship -> update(ship, added, updated, shipsByVesselPK));
         winterNavigationShipRepository.save(added);
         stopWatch.stop();
 
@@ -65,8 +70,10 @@ public class WinterNavigationShipUpdater {
                                               getClass().getSimpleName());
     }
 
-    private void update(final ShipDto ship, final List<WinterNavigationShip> added, final List<WinterNavigationShip> updated) {
-        final WinterNavigationShip old = winterNavigationShipRepository.findOne(ship.vesselPk);
+    private void update(final ShipDto ship, final List<WinterNavigationShip> added, final List<WinterNavigationShip> updated,
+                        final Map<String, WinterNavigationShip> shipsByVesselPK) {
+
+        final WinterNavigationShip old = shipsByVesselPK.get(ship.vesselPk);
 
         if (old == null) {
             added.add(addNew(ship));
