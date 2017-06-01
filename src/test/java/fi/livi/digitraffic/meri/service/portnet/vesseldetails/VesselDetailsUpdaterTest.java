@@ -41,10 +41,11 @@ public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
 
     private MockRestServiceServer server;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate;
 
     @Before
     public void before() {
+        restTemplate = vesselDetailsClient.getRestTemplate();
         server = MockRestServiceServer.createServer(restTemplate);
         Mockito.when(vesselDetailsClient.getRestTemplate()).thenReturn(restTemplate);
     }

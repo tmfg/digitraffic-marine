@@ -4,12 +4,12 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,7 +50,9 @@ public class PortCallClient {
     }
 
     protected RestTemplate getRestTemplate() {
-        return new RestTemplate();
+        final RestTemplate template = new RestTemplate();
+        template.setMessageConverters(Collections.singletonList(new Jaxb2RootElementHttpMessageConverter()));
+        return template;
     }
 
     private static void logInfo(final PortCallList portCallList) {

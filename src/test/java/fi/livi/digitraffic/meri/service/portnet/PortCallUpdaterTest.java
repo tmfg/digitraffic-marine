@@ -45,10 +45,9 @@ public class PortCallUpdaterTest extends AbstractIntegrationTest {
 
     private MockRestServiceServer server;
 
-    private RestTemplate restTemplate = new RestTemplate();
-
     @Before
     public void before() {
+        RestTemplate restTemplate = portCallClient.getRestTemplate();
         server = MockRestServiceServer.createServer(restTemplate);
         Mockito.when(portCallClient.getRestTemplate()).thenReturn(restTemplate);
     }
@@ -62,7 +61,6 @@ public class PortCallUpdaterTest extends AbstractIntegrationTest {
 
         server.expect(MockRestRequestMatchers.requestTo("nullstartDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-                .andExpect(MockRestRequestMatchers.header("Accept", "application/xml, text/xml, application/json, application/*+xml, application/*+json"))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
         response = readFile("portCallResponse2.xml");
