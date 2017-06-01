@@ -4,37 +4,39 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
+import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
 
 @Service
 public class PortCallClient {
     private final String portCallUrl;
+    private final Jax2bRestTemplate restTemplate;
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
     public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmmss");
 
     private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
-    public PortCallClient(@Value("${ais.portnet.portcall.url}") final String portCallUrl) {
+    @Autowired
+    public PortCallClient(@Value("${ais.portnet.portcall.url}") final String portCallUrl,
+                          final Jax2bRestTemplate restTemplate) {
         this.portCallUrl = portCallUrl;
+        this.restTemplate = restTemplate;
     }
 
     public PortCallList getList(final Instant lastUpdated, final Instant now) {
-        final RestTemplate template = getRestTemplate();
         final String url = buildUrl(lastUpdated, now);
 
         log.info("Fetching port calls from {}", url);
 
-        final PortCallList portCallList = template.getForObject(url, PortCallList.class);
+        final PortCallList portCallList = restTemplate.getForObject(url, PortCallList.class);
 
         logInfo(portCallList);
 
@@ -47,12 +49,6 @@ public class PortCallClient {
 
     public static String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
         return timestamp == null ? "" : String.format("%s=%s", timePrefix, timestamp.format(TIME_FORMATTER));
-    }
-
-    protected RestTemplate getRestTemplate() {
-        final RestTemplate template = new RestTemplate();
-        template.setMessageConverters(Collections.singletonList(new Jaxb2RootElementHttpMessageConverter()));
-        return template;
     }
 
     private static void logInfo(final PortCallList portCallList) {

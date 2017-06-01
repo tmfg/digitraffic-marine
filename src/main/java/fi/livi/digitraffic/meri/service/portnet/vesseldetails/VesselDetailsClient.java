@@ -3,47 +3,41 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
+import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
 
 @Service
 public class VesselDetailsClient {
 
     private final String vesselDetailsUrl;
+    private final Jax2bRestTemplate restTemplate;
 
     private static final Logger log = LoggerFactory.getLogger(VesselDetailsClient.class);
 
-    public VesselDetailsClient(@Value("${ais.portnet.vesselDetails.url}") final String vesselDetailsUrl) {
+    public VesselDetailsClient(@Value("${ais.portnet.vesselDetails.url}") final String vesselDetailsUrl,
+                               final Jax2bRestTemplate restTemplate) {
         this.vesselDetailsUrl = vesselDetailsUrl;
+        this.restTemplate = restTemplate;
     }
 
     public VesselList getVesselList(final Instant from) {
         final String url = buildUrl(from);
-        RestTemplate restTemplate = getRestTemplate();
 
         VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
 
         logInfo(vesselList);
 
         return vesselList;
-    }
-
-    protected RestTemplate getRestTemplate() {
-        final RestTemplate template = new RestTemplate();
-        template.setMessageConverters(Collections.singletonList(new Jaxb2RootElementHttpMessageConverter()));
-        return template;
     }
 
     private static void logInfo(final VesselList vesselList) {
