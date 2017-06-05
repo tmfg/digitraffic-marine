@@ -26,8 +26,8 @@ public class ShipPlannedActivityDto {
 
     public final ZonedDateTime planTimestampCanceled;
 
-    public ShipPlannedActivityDto(@JsonProperty("activity_type") final String activityType,
-                                  @JsonProperty("activity_text") final String activityText,
+    public ShipPlannedActivityDto(@JsonProperty("activityType") final String activityType,
+                                  @JsonProperty("activityText") final String activityText,
                                   @JsonProperty("planned_vessel_pk") final String plannedVesselPK,
                                   @JsonProperty("planning_vessel_pk") final String planningVesselPK,
                                   @JsonProperty("ordering") final Integer ordering,

@@ -32,11 +32,11 @@ public class ShipActivityDto {
 
     public final Integer convoyOrder;
 
-    public ShipActivityDto(@JsonProperty("activity_type") final String activityType,
-                           @JsonProperty("activity_text") final String activityText,
+    public ShipActivityDto(@JsonProperty("activityType") final String activityType,
+                           @JsonProperty("activityText") final String activityText,
                            @JsonProperty("comment") final String comment,
-                           @JsonProperty("begin_time") final ZonedDateTime beginTime,
-                           @JsonProperty("end_time") final ZonedDateTime endTime,
+                           @JsonProperty("begintime") final ZonedDateTime beginTime,
+                           @JsonProperty("endtime") final ZonedDateTime endTime,
                            @JsonProperty("timestamp_begin") final ZonedDateTime timestampBegin,
                            @JsonProperty("timestamp_end") final ZonedDateTime timestampEnd,
                            @JsonProperty("timestamp_canceled") final ZonedDateTime timestampCanceled,
