@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "GeoJSON Feature object")
 public class WinterNavigationPortFeature {
 
-    @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)
+    @ApiModelProperty(value = "Port SafeSeaNet location code", required = true)
     public final String locode;
 
     @ApiModelProperty(value = "GeoJSON Properties object", required = true)
