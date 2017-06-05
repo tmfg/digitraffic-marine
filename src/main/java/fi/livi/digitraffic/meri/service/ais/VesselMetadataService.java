@@ -5,6 +5,7 @@ import static fi.livi.digitraffic.meri.config.AisCacheConfiguration.ALLOWED_MMSI
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -56,8 +57,14 @@ public class VesselMetadataService {
         return metadata;
     }
 
-    public List<VesselMetadataJson> listAllowedVesselMetadata() {
-        return vesselMetadataRepository.findByShipTypeNotIn(FORBIDDEN_SHIP_TYPES);
+    public List<VesselMetadataJson> findAllowedVesselMetadataFrom(final Long from) {
+        final Criteria c = createCriteria();
+        c.add(getAllowedShipTypeCriteria());
+        if (from != null) {
+            c.add(Restrictions.ge("timestamp", from));
+        }
+        List<VesselMetadata> vesselMetadata = c.list();
+        return vesselMetadata.stream().map(vessel -> (VesselMetadataJson) vessel).collect(Collectors.toList());
     }
 
     @Cacheable(ALLOWED_MMSI_CACHE)
