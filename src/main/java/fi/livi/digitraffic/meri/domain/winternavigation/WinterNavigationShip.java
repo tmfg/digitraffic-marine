@@ -61,11 +61,11 @@ public class WinterNavigationShip {
     @JoinColumn(name = "vessel_pk", nullable = false)
     private ShipVoyage shipVoyage;
 
-    @OneToMany(mappedBy = "shipActivityPK.vesselPK", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shipActivityPK.vesselPK", cascade = CascadeType.MERGE, orphanRemoval = true)
     @OrderBy(value = "shipActivityPK.orderNumber")
     private List<ShipActivity> shipActivities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "shipActivityPK.vesselPK", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shipActivityPK.vesselPK", cascade = CascadeType.MERGE, orphanRemoval = true)
     @OrderBy(value = "shipActivityPK.orderNumber")
     private List<ShipPlannedActivity> shipPlannedActivities = new ArrayList<>();
 

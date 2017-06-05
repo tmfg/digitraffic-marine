@@ -15,7 +15,7 @@ public class WinterNavigationClient {
 
     private final String winterNavigationUrl;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     private static final Logger log = LoggerFactory.getLogger(WinterNavigationClient.class);
 
