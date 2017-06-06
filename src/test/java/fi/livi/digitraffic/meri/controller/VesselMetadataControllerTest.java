@@ -27,7 +27,7 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
 
     @Test
     public void allVesselsEmpty() throws Exception {
-        given(vesselMetadataService.listAllowedVesselMetadata()).willReturn(Collections.emptyList());
+        given(vesselMetadataService.findAllowedVesselMetadataFrom(null)).willReturn(Collections.emptyList());
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
@@ -40,7 +40,7 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
 
     @Test
     public void allVessels() throws Exception {
-        given(vesselMetadataService.listAllowedVesselMetadata()).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
+        given(vesselMetadataService.findAllowedVesselMetadataFrom(null)).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
 
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_METADATA_PART_PATH +
@@ -49,6 +49,19 @@ public class VesselMetadataControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
                 ;
+    }
+
+    @Test
+    public void allVesselsFrom() throws Exception {
+        given(vesselMetadataService.findAllowedVesselMetadataFrom(1L)).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
+
+        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
+                            AisApplicationConfiguration.API_METADATA_PART_PATH +
+                            VesselMetadataController.VESSELS_PATH + "?from=1"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
+        ;
     }
 
     @Test
