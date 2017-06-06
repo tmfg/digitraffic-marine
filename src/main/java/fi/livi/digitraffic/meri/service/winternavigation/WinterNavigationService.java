@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -15,11 +16,23 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
+import fi.livi.digitraffic.meri.domain.winternavigation.ShipActivity;
+import fi.livi.digitraffic.meri.domain.winternavigation.ShipPlannedActivity;
+import fi.livi.digitraffic.meri.domain.winternavigation.ShipState;
+import fi.livi.digitraffic.meri.domain.winternavigation.ShipVoyage;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
+import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
 import fi.livi.digitraffic.meri.model.geojson.Point;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipActivityProperty;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipPlannedActivityProperty;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipStateProperty;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipVoyageProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortProperties;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeature;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeatureCollection;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipProperties;
 
 @Service
 public class WinterNavigationService {
@@ -51,9 +64,60 @@ public class WinterNavigationService {
             ports.stream().map(this::portFeature).collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
+    public WinterNavigationShipFeatureCollection getWinterNavigationShips() {
+
+        final List<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
+
+        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_SHIPS.name());
+
+        final List<WinterNavigationShipFeature> shipFeatures =
+            ships.stream().map(s -> new WinterNavigationShipFeature(s.getVesselPK(),
+                                                                    shipProperties(s),
+                                                                    new Point(s.getShipState().getLongitude(), s.getShipState().getLatitude())))
+                 .collect(Collectors.toList());
+
+        return new WinterNavigationShipFeatureCollection(lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.systemDefault()),
+                                                         shipFeatures);
+    }
+
     private WinterNavigationPortFeature portFeature(final WinterNavigationPort p) {
         return new WinterNavigationPortFeature(p.getLocode(),
                                                new WinterNavigationPortProperties(p.getName(), p.getNationality(), p.getSeaArea(), p.getPortRestrictions()),
                                                new Point(p.getLongitude(), p.getLatitude()));
+    }
+
+    private WinterNavigationShipProperties shipProperties(final WinterNavigationShip s) {
+        return new WinterNavigationShipProperties(s.getVesselSource(), s.getMmsi(), s.getName(), s.getCallSign(), s.getImo(), s.getDwt(),
+                                                  s.getLength(), s.getWidth(), s.getAisLength(), s.getAisWidth(), s.getDimensions(),
+                                                  s.getNominalDraught(), s.getIceClass(), s.getNatCode(), s.getNationality(), s.getShipType(),
+                                                  s.getAisShipType(), shipState(s.getShipState()), shipVoyage(s.getShipVoyage()),
+                                                  shipActivities(s.getShipActivities()), shipPlannedActivities(s.getShipPlannedActivities()));
+    }
+
+    private ShipStateProperty shipState(final ShipState st) {
+        return new ShipStateProperty(st.getTimestamp(), st.getPosPrintable(), st.getPosAccuracy(), st.getPosSource(), st.getPosArea(), st.getSpeed(),
+                                     st.getCourse(), st.getHeading(), st.getAisDraught(), st.getAisState(), st.getAisStateText(), st.getAisDestination(),
+                                     st.getMovingSince(), st.getStoppedSince(), st.getInactiveSince());
+    }
+
+    private ShipVoyageProperty shipVoyage(final ShipVoyage sv) {
+        return new ShipVoyageProperty(sv.getFromLocode(), sv.getFromName(), sv.getFromAtd(), sv.getInLocode(), sv.getInName(), sv.getInAta(),
+                                      sv.getInEtd(), sv.getDestLocode(), sv.getDestName(), sv.getDestEta());
+    }
+
+    private List<ShipActivityProperty> shipActivities(final List<ShipActivity> shipActivities) {
+        return shipActivities.stream()
+            .map(a -> new ShipActivityProperty(a.getActivityType(), a.getActivityText(), a.getActivityComment(), a.getBeginTime(),
+                                               a.getEndTime(), a.getTimestampBegin(), a.getTimestampEnd(), a.getTimestampCanceled(),
+                                               a.getOperatingIcebreakerPK(), a.getOperatingIcebreakerName(), a.getOperatedVesselPK(),
+                                               a.getOperatedVesselName(), a.getConvoyOrder())).collect(Collectors.toList());
+    }
+
+    private List<ShipPlannedActivityProperty> shipPlannedActivities(final List<ShipPlannedActivity> shipPlannedActivities) {
+        return shipPlannedActivities.stream()
+            .map(a -> new ShipPlannedActivityProperty(a.getActivityType(), a.getActivityText(), a.getPlannedVesselPK(), a.getPlanningVesselPK(),
+                                                      a.getOrdering(), a.getPlannedWhen(), a.getPlannedWhere(), a.getPlanComment(),
+                                                      a.getPlanTimestampRealized(), a.getPlanTimestampCanceled())).collect(Collectors.toList());
     }
 }

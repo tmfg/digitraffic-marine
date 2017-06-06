@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeatureCollection;
 import fi.livi.digitraffic.meri.service.winternavigation.WinterNavigationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,5 +35,14 @@ public class WinterNavigationController {
     @ResponseBody
     public WinterNavigationPortFeatureCollection getWinterNavigationPorts() {
         return winterNavigationService.getWinterNavigationPorts();
+    }
+
+    @ApiOperation("Return winter navigation ships.")
+    @GetMapping(path = "/ships", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation ports"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ResponseBody
+    public WinterNavigationShipFeatureCollection getWinterNavigationShips() {
+        return winterNavigationService.getWinterNavigationShips();
     }
 }

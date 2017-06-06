@@ -65,7 +65,7 @@ public class WinterNavigationShipUpdaterTest extends AbstractIntegrationTest {
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
 
-        List<WinterNavigationShip> ships = winterNavigationShipRepository.findAllByOrderByVesselPK();
+        List<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
         WinterNavigationShip ship = ships.stream().filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
 
         assertTrue(ships.size() > 0);
@@ -83,7 +83,7 @@ public class WinterNavigationShipUpdaterTest extends AbstractIntegrationTest {
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
 
-        ships = winterNavigationShipRepository.findAllByOrderByVesselPK();
+        ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
         ship = ships.stream().filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
 
         assertEquals("A La Marine", ship.getName());

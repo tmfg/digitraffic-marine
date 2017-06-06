@@ -9,21 +9,19 @@ import fi.livi.digitraffic.meri.model.RootDataObjectDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@JsonPropertyOrder({
-        "type",
-        "dataUpdatedTime",
-        "features",
-})
+@JsonPropertyOrder({ "type",
+                     "dataUpdatedTime",
+                     "features" })
 @ApiModel(description = "GeoJSON FeatureCollection object")
-public class WinterNavigationPortFeatureCollection extends RootDataObjectDto {
+public class WinterNavigationShipFeatureCollection extends RootDataObjectDto {
 
     @ApiModelProperty(required = true)
-    public final List<WinterNavigationPortFeature> features;
+    public final List<WinterNavigationShipFeature> features;
 
     @ApiModelProperty(allowableValues = "FeatureCollection", required = true)
     public final String type = "FeatureCollection";
 
-    public WinterNavigationPortFeatureCollection(final ZonedDateTime dataLastUpdated, final List<WinterNavigationPortFeature> features) {
+    public WinterNavigationShipFeatureCollection(final ZonedDateTime dataLastUpdated, final List<WinterNavigationShipFeature> features) {
         super(dataLastUpdated);
         this.features = features;
     }
