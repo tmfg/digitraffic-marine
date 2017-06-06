@@ -2,8 +2,6 @@ package fi.livi.digitraffic.meri.config;
 
 import java.sql.SQLException;
 
-import javax.annotation.PostConstruct;
-import javax.net.ssl.HttpsURLConnection;
 import javax.sql.DataSource;
 
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -56,7 +54,6 @@ public class AisApplicationConfiguration {
         dataSource.setValidateConnectionOnBorrow(true);
         dataSource.setMaxStatements(10);
         dataSource.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
-
         return dataSource;
     }
 }

@@ -35,7 +35,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     }
 
     private boolean getLock() {
-        return lockingService.acquireLock("AIS", instanceId, 2);
+        return lockingService.acquireLock("AIS-METADATA", instanceId, 2);
     }
 
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
