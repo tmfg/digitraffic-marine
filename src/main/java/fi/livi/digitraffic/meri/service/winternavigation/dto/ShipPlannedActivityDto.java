@@ -22,6 +22,8 @@ public class ShipPlannedActivityDto {
 
     public final String planComment;
 
+    public final ZonedDateTime planTimestamp;
+
     public final ZonedDateTime planTimestampRealized;
 
     public final ZonedDateTime planTimestampCanceled;
@@ -34,6 +36,7 @@ public class ShipPlannedActivityDto {
                                   @JsonProperty("planned_when") final String plannedWhen,
                                   @JsonProperty("planned_where") final String plannedWhere,
                                   @JsonProperty("plan_comment") final String planComment,
+                                  @JsonProperty("plan_timestamp") final ZonedDateTime planTimestamp,
                                   @JsonProperty("plan_timestamp_realized") final ZonedDateTime planTimestampRealized,
                                   @JsonProperty("plan_timestamp_canceled") final ZonedDateTime planTimestampCanceled) {
         this.activityType = activityType;
@@ -44,6 +47,7 @@ public class ShipPlannedActivityDto {
         this.plannedWhen = plannedWhen;
         this.plannedWhere = plannedWhere;
         this.planComment = planComment;
+        this.planTimestamp = planTimestamp;
         this.planTimestampRealized = planTimestampRealized;
         this.planTimestampCanceled = planTimestampCanceled;
     }

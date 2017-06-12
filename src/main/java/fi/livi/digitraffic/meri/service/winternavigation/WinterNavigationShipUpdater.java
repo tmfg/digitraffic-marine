@@ -210,6 +210,7 @@ public class WinterNavigationShipUpdater {
             activity.setOrdering(plannedActivity.ordering);
             activity.setPlannedVesselPK(plannedActivity.plannedVesselPK);
             activity.setPlanningVesselPK(plannedActivity.planningVesselPK);
+            activity.setPlanTimestamp(WinterNavigationPortUpdater.findTimestamp(plannedActivity.planTimestamp));
             activity.setPlanTimestampCanceled(WinterNavigationPortUpdater.findTimestamp(plannedActivity.planTimestampCanceled));
             activity.setPlanTimestampRealized(WinterNavigationPortUpdater.findTimestamp(plannedActivity.planTimestampRealized));
             s.getShipPlannedActivities().add(activity);

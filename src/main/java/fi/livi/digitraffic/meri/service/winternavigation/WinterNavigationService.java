@@ -118,6 +118,6 @@ public class WinterNavigationService {
         return shipPlannedActivities.stream()
             .map(a -> new ShipPlannedActivityProperty(a.getActivityType(), a.getActivityText(), a.getPlannedVesselPK(), a.getPlanningVesselPK(),
                                                       a.getOrdering(), a.getPlannedWhen(), a.getPlannedWhere(), a.getPlanComment(),
-                                                      a.getPlanTimestampRealized(), a.getPlanTimestampCanceled())).collect(Collectors.toList());
+                                                      a.getPlanTimestamp(), a.getPlanTimestampRealized(), a.getPlanTimestampCanceled())).collect(Collectors.toList());
     }
 }

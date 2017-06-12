@@ -30,6 +30,8 @@ public class ShipPlannedActivity {
 
     private String planComment;
 
+    private Timestamp planTimestamp;
+
     private Timestamp planTimestampRealized;
 
     private Timestamp planTimestampCanceled;
@@ -112,6 +114,14 @@ public class ShipPlannedActivity {
 
     public void setPlanComment(String planComment) {
         this.planComment = planComment;
+    }
+
+    public Timestamp getPlanTimestamp() {
+        return planTimestamp;
+    }
+
+    public void setPlanTimestamp(Timestamp planTimestamp) {
+        this.planTimestamp = planTimestamp;
     }
 
     public Timestamp getPlanTimestampRealized() {
