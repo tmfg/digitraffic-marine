@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
-import fi.livi.digitraffic.meri.domain.winternavigation.PortRestrictionPK;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PortDto;
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PortRestrictionDto;
@@ -125,7 +124,8 @@ public class WinterNavigationPortUpdater {
         int orderNumber = 1;
         for (final PortRestrictionDto restriction : restrictions) {
             PortRestriction pr = new PortRestriction();
-            pr.setPortRestrictionPK(new PortRestrictionPK(p.getLocode(), orderNumber));
+            pr.setLocode(p.getLocode());
+            pr.setOrderNumber(orderNumber);
             pr.setCurrent(restriction.isCurrent);
             pr.setPortRestricted(restriction.portRestricted);
             pr.setPortClosed(restriction.portClosed);

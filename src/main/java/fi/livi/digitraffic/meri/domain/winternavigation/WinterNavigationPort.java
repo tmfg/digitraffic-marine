@@ -32,8 +32,8 @@ public class WinterNavigationPort {
 
     private Date obsoleteDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "portRestrictionPK.locode", cascade = CascadeType.ALL)
-    @OrderBy(value = "portRestrictionPK.orderNumber")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "locode", cascade = CascadeType.ALL)
+    @OrderBy(value = "orderNumber")
     private List<PortRestriction> portRestrictions = new ArrayList<>();
 
     public String getLocode() {

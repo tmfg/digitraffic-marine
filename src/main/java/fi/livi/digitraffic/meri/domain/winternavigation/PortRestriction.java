@@ -3,10 +3,13 @@ package fi.livi.digitraffic.meri.domain.winternavigation;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,9 +19,18 @@ import io.swagger.annotations.ApiModelProperty;
 @DynamicUpdate
 public class PortRestriction {
 
-    @EmbeddedId
+    @Id
+    @GenericGenerator(name = "SEQ_PORT_RESTRICTION", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+                      parameters = @Parameter(name = "sequence_name", value = "SEQ_PORT_RESTRICTION"))
+    @GeneratedValue(generator = "SEQ_PORT_RESTRICTION")
     @JsonIgnore
-    private PortRestrictionPK portRestrictionPK;
+    private Long id;
+
+    @JsonIgnore
+    private String locode;
+
+    @JsonIgnore
+    private Integer orderNumber;
 
     @ApiModelProperty(value = "Indicates whether this restriction is currently in effect (true); false implies past/future restriction")
     private Boolean isCurrent;
@@ -52,12 +64,24 @@ public class PortRestriction {
     @ApiModelProperty(value = "Traffic restriction text pre-formatted (HTML)")
     private String formattedText;
 
-    public PortRestrictionPK getPortRestrictionPK() {
-        return portRestrictionPK;
+    public Long getId() {
+        return id;
     }
 
-    public void setPortRestrictionPK(PortRestrictionPK portRestrictionPK) {
-        this.portRestrictionPK = portRestrictionPK;
+    public String getLocode() {
+        return locode;
+    }
+
+    public void setLocode(String locode) {
+        this.locode = locode;
+    }
+
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public Boolean getCurrent() {

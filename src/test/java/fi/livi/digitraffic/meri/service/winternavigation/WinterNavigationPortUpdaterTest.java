@@ -79,7 +79,7 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
         assertEquals(1, port.getPortRestrictions().size());
 
         final PortRestriction restriction = port.getPortRestrictions().get(0);
-        assertEquals(1, restriction.getPortRestrictionPK().getOrderNumber().intValue());
+        assertEquals(1, restriction.getOrderNumber().intValue());
         assertTrue(restriction.getCurrent());
         assertFalse(restriction.getPortRestricted());
         assertNull(restriction.getPortClosed());
