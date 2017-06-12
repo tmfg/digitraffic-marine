@@ -61,12 +61,12 @@ public class WinterNavigationShip {
     @JoinColumn(name = "vessel_pk", nullable = false)
     private ShipVoyage shipVoyage;
 
-    @OneToMany(mappedBy = "shipActivityPK.vesselPK", cascade = CascadeType.MERGE, orphanRemoval = true)
-    @OrderBy(value = "shipActivityPK.orderNumber")
+    @OneToMany(mappedBy = "vesselPK", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy(value = "orderNumber")
     private List<ShipActivity> shipActivities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "shipActivityPK.vesselPK", cascade = CascadeType.MERGE, orphanRemoval = true)
-    @OrderBy(value = "shipActivityPK.orderNumber")
+    @OneToMany(mappedBy = "vesselPK", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy(value = "orderNumber")
     private List<ShipPlannedActivity> shipPlannedActivities = new ArrayList<>();
 
     public String getMmsi() {

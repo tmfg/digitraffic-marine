@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipActivity;
-import fi.livi.digitraffic.meri.domain.winternavigation.ShipActivityPK;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipPlannedActivity;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipState;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipVoyage;
@@ -172,7 +171,8 @@ public class WinterNavigationShipUpdater {
         int orderNumber = 1;
         for (final ShipActivityDto shipActivity : ship.shipActivities) {
             final ShipActivity activity = new ShipActivity();
-            activity.setShipActivityPK(new ShipActivityPK(ship.vesselPk, orderNumber));
+            activity.setVesselPK(ship.vesselPk);
+            activity.setOrderNumber(orderNumber);
             activity.setActivityType(shipActivity.activityType);
             activity.setActivityText(shipActivity.activityText);
             activity.setBeginTime(WinterNavigationPortUpdater.findTimestamp(shipActivity.beginTime));
@@ -201,7 +201,8 @@ public class WinterNavigationShipUpdater {
         int orderNumber = 1;
         for (final ShipPlannedActivityDto plannedActivity : ship.plannedActivities) {
             final ShipPlannedActivity activity = new ShipPlannedActivity();
-            activity.setShipActivityPK(new ShipActivityPK(ship.vesselPk, orderNumber));
+            activity.setVesselPK(ship.vesselPk);
+            activity.setOrderNumber(orderNumber);
             activity.setActivityType(plannedActivity.activityType);
             activity.setActivityText(plannedActivity.activityText);
             activity.setPlannedWhen(plannedActivity.plannedWhen);

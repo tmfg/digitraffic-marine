@@ -94,6 +94,7 @@ public class WinterNavigationShipUpdaterTest extends AbstractIntegrationTest {
         assertEquals(2, ship.getShipPlannedActivities().size());
         assertEquals("IMO-8418174", ship.getShipPlannedActivities().get(0).getPlannedVesselPK());
         assertEquals(0, ship.getShipPlannedActivities().get(0).getOrdering().intValue());
+        assertEquals(Timestamp.from(ZonedDateTime.parse("2017-04-11T07:56:49.220+00:00").toInstant()), ship.getShipPlannedActivities().get(0).getPlanTimestamp());
         assertEquals("IMO-9167344", ship.getShipPlannedActivities().get(1).getPlannedVesselPK());
         assertEquals("Planned assistance", ship.getShipPlannedActivities().get(1).getActivityText());
 

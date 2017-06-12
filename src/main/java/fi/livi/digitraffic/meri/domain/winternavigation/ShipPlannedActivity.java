@@ -3,14 +3,26 @@ package fi.livi.digitraffic.meri.domain.winternavigation;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @Entity
 public class ShipPlannedActivity {
 
-    @EmbeddedId
-    private ShipActivityPK shipActivityPK;
+    @Id
+    @GenericGenerator(name = "SEQ_SHIP_PLANNED_ACTIVITY", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+                      parameters = @Parameter(name = "sequence_name", value = "SEQ_SHIP_PLANNED_ACTIVITY"))
+    @GeneratedValue(generator = "SEQ_SHIP_PLANNED_ACTIVITY")
+    private Long id;
+
+    @Column(name = "vessel_pk")
+    private String vesselPK;
+
+    private Integer orderNumber;
 
     private String activityType;
 
@@ -36,20 +48,24 @@ public class ShipPlannedActivity {
 
     private Timestamp planTimestampCanceled;
 
-    public ShipActivityPK getShipActivityPK() {
-        return shipActivityPK;
-    }
-
-    public void setShipActivityPK(ShipActivityPK shipActivityPK) {
-        this.shipActivityPK = shipActivityPK;
+    public Long getId() {
+        return id;
     }
 
     public String getVesselPK() {
-        return this.shipActivityPK != null ? this.shipActivityPK.getVesselPK() : null;
+        return vesselPK;
+    }
+
+    public void setVesselPK(String vesselPK) {
+        this.vesselPK = vesselPK;
     }
 
     public Integer getOrderNumber() {
-        return this.shipActivityPK != null ? this.shipActivityPK.getOrderNumber() : null;
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public String getActivityType() {
