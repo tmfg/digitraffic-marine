@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.documentation;
 
+import java.util.Collections;
+
 import fi.livi.digitraffic.meri.service.BuildVersionService;
 import fi.livi.digitraffic.meri.service.MessageService;
 import springfox.documentation.service.ApiInfo;
@@ -14,9 +16,10 @@ public class AisApiInfo extends ApiInfo {
               null, //description,
               null, //version,
               null, //termsOfServiceUrl,
-              (Contact) null, //contact,
+              null, //contact,
               null, //license,
-              null); //licenseUrl)
+              null,
+                Collections.emptyList()); //licenseUrl)
         this.messageService = messageService;
         this.buildVersionService = buildVersionService;
     }

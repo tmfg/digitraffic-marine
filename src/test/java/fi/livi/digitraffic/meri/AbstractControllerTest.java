@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(classes = AisApplication.class,
                 webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-                properties = { "quartz.enabled=false" })
+                properties = { "quartz.enabled=false", "javamelody.enabled=false" })
 @AutoConfigureMockMvc
 public abstract class AbstractControllerTest extends AbstractTestBase {
     @Autowired
