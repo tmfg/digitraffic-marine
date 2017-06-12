@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
+import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipActivity;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipPlannedActivity;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipState;
@@ -23,6 +24,7 @@ import fi.livi.digitraffic.meri.domain.winternavigation.ShipVoyage;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
 import fi.livi.digitraffic.meri.model.geojson.Point;
+import fi.livi.digitraffic.meri.model.winternavigation.PortRestrictionProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.ShipActivityProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.ShipPlannedActivityProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.ShipStateProperty;
@@ -83,8 +85,15 @@ public class WinterNavigationService {
 
     private WinterNavigationPortFeature portFeature(final WinterNavigationPort p) {
         return new WinterNavigationPortFeature(p.getLocode(),
-                                               new WinterNavigationPortProperties(p.getName(), p.getNationality(), p.getSeaArea(), p.getPortRestrictions()),
+                                               new WinterNavigationPortProperties(p.getName(), p.getNationality(), p.getSeaArea(), portRestrictions(p.getPortRestrictions())),
                                                new Point(p.getLongitude(), p.getLatitude()));
+    }
+
+    private List<PortRestrictionProperty> portRestrictions(final List<PortRestriction> portRestrictions) {
+        return portRestrictions.stream().map(pr -> new PortRestrictionProperty(pr.getCurrent(), pr.getPortRestricted(), pr.getPortClosed(),
+                                                                               pr.getIssueTime(), pr.getLastModified(), pr.getValidFrom(),
+                                                                               pr.getValidUntil(), pr.getRawText(), pr.getFormattedText()))
+            .collect(Collectors.toList());
     }
 
     private WinterNavigationShipProperties shipProperties(final WinterNavigationShip s) {
