@@ -13,10 +13,10 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 javamelody.authorized-users = username:password
 
 # AIS-websocket address
-ais.locations.123.url = ws://ws-address
-ais.locations.27.url = ws://ws-address
-ais.locations.9.url = ws://ws-address
-ais.metadata.5.url = ws://ws-address
+ais.locations.123.url =
+ais.locations.27.url =
+ais.locations.9.url =
+ais.metadata.5.url =
 ais.pooki.url = http://localhost:18080/test/nautical-warnings
 ais.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
 ais.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetails/List/
