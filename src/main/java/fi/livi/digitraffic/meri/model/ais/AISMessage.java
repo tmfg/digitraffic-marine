@@ -17,7 +17,7 @@ public class AISMessage implements Validatable {
 
     @Override
     public boolean validate() {
-        return geometry != null && attributes.mmsi > 0;
+        return geometry != null && attributes.mmsi > 0 && attributes.mmsi < 1000000000;
     }
 
     public static class Geometry {
