@@ -19,7 +19,6 @@ import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
-import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
 public class VesselLocationServiceTest extends AbstractIntegrationTest {
 
