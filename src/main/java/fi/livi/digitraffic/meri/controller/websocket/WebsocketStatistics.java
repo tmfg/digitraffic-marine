@@ -60,7 +60,7 @@ public class WebsocketStatistics {
 
         for (final WebsocketType websocketType : Arrays.asList(WebsocketType.LOCATIONS, WebsocketType.METADATA)) {
             final ReadStatistics readStatistics = readStatisticsMap.get(websocketType);
-            log.info("Read websocket statistics for {} sessions {} messages {}",
+            log.info("Read websocket statistics for {} messages {} status {}",
                      websocketType, readStatistics != null ? readStatistics.messages : 0, readStatistics != null ? readStatistics.status : UNDEFINED);
 
             readStatisticsMap.put(websocketType, new ReadStatistics(0, readStatistics != null ? readStatistics.status : UNDEFINED));
