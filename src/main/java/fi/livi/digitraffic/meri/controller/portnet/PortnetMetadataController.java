@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
 import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
-import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -75,13 +74,13 @@ public class PortnetMetadataController {
     @ApiOperation("Return list of vessels details")
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
-                    @ApiResponse(code = 400, message = "Bad request. At least one parameter is required."),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public List<VesselDetails> findVesselDetails(
-            @ApiParam("Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
+            @ApiParam("Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z. " +
+                      "Default value is now minus 24 hours if all parameters are empty.")
             @RequestParam(value = "from", required = false)
-            @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime from,
 
             @ApiParam("Return vessel details for given vessel name")
             @RequestParam(value = "vesselName", required = false) final String vesselName,
@@ -99,7 +98,7 @@ public class PortnetMetadataController {
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode) {
 
         if (!ObjectUtils.anyNotNull(from, vesselName, mmsi, imo, nationalities, vesselTypeCode)) {
-            throw new BadRequestException("At least one parameter is required");
+            from = ZonedDateTime.now().minusDays(1L);
         }
 
         return portnetMetadataService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
