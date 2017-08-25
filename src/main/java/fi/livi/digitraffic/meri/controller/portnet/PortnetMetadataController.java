@@ -73,7 +73,7 @@ public class PortnetMetadataController {
 
     @ApiOperation("Return list of vessels details")
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel details"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public List<VesselDetails> findVesselDetails(
