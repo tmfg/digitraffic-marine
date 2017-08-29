@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.controller.websocket;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -49,18 +50,20 @@ public class WebsocketStatistics {
     }
 
     private static synchronized void logMessageCount() {
-        for(final Map.Entry<WebsocketType, SentStatistics> e : sentStatisticsMap.entrySet()) {
+        for (final WebsocketType websocketType : WebsocketType.values()) {
+            final SentStatistics sentStatistics = sentStatisticsMap.get(websocketType);
             log.info("Sent websocket statistics for {} sessions {} messages {}",
-                    e.getKey(), e.getValue().sessions, e.getValue().messages);
+                     websocketType, sentStatistics != null ? sentStatistics.sessions : 0, sentStatistics != null ? sentStatistics.messages : 0);
 
-            sentStatisticsMap.put(e.getKey(), new SentStatistics(e.getValue().sessions, 0));
+            sentStatisticsMap.put(websocketType, new SentStatistics(sentStatistics != null ? sentStatistics.sessions : 0, 0));
         }
 
-        for(final Map.Entry<WebsocketType, ReadStatistics> e : readStatisticsMap.entrySet()) {
+        for (final WebsocketType websocketType : Arrays.asList(WebsocketType.LOCATIONS, WebsocketType.METADATA)) {
+            final ReadStatistics readStatistics = readStatisticsMap.get(websocketType);
             log.info("Read websocket statistics for {} messages {} status {}",
-                    e.getKey(), e.getValue().messages, e.getValue().status);
+                     websocketType, readStatistics != null ? readStatistics.messages : 0, readStatistics != null ? readStatistics.status : UNDEFINED);
 
-            readStatisticsMap.put(e.getKey(), new ReadStatistics(0, e.getValue().status));
+            readStatisticsMap.put(websocketType, new ReadStatistics(0, readStatistics != null ? readStatistics.status : UNDEFINED));
         }
     }
 

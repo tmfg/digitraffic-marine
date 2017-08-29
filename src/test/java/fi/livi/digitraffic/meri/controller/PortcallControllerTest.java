@@ -14,13 +14,6 @@ import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 
 
 public class PortcallControllerTest extends AbstractControllerTest {
-    @Test
-    public void listAllPortCallsFail() throws Exception {
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_PORT_CALLS_PATH))
-                .andExpect(status().isBadRequest())
-        ;
-    }
 
     @Test
     public void listAllPortCalls() throws Exception {
@@ -34,7 +27,7 @@ public class PortcallControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void listAllPortCallsFromLocode() throws Exception {
+    public void listPortCallsFromLocodeByVesselName() throws Exception {
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_PORT_CALLS_PATH +
                 "/FIHEL?vesselName=test"))
@@ -45,10 +38,12 @@ public class PortcallControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void listAllPortCallsFromLocodeFail() throws Exception {
+    public void listAllPortCallsFromLocodeSucceeds() throws Exception {
         mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
                 AisApplicationConfiguration.API_PORT_CALLS_PATH + "/FIHEL"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }
 }
