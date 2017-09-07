@@ -51,7 +51,6 @@ public class NauticalWarningController {
     @Autowired
     public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
         this.pookiUrl = pookiUrl;
-        // Enable http gzip compression
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =
                 new HttpComponentsClientHttpRequestFactory(HttpClientBuilder.create().build());
         this.restTemplate = new RestTemplate(clientHttpRequestFactory);
