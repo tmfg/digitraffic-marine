@@ -8,6 +8,20 @@
         </encoder>
     </appender>
 
+    <appender name="NULL" class="ch.qos.logback.core.helpers.NOPAppender" />
+
+    <appender name="FILE_LOGSTASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <file>ais-logstash.%d{yyyy-MM-dd}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>ais-logstash.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- File to write to before rotating. See: http://logback.qos.ch/manual/appenders.html#tbrpFileNamePattern -->
         <file>ais-daily.log</file>
@@ -35,17 +49,27 @@
         </encoder>
     </appender>
 
-
     <!-- PerformanceMonitorAspect log -->
-    <logger name="PerformanceMonitor" additivity="false">
+    <logger name="PerformanceMonitor" additivity="true">
         <appender-ref ref="FILE_PERFORMANCE_MONITOR" />
-        <springProfile name="localhost">
-            <appender-ref ref="CONSOLE" />
-        </springProfile>
+    </logger>
+    <logger name="PerformanceMonitor" additivity="false">
+        <appender-ref ref="FILE_LOGSTASH" />
     </logger>
 
-    <root level="INFO">
+    <!-- debugging log (note: javamelody does not use FQCN, so loggers use name="javamelody",
+     not "net.bull.javamelody") -->
+    <logger name="net.bull.javamelody" additivity="true">
+        <level value="ERROR" />
+        <appender-ref ref="FILE_LOGSTASH" />
+    </logger>
+    <logger name="net.bull.javamelody" additivity="false">
+        <appender-ref ref="NULL" />
+    </logger>
+
+    <root level="INFO" additivity="false">
         <appender-ref ref="FILE" />
+        <appender-ref ref="FILE_LOGSTASH" />
         <springProfile name="localhost">
             <appender-ref ref="CONSOLE" />
         </springProfile>
