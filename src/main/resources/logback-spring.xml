@@ -54,7 +54,8 @@
         <appender-ref ref="FILE_PERFORMANCE_MONITOR" />
     </logger>
     <logger name="PerformanceMonitor" additivity="false">
-        <appender-ref ref="FILE_LOGSTASH" />
+        <appender-ref ref="NULL" />
+        <!-- <appender-ref ref="FILE_LOGSTASH" /> -->
     </logger>
 
     <!-- debugging log (note: javamelody does not use FQCN, so loggers use name="javamelody",
