@@ -19,6 +19,7 @@ import oracle.ucp.jdbc.PoolDataSourceFactory;
 @EnableJpaRepositories(basePackages = {"fi.livi.digitraffic.meri.dao", "fi.livi.util"})
 public class AisApplicationConfiguration {
     public static final String API_V1_BASE_PATH = "/api/v1";
+    public static final String API_BETA_BASE_PATH = "/api/beta";
     public static final String API_WEBSOCKETS_PART_PATH = "/websockets";
     public static final String API_PLAIN_WEBSOCKETS_PART_PATH = "/plain-websockets";
     public static final String API_METADATA_PART_PATH = "/metadata";
