@@ -14,7 +14,7 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>info</level>
         </filter>
-        <file>ais-logstash.%d{yyyy-MM-dd}.log</file>
+        <file>ais-logstash.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>ais-logstash.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>2</maxHistory>
@@ -54,7 +54,6 @@
         <appender-ref ref="FILE_PERFORMANCE_MONITOR" />
     </logger>
     <logger name="PerformanceMonitor" additivity="false">
-        <appender-ref ref="NULL" />
         <appender-ref ref="FILE_LOGSTASH" />
     </logger>
 
