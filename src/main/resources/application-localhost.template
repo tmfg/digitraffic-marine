@@ -2,7 +2,7 @@
 # datasource etc. according to your environment.
 
 # http-server port
-server.port = 9000
+server.port = 9001
 
 spring.datasource.url=jdbc:oracle:thin:@<host localhost>:<port 1521>:<SID XE>
 spring.datasource.username=<username>
