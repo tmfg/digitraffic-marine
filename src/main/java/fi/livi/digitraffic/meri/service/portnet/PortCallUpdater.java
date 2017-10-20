@@ -83,24 +83,12 @@ public class PortCallUpdater {
             final StopWatch watch = new StopWatch();
 
             watch.start();
-            list.getPortCallNotification().forEach(pcn ->  {
-                if (isValid(pcn)) {
-                    update(pcn, added, updated);
-                }
-            });
+            list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
             portCallRepository.save(added);
             watch.stop();
 
             log.info("Added {} port call, updated {}, took {} ms.", added.size(), updated.size(), watch.getTime());
         }
-    }
-
-    private boolean isValid(final PortCallNotification pcn) {
-        if (pcn.getPortCallTimestamp() == null) {
-            log.info("Skipping port call. Reason: portCallTimestamp is null.");
-            return false;
-        }
-        return true;
     }
 
     private static boolean isListOk(final PortCallList list) {
