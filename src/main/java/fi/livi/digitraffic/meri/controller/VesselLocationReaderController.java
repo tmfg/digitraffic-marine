@@ -8,6 +8,7 @@ import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
@@ -46,11 +47,16 @@ public class VesselLocationReaderController {
                 new WebsocketReader(aisLocations123Url, listeners)
             );
 
-            readerList.stream().forEach(WebsocketReader::initialize);
+            readerList.forEach(WebsocketReader::initialize);
+    }
+
+    @Scheduled(fixedRate = 10000)
+    private void idleTimeout() {
+        readerList.forEach(WebsocketReader::idleTimeout);
     }
 
     @PreDestroy
     public void destroy() {
-        readerList.stream().forEach(WebsocketReader::destroy);
+        readerList.forEach(WebsocketReader::destroy);
     }
 }
