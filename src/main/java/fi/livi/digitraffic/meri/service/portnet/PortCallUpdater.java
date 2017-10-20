@@ -83,7 +83,11 @@ public class PortCallUpdater {
             final StopWatch watch = new StopWatch();
 
             watch.start();
-            list.getPortCallNotification().stream().filter(this::isValidPortCall).forEach(pcn -> update(pcn, added, updated));
+            list.getPortCallNotification().forEach(pcn ->  {
+                if (isValid(pcn)) {
+                    update(pcn, added, updated);
+                }
+            });
             portCallRepository.save(added);
             watch.stop();
 
@@ -91,10 +95,9 @@ public class PortCallUpdater {
         }
     }
 
-    private boolean isValidPortCall(final PortCallNotification pcn) {
-        // Source data has invalid port calls with missing timestamp for unknown reason.
+    private boolean isValid(final PortCallNotification pcn) {
         if (pcn.getPortCallTimestamp() == null) {
-            log.info("Skipping port call with ID {}. Reason: portCallTimestamp is null.", pcn.getPortCallId());
+            log.info("Skipping port call. Reason: portCallTimestamp is null.");
             return false;
         }
         return true;
