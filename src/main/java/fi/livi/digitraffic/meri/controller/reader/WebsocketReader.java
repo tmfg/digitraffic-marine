@@ -97,6 +97,7 @@ public class WebsocketReader {
             @Override
             public void onClose(final Session session, final CloseReason closeReason) {
                 log.info("Connection to {} closed because {}", locationUrl, closeReason);
+                lastMessageTime = null;
 
                 session.removeMessageHandler(messageHandler);
             }
