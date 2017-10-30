@@ -53,7 +53,7 @@ public class SsnLocationUpdater {
             final SsnLocation location = oldMap.get(nc.getLocode());
 
             if(location == null) {
-                log.info("Can't find ssn location {}", nc.getLocode());
+                log.info("Can't find ssn location for ssnLocationCode={}", nc.getLocode());
             } else {
                 location.setWgs84Lat(nc.getWgs84Lat());
                 location.setWgs84Long(nc.getWgs84Long());
@@ -83,7 +83,7 @@ public class SsnLocationUpdater {
         ssnLocationRepository.delete(oldMap.values());
         ssnLocationRepository.save(newList);
 
-        log.info("Read {} locations, added {}, updated {}, deleted {}.",
+        log.info("locationsReadCount={} locations, locationsAddedCount={} locationsUpdatedCount={} locationsDeletedCount={} .",
                 newLocations.size(), newList.size(), updates, oldMap.values().size());
 
         return CollectionUtils.isNotEmpty(newList) || updates > 0;

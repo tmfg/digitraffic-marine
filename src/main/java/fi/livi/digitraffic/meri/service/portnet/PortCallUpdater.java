@@ -87,7 +87,7 @@ public class PortCallUpdater {
             portCallRepository.save(added);
             watch.stop();
 
-            log.info("Added {} port call, updated {}, took {} ms.", added.size(), updated.size(), watch.getTime());
+            log.info("portCallAddedCount={} port call, portCallUpdatedCount={}, tookMs={} .", added.size(), updated.size(), watch.getTime());
         }
     }
 
@@ -96,13 +96,13 @@ public class PortCallUpdater {
 
         switch(status) {
         case "OK":
-            log.info("fetched {} notifications", CollectionUtils.size(list.getPortCallNotification()));
+            log.info("notificationsFetchedCount={} notifications", CollectionUtils.size(list.getPortCallNotification()));
             break;
         case "NOT_FOUND":
             log.info("No port calls from server");
             break;
         default:
-            log.error("error with status {}", status);
+            log.error("error with status={}", status);
             return false;
         }
 
