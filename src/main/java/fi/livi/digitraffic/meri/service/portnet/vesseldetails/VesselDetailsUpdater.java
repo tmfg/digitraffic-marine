@@ -69,7 +69,7 @@ public class VesselDetailsUpdater {
             vesselDetailsRepository.save(added);
             watch.stop();
 
-            log.info("Added {} vessel detail, updated {}, took {} ms.", added.size(), updated.size(), watch.getTime());
+            log.info("vesselDetailAddedCount={} vesselDetailUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
         }
     }
 
@@ -91,13 +91,13 @@ public class VesselDetailsUpdater {
 
         switch(status) {
         case "OK":
-            log.info("fetched {} vessel details", CollectionUtils.size(list.getVesselDetails()));
+            log.info("vesselDetailFetchedCount={} vessel details", CollectionUtils.size(list.getVesselDetails()));
             break;
         case "NOT_FOUND":
             log.info("No vessel details from server");
             break;
         default:
-            log.error("error with status " + status);
+            log.error("error with status={}", status);
             return false;
         }
 

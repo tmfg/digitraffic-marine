@@ -56,7 +56,7 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
                 log.debug("Parse of " + dateTime + " failed", e);
             }
         }
-        log.warn("Could not parse dateTime {}", dateTime);
+        log.warn("Could not parse dateTime={}", dateTime);
 
         return null;
     }

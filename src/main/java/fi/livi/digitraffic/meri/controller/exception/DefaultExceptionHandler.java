@@ -37,7 +37,7 @@ public class DefaultExceptionHandler {
         final String parameterValue = exception.getValue().toString();
         final String requiredType = exception.getRequiredType().getSimpleName();
 
-        log.info("Query parameter type mismatch. Uri: {}, query string: {}, required type: {}",
+        log.info("Query parameter type mismatch. uri={}, queryString={}, requiredType={}",
                  request.getRequest().getRequestURI(), request.getRequest().getQueryString(), requiredType);
 
         return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
@@ -55,7 +55,7 @@ public class DefaultExceptionHandler {
         final String parameterName = exception.getParameterName();
         final String requiredType = exception.getParameterType();
 
-        log.info("Query parameter missing. Uri: {}, query string: {}, required name: {], required type: {}",
+        log.info("Query parameter missing. uri={} queryString={} requiredName={} requiredType={}",
                 request.getRequest().getRequestURI(), request.getRequest().getQueryString(), parameterName, requiredType);
 
         return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
@@ -72,7 +72,7 @@ public class DefaultExceptionHandler {
 
         String message = exception.getConstraintViolations().stream().map(v -> getViolationMessage(v)).collect(Collectors.joining(", "));
 
-        log.info("Constraint violation. Uri: {}, query string: {}, violations: {}",
+        log.info("Constraint violation. uri={} queryString={} violations={}",
                  request.getRequest().getRequestURI(), request.getRequest().getQueryString(), message);
 
         return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
@@ -122,7 +122,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(ClientAbortException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleClientAbortException(final Exception exception, final ServletWebRequest request) {
-        log.warn("{} {} ({})",HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), exception.getClass().getName());
+        log.warn("500 Internal Server Error ( exception={} )", exception.getClass().getName());
         // Return null because connection is closed and it's impossible to return anything to client.
         // If something is returned it will cause another exception and that we don't want that to happen.
         return null;

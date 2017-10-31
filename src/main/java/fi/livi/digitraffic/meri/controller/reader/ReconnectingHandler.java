@@ -26,7 +26,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
     }
 
     public void onOpen() {
-        log.info("connected {}", locationUrl);
+        log.info("connected url={}", locationUrl);
 
         notifyStatus(ConnectionStatus.CONNECTED);
 
@@ -35,7 +35,7 @@ public class ReconnectingHandler extends ClientManager.ReconnectHandler {
 
     @Override
     public boolean onDisconnect(final CloseReason closeReason) {
-        log.error("disconnect {}: {} {}", locationUrl, closeReason.getCloseCode(), closeReason.getReasonPhrase());
+        log.error("disconnect url={}: closeCode={} closeReason={}", locationUrl, closeReason.getCloseCode(), closeReason.getReasonPhrase());
 
         notifyStatus(ConnectionStatus.DISCONNECTED);
 

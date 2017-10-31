@@ -5,8 +5,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +30,7 @@ public class PortCallClient {
         final RestTemplate template = getRestTemplate();
         final String url = buildUrl(lastUpdated, now);
 
-        log.info("Fetching port calls from {}", url);
+        log.info("Fetching port calls from url={}", url);
 
         final PortCallList portCallList = template.getForObject(url, PortCallList.class);
 
@@ -54,7 +52,7 @@ public class PortCallClient {
     }
 
     private static void logInfo(final PortCallList portCallList) {
-        log.info("Number of received notifications: {}", portCallList.getPortCallNotification().size());
+        log.info("Number of received notificationsCount={}", portCallList.getPortCallNotification().size());
     }
 
     private String buildUrl(final Instant lastUpdated, final Instant now) {
