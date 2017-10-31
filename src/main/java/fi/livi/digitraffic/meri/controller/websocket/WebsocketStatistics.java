@@ -52,7 +52,7 @@ public class WebsocketStatistics {
     private static synchronized void logMessageCount() {
         for (final WebsocketType websocketType : WebsocketType.values()) {
             final SentStatistics sentStatistics = sentStatisticsMap.get(websocketType);
-            log.info("Sent websocket statistics for type={} sessions={} messages={}",
+            log.info("Sent websocket statistics for webSocketType={} sessions={} messages={}",
                      websocketType, sentStatistics != null ? sentStatistics.sessions : 0, sentStatistics != null ? sentStatistics.messages : 0);
 
             sentStatisticsMap.put(websocketType, new SentStatistics(sentStatistics != null ? sentStatistics.sessions : 0, 0));
@@ -60,7 +60,7 @@ public class WebsocketStatistics {
 
         for (final WebsocketType websocketType : Arrays.asList(WebsocketType.LOCATIONS, WebsocketType.METADATA)) {
             final ReadStatistics readStatistics = readStatisticsMap.get(websocketType);
-            log.info("Read websocket statistics for type={} messages={} status={}",
+            log.info("Read websocket statistics for webSocketType={} messages={} status={}",
                      websocketType, readStatistics != null ? readStatistics.messages : 0, readStatistics != null ? readStatistics.status : UNDEFINED);
 
             readStatisticsMap.put(websocketType, new ReadStatistics(0, readStatistics != null ? readStatistics.status : UNDEFINED));
