@@ -64,7 +64,7 @@ public class WebsocketReader {
 
     public void idleTimeout() {
         if(isIdle() && session != null && session.isOpen()) {
-            log.error("Restarting connection to {} because it's been idle since {}", locationUrl, lastMessageTime);
+            log.error("Restarting connection to url={} because it's been idle since lastMessageTime={}", locationUrl, lastMessageTime);
             try {
                 session.close();
             } catch (final Exception e) {
@@ -74,7 +74,7 @@ public class WebsocketReader {
     }
 
     private ClientManager initializeConnection() throws URISyntaxException, IOException, DeploymentException {
-        log.info("Initializing connection to {} {} listeners", locationUrl, listeners.size());
+        log.info("Initializing connection to url={} listenersCount={} listeners", locationUrl, listeners.size());
 
         final ReconnectingHandler handler = new ReconnectingHandler(locationUrl, listeners, log);
         final MessageHandler messageHandler = new MessageHandler.Whole<String>() {
@@ -96,13 +96,14 @@ public class WebsocketReader {
 
             @Override
             public void onClose(final Session session, final CloseReason closeReason) {
-                log.info("Connection to {} closed because {}", locationUrl, closeReason);
+                log.info("Connection to url={} closed because reason={}", locationUrl, closeReason);
+                lastMessageTime = null;
 
                 session.removeMessageHandler(messageHandler);
             }
 
             public void onError(final Session session, final Throwable thr) {
-                log.error("Connection to {} caused error {}", locationUrl, thr.getMessage());
+                log.error("Connection to url={} caused error message={}", locationUrl, thr.getMessage());
             }
         };
 
