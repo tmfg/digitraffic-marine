@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.TestPropertySource;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
@@ -22,7 +21,6 @@ import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 
 @Transactional
-@TestPropertySource(properties = "cache.allowedMmsis = 200")
 public class VesselMetadataServiceTest extends AbstractIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(MessageConverter.class);
