@@ -35,7 +35,8 @@ public class WebsocketReader {
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    private static final TemporalAmount IDLE_TIME_LIMIT = Duration.ofMinutes(2);
+    private static final TemporalAmount IDLE_TIME_LIMIT = Duration.ofMinutes(1);
+    private static final TemporalAmount ON_OPEN_TIME_LIMIT = Duration.ofMinutes(3);
 
     public WebsocketReader(final String locationUrl, final List<WebsocketListener> listeners) {
         this.locationUrl = locationUrl;
@@ -87,10 +88,11 @@ public class WebsocketReader {
         final Endpoint endPoint = new Endpoint() {
             @Override
             public void onOpen(final Session session, final EndpointConfig endpointConfig) {
+                log.info("method=onOpen Connection to url={} opened", locationUrl);
                 WebsocketReader.this.session = session;
                 handler.onOpen();
 
-                lastMessageTime = LocalDateTime.now();
+                lastMessageTime = LocalDateTime.now().plus(ON_OPEN_TIME_LIMIT);
 
                 // for some reason, this does NOT work with lambda or method reference
                 session.addMessageHandler(messageHandler);
@@ -98,14 +100,14 @@ public class WebsocketReader {
 
             @Override
             public void onClose(final Session session, final CloseReason closeReason) {
-                log.info("Connection to url={} closed because reason={}", locationUrl, closeReason);
+                log.info("method=onClose Connection to url={} closed because reason={}", locationUrl, closeReason);
                 lastMessageTime = null;
 
                 session.removeMessageHandler(messageHandler);
             }
 
             public void onError(final Session session, final Throwable thr) {
-                log.error("Connection to url={} caused error errorMessage={}", locationUrl, thr.getMessage());
+                log.error("method=onError Connection to url={} caused error errorMessage={}", locationUrl, thr.getMessage());
             }
         };
 
