@@ -35,7 +35,7 @@ public class WebsocketReader {
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    private static final TemporalAmount IDLE_TIME_LIMIT = Duration.ofMinutes(1);
+    private static final TemporalAmount IDLE_TIME_LIMIT = Duration.ofMinutes(2);
 
     public WebsocketReader(final String locationUrl, final List<WebsocketListener> listeners) {
         this.locationUrl = locationUrl;
