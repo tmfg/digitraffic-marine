@@ -92,9 +92,7 @@ public class PerformanceMonitorAspect {
             buildValueToString(builder, args);
         }
 
-        builder.append(" invocation time was ")
-               .append(decimalFormat.format(executionTimeSeconds))
-               .append(" s");
+        builder.append(" invocation time was invocationTimeSec=").append(decimalFormat.format(executionTimeSeconds));
         return StringUtils.truncate(builder.toString(), 1000);
     }
 
