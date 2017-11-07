@@ -90,6 +90,8 @@ public class WebsocketReader {
                 WebsocketReader.this.session = session;
                 handler.onOpen();
 
+                lastMessageTime = LocalDateTime.now();
+
                 // for some reason, this does NOT work with lambda or method reference
                 session.addMessageHandler(messageHandler);
             }
