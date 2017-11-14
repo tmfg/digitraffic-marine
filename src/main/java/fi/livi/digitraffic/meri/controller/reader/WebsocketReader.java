@@ -47,13 +47,13 @@ public class WebsocketReader {
 
     public void initialize() {
         if (StringUtils.isEmpty(locationUrl)) {
-            log.info("Empty location, no reader started");
+            log.info("method=initialize Empty location, no reader started");
         } else {
             new Thread(() -> {
                 try {
                     clientManager = initializeConnection();
-                } catch (final Exception e) {
-                    log.error("error", e);
+                } catch (final IOException | DeploymentException | URISyntaxException e) {
+                    log.error("method=initialize locationUrl={}", locationUrl, e);
                 }
             }).start();
         }
@@ -65,11 +65,11 @@ public class WebsocketReader {
 
     public void idleTimeout() {
         if(isIdle() && session != null && session.isOpen()) {
-            log.error("Restarting connection to url={} because it's been idle since lastMessageTime={}", locationUrl, lastMessageTime);
+            log.warn("Restarting connection to url={} because it's been idle since lastMessageTime={}", locationUrl, lastMessageTime);
             try {
                 session.close();
-            } catch (final Exception e) {
-                log.error("error", e);
+            } catch (final IOException e) {
+                log.error("method=idleTimeout locationUrl={}", locationUrl, e);
             }
         }
     }
@@ -100,14 +100,14 @@ public class WebsocketReader {
 
             @Override
             public void onClose(final Session session, final CloseReason closeReason) {
-                log.info("method=onClose Connection to url={} closed because reason={}", locationUrl, closeReason);
+                log.info("method=onClose Connection to url={} closed because reason={}", locationUrl, closeReason.getReasonPhrase().replaceAll("\\s", "_"));
                 lastMessageTime = null;
 
                 session.removeMessageHandler(messageHandler);
             }
 
             public void onError(final Session session, final Throwable thr) {
-                log.error("method=onError Connection to url={} caused error errorMessage={}", locationUrl, thr.getMessage());
+                log.info("method=onError Connection to url={} caused error errorMessage={}", locationUrl, thr.getMessage().replaceAll("\\s", "_"));
             }
         };
 
@@ -123,22 +123,13 @@ public class WebsocketReader {
         lastMessageTime = LocalDateTime.now();
 
         if (running.get()) {
-            listeners.parallelStream().forEach(listener -> notifyListener(listener, message));
+            listeners.parallelStream().forEach(listener -> listener.receiveMessage(message));
         } else {
             log.warn("Not handling messages received after shutdown hook");
         }
     }
 
-    private void notifyListener(final WebsocketListener listener, final String message) {
-        try {
-            listener.receiveMessage(message);
-        } catch(final Exception e) {
-            log.error("exception for message " + message, e);
-        }
-    }
-
     public void destroy() {
-        log.debug("destroy");
         running.set(false);
         if(clientManager != null) {
             clientManager.shutdown();

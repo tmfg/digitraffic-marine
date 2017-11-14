@@ -20,6 +20,12 @@
                 addMessage(JSON.parse(message.data));
                 updateList();
             };
+            socket.onclose = function (event) {
+                console.info("onclose ", event);
+            };
+            socket.onerror = function (event) {
+                console.info("onerror ", event);
+            };
         }
 
         function addMessage(message) {
