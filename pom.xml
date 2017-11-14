@@ -5,7 +5,7 @@
 
     <groupId>fi.fta.digitraffic</groupId>
     <artifactId>AIS</artifactId>
-    <version>1.13.0</version>
+    <version>1.17.0</version>
     <packaging>jar</packaging>
 
     <name>dt-ais</name>
@@ -198,12 +198,6 @@
                  http://stackoverflow.com/questions/35761746/quartz-scheduler-unlimited-attempts-to-connect-with-database
                  https://jira.terracotta.org/jira/browse/QTZ-470 -->
             <version>2.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>

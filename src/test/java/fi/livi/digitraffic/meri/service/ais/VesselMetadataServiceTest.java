@@ -56,8 +56,8 @@ public class VesselMetadataServiceTest extends AbstractIntegrationTest {
         Assert.assertFalse(cache.contains(-3));
         Assert.assertFalse(cache.contains(-4));
 
-        log.info("Wait for 11 seconds to expire cache");
-        Thread.sleep(1000*11);
+        log.info("Wait for cache to expire");
+        Thread.sleep(400);
 
         // from cache
         Collection<Integer> cache2 = vesselMetadataService.findAllowedMmsis();
