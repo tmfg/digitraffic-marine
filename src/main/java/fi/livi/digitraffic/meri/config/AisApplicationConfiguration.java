@@ -27,7 +27,7 @@ public class AisApplicationConfiguration {
     public static final String API_LOCATIONS_PATH = "/locations";
     public static final String API_PORT_CALLS_PATH = "/port-calls";
 
-    @Value("ci.datasource.maxIdleTime")
+    @Value("${ci.datasource.maxIdleTime:0}")
     private Integer MAX_IDLE_TIME;
     /**
      * Enables bean validation for controller parameters
@@ -96,7 +96,7 @@ public class AisApplicationConfiguration {
          * Do not set in production environment
          *
          */
-        if(MAX_IDLE_TIME != null) {
+        if(MAX_IDLE_TIME > 0) {
             dataSource.setMaxIdleTime(MAX_IDLE_TIME);
         }
         /* **************************************************************************************************** */
