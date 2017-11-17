@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,8 @@ public class AisApplicationConfiguration {
     public static final String API_LOCATIONS_PATH = "/locations";
     public static final String API_PORT_CALLS_PATH = "/port-calls";
 
+    @Value("ci.datasource.maxIdleTime")
+    private Integer MAX_IDLE_TIME;
     /**
      * Enables bean validation for controller parameters
      * @return
@@ -85,6 +88,17 @@ public class AisApplicationConfiguration {
          * connection is reclaimed by the pool. This timeout feature helps maximize connection reuse and helps conserve systems resources
          * that are otherwise lost on maintaining connections longer than their expected usage. */
         dataSource.setTimeToLiveConnectionTimeout(480);
+
+        /*
+         * Our integration tests will overload test db unless we set up maxIdleTime
+         * or something something...
+         *
+         * Do not set in production environment
+         *
+         */
+        if(MAX_IDLE_TIME != null) {
+            dataSource.setMaxIdleTime(MAX_IDLE_TIME);
+        }
         /* **************************************************************************************************** */
 
         return dataSource;
