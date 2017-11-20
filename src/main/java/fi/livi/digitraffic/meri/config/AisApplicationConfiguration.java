@@ -27,10 +27,8 @@ public class AisApplicationConfiguration {
     public static final String API_LOCATIONS_PATH = "/locations";
     public static final String API_PORT_CALLS_PATH = "/port-calls";
 
-    // Katso POOL_SIZE selitykset käyttökohdassa
-    @Value("${ci.datasource.poolSize:20}")
-    private Integer POOL_SIZE;
-
+    @Value("${ci.datasource.maxIdleTime:0}")
+    private Integer MAX_IDLE_TIME;
     /**
      * Enables bean validation for controller parameters
      * @return
@@ -72,14 +70,10 @@ public class AisApplicationConfiguration {
          * https://review.solita.fi/cru/CR-4219#c52811
          * initial max ja min kaikki samaan arvoon. Yhteyden avaus on raskas operaatio, mitä halutaan välttää. Kuudennen rinnakkaisen yhteyden
          * tarvitsemishetkellää kanta on todennäköisesti kuormitettuna ja haluamme välttää yhteyden avaamisesta aiheutuvaa ylimääräistä kuormaa.
-         *
-         * Mutta koska meidän CI-pannuilla ei ole juhlavaa määrää conneja,
-         * on ci-buildeissa tälle pienempi arvo. Default on tuolla POOL_SIZE muuttujassa.
          */
-        dataSource.setInitialPoolSize(POOL_SIZE);
-        dataSource.setMaxPoolSize(POOL_SIZE);
-        dataSource.setMinPoolSize(POOL_SIZE);
-
+        dataSource.setInitialPoolSize(10);
+        dataSource.setMaxPoolSize(10);
+        dataSource.setMinPoolSize(10);
         /*
          * See:
          * https://docs.oracle.com/cd/B28359_01/java.111/e10788/optimize.htm#CFHEDJDC
@@ -94,6 +88,17 @@ public class AisApplicationConfiguration {
          * connection is reclaimed by the pool. This timeout feature helps maximize connection reuse and helps conserve systems resources
          * that are otherwise lost on maintaining connections longer than their expected usage. */
         dataSource.setTimeToLiveConnectionTimeout(480);
+
+        /*
+         * Our integration tests will overload test db unless we set up maxIdleTime
+         * or something something...
+         *
+         * Do not set in production environment
+         *
+         */
+        if(MAX_IDLE_TIME > 0) {
+            dataSource.setMaxIdleTime(MAX_IDLE_TIME);
+        }
         /* **************************************************************************************************** */
 
         return dataSource;
