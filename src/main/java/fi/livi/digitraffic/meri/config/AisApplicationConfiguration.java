@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,10 @@ public class AisApplicationConfiguration {
     public static final String API_METADATA_PART_PATH = "/metadata";
     public static final String API_LOCATIONS_PATH = "/locations";
     public static final String API_PORT_CALLS_PATH = "/port-calls";
+
+    // Katso POOL_SIZE selitykset käyttökohdassa
+    @Value("${ci.datasource.poolSize:20}")
+    private Integer POOL_SIZE;
 
     /**
      * Enables bean validation for controller parameters
@@ -49,9 +54,9 @@ public class AisApplicationConfiguration {
         dataSource.setPassword(properties.getPassword());
         dataSource.setURL(properties.getUrl());
         dataSource.setFastConnectionFailoverEnabled(true);
-        dataSource.setMaxPoolSize(20);
-        dataSource.setMinPoolSize(5);
-        dataSource.setMaxIdleTime(5);
+        dataSource.setInitialPoolSize(POOL_SIZE);
+        dataSource.setMaxPoolSize(POOL_SIZE);
+        dataSource.setMinPoolSize(POOL_SIZE);
         dataSource.setValidateConnectionOnBorrow(true);
         dataSource.setMaxStatements(10);
         dataSource.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
