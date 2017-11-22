@@ -28,8 +28,12 @@ public class AisApplicationConfiguration {
     public static final String API_PORT_CALLS_PATH = "/port-calls";
 
     // Katso POOL_SIZE selitykset käyttökohdassa
-    @Value("${ci.datasource.poolSize:20}")
-    private Integer POOL_SIZE;
+    @Value("${ci.datasource.initialPoolSize:20}")
+    private Integer INITIAL_POOL_SIZE;
+    @Value("${ci.datasource.maxPoolSize:20}")
+    private Integer MAX_POOL_SIZE;
+    @Value("${ci.datasource.minPoolSize:20}")
+    private Integer MIN_POOL_SIZE;
 
     /**
      * Enables bean validation for controller parameters
@@ -54,9 +58,9 @@ public class AisApplicationConfiguration {
         dataSource.setPassword(properties.getPassword());
         dataSource.setURL(properties.getUrl());
         dataSource.setFastConnectionFailoverEnabled(true);
-        dataSource.setInitialPoolSize(POOL_SIZE);
-        dataSource.setMaxPoolSize(POOL_SIZE);
-        dataSource.setMinPoolSize(POOL_SIZE);
+        dataSource.setInitialPoolSize(INITIAL_POOL_SIZE);
+        dataSource.setMaxPoolSize(MAX_POOL_SIZE);
+        dataSource.setMinPoolSize(MIN_POOL_SIZE);
         dataSource.setValidateConnectionOnBorrow(true);
         dataSource.setMaxStatements(10);
         dataSource.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
