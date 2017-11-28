@@ -4,6 +4,8 @@ import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -28,6 +30,8 @@ public class NauticalWarningController {
 
     private String pookiUrl;
 
+    private static final Logger log = LoggerFactory.getLogger(NauticalWarningController.class);
+
     public enum Status {
         PUBLISHED("merivaroitus_julkaistu_dt"),
         ARCHIVED("merivaroitus_arkistoitu_dt");
@@ -38,8 +42,8 @@ public class NauticalWarningController {
             this.layer = layer;
         }
 
-        public static boolean contains(String needle) {
-            for (Status status : values()) {
+        public static boolean contains(final String needle) {
+            for (final Status status : values()) {
                 if (StringUtils.equalsIgnoreCase(status.name(), needle)) {
                     return true;
                 }
@@ -51,7 +55,7 @@ public class NauticalWarningController {
     @Autowired
     public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
         this.pookiUrl = pookiUrl;
-        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =
+        final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =
                 new HttpComponentsClientHttpRequestFactory(HttpClientBuilder.create().build());
         this.restTemplate = new RestTemplate(clientHttpRequestFactory);
     }
@@ -61,7 +65,7 @@ public class NauticalWarningController {
                     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "published,archived" )
-                                              @PathVariable final String status) throws BadRequestException, PookiException {
+                                              @PathVariable final String status) throws PookiException {
 
         // Parse status argument
         if (!Status.contains(status)) {
@@ -72,11 +76,13 @@ public class NauticalWarningController {
         // Call Pooki and parse response to GeoJSON
         try {
             return getObjectFromUrl(s);
-        } catch (Exception e) {
+        } catch (final Exception e1) {
+            log.info("exception2 from server", e1);
             // Retry once, because Pooki sometimes responds first time with error.
             try {
                 return getObjectFromUrl(s);
-            } catch(Exception e1) {
+            } catch(final Exception e2) {
+                log.info("exception2 from server", e2);
                 throw new PookiException("Bad Gateway. Pooki responded twice with error response.");
             }
         }

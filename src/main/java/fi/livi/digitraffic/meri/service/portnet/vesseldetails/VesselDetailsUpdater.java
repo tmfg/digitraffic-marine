@@ -23,14 +23,12 @@ import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 
 @Service
 public class VesselDetailsUpdater {
-
     private final VesselDetailsRepository vesselDetailsRepository;
+    private final UpdatedTimestampRepository updatedTimestampRepository;
 
     private final VesselDetailsClient vesselDetailsClient;
 
-    private final UpdatedTimestampRepository updatedTimestampRepository;
-
-    private final static Logger log = LoggerFactory.getLogger(VesselDetailsUpdater.class);
+    private static final Logger log = LoggerFactory.getLogger(VesselDetailsUpdater.class);
 
     @Autowired
     public VesselDetailsUpdater(final VesselDetailsRepository vesselDetailsRepository,
@@ -43,21 +41,18 @@ public class VesselDetailsUpdater {
 
     @Transactional
     public void update() {
-        Instant lastUpdated = updatedTimestampRepository.getLastUpdated(VESSEL_DETAILS.toString());
+        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(VESSEL_DETAILS.toString());
 
         updateVesselDetails(lastUpdated);
     }
 
-    @Transactional
     protected void updateVesselDetails(Instant lastUpdated) {
-
         final Instant now = Instant.now();
         final Instant from = lastUpdated == null ? now.minus(1, ChronoUnit.DAYS) : lastUpdated;
 
-        VesselList vesselList = vesselDetailsClient.getVesselList(from);
+        final VesselList vesselList = vesselDetailsClient.getVesselList(from);
 
         if (isListOk(vesselList)) {
-
             updatedTimestampRepository.setUpdated(VESSEL_DETAILS.name(), Date.from(now), getClass().getSimpleName());
 
             final List<VesselDetails> added = new ArrayList<>();
