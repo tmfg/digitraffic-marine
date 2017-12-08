@@ -8,6 +8,7 @@ import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselMetadataDatabaseListener;
@@ -38,11 +39,16 @@ public class VesselMetadataReaderController {
 
         readerList = Arrays.asList(new WebsocketReader(aisLocations5Url, listeners));
 
-        readerList.stream().forEach(WebsocketReader::initialize);
+        readerList.forEach(WebsocketReader::initialize);
+    }
+
+    @Scheduled(fixedRate = 1000)
+    private void idleTimeout() {
+        readerList.forEach(WebsocketReader::idleTimeout);
     }
 
     @PreDestroy
     public void destroy() {
-        readerList.stream().forEach(WebsocketReader::destroy);
+        readerList.forEach(WebsocketReader::destroy);
     }
 }

@@ -54,7 +54,7 @@ public class JavaMelodyConfiguration implements ServletContextInitializer {
         final MonitoringFilter filter = new MonitoringFilter();
         javaMelody.setFilter(filter);
         javaMelody.setAsyncSupported(true);
-        javaMelody.setName("javamelody");
+        javaMelody.setName("net.bull.javamelody.AISMelody");
         javaMelody.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC);
 
         // see the list of parameters:
@@ -73,7 +73,7 @@ public class JavaMelodyConfiguration implements ServletContextInitializer {
         } else {
             storageDirectory = new FileSystemResource("").getFile().getAbsolutePath() + File.separator + javamelodyStorageDirectory;
         }
-        log.info("Set JavaMelody storage directory to {}", storageDirectory);
+        log.info("Set JavaMelody storage directory to dir={}", storageDirectory);
         javaMelody.addInitParameter(Parameter.STORAGE_DIRECTORY.getCode(), storageDirectory);
 
         // https://github.com/javamelody/javamelody/wiki/UserGuide#13-batch-jobs-if-quartz

@@ -34,7 +34,7 @@ public class PortCallClient {
     public PortCallList getList(final Instant lastUpdated, final Instant now) {
         final String url = buildUrl(lastUpdated, now);
 
-        log.info("Fetching port calls from {}", url);
+        log.info("Fetching port calls from url={}", url);
 
         final PortCallList portCallList = restTemplate.getForObject(url, PortCallList.class);
 
@@ -52,7 +52,7 @@ public class PortCallClient {
     }
 
     private static void logInfo(final PortCallList portCallList) {
-        log.info("Number of received notifications: {}", portCallList.getPortCallNotification().size());
+        log.info("Number of received notificationsCount={}", portCallList.getPortCallNotification().size());
     }
 
     private String buildUrl(final Instant lastUpdated, final Instant now) {

@@ -3,10 +3,13 @@ package fi.livi.digitraffic.meri.controller.reader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.websocket.ClientEndpointConfig;
+import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
@@ -25,10 +28,15 @@ public class WebsocketReader {
     private final String locationUrl;
 
     private volatile ClientManager clientManager = null;
+    private volatile Session session = null;
+    private volatile LocalDateTime lastMessageTime = null;
 
     private final List<WebsocketListener> listeners;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
+
+    private static final TemporalAmount IDLE_TIME_LIMIT = Duration.ofMinutes(1);
+    private static final TemporalAmount ON_OPEN_TIME_LIMIT = Duration.ofMinutes(3);
 
     public WebsocketReader(final String locationUrl, final List<WebsocketListener> listeners) {
         this.locationUrl = locationUrl;
@@ -38,61 +46,90 @@ public class WebsocketReader {
     }
 
     public void initialize() {
-        if(StringUtils.isEmpty(locationUrl)) {
-            log.info("Empty location, no reader started");
+        if (StringUtils.isEmpty(locationUrl)) {
+            log.info("method=initialize Empty location, no reader started");
         } else {
             new Thread(() -> {
                 try {
                     clientManager = initializeConnection();
-                } catch (final Exception e) {
-                    log.error("error", e);
+                } catch (final IOException | DeploymentException | URISyntaxException e) {
+                    log.error("method=initialize locationUrl={}", locationUrl, e);
                 }
             }).start();
         }
     }
 
+    private boolean isIdle() {
+        return lastMessageTime != null && lastMessageTime.isBefore(LocalDateTime.now().minus(IDLE_TIME_LIMIT));
+    }
+
+    public void idleTimeout() {
+        if(isIdle() && session != null && session.isOpen()) {
+            log.warn("Restarting connection to url={} because it's been idle since lastMessageTime={}", locationUrl, lastMessageTime);
+            try {
+                session.close();
+            } catch (final IOException e) {
+                log.error("method=idleTimeout locationUrl={}", locationUrl, e);
+            }
+        }
+    }
+
     private ClientManager initializeConnection() throws URISyntaxException, IOException, DeploymentException {
-        log.info("Initializing connection to {} {} listeners", locationUrl, listeners.size());
+        log.info("Initializing connection to url={} listenersCount={} listeners", locationUrl, listeners.size());
 
-        final ClientManager client = ClientManager.createClient();
         final ReconnectingHandler handler = new ReconnectingHandler(locationUrl, listeners, log);
+        final MessageHandler messageHandler = new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(final String message) {
+                receiveMessage(message);
+            }
+        };
 
-        client.getProperties().put(ClientProperties.RECONNECT_HANDLER, handler);
-        client.connectToServer(new Endpoint() {
-            @Override public void onOpen(final Session session, final EndpointConfig endpointConfig) {
+        final Endpoint endPoint = new Endpoint() {
+            @Override
+            public void onOpen(final Session session, final EndpointConfig endpointConfig) {
+                log.info("method=onOpen Connection to url={} opened", locationUrl);
+                WebsocketReader.this.session = session;
                 handler.onOpen();
 
+                lastMessageTime = LocalDateTime.now().plus(ON_OPEN_TIME_LIMIT);
+
                 // for some reason, this does NOT work with lambda or method reference
-                session.addMessageHandler(new MessageHandler.Whole<String>() {
-                    @Override
-                    public void onMessage(final String message) {
-                        receiveMessage(message);
-                    }
-                });
+                session.addMessageHandler(messageHandler);
             }
-        }, ClientEndpointConfig.Builder.create().build(), new URI(locationUrl));
+
+            @Override
+            public void onClose(final Session session, final CloseReason closeReason) {
+                log.info("method=onClose Connection to url={} closed because reason={}", locationUrl, closeReason.getReasonPhrase().replaceAll("\\s", "_"));
+                lastMessageTime = null;
+
+                session.removeMessageHandler(messageHandler);
+            }
+
+            public void onError(final Session session, final Throwable thr) {
+                log.info("method=onError Connection to url={} caused error errorMessage={}", locationUrl, thr.getMessage().replaceAll("\\s", "_"));
+            }
+        };
+
+        final ClientManager client = ClientManager.createClient();
+
+        client.getProperties().put(ClientProperties.RECONNECT_HANDLER, handler);
+        client.connectToServer(endPoint, ClientEndpointConfig.Builder.create().build(), new URI(locationUrl));
 
         return client;
     }
 
     private void receiveMessage(final String message) {
+        lastMessageTime = LocalDateTime.now();
+
         if (running.get()) {
-            listeners.parallelStream().forEach(listener -> notifyListener(listener, message));
+            listeners.parallelStream().forEach(listener -> listener.receiveMessage(message));
         } else {
             log.warn("Not handling messages received after shutdown hook");
         }
     }
 
-    private void notifyListener(final WebsocketListener listener, final String message) {
-        try {
-            listener.receiveMessage(message);
-        } catch(final Exception e) {
-            log.error("exception for message " + message, e);
-        }
-    }
-
     public void destroy() {
-        log.debug("destroy");
         running.set(false);
         if(clientManager != null) {
             clientManager.shutdown();

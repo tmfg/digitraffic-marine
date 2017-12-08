@@ -22,7 +22,7 @@ public interface PortCallJson {
     @ApiModelProperty(value = "Unique identifier for port call", required = true)
     Long getPortCallId();
 
-    @ApiModelProperty(value = "Port call information modification time", required = true)
+    @ApiModelProperty(value = "Port call information modification time")
     Timestamp getPortCallTimestamp();
 
     @ApiModelProperty(value = "Custom's reference")

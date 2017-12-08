@@ -1,3 +1,3 @@
 #!/bin/bash
-ssh -L 18080:172.17.206.134:80 dttestdaemon
-# localhost:18080 -> dttestdaemon -> 172.17.206.134:80
+ssh -L 18080:livisov02t.vally.local:80 dttestdaemon
+# localhost:18080 -> dttestdaemon -> livituo04.vally.local:80

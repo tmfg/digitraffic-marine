@@ -64,7 +64,7 @@ public class BerthUpdater {
             final PortArea portArea = oldMap.get(nc.getPortAreaKey());
 
             if(portArea == null) {
-                log.error("Can't find port area {}", nc.getPortAreaKey());
+                log.error("Can't find portArea={}", nc.getPortAreaKey());
             } else {
                 portArea.setWgs84Lat(nc.getWgs84Lat());
                 portArea.setWgs84Long(nc.getWgs84Long());
@@ -102,7 +102,7 @@ public class BerthUpdater {
         berthRepository.delete(oldMap.values());
         berthRepository.save(newBerths);
 
-        log.info("Read {} berths, added {}, updated {}, deleted {}.",
+        log.info("Read berthsCount={} berths, berthsAddedCount={} berthsUpdatedCount={} berthsDeletedCount={} .",
                 berthLines.size(), newBerths.size(), updates, oldMap.values().size());
     }
 
@@ -144,7 +144,7 @@ public class BerthUpdater {
         portAreaRepository.delete(oldMap.values());
         portAreaRepository.save(newAreas);
 
-        log.info("Added {} port areas, updated {}, deleted {}.", newAreas.size(), updates, oldMap.values().size());
+        log.info("portAreasAddedCount={} port areas, portAreasUpdatedCount={} portAreasDeletedCount={} .", newAreas.size(), updates, oldMap.values().size());
 
         return CollectionUtils.isNotEmpty(newAreas) || updates > 0;
     }

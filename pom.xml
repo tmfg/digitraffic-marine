@@ -5,7 +5,7 @@
 
     <groupId>fi.fta.digitraffic</groupId>
     <artifactId>AIS</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.18.0</version>
     <packaging>jar</packaging>
 
     <name>dt-ais</name>
@@ -21,6 +21,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
     </properties>
 
     <!-- Download OJDBC7.jar, ons.jar and ucp.jar and install drivers to local repo
@@ -30,6 +31,29 @@
     <repositories>
         <!-- PLACEHOLDER -->
     </repositories>
+
+
+    <!-- *** https://github.com/logstash/logstash-logback-encoder#including-it-in-your-project *** -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-access</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!-- *** https://github.com/logstash/logstash-logback-encoder#including-it-in-your-project *** -->
 
     <dependencies>
         <dependency>
@@ -182,12 +206,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
             <version>1.1</version>
@@ -197,6 +215,13 @@
             <groupId>org.osgeo</groupId>
             <artifactId>proj4j</artifactId>
             <version>0.1.0</version>
+        </dependency>
+
+        <!-- Logging in JSON format for ELK-stack -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>4.11</version>
         </dependency>
 
         <!-- JavaMelody -->
@@ -289,6 +314,69 @@
                     <!--</items>-->
                 <!--</configuration>-->
             <!--</plugin>-->
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>validate-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <prefix>git</prefix>
+                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+                    <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+                    <!-- false is default here, it prints some more information during the build -->
+                    <verbose>false</verbose>
+                    <!-- this is false by default, forces the plugin to generate the git.properties file -->
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <format>properties</format>
+                    <skipPoms>true</skipPoms>
+                    <injectAllReactorProjects>false</injectAllReactorProjects>
+                    <failOnNoGitDirectory>true</failOnNoGitDirectory>
+                    <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
+                    <skip>false</skip>
+                    <runOnlyOnce>false</runOnlyOnce>
+                    <excludeProperties>
+                        <!-- <excludeProperty>git.user.*</excludeProperty> -->
+                    </excludeProperties>
+                    <includeOnlyProperties>
+                        <!-- <includeOnlyProperty>^git.commit.id.full$</includeOnlyProperty> -->
+                    </includeOnlyProperties>
+                    <useNativeGit>false</useNativeGit>
+                    <abbrevLength>7</abbrevLength>
+                    <commitIdGenerationMode>flat</commitIdGenerationMode>
+                    <gitDescribe>
+                        <!-- don't generate the describe property -->
+                        <skip>false</skip>
+                        <!-- if no tag was found "near" this commit, just print the commit's id instead, helpful when you always expect this field to be not-empty -->
+                        <always>false</always>
+                        <!-- how many chars should be displayed as the commit object id? 7 is git's default, 0 has a special meaning (see end of this README.md), and 40 is the maximum value here -->
+                        <abbrev>7</abbrev>
+                        <!-- when the build is triggered while the repo is in "dirty state", append this suffix -->
+                        <dirty>-dirty</dirty>
+                        <!-- Only consider tags matching the given pattern. This can be used to avoid leaking private tags from the repository. -->
+                        <match>*</match>
+                        <!-- always print using the "tag-commits_from_tag-g_commit_id-maybe_dirty" format, even if "on" a tag. The distance will always be 0 if you're "on" the tag. -->
+                        <forceLongFormat>false</forceLongFormat>
+                    </gitDescribe>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
