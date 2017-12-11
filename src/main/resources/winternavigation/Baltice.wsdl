@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="IBNet_Baltice_Service" xmlns:ibbi="IBNet_Baltice_Schema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ibbi_winterships="IBNet_Baltice_WinterShips" xmlns:ibbiservice="IBNet_Baltice_Service" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ibbi_waypoints="IBNet_Baltice_Waypoints" xmlns:ibbi_ports="IBNet_Baltice_Ports">
+  <wsdl:types>
+    <xs:schema targetNamespace="IBNet_Baltice_Schema" xmlns="http://www.w3.org/2001/XMLSchema">
+			<xs:import namespace="IBNet_Baltice_Ports" schemaLocation="Baltice_ports.xsd"/>
+			<xs:import namespace="IBNet_Baltice_Waypoints" schemaLocation="Baltice_waypoints.xsd"/>
+			<xs:import namespace="IBNet_Baltice_WinterShips" schemaLocation="Baltice_winterships.xsd"/>
+			<xs:complexType name="PortsRequestType">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="timestamp" type="xs:dateTime"/>
+					<xs:element minOccurs="0" name="options" type="xs:string"/>
+					<xs:element minOccurs="0" name="sea_area" type="xs:string"/>
+					<xs:element minOccurs="0" name="port_name" type="xs:string"/>
+					<xs:element minOccurs="0" name="port_key" type="xs:string"/>
+					<xs:element minOccurs="0" name="nationality" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="PortsResponseType">
+				<xs:sequence>
+					<xs:element name="ports" type="ibbi_ports:ports"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="WaypointsRequestType">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="timestamp" type="xs:dateTime"/>
+					<xs:element minOccurs="0" name="options" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="WaypointsResponseType">
+				<xs:sequence>
+					<xs:element name="waypoints" type="ibbi_waypoints:DirWaysType"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="WinterShipsRequestType">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="timestamp" type="xs:dateTime"/>
+					<xs:element minOccurs="0" name="options" type="xs:string"/>
+					<xs:element minOccurs="0" name="sea_area" type="xs:string"/>
+					<xs:element minOccurs="0" name="ship_name" type="xs:string"/>
+					<xs:element minOccurs="0" name="ship_key" type="xs:string"/>
+					<xs:element minOccurs="0" name="port_name" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="WinterShipsResponseType">
+				<xs:sequence>
+					<xs:element name="winterShips" type="ibbi_winterships:winterShips"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="PortsRequest" type="ibbi:PortsRequestType"/>
+			<xs:element name="PortsResponse" type="ibbi:PortsResponseType"/>
+			<xs:element name="WaypointsRequest" type="ibbi:WaypointsRequestType"/>
+			<xs:element name="WaypointsResponse" type="ibbi:WaypointsResponseType"/>
+			<xs:element name="WinterShipsRequest" type="ibbi:WinterShipsRequestType"/>
+			<xs:element name="WinterShipsResponse" type="ibbi:WinterShipsResponseType"/>
+		</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="PortsRequestMessage">
+    <wsdl:part name="parameters" element="ibbi:PortsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WaypointsRequestMessage">
+    <wsdl:part name="parameters" element="ibbi:WaypointsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WinterShipsRequestMessage">
+    <wsdl:part name="parameters" element="ibbi:WinterShipsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PortsResponseMessage">
+    <wsdl:part name="parameters" element="ibbi:PortsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WinterShipsResponseMessage">
+    <wsdl:part name="parameters" element="ibbi:WinterShipsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WaypointsResponseMessage">
+    <wsdl:part name="parameters" element="ibbi:WaypointsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WebServicePortType">
+    <wsdl:operation name="getPorts">
+      <wsdl:input message="ibbiservice:PortsRequestMessage" wsaw:Action="urn:getPorts">
+    </wsdl:input>
+      <wsdl:output message="ibbiservice:PortsResponseMessage" wsaw:Action="urn:PortsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWaypoints">
+      <wsdl:input message="ibbiservice:WaypointsRequestMessage" wsaw:Action="urn:getWaypoints">
+    </wsdl:input>
+      <wsdl:output message="ibbiservice:WaypointsResponseMessage" wsaw:Action="urn:WaypointsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWinterShips">
+      <wsdl:input message="ibbiservice:WinterShipsRequestMessage" wsaw:Action="urn:getWinterShips">
+    </wsdl:input>
+      <wsdl:output message="ibbiservice:WinterShipsResponseMessage" wsaw:Action="urn:WinterShipsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSOAP12Binding" type="ibbiservice:WebServicePortType">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getPorts">
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWaypoints">
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWinterShips">
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="IBNet_Baltice_Service">
+    <wsdl:port name="WebServiceSOAP12port_http" binding="ibbiservice:WebServiceSOAP12Binding">
+      <soap12:address location="http://172.17.195.29:8333/baltice/services/IBNet_Baltice_Service/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
