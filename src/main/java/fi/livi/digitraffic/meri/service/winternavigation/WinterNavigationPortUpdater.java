@@ -2,13 +2,15 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -22,9 +24,9 @@ import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
-import fi.livi.digitraffic.meri.service.winternavigation.dto.PortDto;
-import fi.livi.digitraffic.meri.service.winternavigation.dto.PortRestrictionDto;
-import fi.livi.digitraffic.meri.service.winternavigation.dto.PortsDto;
+import ibnet_baltice_ports.Port;
+import ibnet_baltice_ports.Ports;
+import ibnet_baltice_ports.Restriction;
 
 @Service
 public class WinterNavigationPortUpdater {
@@ -49,18 +51,19 @@ public class WinterNavigationPortUpdater {
     @Transactional
     public void updateWinterNavigationPorts() {
 
-        final PortsDto data = winterNavigationClient.getWinterNavigationPorts();
+        final Ports data = winterNavigationClient.getWinterNavigationPorts();
 
-        final Map<Boolean, List<PortDto>> ports =
-                data.ports.stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.portInfo.locode)));
+        final Map<Boolean, List<Port>> ports =
+            data.getPort().stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.getPortInfo().getLocode())));
 
-        final List<PortDto> portsWithoutLocode = ports.get(false);
+        final List<Port> portsWithoutLocode = ports.get(false);
         if (!portsWithoutLocode.isEmpty()) {
-            log.info("Received {} winter navigation port(s) with missing locode. PortIds: {}",
-                     portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.portInfo.portId).collect(Collectors.joining(", ")));
+            log.info("Received winterNavigationPorts={} with missing locode. PortIds={}",
+                     portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.getPortInfo().getPortId()).collect(Collectors.joining(", ")));
         }
 
-        final List<String> locodes = ports.get(true).stream().map(p -> p.portInfo.locode).collect(Collectors.toList());
+        // Make all ports obsolete before update
+        final List<String> locodes = ports.get(true).stream().map(p -> p.getPortInfo().getLocode()).collect(Collectors.toList());
         if (!locodes.isEmpty()) {
             winterNavigationRepository.setRemovedPortsObsolete(locodes);
         }
@@ -73,15 +76,15 @@ public class WinterNavigationPortUpdater {
         winterNavigationRepository.save(added);
         stopWatch.stop();
 
-        log.info("Added {} winter navigation port(s), updated {}, took {} ms", added.size(), updated.size(), stopWatch.getTime());
+        log.info("method=updateWinterNavigationPorts addedPorts={} , updatedPorts={}, took={} ms", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
-                                              Date.from(data.dataValidTime.toInstant()),
+                                              Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
                                               getClass().getSimpleName());
     }
 
-    private void update(final PortDto port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
-        final WinterNavigationPort old = winterNavigationRepository.findOne(port.portInfo.portId);
+    private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
+        final WinterNavigationPort old = winterNavigationRepository.findOne(port.getPortInfo().getPortId());
 
         if (old == null) {
             added.add(addNew(port));
@@ -90,7 +93,7 @@ public class WinterNavigationPortUpdater {
         }
     }
 
-    private static WinterNavigationPort addNew(final PortDto port) {
+    private static WinterNavigationPort addNew(final Port port) {
         WinterNavigationPort p = new WinterNavigationPort();
 
         updateData(p, port);
@@ -98,49 +101,57 @@ public class WinterNavigationPortUpdater {
         return p;
     }
 
-    private static WinterNavigationPort update(final WinterNavigationPort p, final PortDto port) {
+    private static WinterNavigationPort update(final WinterNavigationPort p, final Port port) {
 
         updateData(p, port);
 
         return p;
     }
 
-    private static void updateData(final WinterNavigationPort p, final PortDto port) {
-        p.setLocode(port.portInfo.locode);
-        p.setName(port.portInfo.name);
-        p.setLongitude(port.portInfo.lon);
-        p.setLatitude(port.portInfo.lat);
-        p.setNationality(port.portInfo.nationality);
-        p.setSeaArea(port.portInfo.seaArea);
+    private static void updateData(final WinterNavigationPort p, final Port port) {
+        p.setLocode(port.getPortInfo().getLocode());
+        p.setName(port.getPortInfo().getName().getValue());
+        p.setLongitude(port.getPortInfo().getLon().doubleValue());
+        p.setLatitude(port.getPortInfo().getLat().doubleValue());
+        p.setNationality(port.getPortInfo().getNationality());
+        p.setSeaArea(port.getPortInfo().getSeaArea());
         p.setObsoleteDate(null);
-        if (port.restrictions != null) {
-            updatePortRestrictions(p, port.restrictions);
+        p.getPortRestrictions().clear();
+        if (port.getRestrictions() != null) {
+            updatePortRestrictions(p, port.getRestrictions().getRestriction());
         }
     }
 
-    private static void updatePortRestrictions(final WinterNavigationPort p, final List<PortRestrictionDto> restrictions) {
-        p.getPortRestrictions().clear();
+    private static void updatePortRestrictions(final WinterNavigationPort p, final List<Restriction> restrictions) {
 
         int orderNumber = 1;
-        for (final PortRestrictionDto restriction : restrictions) {
+        for (final Restriction restriction : restrictions) {
             PortRestriction pr = new PortRestriction();
             pr.setLocode(p.getLocode());
             pr.setOrderNumber(orderNumber);
-            pr.setCurrent(restriction.isCurrent);
-            pr.setPortRestricted(restriction.portRestricted);
-            pr.setPortClosed(restriction.portClosed);
-            pr.setIssueTime(findTimestamp(restriction.issueTime));
-            pr.setLastModified(findTimestamp(restriction.timeStamp));
-            pr.setValidFrom(restriction.validFrom);
-            pr.setValidUntil(restriction.validUntil);
-            pr.setRawText(restriction.rawText);
-            pr.setFormattedText(restriction.formattedText);
+            pr.setCurrent(restriction.isIsCurrent());
+            pr.setPortRestricted(restriction.isPortRestricted());
+            pr.setPortClosed(restriction.isPortClosed());
+            pr.setIssueTime(findTimestamp(restriction.getIssueTime())); // FIXME ZonedDateTime
+            pr.setLastModified(findTimestamp(restriction.getTimeStamp())); // FIXME
+            pr.setValidFrom(findDate(restriction.getValidFrom())); // FIXME
+            pr.setValidUntil(findDate(restriction.getValidUntil())); // FIXME
+            pr.setRawText(restriction.getRawText());
+            pr.setFormattedText(restriction.getFormattedText());
             p.getPortRestrictions().add(pr);
             orderNumber++;
         }
     }
 
-    public static Timestamp findTimestamp(final ZonedDateTime issueTime) {
+    public static Timestamp findTimestamp(final ZonedDateTime issueTime) { // FIXME
         return issueTime == null ? null : Timestamp.from(issueTime.toInstant());
+    }
+
+    public static Timestamp findTimestamp(final XMLGregorianCalendar cal) { // FIXME
+        return cal == null ? null : Timestamp.from(cal.toGregorianCalendar().toInstant());
+    }
+
+    public static Date findDate(final XMLGregorianCalendar cal) {
+        return cal == null ? null : Date.from(cal.toGregorianCalendar().toInstant());
     }
 }

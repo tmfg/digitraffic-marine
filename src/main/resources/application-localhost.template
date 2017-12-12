@@ -21,6 +21,8 @@ ais.pooki.url = http://localhost:18080/pooki_www/services/rest.ashx
 ais.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
 ais.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetails/List/
 
+winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/services/IBNet_Baltice_Service/
+
 metadata.csv.baseUrl = https://raw.githubusercontent.com/finnishtransportagency/metadata/master/csv/
 
 quartz.enabled = true

@@ -158,6 +158,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
@@ -452,22 +457,6 @@
                                 <xsdOption>
                                     <xsd>${basedir}/src/main/resources/portnet/vesseldetails/PortnetTypes.xsd</xsd>
                                     <packagename>fi.livi.digitraffic.meri.portnet.vesseldetails.xsd</packagename>
-                                </xsdOption>
-                                <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/winternavigation/Baltice_ports.xsd</xsd>
-                                    <packagename>fi.livi.digitraffic.meri.winternavigation.baltice.ports.xsd</packagename>
-                                </xsdOption>
-                                <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/winternavigation/Baltice_waypoints.xsd</xsd>
-                                    <packagename>fi.livi.digitraffic.meri.winternavigation.baltice.waypoints.xsd</packagename>
-                                </xsdOption>
-                                <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/winternavigation/Baltice_winterships.xsd</xsd>
-                                    <packagename>fi.livi.digitraffic.meri.winternavigation.baltice.winterships.xsd</packagename>
-                                </xsdOption>
-                                <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/winternavigation/Baltice.xsd</xsd>
-                                    <packagename>fi.livi.digitraffic.meri.winternavigation.baltice.xsd</packagename>
                                 </xsdOption>
                             </xsdOptions>
                         </configuration>

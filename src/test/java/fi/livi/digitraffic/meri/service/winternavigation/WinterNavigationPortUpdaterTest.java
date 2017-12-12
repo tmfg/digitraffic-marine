@@ -4,34 +4,36 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+
+import javax.xml.bind.JAXBElement;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.xml.transform.StringSource;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
+import ibnet_baltice_ports.Ports;
+import ibnet_baltice_schema.PortsResponseType;
 
 public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
 
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
+    @MockBean
     private WinterNavigationClient winterNavigationClient;
 
     @MockBean(answer = Answers.CALLS_REAL_METHODS)
@@ -43,17 +45,12 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
 
-    private MockRestServiceServer server;
-
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    private final String expectedUri = "winterNavigationUrl";
+    @Autowired
+    private Jaxb2Marshaller jaxb2Marshaller;
 
     @Before
     public void before() {
-        winterNavigationClient = new WinterNavigationClient(expectedUri, restTemplate);
         winterNavigationPortUpdater = new WinterNavigationPortUpdater(winterNavigationClient, winterNavigationRepository, updatedTimestampRepository);
-        server = MockRestServiceServer.createServer(restTemplate);
     }
 
     @Test
@@ -61,33 +58,37 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
     @Rollback
     public void updateWinterNavigationPortsSucceeds() throws IOException {
 
-        server.expect(MockRestRequestMatchers.requestTo(expectedUri))
-            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-            .andRespond(MockRestResponseCreators.withSuccess(readFile("winterNavigationPortsResponse.xml"), MediaType.APPLICATION_XML));
+        when(winterNavigationClient.getWinterNavigationPorts()).thenReturn(getResponse("winterNavigationPortsResponse.xml"));
 
         winterNavigationPortUpdater.updateWinterNavigationPorts();
 
         List<WinterNavigationPort> ports = winterNavigationRepository.findAll();
         assertEquals(156, ports.size());
-        final WinterNavigationPort port = ports.get(90);
-        assertEquals("SEGÄV", port.getLocode());
-        assertEquals("GÄVLE", port.getName());
-        assertEquals("SE", port.getNationality());
-        assertEquals(Double.valueOf("17.18333333"), port.getLongitude(), 0.00000001);
-        assertEquals(Double.valueOf("60.68333333"), port.getLatitude(), 0.00000001);
-        assertEquals("Sea of Åland and its archipelago", port.getSeaArea());
+        final WinterNavigationPort port = ports.stream().filter(p -> p.getLocode().equals("FIPUH")).findFirst().get();
+        assertEquals("FIPUH", port.getLocode());
+        assertEquals("PUHOS", port.getName());
+        assertEquals("FI", port.getNationality());
+        assertEquals(Double.valueOf("29.9167"), port.getLongitude(), 0.00001);
+        assertEquals(Double.valueOf("62.1"), port.getLatitude(), 0.01);
+        assertEquals("Baltic Sea", port.getSeaArea());
         assertEquals(1, port.getPortRestrictions().size());
 
         final PortRestriction restriction = port.getPortRestrictions().get(0);
         assertEquals(1, restriction.getOrderNumber().intValue());
-        assertTrue(restriction.getCurrent());
-        assertFalse(restriction.getPortRestricted());
-        assertNull(restriction.getPortClosed());
-        assertEquals(Timestamp.valueOf("2017-03-20 08:10:39.127"), restriction.getIssueTime());
-        assertEquals(Timestamp.valueOf("2017-03-20 08:10:39.127"), restriction.getLastModified());
-        assertNull(restriction.getValidFrom());
+        assertFalse(restriction.getCurrent());
+        assertTrue(restriction.getPortRestricted());
+        assertFalse(restriction.getPortClosed());
+        assertEquals(Timestamp.valueOf("2017-12-11 10:10:28.217"), restriction.getIssueTime());
+        assertEquals(Timestamp.valueOf("2017-12-11 11:10:28.217"), restriction.getLastModified());
+        assertEquals(Date.valueOf("2017-12-16"), restriction.getValidFrom());
         assertNull(restriction.getValidUntil());
-        assertNull(restriction.getRawText());
-        assertNull(restriction.getFormattedText());
+        assertEquals("I,II 2000", restriction.getRawText());
+        assertEquals("I,II 2000", restriction.getFormattedText());
+    }
+
+    private Ports getResponse(final String filename) throws IOException {
+        final JAXBElement<PortsResponseType> unmarshal =
+            ((JAXBElement<PortsResponseType>) jaxb2Marshaller.unmarshal(new StringSource(readFile(filename))));
+        return unmarshal.getValue().getPorts();
     }
 }
