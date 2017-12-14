@@ -13,4 +13,13 @@ public enum PositionAccuracy {
     PositionAccuracy(final int value) {
         this.value = value;
     }
+
+    public static PositionAccuracy fromValue(final int value) {
+        for (PositionAccuracy positionAccuracy : values()) {
+            if (positionAccuracy.value == value) {
+                return positionAccuracy;
+            }
+        }
+        throw new IllegalArgumentException("No matching PositionAccuracy for code={" + value + "}");
+    }
 }

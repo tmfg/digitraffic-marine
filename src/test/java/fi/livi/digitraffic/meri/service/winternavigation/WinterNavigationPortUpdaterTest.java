@@ -40,7 +40,7 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
     private WinterNavigationPortUpdater winterNavigationPortUpdater;
 
     @Autowired
-    private WinterNavigationPortRepository winterNavigationRepository;
+    private WinterNavigationPortRepository winterNavigationPortRepository;
 
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
@@ -50,7 +50,8 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
 
     @Before
     public void before() {
-        winterNavigationPortUpdater = new WinterNavigationPortUpdater(winterNavigationClient, winterNavigationRepository, updatedTimestampRepository);
+        winterNavigationPortUpdater = new WinterNavigationPortUpdater(winterNavigationClient, winterNavigationPortRepository, updatedTimestampRepository);
+        winterNavigationPortRepository.deleteAll();
     }
 
     @Test
@@ -62,7 +63,7 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
 
         winterNavigationPortUpdater.updateWinterNavigationPorts();
 
-        List<WinterNavigationPort> ports = winterNavigationRepository.findAll();
+        List<WinterNavigationPort> ports = winterNavigationPortRepository.findAll();
         assertEquals(156, ports.size());
         final WinterNavigationPort port = ports.stream().filter(p -> p.getLocode().equals("FIPUH")).findFirst().get();
         assertEquals("FIPUH", port.getLocode());

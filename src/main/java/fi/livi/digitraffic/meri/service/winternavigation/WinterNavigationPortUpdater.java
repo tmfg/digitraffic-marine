@@ -2,15 +2,11 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -48,8 +44,13 @@ public class WinterNavigationPortUpdater {
         this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
+    /**
+     * 1. Get winter navigation ports from an external source
+     * 2. Insert / update database
+     * @return total number of added or updated ports
+     */
     @Transactional
-    public void updateWinterNavigationPorts() {
+    public int updateWinterNavigationPorts() {
 
         final Ports data = winterNavigationClient.getWinterNavigationPorts();
 
@@ -57,13 +58,15 @@ public class WinterNavigationPortUpdater {
             data.getPort().stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.getPortInfo().getLocode())));
 
         final List<Port> portsWithoutLocode = ports.get(false);
+        final List<Port> portsWithLocode = ports.get(true);
+
         if (!portsWithoutLocode.isEmpty()) {
-            log.info("Received winterNavigationPorts={} with missing locode. PortIds={}",
+            log.warn("method=updateWinterNavigationPorts Received invalidPortCount={} with missing locode. PortIds={}",
                      portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.getPortInfo().getPortId()).collect(Collectors.joining(", ")));
         }
 
         // Make all ports obsolete before update
-        final List<String> locodes = ports.get(true).stream().map(p -> p.getPortInfo().getLocode()).collect(Collectors.toList());
+        final List<String> locodes = portsWithLocode.stream().map(p -> p.getPortInfo().getLocode()).collect(Collectors.toList());
         if (!locodes.isEmpty()) {
             winterNavigationRepository.setRemovedPortsObsolete(locodes);
         }
@@ -72,15 +75,18 @@ public class WinterNavigationPortUpdater {
         final List<WinterNavigationPort> updated = new ArrayList<>();
 
         StopWatch stopWatch = StopWatch.createStarted();
-        ports.get(true).forEach(p -> update(p, added, updated));
+        portsWithLocode.forEach(p -> update(p, added, updated));
         winterNavigationRepository.save(added);
         stopWatch.stop();
 
-        log.info("method=updateWinterNavigationPorts addedPorts={} , updatedPorts={}, took={} ms", added.size(), updated.size(), stopWatch.getTime());
+        log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={}, tookMs={}",
+                 data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
                                               Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
                                               getClass().getSimpleName());
+
+        return added.size() + updated.size();
     }
 
     private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
@@ -132,10 +138,10 @@ public class WinterNavigationPortUpdater {
             pr.setCurrent(restriction.isIsCurrent());
             pr.setPortRestricted(restriction.isPortRestricted());
             pr.setPortClosed(restriction.isPortClosed());
-            pr.setIssueTime(findTimestamp(restriction.getIssueTime())); // FIXME ZonedDateTime
-            pr.setLastModified(findTimestamp(restriction.getTimeStamp())); // FIXME
-            pr.setValidFrom(findDate(restriction.getValidFrom())); // FIXME
-            pr.setValidUntil(findDate(restriction.getValidUntil())); // FIXME
+            pr.setIssueTime(WinterNavigationShipUpdater.findTimestamp(restriction.getIssueTime())); // FIXME ZonedDateTime
+            pr.setLastModified(WinterNavigationShipUpdater.findTimestamp(restriction.getTimeStamp())); // FIXME
+            pr.setValidFrom(WinterNavigationShipUpdater.findDate(restriction.getValidFrom())); // FIXME
+            pr.setValidUntil(WinterNavigationShipUpdater.findDate(restriction.getValidUntil())); // FIXME
             pr.setRawText(restriction.getRawText());
             pr.setFormattedText(restriction.getFormattedText());
             p.getPortRestrictions().add(pr);
@@ -143,15 +149,4 @@ public class WinterNavigationPortUpdater {
         }
     }
 
-    public static Timestamp findTimestamp(final ZonedDateTime issueTime) { // FIXME
-        return issueTime == null ? null : Timestamp.from(issueTime.toInstant());
-    }
-
-    public static Timestamp findTimestamp(final XMLGregorianCalendar cal) { // FIXME
-        return cal == null ? null : Timestamp.from(cal.toGregorianCalendar().toInstant());
-    }
-
-    public static Date findDate(final XMLGregorianCalendar cal) {
-        return cal == null ? null : Date.from(cal.toGregorianCalendar().toInstant());
-    }
 }

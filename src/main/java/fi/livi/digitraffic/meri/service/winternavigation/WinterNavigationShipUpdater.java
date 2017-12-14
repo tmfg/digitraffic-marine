@@ -2,12 +2,16 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -23,10 +27,11 @@ import fi.livi.digitraffic.meri.domain.winternavigation.ShipPlannedActivity;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipState;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipVoyage;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
-import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipActivityDto;
-import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipDto;
-import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipPlannedActivityDto;
-import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipsDto;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionAccuracy;
+import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionSource;
+import ibnet_baltice_winterships.PlannedActivity;
+import ibnet_baltice_winterships.WinterShip;
+import ibnet_baltice_winterships.WinterShips;
 
 @Service
 public class WinterNavigationShipUpdater {
@@ -46,10 +51,15 @@ public class WinterNavigationShipUpdater {
         this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
+    /**
+     * 1. Get winter navigation ships from an external source
+     * 2. Insert / update database
+     * @return total number of added or updated ships
+     */
     @Transactional
-    public void updateWinterNavigationShips() {
+    public int updateWinterNavigationShips() {
 
-        final ShipsDto data = winterNavigationClient.getWinterNavigationShips();
+        final WinterShips data = winterNavigationClient.getWinterNavigationShips();
 
         final List<WinterNavigationShip> added = new ArrayList<>();
         final List<WinterNavigationShip> updated = new ArrayList<>();
@@ -58,21 +68,23 @@ public class WinterNavigationShipUpdater {
             winterNavigationShipRepository.findDistinctByOrderByVesselPK().stream().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
 
         final StopWatch stopWatch = StopWatch.createStarted();
-        data.ships.forEach(ship -> update(ship, added, updated, shipsByVesselPK));
+        data.getWinterShip().forEach(ship -> update(ship, added, updated, shipsByVesselPK));
         winterNavigationShipRepository.save(added);
         stopWatch.stop();
 
-        log.info("Added {} winter navigation ships(s), updated {}, took {} ms", added.size(), updated.size(), stopWatch.getTime());
+        log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={}, tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_SHIPS.name(),
-                                              Date.from(data.dataValidTime.toInstant()),
+                                              Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
                                               getClass().getSimpleName());
+
+        return added.size() + updated.size();
     }
 
-    private void update(final ShipDto ship, final List<WinterNavigationShip> added, final List<WinterNavigationShip> updated,
+    private void update(final WinterShip ship, final List<WinterNavigationShip> added, final List<WinterNavigationShip> updated,
                         final Map<String, WinterNavigationShip> shipsByVesselPK) {
 
-        final WinterNavigationShip old = shipsByVesselPK.get(ship.vesselPk);
+        final WinterNavigationShip old = shipsByVesselPK.get(ship.getVesselPk());
 
         if (old == null) {
             added.add(addNew(ship));
@@ -81,33 +93,33 @@ public class WinterNavigationShipUpdater {
         }
     }
 
-    private WinterNavigationShip addNew(final ShipDto ship) {
+    private WinterNavigationShip addNew(final WinterShip ship) {
         final WinterNavigationShip s = new WinterNavigationShip();
 
         updateData(s, ship);
         return s;
     }
 
-    private static WinterNavigationShip updateData(final WinterNavigationShip s, final ShipDto ship) {
+    private static WinterNavigationShip updateData(final WinterNavigationShip s, final WinterShip ship) {
 
-        s.setVesselPK(ship.vesselPk);
-        s.setVesselSource(ship.vesselSource);
-        s.setMmsi(ship.shipData.mmsi);
-        s.setName(ship.shipData.name);
-        s.setImo(ship.shipData.imo);
-        s.setNationality(ship.shipData.nationality);
-        s.setNatCode(ship.shipData.natCode);
-        s.setAisLength(ship.shipData.aisLength);
-        s.setAisWidth(ship.shipData.aisWidth);
-        s.setAisShipType(ship.shipData.aisShipType);
-        s.setCallSign(ship.shipData.callSign);
-        s.setDimensions(ship.shipData.dimensions);
-        s.setDwt(ship.shipData.dwt);
-        s.setIceClass(ship.shipData.iceClass);
-        s.setNominalDraught(ship.shipData.nominalDraught);
-        s.setLength(ship.shipData.length);
-        s.setWidth(ship.shipData.width);
-        s.setShipType(ship.shipData.shipType);
+        s.setVesselPK(ship.getVesselPk());
+        s.setVesselSource(ship.getVesselSource());
+        s.setMmsi(ship.getShipData().getMmsi());
+        s.setName(ship.getShipData().getName());
+        s.setImo(ship.getShipData().getImo());
+        s.setNationality(ship.getShipData().getNationality());
+        s.setNatCode(ship.getShipData().getNatcode());
+        s.setAisLength(findDouble(ship.getShipData().getAisLength()));
+        s.setAisWidth(findDouble(ship.getShipData().getAisWidth()));
+        s.setAisShipType(findInteger(ship.getShipData().getAisShipType()));
+        s.setCallSign(ship.getShipData().getCallsign());
+        s.setDimensions(ship.getShipData().getDimensions());
+        s.setDwt(findDouble(ship.getShipData().getDwt()));
+        s.setIceClass(ship.getShipData().getIceclass());
+        s.setNominalDraught(findDouble(ship.getShipData().getNominalDraught()));
+        s.setLength(findDouble(ship.getShipData().getLength()));
+        s.setWidth(findDouble(ship.getShipData().getWidth()));
+        s.setShipType(ship.getShipData().getShipType());
 
         updateShipState(s, ship);
         updateShipVoyage(s, ship);
@@ -116,106 +128,123 @@ public class WinterNavigationShipUpdater {
         return s;
     }
 
-    private static void updateShipState(final WinterNavigationShip s, final ShipDto ship) {
+    private static void updateShipState(final WinterNavigationShip s, final WinterShip ship) {
+
 
         final ShipState shipState = s.getShipState() != null ? s.getShipState() : new ShipState();
-        shipState.setVesselPK(ship.vesselPk);
-        if (ship.shipState != null) {
-            shipState.setTimestamp(Timestamp.from(ship.shipState.timestamp.toInstant()));
-            shipState.setLongitude(ship.shipState.longitude);
-            shipState.setLatitude(ship.shipState.latitude);
-            shipState.setPosPrintable(ship.shipState.posPrintable);
-            shipState.setPosAccuracy(ship.shipState.posAccuracy);
-            shipState.setPosSource(ship.shipState.posSource);
-            shipState.setPosArea(ship.shipState.posArea);
-            shipState.setSpeed(ship.shipState.speed);
-            shipState.setCourse(ship.shipState.course);
-            shipState.setHeading(ship.shipState.heading);
-            shipState.setAisDraught(ship.shipState.aisDraught);
-            shipState.setAisState(ship.shipState.aisState);
-            shipState.setAisStateText(ship.shipState.aisStateText);
-            shipState.setAisDestination(ship.shipState.aisDestination);
-            shipState.setMovingSince(WinterNavigationPortUpdater.findTimestamp(ship.shipState.movingSince));
-            shipState.setStoppedSince(WinterNavigationPortUpdater.findTimestamp(ship.shipState.stoppedSince));
-            shipState.setInactiveSince(WinterNavigationPortUpdater.findTimestamp(ship.shipState.inactiveSince));
+        shipState.setVesselPK(ship.getVesselPk());
+        if (ship.getShipState() != null) {
+            shipState.setTimestamp(Timestamp.from(ship.getShipState().getTimestamp().toGregorianCalendar().toInstant()));
+            shipState.setLongitude(ship.getShipState().getLon().doubleValue());
+            shipState.setLatitude(ship.getShipState().getLat().doubleValue());
+            shipState.setPosPrintable(ship.getShipState().getPosPrintable());
+            shipState.setPosAccuracy(PositionAccuracy.fromValue(ship.getShipState().getPosAccuracy().intValue())); // FIXME: NPE?
+            shipState.setPosSource(PositionSource.valueOf(ship.getShipState().getPosSource()));
+            shipState.setPosArea(ship.getShipState().getPosArea());
+            shipState.setSpeed(findDouble(ship.getShipState().getSpeed()));
+            shipState.setCourse(findDouble(ship.getShipState().getCourse()));
+            shipState.setHeading(findDouble(ship.getShipState().getHeading()));
+            shipState.setAisDraught(findDouble(ship.getShipState().getAisDraught()));
+            shipState.setAisState(findInteger(ship.getShipState().getAisState()));
+            shipState.setAisStateText(ship.getShipState().getAisStateText());
+            shipState.setAisDestination(ship.getShipState().getAisDestination());
+            shipState.setMovingSince(findTimestamp(ship.getShipState().getMovingSince()));
+            shipState.setStoppedSince(findTimestamp(ship.getShipState().getStoppedSince()));
+            shipState.setInactiveSince(findTimestamp(ship.getShipState().getInactiveSince()));
         }
         s.setShipState(shipState);
     }
 
-    private static void updateShipVoyage(final WinterNavigationShip s, final ShipDto ship) {
+    private static void updateShipVoyage(final WinterNavigationShip s, final WinterShip ship) {
 
         final ShipVoyage shipVoyage = s.getShipVoyage() != null ? s.getShipVoyage() : new ShipVoyage();
-        shipVoyage.setVesselPK(ship.vesselPk);
-        if (ship.shipVoyage != null) {
-            shipVoyage.setInLocode(ship.shipVoyage.inLocode);
-            shipVoyage.setInName(ship.shipVoyage.inName);
-            shipVoyage.setInAta(WinterNavigationPortUpdater.findTimestamp(ship.shipVoyage.inAta));
-            shipVoyage.setInEtd(WinterNavigationPortUpdater.findTimestamp(ship.shipVoyage.inEtd));
-            shipVoyage.setFromLocode(ship.shipVoyage.fromLocode);
-            shipVoyage.setFromName(ship.shipVoyage.fromName);
-            shipVoyage.setFromAtd(WinterNavigationPortUpdater.findTimestamp(ship.shipVoyage.fromAtd));
-            shipVoyage.setDestLocode(ship.shipVoyage.destLocode);
-            shipVoyage.setDestName(ship.shipVoyage.destName);
-            shipVoyage.setDestEta(WinterNavigationPortUpdater.findTimestamp(ship.shipVoyage.destEta));
+        shipVoyage.setVesselPK(ship.getVesselPk());
+        if (ship.getShipVoyage() != null) {
+            shipVoyage.setInLocode(ship.getShipVoyage().getInLocode());
+            shipVoyage.setInName(ship.getShipVoyage().getInName());
+            shipVoyage.setInAta(findTimestamp(ship.getShipVoyage().getInAta()));
+            shipVoyage.setInEtd(findTimestamp(ship.getShipVoyage().getInEtd()));
+            shipVoyage.setFromLocode(ship.getShipVoyage().getFromLocode());
+            shipVoyage.setFromName(ship.getShipVoyage().getFromName());
+            shipVoyage.setFromAtd(findTimestamp(ship.getShipVoyage().getFromAtd()));
+            shipVoyage.setDestLocode(ship.getShipVoyage().getDestLocode());
+            shipVoyage.setDestName(ship.getShipVoyage().getDestName());
+            shipVoyage.setDestEta(findTimestamp(ship.getShipVoyage().getDestEta()));
         }
         s.setShipVoyage(shipVoyage);
     }
 
-    private static void updateShipActivities(final WinterNavigationShip s, final ShipDto ship) {
+    private static void updateShipActivities(final WinterNavigationShip s, final WinterShip ship) {
         s.getShipActivities().clear();
 
-        if (ship.shipActivities == null) {
+        if (ship.getShipActivities() == null) {
             return;
         }
 
         int orderNumber = 1;
-        for (final ShipActivityDto shipActivity : ship.shipActivities) {
+        for (final ibnet_baltice_winterships.ShipActivity shipActivity : ship.getShipActivities().getShipActivity()) {
             final ShipActivity activity = new ShipActivity();
-            activity.setVesselPK(ship.vesselPk);
+            activity.setVesselPK(ship.getVesselPk());
             activity.setOrderNumber(orderNumber);
-            activity.setActivityType(shipActivity.activityType);
-            activity.setActivityText(shipActivity.activityText);
-            activity.setBeginTime(WinterNavigationPortUpdater.findTimestamp(shipActivity.beginTime));
-            activity.setEndTime(WinterNavigationPortUpdater.findTimestamp(shipActivity.endTime));
-            activity.setActivityComment(shipActivity.comment);
-            activity.setTimestampBegin(Timestamp.from(shipActivity.timestampBegin.toInstant()));
-            activity.setTimestampEnd(WinterNavigationPortUpdater.findTimestamp(shipActivity.timestampEnd));
-            activity.setTimestampCanceled(WinterNavigationPortUpdater.findTimestamp(shipActivity.timestampCanceled));
-            activity.setConvoyOrder(shipActivity.convoyOrder);
-            activity.setOperatedVesselPK(shipActivity.operatedVesselPK);
-            activity.setOperatedVesselName(shipActivity.operatedVesselName);
-            activity.setOperatingIcebreakerPK(shipActivity.operatingIcebreakerPK);
-            activity.setOperatingIcebreakerName(shipActivity.operatingIcebreakerName);
+            activity.setActivityType(shipActivity.getActivityType());
+            activity.setActivityText(shipActivity.getActivityText());
+            activity.setBeginTime(findTimestamp(shipActivity.getBegintime()));
+            activity.setEndTime(findTimestamp(shipActivity.getEndtime()));
+            activity.setActivityComment(shipActivity.getComment());
+            activity.setTimestampBegin(Timestamp.from(shipActivity.getTimestampBegin().toGregorianCalendar().toInstant()));
+            activity.setTimestampEnd(findTimestamp(shipActivity.getTimestampEnd()));
+            activity.setTimestampCanceled(findTimestamp(shipActivity.getTimestampCanceled()));
+            activity.setConvoyOrder(findInteger(shipActivity.getConvoyOrder()));
+            activity.setOperatedVesselPK(shipActivity.getOperatedVesselPk());
+            activity.setOperatedVesselName(shipActivity.getOperatedVesselName());
+            activity.setOperatingIcebreakerPK(shipActivity.getOperatingIbPk());
+            activity.setOperatingIcebreakerName(shipActivity.getOperatingIbName());
             s.getShipActivities().add(activity);
             orderNumber++;
         }
     }
 
-    private static void updateShipPlannedActivities(final WinterNavigationShip s, final ShipDto ship) {
+    private static void updateShipPlannedActivities(final WinterNavigationShip s, final WinterShip ship) {
         s.getShipPlannedActivities().clear();
 
-        if (ship.plannedActivities == null) {
+        if (ship.getPlannedActivities() == null) {
             return;
         }
 
         int orderNumber = 1;
-        for (final ShipPlannedActivityDto plannedActivity : ship.plannedActivities) {
+        for (final PlannedActivity plannedActivity : ship.getPlannedActivities().getPlannedActivity()) {
             final ShipPlannedActivity activity = new ShipPlannedActivity();
-            activity.setVesselPK(ship.vesselPk);
+            activity.setVesselPK(ship.getVesselPk());
             activity.setOrderNumber(orderNumber);
-            activity.setActivityType(plannedActivity.activityType);
-            activity.setActivityText(plannedActivity.activityText);
-            activity.setPlannedWhen(plannedActivity.plannedWhen);
-            activity.setPlannedWhere(plannedActivity.plannedWhere);
-            activity.setPlanComment(plannedActivity.planComment);
-            activity.setOrdering(plannedActivity.ordering);
-            activity.setPlannedVesselPK(plannedActivity.plannedVesselPK);
-            activity.setPlanningVesselPK(plannedActivity.planningVesselPK);
-            activity.setPlanTimestamp(WinterNavigationPortUpdater.findTimestamp(plannedActivity.planTimestamp));
-            activity.setPlanTimestampCanceled(WinterNavigationPortUpdater.findTimestamp(plannedActivity.planTimestampCanceled));
-            activity.setPlanTimestampRealized(WinterNavigationPortUpdater.findTimestamp(plannedActivity.planTimestampRealized));
+            activity.setActivityType(plannedActivity.getActivityType());
+            activity.setActivityText(plannedActivity.getActivityText());
+            activity.setPlannedWhen(plannedActivity.getPlannedWhen());
+            activity.setPlannedWhere(plannedActivity.getPlannedWhere());
+            activity.setPlanComment(plannedActivity.getPlanComment());
+            activity.setOrdering(findInteger(plannedActivity.getOrdering()));
+            activity.setPlannedVesselPK(plannedActivity.getPlannedVesselPk());
+            activity.setPlanningVesselPK(plannedActivity.getPlanningVesselPk());
+            activity.setPlanTimestamp(findTimestamp(plannedActivity.getPlanTimestamp()));
+            activity.setPlanTimestampCanceled(findTimestamp(plannedActivity.getPlanTimestampCanceled()));
+            activity.setPlanTimestampRealized(findTimestamp(plannedActivity.getPlanTimestampRealized()));
             s.getShipPlannedActivities().add(activity);
             orderNumber++;
         }
+    }
+
+    private static Double findDouble(final BigDecimal value) {
+        return value == null ? null : value.doubleValue();
+    }
+
+    private static Integer findInteger(final BigInteger value) {
+        return value == null ? null : value.intValue();
+    }
+
+    static Timestamp findTimestamp(final XMLGregorianCalendar cal) { // FIXME
+        return cal == null ? null : Timestamp.from(cal.toGregorianCalendar().toInstant());
+    }
+
+    static java.util.Date findDate(final XMLGregorianCalendar cal) {
+        return cal == null ? null : java.util.Date.from(cal.toGregorianCalendar().toInstant());
     }
 }

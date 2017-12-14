@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
-import fi.livi.digitraffic.meri.service.winternavigation.dto.ShipsDto;
 import ibnet_baltice_ports.Ports;
 import ibnet_baltice_schema.ObjectFactory;
 import ibnet_baltice_schema.PortsRequestType;
 import ibnet_baltice_schema.PortsResponseType;
+import ibnet_baltice_schema.WinterShipsRequestType;
+import ibnet_baltice_schema.WinterShipsResponseType;
+import ibnet_baltice_winterships.WinterShips;
 
 @Service
 public class WinterNavigationClient extends WebServiceGatewaySupport {
@@ -44,7 +46,10 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         return portsResponseTypeJAXBElement.getValue().getPorts();
     }
 
-    public ShipsDto getWinterNavigationShips() {
-        return null;
+    public WinterShips getWinterNavigationShips() {
+        final JAXBElement<WinterShipsResponseType> portsResponseTypeJAXBElement =
+            (JAXBElement<WinterShipsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createWinterShipsRequest(new WinterShipsRequestType()));
+
+        return portsResponseTypeJAXBElement.getValue().getWinterShips();
     }
 }
