@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,11 +42,11 @@ public class ShipPlannedActivity {
 
     private String planComment;
 
-    private Timestamp planTimestamp;
+    private ZonedDateTime planTimestamp;
 
-    private Timestamp planTimestampRealized;
+    private ZonedDateTime planTimestampRealized;
 
-    private Timestamp planTimestampCanceled;
+    private ZonedDateTime planTimestampCanceled;
 
     public Long getId() {
         return id;
@@ -132,27 +132,27 @@ public class ShipPlannedActivity {
         this.planComment = planComment;
     }
 
-    public Timestamp getPlanTimestamp() {
+    public ZonedDateTime getPlanTimestamp() {
         return planTimestamp;
     }
 
-    public void setPlanTimestamp(Timestamp planTimestamp) {
+    public void setPlanTimestamp(ZonedDateTime planTimestamp) {
         this.planTimestamp = planTimestamp;
     }
 
-    public Timestamp getPlanTimestampRealized() {
+    public ZonedDateTime getPlanTimestampRealized() {
         return planTimestampRealized;
     }
 
-    public void setPlanTimestampRealized(Timestamp planTimestampRealized) {
+    public void setPlanTimestampRealized(ZonedDateTime planTimestampRealized) {
         this.planTimestampRealized = planTimestampRealized;
     }
 
-    public Timestamp getPlanTimestampCanceled() {
+    public ZonedDateTime getPlanTimestampCanceled() {
         return planTimestampCanceled;
     }
 
-    public void setPlanTimestampCanceled(Timestamp planTimestampCanceled) {
+    public void setPlanTimestampCanceled(ZonedDateTime planTimestampCanceled) {
         this.planTimestampCanceled = planTimestampCanceled;
     }
 }

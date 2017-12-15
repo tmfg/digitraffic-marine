@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -79,8 +79,8 @@ public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
         assertFalse(restriction.getCurrent());
         assertTrue(restriction.getPortRestricted());
         assertFalse(restriction.getPortClosed());
-        assertEquals(Timestamp.valueOf("2017-12-11 10:10:28.217"), restriction.getIssueTime());
-        assertEquals(Timestamp.valueOf("2017-12-11 11:10:28.217"), restriction.getLastModified());
+        assertEquals(ZonedDateTime.parse("2017-12-11T08:10:28.217+00:00").toEpochSecond(), restriction.getIssueTime().toEpochSecond());
+        assertEquals(ZonedDateTime.parse("2017-12-11T09:10:28.217+00:00").toEpochSecond(), restriction.getLastModified().toEpochSecond());
         assertEquals(Date.valueOf("2017-12-16"), restriction.getValidFrom());
         assertNull(restriction.getValidUntil());
         assertEquals("I,II 2000", restriction.getRawText());

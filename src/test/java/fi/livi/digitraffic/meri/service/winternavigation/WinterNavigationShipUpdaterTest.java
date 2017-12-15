@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -70,12 +69,13 @@ public class WinterNavigationShipUpdaterTest extends AbstractIntegrationTest {
         assertEquals("HK", ship.getNatCode());
         assertEquals(171.0, ship.getAisLength(), 0.1);
         assertEquals("moored", ship.getShipState().getAisStateText());
+        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipState().getTimestamp().toEpochSecond());
         assertEquals(0.00, ship.getShipState().getSpeed(), 0.1);
 
         assertEquals(1, ship.getShipActivities().size());
         assertEquals("PORT", ship.getShipActivities().get(0).getActivityType());
         assertEquals("In port", ship.getShipActivities().get(0).getActivityText());
-        assertEquals(Timestamp.from(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toInstant()), ship.getShipActivities().get(0).getBeginTime());
+        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().get(0).getBeginTime().toEpochSecond());
         assertEquals(0, ship.getShipPlannedActivities().size());
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
@@ -90,7 +90,7 @@ public class WinterNavigationShipUpdaterTest extends AbstractIntegrationTest {
         assertEquals(1, ship.getShipActivities().size());
         assertEquals("FREE", ship.getShipActivities().get(0).getActivityType());
         assertEquals("Moving freely", ship.getShipActivities().get(0).getActivityText());
-        assertEquals(Timestamp.from(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toInstant()), ship.getShipActivities().get(0).getBeginTime());
+        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().get(0).getBeginTime().toEpochSecond());
     }
 
     private WinterShips getResponse(final String filename) throws IOException {

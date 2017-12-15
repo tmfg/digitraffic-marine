@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionAccuracy;
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionSource;
@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class ShipStateProperty {
 
     @ApiModelProperty(value = "Timestamp of position observation")
-    public final Timestamp timestamp;
+    public final ZonedDateTime timestamp;
 
     @ApiModelProperty(value = "Pre-formatted friendly output")
     public final String posPrintable;
@@ -47,18 +47,18 @@ public class ShipStateProperty {
     public final String aisDestination;
 
     @ApiModelProperty(value = "When the ship was observed to start moving")
-    public final Timestamp movingSince;
+    public final ZonedDateTime movingSince;
 
     @ApiModelProperty(value = "When the ship was observed to having been stopped")
-    public final Timestamp stoppedSince;
+    public final ZonedDateTime stoppedSince;
 
     @ApiModelProperty(value = "When the ship was no more observed / was deactivated from the system")
-    public final Timestamp inactiveSince;
+    public final ZonedDateTime inactiveSince;
 
-    public ShipStateProperty(Timestamp timestamp, String posPrintable, PositionAccuracy posAccuracy,
+    public ShipStateProperty(ZonedDateTime timestamp, String posPrintable, PositionAccuracy posAccuracy,
                              PositionSource posSource, String posArea, Double speed, Double course, Double heading, Double aisDraught,
-                             Integer aisState, String aisStateText, String aisDestination, Timestamp movingSince, Timestamp stoppedSince,
-                             Timestamp inactiveSince) {
+                             Integer aisState, String aisStateText, String aisDestination, ZonedDateTime movingSince, ZonedDateTime stoppedSince,
+                             ZonedDateTime inactiveSince) {
         this.timestamp = timestamp;
         this.posPrintable = posPrintable;
         this.posAccuracy = posAccuracy;

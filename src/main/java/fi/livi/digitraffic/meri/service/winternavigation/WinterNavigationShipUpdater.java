@@ -5,7 +5,7 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +134,7 @@ public class WinterNavigationShipUpdater {
         final ShipState shipState = s.getShipState() != null ? s.getShipState() : new ShipState();
         shipState.setVesselPK(ship.getVesselPk());
         if (ship.getShipState() != null) {
-            shipState.setTimestamp(Timestamp.from(ship.getShipState().getTimestamp().toGregorianCalendar().toInstant()));
+            shipState.setTimestamp(ship.getShipState().getTimestamp().toGregorianCalendar().toZonedDateTime());
             shipState.setLongitude(ship.getShipState().getLon().doubleValue());
             shipState.setLatitude(ship.getShipState().getLat().doubleValue());
             shipState.setPosPrintable(ship.getShipState().getPosPrintable());
@@ -148,9 +148,9 @@ public class WinterNavigationShipUpdater {
             shipState.setAisState(findInteger(ship.getShipState().getAisState()));
             shipState.setAisStateText(ship.getShipState().getAisStateText());
             shipState.setAisDestination(ship.getShipState().getAisDestination());
-            shipState.setMovingSince(findTimestamp(ship.getShipState().getMovingSince()));
-            shipState.setStoppedSince(findTimestamp(ship.getShipState().getStoppedSince()));
-            shipState.setInactiveSince(findTimestamp(ship.getShipState().getInactiveSince()));
+            shipState.setMovingSince(findZonedDateTime(ship.getShipState().getMovingSince()));
+            shipState.setStoppedSince(findZonedDateTime(ship.getShipState().getStoppedSince()));
+            shipState.setInactiveSince(findZonedDateTime(ship.getShipState().getInactiveSince()));
         }
         s.setShipState(shipState);
     }
@@ -162,14 +162,14 @@ public class WinterNavigationShipUpdater {
         if (ship.getShipVoyage() != null) {
             shipVoyage.setInLocode(ship.getShipVoyage().getInLocode());
             shipVoyage.setInName(ship.getShipVoyage().getInName());
-            shipVoyage.setInAta(findTimestamp(ship.getShipVoyage().getInAta()));
-            shipVoyage.setInEtd(findTimestamp(ship.getShipVoyage().getInEtd()));
+            shipVoyage.setInAta(findZonedDateTime(ship.getShipVoyage().getInAta()));
+            shipVoyage.setInEtd(findZonedDateTime(ship.getShipVoyage().getInEtd()));
             shipVoyage.setFromLocode(ship.getShipVoyage().getFromLocode());
             shipVoyage.setFromName(ship.getShipVoyage().getFromName());
-            shipVoyage.setFromAtd(findTimestamp(ship.getShipVoyage().getFromAtd()));
+            shipVoyage.setFromAtd(findZonedDateTime(ship.getShipVoyage().getFromAtd()));
             shipVoyage.setDestLocode(ship.getShipVoyage().getDestLocode());
             shipVoyage.setDestName(ship.getShipVoyage().getDestName());
-            shipVoyage.setDestEta(findTimestamp(ship.getShipVoyage().getDestEta()));
+            shipVoyage.setDestEta(findZonedDateTime(ship.getShipVoyage().getDestEta()));
         }
         s.setShipVoyage(shipVoyage);
     }
@@ -188,12 +188,12 @@ public class WinterNavigationShipUpdater {
             activity.setOrderNumber(orderNumber);
             activity.setActivityType(shipActivity.getActivityType());
             activity.setActivityText(shipActivity.getActivityText());
-            activity.setBeginTime(findTimestamp(shipActivity.getBegintime()));
-            activity.setEndTime(findTimestamp(shipActivity.getEndtime()));
+            activity.setBeginTime(findZonedDateTime(shipActivity.getBegintime()));
+            activity.setEndTime(findZonedDateTime(shipActivity.getEndtime()));
             activity.setActivityComment(shipActivity.getComment());
-            activity.setTimestampBegin(Timestamp.from(shipActivity.getTimestampBegin().toGregorianCalendar().toInstant()));
-            activity.setTimestampEnd(findTimestamp(shipActivity.getTimestampEnd()));
-            activity.setTimestampCanceled(findTimestamp(shipActivity.getTimestampCanceled()));
+            activity.setTimestampBegin(shipActivity.getTimestampBegin().toGregorianCalendar().toZonedDateTime());
+            activity.setTimestampEnd(findZonedDateTime(shipActivity.getTimestampEnd()));
+            activity.setTimestampCanceled(findZonedDateTime(shipActivity.getTimestampCanceled()));
             activity.setConvoyOrder(findInteger(shipActivity.getConvoyOrder()));
             activity.setOperatedVesselPK(shipActivity.getOperatedVesselPk());
             activity.setOperatedVesselName(shipActivity.getOperatedVesselName());
@@ -224,9 +224,9 @@ public class WinterNavigationShipUpdater {
             activity.setOrdering(findInteger(plannedActivity.getOrdering()));
             activity.setPlannedVesselPK(plannedActivity.getPlannedVesselPk());
             activity.setPlanningVesselPK(plannedActivity.getPlanningVesselPk());
-            activity.setPlanTimestamp(findTimestamp(plannedActivity.getPlanTimestamp()));
-            activity.setPlanTimestampCanceled(findTimestamp(plannedActivity.getPlanTimestampCanceled()));
-            activity.setPlanTimestampRealized(findTimestamp(plannedActivity.getPlanTimestampRealized()));
+            activity.setPlanTimestamp(findZonedDateTime(plannedActivity.getPlanTimestamp()));
+            activity.setPlanTimestampCanceled(findZonedDateTime(plannedActivity.getPlanTimestampCanceled()));
+            activity.setPlanTimestampRealized(findZonedDateTime(plannedActivity.getPlanTimestampRealized()));
             s.getShipPlannedActivities().add(activity);
             orderNumber++;
         }
@@ -240,8 +240,8 @@ public class WinterNavigationShipUpdater {
         return value == null ? null : value.intValue();
     }
 
-    static Timestamp findTimestamp(final XMLGregorianCalendar cal) { // FIXME
-        return cal == null ? null : Timestamp.from(cal.toGregorianCalendar().toInstant());
+    static ZonedDateTime findZonedDateTime(final XMLGregorianCalendar cal) {
+        return cal == null ? null : cal.toGregorianCalendar().toZonedDateTime();
     }
 
     static java.util.Date findDate(final XMLGregorianCalendar cal) {

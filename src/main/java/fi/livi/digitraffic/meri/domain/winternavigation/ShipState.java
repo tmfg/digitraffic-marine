@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,7 @@ public class ShipState {
     @Column(name = "vessel_pk", nullable = false)
     private String vesselPK;
 
-    private Timestamp timestamp;
+    private ZonedDateTime timestamp;
 
     private Double longitude;
 
@@ -44,11 +44,11 @@ public class ShipState {
 
     private String aisDestination;
 
-    private Timestamp movingSince;
+    private ZonedDateTime movingSince;
 
-    private Timestamp stoppedSince;
+    private ZonedDateTime stoppedSince;
 
-    private Timestamp inactiveSince;
+    private ZonedDateTime inactiveSince;
 
     public String getVesselPK() {
         return vesselPK;
@@ -58,11 +58,11 @@ public class ShipState {
         this.vesselPK = vesselPK;
     }
 
-    public Timestamp getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -170,27 +170,27 @@ public class ShipState {
         this.aisDestination = aisDestination;
     }
 
-    public Timestamp getMovingSince() {
+    public ZonedDateTime getMovingSince() {
         return movingSince;
     }
 
-    public void setMovingSince(Timestamp movingSince) {
+    public void setMovingSince(ZonedDateTime movingSince) {
         this.movingSince = movingSince;
     }
 
-    public Timestamp getStoppedSince() {
+    public ZonedDateTime getStoppedSince() {
         return stoppedSince;
     }
 
-    public void setStoppedSince(Timestamp stoppedSince) {
+    public void setStoppedSince(ZonedDateTime stoppedSince) {
         this.stoppedSince = stoppedSince;
     }
 
-    public Timestamp getInactiveSince() {
+    public ZonedDateTime getInactiveSince() {
         return inactiveSince;
     }
 
-    public void setInactiveSince(Timestamp inactiveSince) {
+    public void setInactiveSince(ZonedDateTime inactiveSince) {
         this.inactiveSince = inactiveSince;
     }
 }

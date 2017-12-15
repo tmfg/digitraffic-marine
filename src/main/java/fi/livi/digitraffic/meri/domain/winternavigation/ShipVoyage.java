@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,21 +17,21 @@ public class ShipVoyage {
 
     private String fromName;
 
-    private Timestamp fromAtd;
+    private ZonedDateTime fromAtd;
 
     private String inLocode;
 
     private String inName;
 
-    private Timestamp inAta;
+    private ZonedDateTime inAta;
 
-    private Timestamp inEtd;
+    private ZonedDateTime inEtd;
 
     private String destLocode;
 
     private String destName;
 
-    private Timestamp destEta;
+    private ZonedDateTime destEta;
 
     public String getVesselPK() {
         return vesselPK;
@@ -57,11 +57,11 @@ public class ShipVoyage {
         this.fromName = fromName;
     }
 
-    public Timestamp getFromAtd() {
+    public ZonedDateTime getFromAtd() {
         return fromAtd;
     }
 
-    public void setFromAtd(Timestamp fromAtd) {
+    public void setFromAtd(ZonedDateTime fromAtd) {
         this.fromAtd = fromAtd;
     }
 
@@ -81,19 +81,19 @@ public class ShipVoyage {
         this.inName = inName;
     }
 
-    public Timestamp getInAta() {
+    public ZonedDateTime getInAta() {
         return inAta;
     }
 
-    public void setInAta(Timestamp inAta) {
+    public void setInAta(ZonedDateTime inAta) {
         this.inAta = inAta;
     }
 
-    public Timestamp getInEtd() {
+    public ZonedDateTime getInEtd() {
         return inEtd;
     }
 
-    public void setInEtd(Timestamp inEtd) {
+    public void setInEtd(ZonedDateTime inEtd) {
         this.inEtd = inEtd;
     }
 
@@ -113,11 +113,11 @@ public class ShipVoyage {
         this.destName = destName;
     }
 
-    public Timestamp getDestEta() {
+    public ZonedDateTime getDestEta() {
         return destEta;
     }
 
-    public void setDestEta(Timestamp destEta) {
+    public void setDestEta(ZonedDateTime destEta) {
         this.destEta = destEta;
     }
 }

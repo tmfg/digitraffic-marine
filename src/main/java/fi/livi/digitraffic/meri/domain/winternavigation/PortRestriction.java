@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -31,9 +31,9 @@ public class PortRestriction {
 
     private Boolean portClosed;
 
-    private Timestamp issueTime;
+    private ZonedDateTime issueTime;
 
-    private Timestamp lastModified;
+    private ZonedDateTime lastModified;
 
     private Date validFrom;
 
@@ -87,19 +87,19 @@ public class PortRestriction {
         this.portClosed = portClosed;
     }
 
-    public Timestamp getIssueTime() {
+    public ZonedDateTime getIssueTime() {
         return issueTime;
     }
 
-    public void setIssueTime(Timestamp issueTime) {
+    public void setIssueTime(ZonedDateTime issueTime) {
         this.issueTime = issueTime;
     }
 
-    public Timestamp getLastModified() {
+    public ZonedDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Timestamp lastModified) {
+    public void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 

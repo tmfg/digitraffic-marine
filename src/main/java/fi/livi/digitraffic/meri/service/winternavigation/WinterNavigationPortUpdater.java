@@ -138,10 +138,10 @@ public class WinterNavigationPortUpdater {
             pr.setCurrent(restriction.isIsCurrent());
             pr.setPortRestricted(restriction.isPortRestricted());
             pr.setPortClosed(restriction.isPortClosed());
-            pr.setIssueTime(WinterNavigationShipUpdater.findTimestamp(restriction.getIssueTime())); // FIXME ZonedDateTime
-            pr.setLastModified(WinterNavigationShipUpdater.findTimestamp(restriction.getTimeStamp())); // FIXME
-            pr.setValidFrom(WinterNavigationShipUpdater.findDate(restriction.getValidFrom())); // FIXME
-            pr.setValidUntil(WinterNavigationShipUpdater.findDate(restriction.getValidUntil())); // FIXME
+            pr.setIssueTime(WinterNavigationShipUpdater.findZonedDateTime(restriction.getIssueTime()));
+            pr.setLastModified(WinterNavigationShipUpdater.findZonedDateTime(restriction.getTimeStamp()));
+            pr.setValidFrom(WinterNavigationShipUpdater.findDate(restriction.getValidFrom())); // FIXME Date?
+            pr.setValidUntil(WinterNavigationShipUpdater.findDate(restriction.getValidUntil())); // FIXME Date?
             pr.setRawText(restriction.getRawText());
             pr.setFormattedText(restriction.getFormattedText());
             p.getPortRestrictions().add(pr);

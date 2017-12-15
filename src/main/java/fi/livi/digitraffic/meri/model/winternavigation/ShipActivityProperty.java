@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,19 +34,19 @@ public class ShipActivityProperty {
     public final String activityComment;
 
     @ApiModelProperty(value = "When the activity was started; the start of the validity period of the activity")
-    public final Timestamp beginTime;
+    public final ZonedDateTime beginTime;
 
     @ApiModelProperty(value = "When activity was ended (available only when querying past events); the end of the validity period of the activity")
-    public final Timestamp endTime;
+    public final ZonedDateTime endTime;
 
     @ApiModelProperty(value = "When the begintime was entered into the source system")
-    public final Timestamp timestampBegin;
+    public final ZonedDateTime timestampBegin;
 
     @ApiModelProperty(value = "When the endtime was entered into the source system")
-    public final Timestamp timestampEnd;
+    public final ZonedDateTime timestampEnd;
 
     @ApiModelProperty(value = "When an erroneous activity was canceled (if ever)")
-    public final Timestamp timestampCanceled;
+    public final ZonedDateTime timestampCanceled;
 
     @ApiModelProperty(value = "Key of icebreaker that is giving assistance (or supervising)")
     public final String operatingIcebreakerPK;
@@ -63,8 +63,8 @@ public class ShipActivityProperty {
     @ApiModelProperty(value = "Position in icebreaker convoy, if any (with 0 reserved for a towed ship); results should be given in this order")
     public final Integer convoyOrder;
 
-    public ShipActivityProperty(String activityType, String activityText, String activityComment, Timestamp beginTime, Timestamp endTime,
-                                Timestamp timestampBegin, Timestamp timestampEnd, Timestamp timestampCanceled, String operatingIcebreakerPK,
+    public ShipActivityProperty(String activityType, String activityText, String activityComment, ZonedDateTime beginTime, ZonedDateTime endTime,
+                                ZonedDateTime timestampBegin, ZonedDateTime timestampEnd, ZonedDateTime timestampCanceled, String operatingIcebreakerPK,
                                 String operatingIcebreakerName, String operatedVesselPK, String operatedVesselName, Integer convoyOrder) {
         this.activityType = activityType;
         this.activityText = activityText;

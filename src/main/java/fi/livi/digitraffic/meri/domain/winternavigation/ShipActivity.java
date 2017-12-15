@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,15 +30,15 @@ public class ShipActivity {
 
     private String activityComment;
 
-    private Timestamp beginTime;
+    private ZonedDateTime beginTime;
 
-    private Timestamp endTime;
+    private ZonedDateTime endTime;
 
-    private Timestamp timestampBegin;
+    private ZonedDateTime timestampBegin;
 
-    private Timestamp timestampEnd;
+    private ZonedDateTime timestampEnd;
 
-    private Timestamp timestampCanceled;
+    private ZonedDateTime timestampCanceled;
 
     @Column(name = "operating_icebreaker_pk")
     private String operatingIcebreakerPK;
@@ -96,43 +96,43 @@ public class ShipActivity {
         this.activityComment = activityComment;
     }
 
-    public Timestamp getBeginTime() {
+    public ZonedDateTime getBeginTime() {
         return beginTime;
     }
 
-    public void setBeginTime(Timestamp beginTime) {
+    public void setBeginTime(ZonedDateTime beginTime) {
         this.beginTime = beginTime;
     }
 
-    public Timestamp getEndTime() {
+    public ZonedDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Timestamp endTime) {
+    public void setEndTime(ZonedDateTime endTime) {
         this.endTime = endTime;
     }
 
-    public Timestamp getTimestampBegin() {
+    public ZonedDateTime getTimestampBegin() {
         return timestampBegin;
     }
 
-    public void setTimestampBegin(Timestamp timestampBegin) {
+    public void setTimestampBegin(ZonedDateTime timestampBegin) {
         this.timestampBegin = timestampBegin;
     }
 
-    public Timestamp getTimestampEnd() {
+    public ZonedDateTime getTimestampEnd() {
         return timestampEnd;
     }
 
-    public void setTimestampEnd(Timestamp timestampEnd) {
+    public void setTimestampEnd(ZonedDateTime timestampEnd) {
         this.timestampEnd = timestampEnd;
     }
 
-    public Timestamp getTimestampCanceled() {
+    public ZonedDateTime getTimestampCanceled() {
         return timestampCanceled;
     }
 
-    public void setTimestampCanceled(Timestamp timestampCanceled) {
+    public void setTimestampCanceled(ZonedDateTime timestampCanceled) {
         this.timestampCanceled = timestampCanceled;
     }
 

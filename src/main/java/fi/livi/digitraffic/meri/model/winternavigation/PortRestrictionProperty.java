@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import io.swagger.annotations.ApiModel;
@@ -19,10 +19,10 @@ public class PortRestrictionProperty {
     public final Boolean portClosed;
 
     @ApiModelProperty(value = "Date and time of issue/announcement")
-    public final Timestamp issueTime;
+    public final ZonedDateTime issueTime;
 
     @ApiModelProperty(value = "Date and time of last modification")
-    public final Timestamp lastModified;
+    public final ZonedDateTime lastModified;
 
     @ApiModelProperty(value = "Date when this restriction starts/started to be in effect; this is optional if isCurrent is true and\n" +
                               "portRestricted is false, because during early winter – when no restrictions yet exist – the\n" +
@@ -41,7 +41,7 @@ public class PortRestrictionProperty {
     @ApiModelProperty(value = "Traffic restriction text pre-formatted (HTML)")
     public final String formattedText;
 
-    public PortRestrictionProperty(Boolean isCurrent, Boolean portRestricted, Boolean portClosed, Timestamp issueTime, Timestamp lastModified,
+    public PortRestrictionProperty(Boolean isCurrent, Boolean portRestricted, Boolean portClosed, ZonedDateTime issueTime, ZonedDateTime lastModified,
                                    Date validFrom, Date validUntil, String rawText, String formattedText) {
         this.isCurrent = isCurrent;
         this.portRestricted = portRestricted;

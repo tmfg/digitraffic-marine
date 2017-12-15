@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,17 +35,17 @@ public class ShipPlannedActivityProperty {
     public final String planComment;
 
     @ApiModelProperty(value = "When the plan was made or changed")
-    public final Timestamp planTimestamp;
+    public final ZonedDateTime planTimestamp;
 
     @ApiModelProperty(value = "When the plan was actualized (only available when retrieving past, historical events)")
-    public final Timestamp planTimestampRealized;
+    public final ZonedDateTime planTimestampRealized;
 
     @ApiModelProperty(value = "If canceled, when")
-    public final Timestamp planTimestampCanceled;
+    public final ZonedDateTime planTimestampCanceled;
 
     public ShipPlannedActivityProperty(String activityType, String activityText, String plannedVesselPK, String planningVesselPK, Integer ordering,
-                                       String plannedWhen, String plannedWhere, String planComment, Timestamp planTimestamp,
-                                       Timestamp planTimestampRealized, Timestamp planTimestampCanceled) {
+                                       String plannedWhen, String plannedWhere, String planComment, ZonedDateTime planTimestamp,
+                                       ZonedDateTime planTimestampRealized, ZonedDateTime planTimestampCanceled) {
         this.activityType = activityType;
         this.activityText = activityText;
         this.plannedVesselPK = plannedVesselPK;

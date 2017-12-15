@@ -62,7 +62,7 @@ public class WinterNavigationService {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_PORTS.name());
 
         return new WinterNavigationPortFeatureCollection(
-            lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.systemDefault()),
+            lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
             ports.stream().map(this::portFeature).collect(Collectors.toList()));
     }
 
@@ -79,7 +79,7 @@ public class WinterNavigationService {
                                                                     new Point(s.getShipState().getLongitude(), s.getShipState().getLatitude())))
                  .collect(Collectors.toList());
 
-        return new WinterNavigationShipFeatureCollection(lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.systemDefault()),
+        return new WinterNavigationShipFeatureCollection(lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
                                                          shipFeatures);
     }
 
