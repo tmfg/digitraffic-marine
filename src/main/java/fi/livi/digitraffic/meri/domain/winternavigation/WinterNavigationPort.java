@@ -32,7 +32,7 @@ public class WinterNavigationPort {
 
     private Date obsoleteDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "locode", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "locode", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy(value = "orderNumber")
     private List<PortRestriction> portRestrictions = new ArrayList<>();
 

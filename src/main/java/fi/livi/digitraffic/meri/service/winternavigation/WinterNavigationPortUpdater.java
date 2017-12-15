@@ -22,6 +22,7 @@ import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 import ibnet_baltice_ports.Port;
 import ibnet_baltice_ports.Ports;
 import ibnet_baltice_ports.Restriction;
+import ibnet_baltice_ports.Restrictions;
 
 @Service
 public class WinterNavigationPortUpdater {
@@ -121,16 +122,19 @@ public class WinterNavigationPortUpdater {
         p.setNationality(port.getPortInfo().getNationality());
         p.setSeaArea(port.getPortInfo().getSeaArea());
         p.setObsoleteDate(null);
-        p.getPortRestrictions().clear();
-        if (port.getRestrictions() != null) {
-            updatePortRestrictions(p, port.getRestrictions().getRestriction());
-        }
+
+        updatePortRestrictions(p, port.getRestrictions());
     }
 
-    private static void updatePortRestrictions(final WinterNavigationPort p, final List<Restriction> restrictions) {
+    private static void updatePortRestrictions(final WinterNavigationPort p, final Restrictions restrictions) {
+        p.getPortRestrictions().clear();
+
+        if (restrictions == null) {
+            return;
+        }
 
         int orderNumber = 1;
-        for (final Restriction restriction : restrictions) {
+        for (final Restriction restriction : restrictions.getRestriction()) {
             PortRestriction pr = new PortRestriction();
             pr.setLocode(p.getLocode());
             pr.setOrderNumber(orderNumber);
