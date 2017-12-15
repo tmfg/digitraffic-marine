@@ -5,10 +5,9 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -76,7 +75,7 @@ public class PortCallUpdater {
         final PortCallList list = portCallClient.getList(from, to);
 
         if(isListOk(list)) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(to), getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), ZonedDateTime.from(to), getClass().getSimpleName());
 
             final List<PortCall> added = new ArrayList<>();
             final List<PortCall> updated = new ArrayList<>();
