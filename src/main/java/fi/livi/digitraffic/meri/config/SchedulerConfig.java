@@ -29,6 +29,8 @@ import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
+import fi.livi.digitraffic.meri.quartz.WinterNavigationPortUpdateJob;
+import fi.livi.digitraffic.meri.quartz.WinterNavigationShipUpdateJob;
 
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
@@ -93,6 +95,17 @@ public class SchedulerConfig {
     }
 
     @Bean
+    public JobDetailFactoryBean winterNavigationShipUpdateJobDetail() {
+        return createJobDetail(WinterNavigationShipUpdateJob.class);
+    }
+
+    @Bean
+    public JobDetailFactoryBean winterNavigationPortUpdateJobDetail() {
+        return createJobDetail(WinterNavigationPortUpdateJob.class);
+    }
+
+
+    @Bean
     public SimpleTriggerFactoryBean portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail,
                                                              @Value("${portCallUpdateJob.frequency}") final long frequency) {
         return createTrigger(portCallUpdateJobDetail, frequency);
@@ -114,6 +127,18 @@ public class SchedulerConfig {
     public SimpleTriggerFactoryBean vesselDetailUpdateJobTrigger(final JobDetail vesselDetailsUpdateJobDetail,
                                                                  @Value("${vesselDetailsUpdateJob.frequency}") final long frequency) {
         return createTrigger(vesselDetailsUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean winterNavigationShipUpdateJobTrigger(final JobDetail winterNavigationShipUpdateJobDetail,
+                                                                         @Value("${winterNavigationShipUpdateJob.frequency}") final long frequency) {
+        return createTrigger(winterNavigationShipUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean winterNavigationPortUpdateJobTrigger(final JobDetail winterNavigationPortUpdateJobDetail,
+                                                                         @Value("${winterNavigationPortUpdateJob.frequency}") final long frequency) {
+        return createTrigger(winterNavigationPortUpdateJobDetail, frequency);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {

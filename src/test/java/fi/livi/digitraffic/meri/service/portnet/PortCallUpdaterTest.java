@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
@@ -26,31 +25,37 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
+import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
 
 public class PortCallUpdaterTest extends AbstractIntegrationTest {
 
     @MockBean(answer = Answers.CALLS_REAL_METHODS)
     private PortCallClient portCallClient;
 
-    @Autowired
+    @MockBean(answer = Answers.CALLS_REAL_METHODS)
     private PortCallUpdater portCallUpdater;
+
+    @Autowired
+    private UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
     private PortCallRepository portCallRepository;
 
-    private MockRestServiceServer server;
+    @Autowired
+    private Jax2bRestTemplate jax2bRestTemplate;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    private MockRestServiceServer server;
 
     @Before
     public void before() {
-        server = MockRestServiceServer.createServer(restTemplate);
-        Mockito.when(portCallClient.getRestTemplate()).thenReturn(restTemplate);
+        portCallClient = new PortCallClient("portCallUrl/", jax2bRestTemplate);
+        portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, 42, 42);
+        server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
 
     @Test
@@ -60,14 +65,13 @@ public class PortCallUpdaterTest extends AbstractIntegrationTest {
 
         String response = readFile("portCallResponse1.xml");
 
-        server.expect(MockRestRequestMatchers.requestTo("nullstartDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+        server.expect(MockRestRequestMatchers.requestTo("portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-                .andExpect(MockRestRequestMatchers.header("Accept", "application/xml, text/xml, application/json, application/*+xml, application/*+json"))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
         response = readFile("portCallResponse2.xml");
 
-        server.expect(MockRestRequestMatchers.requestTo("nullstartDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+        server.expect(MockRestRequestMatchers.requestTo("portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
