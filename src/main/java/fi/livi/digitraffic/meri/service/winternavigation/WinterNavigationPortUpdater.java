@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -83,14 +82,14 @@ public class WinterNavigationPortUpdater {
                  data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();
     }
 
     private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
-        final WinterNavigationPort old = winterNavigationRepository.findOne(port.getPortInfo().getPortId());
+        final WinterNavigationPort old = winterNavigationRepository.findOne(port.getPortInfo().getLocode());
 
         if (old == null) {
             added.add(addNew(port));
@@ -140,8 +139,8 @@ public class WinterNavigationPortUpdater {
             pr.setPortClosed(restriction.isPortClosed());
             pr.setIssueTime(WinterNavigationShipUpdater.findZonedDateTime(restriction.getIssueTime()));
             pr.setLastModified(WinterNavigationShipUpdater.findZonedDateTime(restriction.getTimeStamp()));
-            pr.setValidFrom(WinterNavigationShipUpdater.findDate(restriction.getValidFrom())); // FIXME Date?
-            pr.setValidUntil(WinterNavigationShipUpdater.findDate(restriction.getValidUntil())); // FIXME Date?
+            pr.setValidFrom(WinterNavigationShipUpdater.findDate(restriction.getValidFrom()));
+            pr.setValidUntil(WinterNavigationShipUpdater.findDate(restriction.getValidUntil()));
             pr.setRawText(restriction.getRawText());
             pr.setFormattedText(restriction.getFormattedText());
             p.getPortRestrictions().add(pr);

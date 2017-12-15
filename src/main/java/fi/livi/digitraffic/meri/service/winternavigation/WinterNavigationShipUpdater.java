@@ -4,7 +4,6 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Date;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +74,7 @@ public class WinterNavigationShipUpdater {
         log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={}, tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_SHIPS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();
@@ -138,7 +137,7 @@ public class WinterNavigationShipUpdater {
             shipState.setLongitude(ship.getShipState().getLon().doubleValue());
             shipState.setLatitude(ship.getShipState().getLat().doubleValue());
             shipState.setPosPrintable(ship.getShipState().getPosPrintable());
-            shipState.setPosAccuracy(PositionAccuracy.fromValue(ship.getShipState().getPosAccuracy().intValue())); // FIXME: NPE?
+            shipState.setPosAccuracy(PositionAccuracy.fromValue(ship.getShipState().getPosAccuracy().intValue()));
             shipState.setPosSource(PositionSource.valueOf(ship.getShipState().getPosSource()));
             shipState.setPosArea(ship.getShipState().getPosArea());
             shipState.setSpeed(findDouble(ship.getShipState().getSpeed()));
