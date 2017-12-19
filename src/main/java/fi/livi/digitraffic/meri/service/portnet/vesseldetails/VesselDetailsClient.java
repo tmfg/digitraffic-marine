@@ -1,7 +1,5 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
@@ -12,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
 
@@ -27,11 +24,11 @@ public class VesselDetailsClient {
         this.vesselDetailsUrl = vesselDetailsUrl;
     }
 
-    public VesselList getVesselList(final Instant from) {
+    public VesselList getVesselList(final ZonedDateTime from) {
         final String url = buildUrl(from);
-        RestTemplate restTemplate = getRestTemplate();
+        final RestTemplate restTemplate = getRestTemplate();
 
-        VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
+        final VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
 
         logInfo(vesselList);
 
@@ -53,10 +50,9 @@ public class VesselDetailsClient {
         }
     }
 
-    private String buildUrl(final Instant from) {
-        final ZonedDateTime fromDt = from.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault());
-        final String dateFromParameter = PortCallClient.dateToString("fromDte", fromDt);
-        final String timeFromParameter = PortCallClient.timeToString("fromTme", fromDt);
+    private String buildUrl(final ZonedDateTime from) {
+        final String dateFromParameter = PortCallClient.dateToString("fromDte", from);
+        final String timeFromParameter = PortCallClient.timeToString("fromTme", from);
 
         return String.format("%s%s&%s", vesselDetailsUrl, dateFromParameter, timeFromParameter);
     }

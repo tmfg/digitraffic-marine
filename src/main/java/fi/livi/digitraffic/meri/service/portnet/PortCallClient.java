@@ -1,7 +1,5 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -26,7 +24,7 @@ public class PortCallClient {
         this.portCallUrl = portCallUrl;
     }
 
-    public PortCallList getList(final Instant lastUpdated, final Instant now) {
+    public PortCallList getList(final ZonedDateTime lastUpdated, final ZonedDateTime now) {
         final RestTemplate template = getRestTemplate();
         final String url = buildUrl(lastUpdated, now);
 
@@ -55,12 +53,11 @@ public class PortCallClient {
         log.info("Number of received notificationsCount={}", portCallList.getPortCallNotification().size());
     }
 
-    private String buildUrl(final Instant lastUpdated, final Instant now) {
-        final ZonedDateTime lastUpdatedDt = lastUpdated.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault());
-        final String dateStartParameter = dateToString("startDte", lastUpdatedDt);
-        final String timeStartParameter = timeToString("startTme", lastUpdatedDt);
-        final String dateEndParameter = dateToString("endDte", now.atZone(ZoneId.systemDefault()));
-        final String timeEndParameter = timeToString("endTme", now.atZone(ZoneId.systemDefault()));
+    private String buildUrl(final ZonedDateTime lastUpdated, final ZonedDateTime now) {
+        final String dateStartParameter = dateToString("startDte", lastUpdated);
+        final String timeStartParameter = timeToString("startTme", lastUpdated);
+        final String dateEndParameter = dateToString("endDte", now);
+        final String timeEndParameter = timeToString("endTme", now);
 
         // order is important, must be startDte,endDte,startTme,endTme, otherwise 404
 

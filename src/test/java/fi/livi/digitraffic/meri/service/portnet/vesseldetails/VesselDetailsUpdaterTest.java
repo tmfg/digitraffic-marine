@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -53,7 +52,6 @@ public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
     @Transactional
     @Rollback
     public void updateVesselDetailsSucceeds() throws IOException {
-
         String response = readFile("vesselDetailsResponse1.xml");
 
         server.expect(MockRestRequestMatchers.requestTo("nullfromDte=20160129&fromTme=063059"))
@@ -66,7 +64,7 @@ public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        Instant from = ZonedDateTime.of(2016, 1, 29, 6, 30, 59, 0, ZoneId.systemDefault()).toInstant();
+        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 29, 6, 30, 59, 0, ZoneId.systemDefault());
 
         vesselDetailsUpdater.updateVesselDetails(from);
 

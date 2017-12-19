@@ -1,13 +1,10 @@
 package fi.livi.digitraffic.meri.model.portnet.metadata;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
-
 import fi.livi.digitraffic.meri.model.CodeDescriptionJson;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,10 +22,10 @@ public final class CodeDescriptions {
     @ApiModelProperty(value = "All agent type descriptions", required = true)
     public final List<CodeDescriptionJson> agentTypes;
 
-    public CodeDescriptions(final Instant lastUpdated,
+    public CodeDescriptions(final ZonedDateTime lastUpdated,
                             final List<CodeDescriptionJson> cargoTypes, final List<CodeDescriptionJson> vesselTypes,
                             final List<CodeDescriptionJson> agentTypes) {
-        this.lastUpdated = lastUpdated == null ? null : lastUpdated.atZone(ZoneId.systemDefault());
+        this.lastUpdated = lastUpdated;
         this.cargoTypes = ImmutableList.copyOf(cargoTypes);
         this.vesselTypes = ImmutableList.copyOf(vesselTypes);
         this.agentTypes = ImmutableList.copyOf(agentTypes);
