@@ -64,7 +64,7 @@ public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 29, 6, 30, 59, 0, ZoneId.systemDefault());
+        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 29, 6, 30, 59, 0, ZoneId.of("Europe/Helsinki"));
 
         vesselDetailsUpdater.updateVesselDetails(from);
 
