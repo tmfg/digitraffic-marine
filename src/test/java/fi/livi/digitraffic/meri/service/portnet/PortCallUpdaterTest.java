@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -62,7 +61,6 @@ public class PortCallUpdaterTest extends AbstractIntegrationTest {
     @Transactional
     @Rollback
     public void updatePortCallsSucceeds() throws IOException {
-
         String response = readFile("portCallResponse1.xml");
 
         server.expect(MockRestRequestMatchers.requestTo("portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
@@ -75,8 +73,8 @@ public class PortCallUpdaterTest extends AbstractIntegrationTest {
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        Instant from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, ZoneId.systemDefault()).toInstant();
-        Instant to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, ZoneId.systemDefault()).toInstant();
+        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, ZoneId.systemDefault());
+        final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, ZoneId.systemDefault());
 
         portCallUpdater.updatePortCalls(from, to);
 
