@@ -3,6 +3,8 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,10 +59,10 @@ public class WinterNavigationService {
 
         final List<WinterNavigationPort> ports = winterNavigationPortRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_PORTS.name());
+        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_PORTS.name());
 
         return new WinterNavigationPortFeatureCollection(
-            lastUpdated,
+            lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
             ports.stream().map(this::portFeature).collect(Collectors.toList()));
     }
 
@@ -69,7 +71,7 @@ public class WinterNavigationService {
 
         final List<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_SHIPS.name());
+        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_SHIPS.name());
 
         final List<WinterNavigationShipFeature> shipFeatures =
             ships.stream().map(s -> new WinterNavigationShipFeature(s.getVesselPK(),
@@ -77,7 +79,8 @@ public class WinterNavigationService {
                                                                     new Point(s.getShipState().getLongitude(), s.getShipState().getLatitude())))
                  .collect(Collectors.toList());
 
-        return new WinterNavigationShipFeatureCollection(lastUpdated, shipFeatures);
+        return new WinterNavigationShipFeatureCollection(lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
+                                                         shipFeatures);
     }
 
     private WinterNavigationPortFeature portFeature(final WinterNavigationPort p) {

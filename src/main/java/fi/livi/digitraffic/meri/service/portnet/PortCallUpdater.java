@@ -1,11 +1,10 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
-import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.time.Duration;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,25 +60,22 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
-        final ZonedDateTime now = ZonedDateTime.now();
-        final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus
-            (overlapTimeFrame, MILLIS);
-
-        final ZonedDateTime to = Duration.between(from, now).toMillis() > maxTimeFrameToFetch ?
-            from.plus(maxTimeFrameToFetch, MILLIS) : now;
+        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
+        final Instant now = Instant.now();
+        final Instant from = lastUpdated == null ? now.minusMillis(maxTimeFrameToFetch) : lastUpdated.minusMillis(overlapTimeFrame);
+        final Instant to = now.toEpochMilli() - from.toEpochMilli() > maxTimeFrameToFetch ? from.plusMillis(maxTimeFrameToFetch) : now;
 
         updatePortCalls(from, to);
     }
 
     @Transactional
-    public void updatePortCalls(final ZonedDateTime from, final ZonedDateTime to) {
+    public void updatePortCalls(final Instant from, final Instant to) {
         log.info("Fetching port calls from server");
 
         final PortCallList list = portCallClient.getList(from, to);
 
         if(isListOk(list)) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), ZonedDateTime.from(to), getClass().getSimpleName());
 
             final List<PortCall> added = new ArrayList<>();
             final List<PortCall> updated = new ArrayList<>();

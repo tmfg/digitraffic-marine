@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller.portnet;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +23,8 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationProperties;
 public final class SsnLocationConverter {
     private SsnLocationConverter() {}
 
-    public static FeatureCollectionList convert(final ZonedDateTime timestamp, final List<SsnLocation> locations, final List<PortArea> portAreas,
-        final List<Berth> berths) {
-        return new FeatureCollectionList(timestamp,
+    public static FeatureCollectionList convert(final Instant timestamp, final List<SsnLocation> locations, final List<PortArea> portAreas, final List<Berth> berths) {
+        return new FeatureCollectionList(timestamp == null ? null : timestamp.atZone(ZoneId.systemDefault()),
                 convertSsnLocations(locations),
                 convertPortAreas(portAreas),
                 convertBerths(berths));

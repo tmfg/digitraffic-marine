@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.dao;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,7 +17,7 @@ public interface UpdatedTimestampRepository extends SqlRepository {
     }
 
     @Query(value = "select cast(updated_time as date) from updated_timestamp where updated_name = :name", nativeQuery = true)
-    ZonedDateTime getLastUpdated(@Param("name") final String name);
+    Instant getLastUpdated(@Param("name") final String name);
 
     @Modifying
     @Query(value = "merge into updated_timestamp ut using (select :name as updated_name from dual) utold"

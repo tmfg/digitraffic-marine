@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.model.portnet.data;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -14,8 +16,8 @@ public final class PortCallsJson {
     @ApiModelProperty(value = "Port calls", required = true)
     public final List<PortCallJson> portCalls;
 
-    public PortCallsJson(final ZonedDateTime portCallsUpdated, final List<PortCallJson> portCalls) {
-        this.portCallsUpdated = portCallsUpdated;
+    public PortCallsJson(final Instant portCallsUpdated, final List<PortCallJson> portCalls) {
+        this.portCallsUpdated = portCallsUpdated == null ? null : portCallsUpdated.atZone(ZoneId.systemDefault());
         this.portCalls = portCalls;
     }
 }
