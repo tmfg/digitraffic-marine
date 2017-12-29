@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,7 +75,7 @@ public class WinterNavigationShipUpdater {
         log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={}, tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_SHIPS.name(),
-                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
+                                              Date.from(data.getDataValidTime().toGregorianCalendar().toZonedDateTime().toInstant()),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();

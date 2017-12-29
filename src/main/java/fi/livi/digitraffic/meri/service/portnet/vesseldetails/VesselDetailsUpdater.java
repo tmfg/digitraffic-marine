@@ -2,8 +2,8 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.VESSEL_DETAILS;
 
+import java.sql.Date;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +46,14 @@ public class VesselDetailsUpdater {
         updateVesselDetails(lastUpdated);
     }
 
-    protected void updateVesselDetails(final Instant lastUpdated) {
+    protected void updateVesselDetails(Instant lastUpdated) {
         final Instant now = Instant.now();
         final Instant from = lastUpdated == null ? now.minus(1, ChronoUnit.DAYS) : lastUpdated;
 
         final VesselList vesselList = vesselDetailsClient.getVesselList(from);
 
         if (isListOk(vesselList)) {
-            updatedTimestampRepository.setUpdated(VESSEL_DETAILS.name(), ZonedDateTime.from(now), getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(VESSEL_DETAILS.name(), Date.from(now), getClass().getSimpleName());
 
             final List<VesselDetails> added = new ArrayList<>();
             final List<VesselDetails> updated = new ArrayList<>();

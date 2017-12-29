@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class WinterNavigationPortUpdater {
                  data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
-                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
+                                              Date.from(data.getDataValidTime().toGregorianCalendar().toZonedDateTime().toInstant()),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();
