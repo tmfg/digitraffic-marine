@@ -107,15 +107,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.oracle.jdbc</groupId>
-            <artifactId>ucp</artifactId>
-            <version>12.1.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.oracle.jdbc</groupId>
-            <artifactId>ons</artifactId>
-            <version>12.1.0.2</version>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.7.4</version>
         </dependency>
 
         <dependency>
@@ -210,7 +204,7 @@
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
-            <!-- Versions from 2.2.1 on has loop bug on jdbc conection drop. Fixed by using 2.2.0-version
+            <!-- DPO-392 Versions from 2.2.1 on has loop bug on jdbc conection drop. Fixed by using 2.2.0-version
                  http://stackoverflow.com/questions/35761746/quartz-scheduler-unlimited-attempts-to-connect-with-database
                  https://jira.terracotta.org/jira/browse/QTZ-470 -->
             <version>2.2.0</version>
