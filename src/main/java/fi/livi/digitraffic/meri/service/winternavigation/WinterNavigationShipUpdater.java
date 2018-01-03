@@ -72,7 +72,7 @@ public class WinterNavigationShipUpdater {
         winterNavigationShipRepository.save(added);
         stopWatch.stop();
 
-        log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={}, tookMs={}", added.size(), updated.size(), stopWatch.getTime());
+        log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={} , tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_SHIPS.name(),
                                               Date.from(data.getDataValidTime().toGregorianCalendar().toZonedDateTime().toInstant()),

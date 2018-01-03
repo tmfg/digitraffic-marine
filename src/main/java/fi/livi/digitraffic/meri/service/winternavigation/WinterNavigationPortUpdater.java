@@ -80,7 +80,7 @@ public class WinterNavigationPortUpdater {
         winterNavigationRepository.save(added);
         stopWatch.stop();
 
-        log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={}, tookMs={}",
+        log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
                  data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
