@@ -15,8 +15,11 @@ import ibnet_baltice_ports.Ports;
 import ibnet_baltice_schema.ObjectFactory;
 import ibnet_baltice_schema.PortsRequestType;
 import ibnet_baltice_schema.PortsResponseType;
+import ibnet_baltice_schema.WaypointsRequestType;
+import ibnet_baltice_schema.WaypointsResponseType;
 import ibnet_baltice_schema.WinterShipsRequestType;
 import ibnet_baltice_schema.WinterShipsResponseType;
+import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
 
 @Service
@@ -47,9 +50,16 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
     }
 
     public WinterShips getWinterNavigationShips() {
-        final JAXBElement<WinterShipsResponseType> portsResponseTypeJAXBElement =
+        final JAXBElement<WinterShipsResponseType> winterShipsResponseTypeJAXBElement =
             (JAXBElement<WinterShipsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createWinterShipsRequest(new WinterShipsRequestType()));
 
-        return portsResponseTypeJAXBElement.getValue().getWinterShips();
+        return winterShipsResponseTypeJAXBElement.getValue().getWinterShips();
+    }
+
+    public DirWaysType getWinterNavigationWaypoints() {
+        final JAXBElement<WaypointsResponseType> waypointsResponseTypeJAXBElement =
+            (JAXBElement<WaypointsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createWaypointsRequest(new WaypointsRequestType()));
+
+        return waypointsResponseTypeJAXBElement.getValue().getWaypoints();
     }
 }

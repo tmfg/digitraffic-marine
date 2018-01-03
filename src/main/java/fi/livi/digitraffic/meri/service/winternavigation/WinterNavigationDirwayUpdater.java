@@ -1,0 +1,120 @@
+package fi.livi.digitraffic.meri.service.winternavigation;
+
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
+import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirway;
+import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirwayPoint;
+import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirwayPointPK;
+import ibnet_baltice_waypoints.DirWayPointType;
+import ibnet_baltice_waypoints.DirWayType;
+import ibnet_baltice_waypoints.DirWaysType;
+
+@Service
+public class WinterNavigationDirwayUpdater {
+
+    private final static Logger log = LoggerFactory.getLogger(WinterNavigationDirwayUpdater.class);
+
+    private final WinterNavigationClient winterNavigationClient;
+    private final WinterNavigationDirwayRepository winterNavigationDirwayRepository;
+    private final UpdatedTimestampRepository updatedTimestampRepository;
+
+    @Autowired
+    public WinterNavigationDirwayUpdater(final WinterNavigationClient winterNavigationClient,
+                                         final WinterNavigationDirwayRepository winterNavigationDirwayRepository,
+                                         final UpdatedTimestampRepository updatedTimestampRepository) {
+        this.winterNavigationClient = winterNavigationClient;
+        this.winterNavigationDirwayRepository = winterNavigationDirwayRepository;
+        this.updatedTimestampRepository = updatedTimestampRepository;
+    }
+
+    /**
+     * 1. Get winter navigation dirways from an external source
+     * 2. Insert / update database
+     * @return total number of added or updated dirways
+     */
+    @Transactional
+    public int updateWinterNavigationDirways() {
+        final DirWaysType data = winterNavigationClient.getWinterNavigationWaypoints();
+
+        final List<WinterNavigationDirway> added = new ArrayList<>();
+        final List<WinterNavigationDirway> updated = new ArrayList<>();
+
+        final StopWatch stopWatch = StopWatch.createStarted();
+        data.getDirWay().forEach(dirway -> update(dirway, added, updated));
+        winterNavigationDirwayRepository.save(added);
+        stopWatch.stop();
+
+        log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , tookMs={}", added.size(), updated.size(), stopWatch.getTime());
+
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS.name(),
+                                              Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
+                                              getClass().getSimpleName());
+
+        return added.size() + updated.size();
+    }
+
+    private void update(final DirWayType dirway, final List<WinterNavigationDirway> added, final List<WinterNavigationDirway> updated) {
+        final WinterNavigationDirway old = winterNavigationDirwayRepository.findOne(dirway.getName());
+
+        if (old == null) {
+            added.add(addNew(dirway));
+        } else {
+            updated.add(update(old, dirway));
+        }
+    }
+
+    private static WinterNavigationDirway addNew(final DirWayType dirway) {
+        WinterNavigationDirway d = new WinterNavigationDirway();
+
+        updateData(d, dirway);
+
+        return d;
+    }
+
+    private static WinterNavigationDirway update(final WinterNavigationDirway d, final DirWayType dirway) {
+
+        updateData(d, dirway);
+
+        return d;
+    }
+
+    private static void updateData(final WinterNavigationDirway d, final DirWayType dirway) {
+        d.setName(dirway.getName());
+        d.setIssuerCode(dirway.getIssuerCode());
+        d.setIssuerName(dirway.getIssuerName());
+        d.setIssueTime(WinterNavigationShipUpdater.findZonedDateTime(dirway.getIssueTime()));
+        d.setValidUntil(WinterNavigationShipUpdater.findZonedDateTime(dirway.getValidUntil()));
+
+        updateDirwayPoints(d, dirway.getDirWayPoints());
+    }
+
+    private static void updateDirwayPoints(final WinterNavigationDirway d, final DirWayType.DirWayPoints dirwayPoints) {
+        d.getDirwayPoints().clear();
+
+        if (dirwayPoints == null) {
+            return;
+        }
+
+        for (final DirWayPointType point : dirwayPoints.getDirWayPoint()) {
+            final WinterNavigationDirwayPoint p = new WinterNavigationDirwayPoint();
+            p.setWinterNavigationDirwayPointPK(new WinterNavigationDirwayPointPK(d.getName(), point.getId().longValue()));
+            p.setLongitude(point.getLon().doubleValue());
+            p.setLatitude(point.getLat().doubleValue());
+            p.setSeaArea(point.getSeaArea());
+            d.getDirwayPoints().add(p);
+        }
+    }
+}
