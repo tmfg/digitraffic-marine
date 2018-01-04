@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
-import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
+import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Service
 public class VesselDetailsClient {

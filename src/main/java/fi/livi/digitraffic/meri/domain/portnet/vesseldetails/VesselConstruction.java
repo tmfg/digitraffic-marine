@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
-import fi.livi.digitraffic.util.TypeUtil;
+import fi.livi.digitraffic.meri.util.TypeUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

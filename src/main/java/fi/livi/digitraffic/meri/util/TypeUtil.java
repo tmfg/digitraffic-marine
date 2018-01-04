@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.util;
+package fi.livi.digitraffic.meri.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

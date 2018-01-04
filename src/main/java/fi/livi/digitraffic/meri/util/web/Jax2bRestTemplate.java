@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.util.web;
+package fi.livi.digitraffic.meri.util.web;
 
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;

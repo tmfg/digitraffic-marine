@@ -9,7 +9,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
+import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Configuration
 public class RestTemplateConfiguration {

@@ -6,9 +6,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 
-public class UpdatedTimestampRepositoryTest extends AbstractIntegrationTest {
+public class UpdatedTimestampRepositoryTest extends AbstractTestBase {
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
 

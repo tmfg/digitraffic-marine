@@ -22,13 +22,13 @@ import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
+import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
-public class VesselDetailsUpdaterTest extends AbstractIntegrationTest {
+public class VesselDetailsUpdaterTest extends AbstractTestBase {
 
     @MockBean(answer = Answers.CALLS_REAL_METHODS)
     private VesselDetailsClient vesselDetailsClient;

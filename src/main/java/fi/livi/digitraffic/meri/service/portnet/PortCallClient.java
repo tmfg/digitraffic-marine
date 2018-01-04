@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
-import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
+import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Service
 public class PortCallClient {

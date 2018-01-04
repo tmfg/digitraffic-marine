@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.util.dao;
+package fi.livi.digitraffic.meri.util.dao;
 
 import java.util.HashMap;
 

@@ -11,11 +11,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 
 @Ignore("Needs vpn")
-public class PortCallClientTest extends AbstractIntegrationTest {
+public class PortCallClientTest extends AbstractTestBase {
     @Autowired
     private PortCallClient portCallClient;
 

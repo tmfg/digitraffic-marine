@@ -1,4 +1,4 @@
-package fi.livi.digitraffic;
+package fi.livi.digitraffic.meri;
 
 import java.util.List;
 import java.util.Map;
@@ -10,9 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
-
-public class ForeignKeyIndexTest extends AbstractIntegrationTest {
+public class ForeignKeyIndexTest extends AbstractTestBase {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -12,11 +12,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 
 @Ignore("Needs vpn")
-public class VesselDetailsClientTest extends AbstractIntegrationTest {
+public class VesselDetailsClientTest extends AbstractTestBase {
 
     @Autowired
     private VesselDetailsClient vesselDetailsClient;
