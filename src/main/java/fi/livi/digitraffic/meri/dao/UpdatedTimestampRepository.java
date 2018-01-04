@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.dao;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +13,7 @@ import fi.livi.digitraffic.util.dao.SqlRepository;
 @Repository
 public interface UpdatedTimestampRepository extends SqlRepository {
     enum UpdatedName {
-        PORT_CALLS, PORT_METADATA, VESSEL_DETAILS
+        PORT_CALLS, PORT_METADATA, VESSEL_DETAILS, WINTER_NAVIGATION_PORTS, WINTER_NAVIGATION_SHIPS, WINTER_NAVIGATION_DIRWAYS
     }
 
     @Query(value = "select cast(updated_time as date) from updated_timestamp where updated_name = :name", nativeQuery = true)
@@ -24,5 +24,5 @@ public interface UpdatedTimestampRepository extends SqlRepository {
             + " on (ut.updated_name = utold.updated_name) "
             + " when matched then update set ut.updated_time = :time, ut.updated_by = :by"
             + " when not matched then insert(ut.updated_name, ut.updated_time, ut.updated_by) values (:name, :time, :by)", nativeQuery = true)
-    void setUpdated(@Param("name")final String name, @Param("time")final ZonedDateTime time, @Param("by")final String by);
+    void setUpdated(@Param("name")final String name, @Param("time")final Date time, @Param("by")final String by);
 }

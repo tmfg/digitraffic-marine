@@ -1,0 +1,34 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="IBNet_Baltice_Waypoints" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="IBNet_Baltice_Waypoints">
+<xsd:complexType name="DirWayPointType">
+<xsd:sequence>
+<xsd:element name="id" type="xsd:integer"/>
+<xsd:element name="lat" type="xsd:decimal"/>
+<xsd:element name="lon" type="xsd:decimal"/>
+<xsd:element name="seaArea" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="DirWayType">
+<xsd:sequence>
+<xsd:element name="name" type="xsd:string"/>
+<xsd:element minOccurs="0" name="issueTime" type="xsd:dateTime"/>
+<xsd:element name="issuerCode" type="xsd:string"/>
+<xsd:element name="issuerName" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validUntil" type="xsd:dateTime"/>
+<xsd:element name="DirWayPoints">
+<xsd:complexType>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" name="DirWayPoint" type="tns:DirWayPointType"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="DirWaysType">
+<xsd:sequence>
+<xsd:element name="dataValidTime" type="xsd:dateTime"/>
+<xsd:element name="dataQueryTime" type="xsd:dateTime"/>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="DirWay" type="tns:DirWayType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="waypoints" type="tns:DirWaysType"/>
+</xsd:schema>
