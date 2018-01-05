@@ -18,11 +18,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import fi.livi.digitraffic.meri.AbstractControllerTest;
-import fi.livi.digitraffic.util.RestUtil;
+import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.util.RestUtil;
 
 
-public class NauticalWarningControllerTest extends AbstractControllerTest {
+public class NauticalWarningControllerTest extends AbstractTestBase {
     private TestRestTemplate template = new TestRestTemplate();
 
     @Autowired

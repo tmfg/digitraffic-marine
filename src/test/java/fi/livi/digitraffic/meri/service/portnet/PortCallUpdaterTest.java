@@ -26,13 +26,13 @@ import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
-import fi.livi.digitraffic.util.web.Jax2bRestTemplate;
+import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
-public class PortCallUpdaterTest extends AbstractIntegrationTest {
+public class PortCallUpdaterTest extends AbstractTestBase {
 
     @MockBean(answer = Answers.CALLS_REAL_METHODS)
     private PortCallClient portCallClient;

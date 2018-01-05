@@ -19,7 +19,7 @@ import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
-import fi.livi.digitraffic.util.service.LockingService;
+import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")

@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
@@ -20,7 +20,7 @@ import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 
-public class VesselLocationServiceTest extends AbstractIntegrationTest {
+public class VesselLocationServiceTest extends AbstractTestBase {
 
     private class Point {
         public final double x;

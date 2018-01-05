@@ -10,11 +10,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
 
-public class WinterNavigationIntegrationTest extends AbstractIntegrationTest {
+public class WinterNavigationIntegrationTest extends AbstractTestBase {
 
     @Autowired
     private WinterNavigationClient winterNavigationClient;

@@ -9,10 +9,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.SAXException;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationUpdater;
 
-public class SsnLocationUpdaterTest extends AbstractIntegrationTest {
+public class SsnLocationUpdaterTest extends AbstractTestBase {
     @Autowired
     private SsnLocationUpdater ssnLocationUpdater;
 

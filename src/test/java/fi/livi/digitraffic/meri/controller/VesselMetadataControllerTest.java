@@ -14,12 +14,12 @@ import org.junit.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
-import fi.livi.digitraffic.meri.AbstractControllerTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.VesselMetadataBuilder;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
-public class VesselMetadataControllerTest extends AbstractControllerTest {
+public class VesselMetadataControllerTest extends AbstractTestBase {
     @MockBean
     private VesselMetadataService vesselMetadataService;
 

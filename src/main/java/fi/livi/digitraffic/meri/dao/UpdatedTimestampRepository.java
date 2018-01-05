@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import fi.livi.digitraffic.util.dao.SqlRepository;
+import fi.livi.digitraffic.meri.util.dao.SqlRepository;
 
 @Repository
 public interface UpdatedTimestampRepository extends SqlRepository {

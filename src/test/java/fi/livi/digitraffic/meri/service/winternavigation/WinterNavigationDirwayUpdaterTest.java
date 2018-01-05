@@ -19,14 +19,14 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirway;
 import ibnet_baltice_schema.WaypointsResponseType;
 import ibnet_baltice_waypoints.DirWaysType;
 
-public class WinterNavigationDirwayUpdaterTest extends AbstractIntegrationTest {
+public class WinterNavigationDirwayUpdaterTest extends AbstractTestBase {
 
     @MockBean
     private WinterNavigationClient winterNavigationClient;

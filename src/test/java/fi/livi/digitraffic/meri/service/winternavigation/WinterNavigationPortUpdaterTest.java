@@ -23,7 +23,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
@@ -31,7 +31,7 @@ import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 import ibnet_baltice_ports.Ports;
 import ibnet_baltice_schema.PortsResponseType;
 
-public class WinterNavigationPortUpdaterTest extends AbstractIntegrationTest {
+public class WinterNavigationPortUpdaterTest extends AbstractTestBase {
 
     @MockBean
     private WinterNavigationClient winterNavigationClient;

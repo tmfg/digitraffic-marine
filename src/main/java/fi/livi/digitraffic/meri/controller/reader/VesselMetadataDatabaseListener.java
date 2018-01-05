@@ -8,7 +8,7 @@ import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
-import fi.livi.digitraffic.util.service.LockingService;
+import fi.livi.digitraffic.meri.util.service.LockingService;
 
 public class VesselMetadataDatabaseListener implements WebsocketListener {
     private final VesselMetadataRepository vesselMetadataRepository;

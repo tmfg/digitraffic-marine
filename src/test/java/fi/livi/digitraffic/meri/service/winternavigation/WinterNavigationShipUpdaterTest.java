@@ -19,14 +19,14 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
 import ibnet_baltice_schema.WinterShipsResponseType;
 import ibnet_baltice_winterships.WinterShips;
 
-public class WinterNavigationShipUpdaterTest extends AbstractIntegrationTest {
+public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
 
     @MockBean
     private WinterNavigationClient winterNavigationClient;

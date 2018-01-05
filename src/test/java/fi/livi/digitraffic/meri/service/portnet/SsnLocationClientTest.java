@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationClient;
 
-public class SsnLocationClientTest extends AbstractIntegrationTest {
+public class SsnLocationClientTest extends AbstractTestBase {
     @Autowired
     private SsnLocationClient ssnLocationClient;
 
