@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayFeatureCollection;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeatureCollection;
 import fi.livi.digitraffic.meri.service.winternavigation.WinterNavigationService;
@@ -44,5 +45,14 @@ public class BetaController {
     @ResponseBody
     public WinterNavigationShipFeatureCollection getWinterNavigationShips() {
         return winterNavigationService.getWinterNavigationShips();
+    }
+
+    @ApiOperation("Return winter navigation dirways")
+    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/dirways", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation dirways"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ResponseBody
+    public WinterNavigationDirwayFeatureCollection getWinterNavigationDirways() {
+        return winterNavigationService.getWinterNavigationDirways();
     }
 }
