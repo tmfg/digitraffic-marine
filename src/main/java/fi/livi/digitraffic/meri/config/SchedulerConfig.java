@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.impl.triggers.SimpleTriggerImpl;
 import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,11 @@ public class SchedulerConfig {
 
         if (triggerBeans.isPresent()) {
             for (Trigger triggerBean : triggerBeans.get()) {
-                log.info("Schedule trigger " + triggerBean.getJobKey());
+                if (triggerBean instanceof  SimpleTriggerImpl) {
+                    log.info("Schedule trigger={} repeatInterval={}", triggerBean.getJobKey(), ((SimpleTriggerImpl)triggerBean).getRepeatInterval());
+                } else {
+                    log.info("Schedule trigger={}", triggerBean.getJobKey());
+                }
             }
             factory.setTriggers(triggerBeans.get().toArray(new Trigger[0]));
         }
