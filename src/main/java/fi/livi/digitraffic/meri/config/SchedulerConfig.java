@@ -29,6 +29,7 @@ import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
+import fi.livi.digitraffic.meri.quartz.WinterNavigationDirwayUpdateJob;
 import fi.livi.digitraffic.meri.quartz.WinterNavigationPortUpdateJob;
 import fi.livi.digitraffic.meri.quartz.WinterNavigationShipUpdateJob;
 
@@ -104,6 +105,10 @@ public class SchedulerConfig {
         return createJobDetail(WinterNavigationPortUpdateJob.class);
     }
 
+    @Bean
+    public JobDetailFactoryBean winterNavigationDirwayUpdateJobDetail() {
+        return createJobDetail(WinterNavigationDirwayUpdateJob.class);
+    }
 
     @Bean
     public SimpleTriggerFactoryBean portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail,
@@ -139,6 +144,12 @@ public class SchedulerConfig {
     public SimpleTriggerFactoryBean winterNavigationPortUpdateJobTrigger(final JobDetail winterNavigationPortUpdateJobDetail,
                                                                          @Value("${winterNavigationPortUpdateJob.frequency}") final long frequency) {
         return createTrigger(winterNavigationPortUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail,
+                                                                           @Value("${winterNavigationDirwayUpdateJob.frequency}") final long frequency) {
+        return createTrigger(winterNavigationDirwayUpdateJobDetail, frequency);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {
