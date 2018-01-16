@@ -111,11 +111,16 @@ public class WinterNavigationService {
     }
 
     private Geometry dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {
-        final LineString l = new LineString();
-        l.setCoordinates(dirwayPoints.stream().sorted(Comparator.comparing(WinterNavigationDirwayPoint::getOrderNumber))
-                             .map(p -> Arrays.asList(p.getLongitude(), p.getLatitude())).collect(Collectors.toList()));
-        l.setAdditionalProperty("seaAreas", dirwayPoints.stream().map(d -> d.getSeaArea()).collect(Collectors.toList()));
-        return l;
+        Geometry geometry;
+        if (dirwayPoints.size() == 1) {
+            geometry = new Point(dirwayPoints.get(0).getLongitude(), dirwayPoints.get(0).getLatitude());
+        } else {
+            geometry = new LineString();
+            geometry.setCoordinates(dirwayPoints.stream().sorted(Comparator.comparing(WinterNavigationDirwayPoint::getOrderNumber))
+                                        .map(p -> Arrays.asList(p.getLongitude(), p.getLatitude())).collect(Collectors.toList()));
+        }
+        geometry.setAdditionalProperty("seaAreas", dirwayPoints.stream().map(d -> d.getSeaArea()).collect(Collectors.toList()));
+        return geometry;
     }
 
     private WinterNavigationDirwayProperties dirwayProperties(final WinterNavigationDirway d) {
