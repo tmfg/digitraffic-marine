@@ -33,6 +33,7 @@ ssnLocationUpdateJob.frequency = 43200000
 vesselDetailsUpdateJob.frequency = 1800000
 winterNavigationShipUpdateJob.frequency = 60000
 winterNavigationPortUpdateJob.frequency = 60000
+winterNavigationDirwayUpdateJob.frequency = 60000
 
 # Allowed mmsis cache time in millis
 cache.allowedMmsis = #{60*1000}

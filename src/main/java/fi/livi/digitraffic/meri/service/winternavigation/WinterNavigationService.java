@@ -1,11 +1,14 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
@@ -21,14 +25,21 @@ import fi.livi.digitraffic.meri.domain.winternavigation.ShipActivity;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipPlannedActivity;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipState;
 import fi.livi.digitraffic.meri.domain.winternavigation.ShipVoyage;
+import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirway;
+import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirwayPoint;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
+import fi.livi.digitraffic.meri.model.geojson.Geometry;
+import fi.livi.digitraffic.meri.model.geojson.LineString;
 import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.winternavigation.PortRestrictionProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.ShipActivityProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.ShipPlannedActivityProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.ShipStateProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.ShipVoyageProperty;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayFeature;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayFeatureCollection;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayProperties;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortProperties;
@@ -43,14 +54,18 @@ public class WinterNavigationService {
 
     private final WinterNavigationShipRepository winterNavigationShipRepository;
 
+    private final WinterNavigationDirwayRepository winterNavigationDirwayRepository;
+
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
     public WinterNavigationService(final WinterNavigationPortRepository winterNavigationPortRepository,
                                    final WinterNavigationShipRepository winterNavigationShipRepository,
+                                   final WinterNavigationDirwayRepository winterNavigationDirwayRepository,
                                    final UpdatedTimestampRepository updatedTimestampRepository) {
         this.winterNavigationPortRepository = winterNavigationPortRepository;
         this.winterNavigationShipRepository = winterNavigationShipRepository;
+        this.winterNavigationDirwayRepository = winterNavigationDirwayRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
@@ -81,6 +96,35 @@ public class WinterNavigationService {
 
         return new WinterNavigationShipFeatureCollection(lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
                                                          shipFeatures);
+    }
+
+    @Transactional(readOnly = true)
+    public WinterNavigationDirwayFeatureCollection getWinterNavigationDirways() {
+        final List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
+
+        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_DIRWAYS.name());
+
+        return new WinterNavigationDirwayFeatureCollection(
+            lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
+            dirways.stream().map(d -> new WinterNavigationDirwayFeature(d.getName(), dirwayProperties(d), dirwayGeometry(d.getDirwayPoints())))
+                .collect(Collectors.toList()));
+    }
+
+    private Geometry dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {
+        Geometry geometry;
+        if (dirwayPoints.size() == 1) {
+            geometry = new Point(dirwayPoints.get(0).getLongitude(), dirwayPoints.get(0).getLatitude());
+        } else {
+            geometry = new LineString();
+            geometry.setCoordinates(dirwayPoints.stream().sorted(Comparator.comparing(WinterNavigationDirwayPoint::getOrderNumber))
+                                        .map(p -> Arrays.asList(p.getLongitude(), p.getLatitude())).collect(Collectors.toList()));
+        }
+        geometry.setAdditionalProperty("seaAreas", dirwayPoints.stream().map(d -> d.getSeaArea()).collect(Collectors.toList()));
+        return geometry;
+    }
+
+    private WinterNavigationDirwayProperties dirwayProperties(final WinterNavigationDirway d) {
+        return new WinterNavigationDirwayProperties(d.getIssueTime(), d.getIssuerCode(), d.getIssuerName(), d.getValidUntil());
     }
 
     private WinterNavigationPortFeature portFeature(final WinterNavigationPort p) {

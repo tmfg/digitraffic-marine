@@ -19,6 +19,10 @@ public class WinterNavigationDirwayPoint {
         return winterNavigationDirwayPointPK;
     }
 
+    public Long getOrderNumber() {
+        return winterNavigationDirwayPointPK.getOrderNumber();
+    }
+
     public void setWinterNavigationDirwayPointPK(WinterNavigationDirwayPointPK winterNavigationDirwayPointPK) {
         this.winterNavigationDirwayPointPK = winterNavigationDirwayPointPK;
     }

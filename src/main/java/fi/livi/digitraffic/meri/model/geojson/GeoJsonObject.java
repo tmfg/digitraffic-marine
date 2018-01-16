@@ -41,7 +41,6 @@ public abstract class GeoJsonObject implements Serializable {
 
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
-        log.warn("Unmapped field: " + name + " = " + value);
         this.additionalProperties.put(name, value);
     }
 

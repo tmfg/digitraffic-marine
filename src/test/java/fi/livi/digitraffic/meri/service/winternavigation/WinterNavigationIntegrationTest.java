@@ -26,6 +26,9 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
     private WinterNavigationShipUpdater winterNavigationShipUpdater;
 
     @Autowired
+    private WinterNavigationDirwayUpdater winterNavigationDirwayUpdater;
+
+    @Autowired
     private WinterNavigationService winterNavigationService;
 
     @Test
@@ -64,8 +67,19 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
     @Test
     @Ignore("For manual integration testing")
     public void getWinterNavigationWaypointsSucceeds() {
-        final DirWaysType winterNavigationWaypoints = winterNavigationClient.getWinterNavigationWaypoints();
+        final ZonedDateTime start = ZonedDateTime.now().minusSeconds(1);
 
-        assertNotNull(winterNavigationWaypoints);
+        final DirWaysType dirways = winterNavigationClient.getWinterNavigationWaypoints();
+
+        assertNotNull(dirways);
+        assertTrue(dirways.getDirWay().size() > 0);
+
+        int count = winterNavigationDirwayUpdater.updateWinterNavigationDirways();
+        assertTrue("Total count of added or updated dirways is greater than 0", count > 0);
+
+        ZonedDateTime dataUpdatedTime = winterNavigationService.getWinterNavigationDirways().getDataUpdatedTime();
+
+        assertNotNull(dataUpdatedTime);
+        assertTrue(dataUpdatedTime.isAfter(start));
     }
 }
