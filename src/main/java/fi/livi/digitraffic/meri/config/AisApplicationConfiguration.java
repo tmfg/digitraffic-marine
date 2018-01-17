@@ -34,6 +34,7 @@ public class AisApplicationConfiguration {
         return new MethodValidationPostProcessor();
     }
 
+    @SuppressWarnings("Duplicates")
     @Bean
     public DataSource datasource(final @Value("${ais.datasource.url}") String url,
                                  final @Value("${ais.datasource.username}") String username,
