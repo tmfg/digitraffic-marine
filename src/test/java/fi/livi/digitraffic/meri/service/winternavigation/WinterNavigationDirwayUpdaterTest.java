@@ -21,6 +21,7 @@ import org.springframework.xml.transform.StringSource;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirway;
 import ibnet_baltice_schema.WaypointsResponseType;
@@ -38,6 +39,9 @@ public class WinterNavigationDirwayUpdaterTest extends AbstractTestBase {
     private WinterNavigationDirwayRepository winterNavigationDirwayRepository;
 
     @Autowired
+    private WinterNavigationDirwayPointRepository winterNavigationDirwayPointRepository;
+
+    @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
@@ -45,7 +49,8 @@ public class WinterNavigationDirwayUpdaterTest extends AbstractTestBase {
 
     @Before
     public void before() {
-        winterNavigationDirwayUpdater = new WinterNavigationDirwayUpdater(winterNavigationClient, winterNavigationDirwayRepository, updatedTimestampRepository);
+        winterNavigationDirwayUpdater = new WinterNavigationDirwayUpdater(winterNavigationClient, winterNavigationDirwayRepository,
+                                                                          winterNavigationDirwayPointRepository, updatedTimestampRepository);
         winterNavigationDirwayRepository.deleteAll();
     }
 
