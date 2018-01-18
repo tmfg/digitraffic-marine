@@ -117,6 +117,11 @@ public class WinterNavigationService {
                                                new Point(ship.getShipState().getLongitude(), ship.getShipState().getLatitude()));
     }
 
+    public WinterNavigationPortFeature getWinterNavigationPortByLocode(final String locode) {
+        final WinterNavigationPort port = winterNavigationPortRepository.findOne(locode);
+        return portFeature(port);
+    }
+
     private Geometry dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {
         Geometry geometry;
         if (dirwayPoints.size() == 1) {

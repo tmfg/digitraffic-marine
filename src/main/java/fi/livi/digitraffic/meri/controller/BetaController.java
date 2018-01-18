@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayFeatureCollection;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeature;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeatureCollection;
@@ -59,7 +60,7 @@ public class BetaController {
         return winterNavigationService.getWinterNavigationDirways();
     }
 
-    @ApiOperation("Return winter navigation ships")
+    @ApiOperation("Return winter navigation ship")
     @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ships/{vesselId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation ship"),
                     @ApiResponse(code = 500, message = "Internal server error") })
@@ -69,5 +70,16 @@ public class BetaController {
                                                                              @PathVariable("vesselId") final String vesselId) {
 
         return winterNavigationService.getWinterNavigationShipByVesselId(vesselId);
+    }
+
+    @ApiOperation("Return winter navigation port")
+    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ports/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation port"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ResponseBody
+    public WinterNavigationPortFeature getWinterNavigationPortByLocode(@ApiParam(value = "Port locode", required = true)
+                                                                         @PathVariable("locode") final String locode) {
+
+        return winterNavigationService.getWinterNavigationPortByLocode(locode);
     }
 }
