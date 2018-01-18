@@ -110,6 +110,13 @@ public class WinterNavigationService {
                 .collect(Collectors.toList()));
     }
 
+    public WinterNavigationShipFeature getWinterNavigationShipByVesselId(String vesselId) {
+        final WinterNavigationShip ship = winterNavigationShipRepository.findOne(vesselId);
+        return new WinterNavigationShipFeature(ship.getVesselPK(),
+                                               shipProperties(ship),
+                                               new Point(ship.getShipState().getLongitude(), ship.getShipState().getLatitude()));
+    }
+
     private Geometry dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {
         Geometry geometry;
         if (dirwayPoints.size() == 1) {
