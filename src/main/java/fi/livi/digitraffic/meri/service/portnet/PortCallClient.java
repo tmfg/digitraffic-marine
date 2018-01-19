@@ -5,6 +5,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class PortCallClient {
 
     public PortCallList getList(final Instant lastUpdated, final Instant now) {
         final String url = buildUrl(lastUpdated, now);
+
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 
         log.info("Fetching port calls from url={}", url);
 
