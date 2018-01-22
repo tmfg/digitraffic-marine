@@ -26,7 +26,7 @@ public abstract class SimpleUpdateJob extends AbstractUpdateJob {
 
         stopWatch.stop();
 
-        log.info("Quartz job={} end ( tookMs={} )", jobName, stopWatch.getTime());
+        log.info("Quartz jobName={} end ( jobTimeMs={} )", jobName, stopWatch.getTime());
     }
 
     protected abstract void doExecute(final JobExecutionContext context) throws Exception;
