@@ -6,11 +6,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.meri.AbstractIntegrationTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.service.portnet.berth.BerthUpdater;
 
 @Ignore
-public class BerthUpdaterTest extends AbstractIntegrationTest {
+public class BerthUpdaterTest extends AbstractTestBase {
     @Autowired
     private BerthUpdater berthUpdater;
 

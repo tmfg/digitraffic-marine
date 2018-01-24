@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import fi.livi.digitraffic.util.dao.SqlRepository;
+import fi.livi.digitraffic.meri.util.dao.SqlRepository;
 
 @Repository
 public interface UpdatedTimestampRepository extends SqlRepository {
     enum UpdatedName {
-        PORT_CALLS, PORT_METADATA, VESSEL_DETAILS
+        PORT_CALLS, PORT_METADATA, VESSEL_DETAILS, WINTER_NAVIGATION_PORTS, WINTER_NAVIGATION_SHIPS, WINTER_NAVIGATION_DIRWAYS
     }
 
     @Query(value = "select cast(updated_time as date) from updated_timestamp where updated_name = :name", nativeQuery = true)

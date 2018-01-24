@@ -9,11 +9,11 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
-import fi.livi.digitraffic.meri.AbstractControllerTest;
+import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
 
 
-public class PortcallControllerTest extends AbstractControllerTest {
+public class PortcallControllerTest extends AbstractTestBase {
 
     @Test
     public void listAllPortCalls() throws Exception {

@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.impl.triggers.SimpleTriggerImpl;
 import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,9 @@ import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
+import fi.livi.digitraffic.meri.quartz.WinterNavigationDirwayUpdateJob;
+import fi.livi.digitraffic.meri.quartz.WinterNavigationPortUpdateJob;
+import fi.livi.digitraffic.meri.quartz.WinterNavigationShipUpdateJob;
 
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
@@ -57,7 +61,11 @@ public class SchedulerConfig {
 
         if (triggerBeans.isPresent()) {
             for (Trigger triggerBean : triggerBeans.get()) {
-                log.info("Schedule trigger " + triggerBean.getJobKey());
+                if (triggerBean instanceof  SimpleTriggerImpl) {
+                    log.info("Schedule trigger={} repeatInterval={}", triggerBean.getJobKey(), ((SimpleTriggerImpl)triggerBean).getRepeatInterval());
+                } else {
+                    log.info("Schedule trigger={}", triggerBean.getJobKey());
+                }
             }
             factory.setTriggers(triggerBeans.get().toArray(new Trigger[0]));
         }
@@ -93,6 +101,21 @@ public class SchedulerConfig {
     }
 
     @Bean
+    public JobDetailFactoryBean winterNavigationShipUpdateJobDetail() {
+        return createJobDetail(WinterNavigationShipUpdateJob.class);
+    }
+
+    @Bean
+    public JobDetailFactoryBean winterNavigationPortUpdateJobDetail() {
+        return createJobDetail(WinterNavigationPortUpdateJob.class);
+    }
+
+    @Bean
+    public JobDetailFactoryBean winterNavigationDirwayUpdateJobDetail() {
+        return createJobDetail(WinterNavigationDirwayUpdateJob.class);
+    }
+
+    @Bean
     public SimpleTriggerFactoryBean portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail,
                                                              @Value("${portCallUpdateJob.frequency}") final long frequency) {
         return createTrigger(portCallUpdateJobDetail, frequency);
@@ -114,6 +137,24 @@ public class SchedulerConfig {
     public SimpleTriggerFactoryBean vesselDetailUpdateJobTrigger(final JobDetail vesselDetailsUpdateJobDetail,
                                                                  @Value("${vesselDetailsUpdateJob.frequency}") final long frequency) {
         return createTrigger(vesselDetailsUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean winterNavigationShipUpdateJobTrigger(final JobDetail winterNavigationShipUpdateJobDetail,
+                                                                         @Value("${winterNavigationShipUpdateJob.frequency}") final long frequency) {
+        return createTrigger(winterNavigationShipUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean winterNavigationPortUpdateJobTrigger(final JobDetail winterNavigationPortUpdateJobDetail,
+                                                                         @Value("${winterNavigationPortUpdateJob.frequency}") final long frequency) {
+        return createTrigger(winterNavigationPortUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail,
+                                                                           @Value("${winterNavigationDirwayUpdateJob.frequency}") final long frequency) {
+        return createTrigger(winterNavigationDirwayUpdateJobDetail, frequency);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {
