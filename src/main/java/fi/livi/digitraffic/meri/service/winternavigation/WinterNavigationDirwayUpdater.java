@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirway;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirwayPoint;
@@ -29,14 +30,17 @@ public class WinterNavigationDirwayUpdater {
 
     private final WinterNavigationClient winterNavigationClient;
     private final WinterNavigationDirwayRepository winterNavigationDirwayRepository;
+    private final WinterNavigationDirwayPointRepository winterNavigationDirwayPointRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
     public WinterNavigationDirwayUpdater(final WinterNavigationClient winterNavigationClient,
                                          final WinterNavigationDirwayRepository winterNavigationDirwayRepository,
+                                         final WinterNavigationDirwayPointRepository winterNavigationDirwayPointRepository,
                                          final UpdatedTimestampRepository updatedTimestampRepository) {
         this.winterNavigationClient = winterNavigationClient;
         this.winterNavigationDirwayRepository = winterNavigationDirwayRepository;
+        this.winterNavigationDirwayPointRepository = winterNavigationDirwayPointRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
@@ -76,7 +80,7 @@ public class WinterNavigationDirwayUpdater {
         }
     }
 
-    private static WinterNavigationDirway addNew(final DirWayType dirway) {
+    private WinterNavigationDirway addNew(final DirWayType dirway) {
         WinterNavigationDirway d = new WinterNavigationDirway();
 
         updateData(d, dirway);
@@ -84,14 +88,14 @@ public class WinterNavigationDirwayUpdater {
         return d;
     }
 
-    private static WinterNavigationDirway update(final WinterNavigationDirway d, final DirWayType dirway) {
+    private WinterNavigationDirway update(final WinterNavigationDirway d, final DirWayType dirway) {
 
         updateData(d, dirway);
 
         return d;
     }
 
-    private static void updateData(final WinterNavigationDirway d, final DirWayType dirway) {
+    private void updateData(final WinterNavigationDirway d, final DirWayType dirway) {
         d.setName(dirway.getName());
         d.setIssuerCode(dirway.getIssuerCode());
         d.setIssuerName(dirway.getIssuerName());
@@ -101,8 +105,10 @@ public class WinterNavigationDirwayUpdater {
         updateDirwayPoints(d, dirway.getDirWayPoints());
     }
 
-    private static void updateDirwayPoints(final WinterNavigationDirway d, final DirWayType.DirWayPoints dirwayPoints) {
+    private void updateDirwayPoints(final WinterNavigationDirway d, final DirWayType.DirWayPoints dirwayPoints) {
         d.getDirwayPoints().clear();
+        winterNavigationDirwayPointRepository.deleteInBatch(d.getDirwayPoints());
+        winterNavigationDirwayPointRepository.flush();
 
         if (dirwayPoints == null) {
             return;

@@ -53,7 +53,7 @@ public class WebsocketReader {
                 try {
                     clientManager = initializeConnection();
                 } catch (final IOException | DeploymentException | URISyntaxException e) {
-                    log.error("method=initialize locationUrl={}", locationUrl, e);
+                    log.error("method=initialize locationUrl=" + locationUrl, e);
                 }
             }).start();
         }
@@ -69,7 +69,7 @@ public class WebsocketReader {
             try {
                 session.close();
             } catch (final IOException e) {
-                log.error("method=idleTimeout locationUrl={}", locationUrl, e);
+                log.error("method=idleTimeout locationUrl=" + locationUrl, e);
             }
         }
     }

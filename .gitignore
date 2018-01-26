@@ -56,3 +56,7 @@ crashlytics-build.properties
 buildNumber.properties
 *.log.gz
 /javamelody
+
+# Ignoroidaan, koska ei olla varmoja voiko sql-lauseet julkaista
+/db/sql
+/db/pom.xml

@@ -46,6 +46,7 @@ import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortPrope
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeature;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipFeatureCollection;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShipProperties;
+import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 
 @Service
 public class WinterNavigationService {
@@ -108,6 +109,24 @@ public class WinterNavigationService {
             lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
             dirways.stream().map(d -> new WinterNavigationDirwayFeature(d.getName(), dirwayProperties(d), dirwayGeometry(d.getDirwayPoints())))
                 .collect(Collectors.toList()));
+    }
+
+    public WinterNavigationShipFeature getWinterNavigationShipByVesselId(String vesselId) {
+        final WinterNavigationShip ship = winterNavigationShipRepository.findOne(vesselId);
+        if (ship == null) {
+            throw new ObjectNotFoundException(WinterNavigationShip.class, vesselId);
+        }
+        return new WinterNavigationShipFeature(ship.getVesselPK(),
+                                               shipProperties(ship),
+                                               new Point(ship.getShipState().getLongitude(), ship.getShipState().getLatitude()));
+    }
+
+    public WinterNavigationPortFeature getWinterNavigationPortByLocode(final String locode) {
+        final WinterNavigationPort port = winterNavigationPortRepository.findOne(locode);
+        if (port == null) {
+            throw new ObjectNotFoundException(WinterNavigationPort.class, locode);
+        }
+        return portFeature(port);
     }
 
     private Geometry dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {
