@@ -17,7 +17,7 @@ import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
 @Repository
 public interface WinterNavigationPortRepository extends JpaRepository<WinterNavigationPort, String> {
 
-    @Query(value = "UPDATE WINTER_NAVIGATION_PORT SET obsolete_date = sysdate WHERE locode NOT IN (:locodes)", nativeQuery = true)
+    @Query(value = "UPDATE WINTER_NAVIGATION_PORT SET obsolete_date = CURRENT_TIMESTAMP WHERE locode NOT IN (:locodes)", nativeQuery = true)
     @Modifying
     void setRemovedPortsObsolete(@Param("locodes") final List<String> locodes);
 
