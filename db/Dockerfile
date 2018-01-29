@@ -8,7 +8,7 @@ RUN \
     maven && \
   rm -rf /var/lib/apt/lists/*
 
-COPY sql /sql
 COPY flyway.properties /flyway.properties
 COPY pom.xml /pom.xml
-ENTRYPOINT ["mvn", "flyway:migrate"]
+VOLUME /root/.m2
+ENTRYPOINT ["mvn", "-B", "flyway:migrate"]
