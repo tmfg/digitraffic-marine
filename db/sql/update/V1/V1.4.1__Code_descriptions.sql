@@ -1,0 +1,40 @@
+insert into code_description(domain, code, description) values ('CARGO', '301', 'kappaletavaraa');
+insert into code_description(domain, code, description) values ('CARGO', '302', 'kontteja');
+insert into code_description(domain, code, description) values ('CARGO', '303', 'paperia, sellua');
+insert into code_description(domain, code, description) values ('CARGO', '304', 'sahatavaraa');
+insert into code_description(domain, code, description) values ('CARGO', '305', 'metallia');
+insert into code_description(domain, code, description) values ('CARGO', '306', 'raakapuuta');
+insert into code_description(domain, code, description) values ('CARGO', '307', 'irtolastia');
+insert into code_description(domain, code, description) values ('CARGO', '308', 'öljyä');
+insert into code_description(domain, code, description) values ('CARGO', '309', 'kemikaalia');
+insert into code_description(domain, code, description) values ('CARGO', '310', 'muuta lastia');
+
+insert into code_description(domain, code, description) values ('VESSEL', '10', 'matkustaja-alus');
+insert into code_description(domain, code, description) values ('VESSEL', '20', 'matkustaja-autolautta');
+insert into code_description(domain, code, description) values ('VESSEL', '30', 'junalautta');
+insert into code_description(domain, code, description) values ('VESSEL', '40', 'roro');
+insert into code_description(domain, code, description) values ('VESSEL', '44', 'ajoneuvojenkuljetusalus');
+insert into code_description(domain, code, description) values ('VESSEL', '50', 'konttialus');
+insert into code_description(domain, code, description) values ('VESSEL', '60', 'kuiva-bulk');
+insert into code_description(domain, code, description) values ('VESSEL', '70', 'kuivalastialus');
+insert into code_description(domain, code, description) values ('VESSEL', '80', 'säiliöalus');
+insert into code_description(domain, code, description) values ('VESSEL', '81', 'öljysäiliöalus');
+insert into code_description(domain, code, description) values ('VESSEL', '82', 'kaasusäiliöalus');
+insert into code_description(domain, code, description) values ('VESSEL', '83', 'kemikaalisäiliöalus');
+insert into code_description(domain, code, description) values ('VESSEL', '90', 'muu alus');
+insert into code_description(domain, code, description) values ('VESSEL', '91', 'hinaaja');
+insert into code_description(domain, code, description) values ('VESSEL', '93', 'proomu');
+insert into code_description(domain, code, description) values ('VESSEL', '94', 'puskija');
+insert into code_description(domain, code, description) values ('VESSEL', '95', 'puskuproomu');
+insert into code_description(domain, code, description) values ('VESSEL', '96', 'säiliöproomu');
+insert into code_description(domain, code, description) values ('VESSEL', '97', 'muu kuljetuskoneeton alus');
+insert into code_description(domain, code, description) values ('VESSEL', '99', 'muu alus');
+
+insert into code_description(domain, code, description) values ('AGENT', '1', 'aluksen edustaja');
+insert into code_description(domain, code, description) values ('AGENT', '2', 'varustamo');
+insert into code_description(domain, code, description) values ('AGENT', '3', 'muu edustaja');
+
+insert into code_description(domain, code, description) values ('DISCHARGE', '1', 'aluksesta puretaan koko lasti');
+insert into code_description(domain, code, description) values ('DISCHARGE', '2', 'aluksesta puretaan osa lastista');
+insert into code_description(domain, code, description) values ('DISCHARGE', '3', 'aluksesta ei pureta lainkaan lastia');
+insert into code_description(domain, code, description) values ('DISCHARGE', '4', 'alus saapuu painolastissa');
