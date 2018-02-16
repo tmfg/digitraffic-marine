@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.controller.websocket;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnOpen;
@@ -12,6 +11,7 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
@@ -29,6 +29,7 @@ import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
                 + "/locations",
                 encoders = { StatusMessageDtoEncoder.class, VesselMetadataDtoEncoder.class, VesselLocationDtoEncoder.class })
 @Component
+@ConditionalOnWebApplication
 public class VesselEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(VesselEndpoint.class);
 

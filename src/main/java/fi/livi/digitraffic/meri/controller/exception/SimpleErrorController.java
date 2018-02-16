@@ -1,11 +1,10 @@
 package fi.livi.digitraffic.meri.controller.exception;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.util.Assert;
@@ -16,7 +15,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
 @RequestMapping("/error")
-@ConditionalOnProperty(value = "spring.main.web_environment", matchIfMissing = true)
+@ConditionalOnWebApplication
 public class SimpleErrorController implements ErrorController {
 
     private final ErrorAttributes errorAttributes;

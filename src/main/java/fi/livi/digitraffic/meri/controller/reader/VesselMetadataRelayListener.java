@@ -1,7 +1,5 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import java.util.UUID;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
@@ -16,14 +14,10 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     private final VesselMetadataService vesselMetadataService;
     private final VesselSender vesselSender;
 
-    private final String instanceId;
-
     public VesselMetadataRelayListener(final VesselMetadataService vesselMetadataService,
                                        final VesselSender vesselSender) {
         this.vesselMetadataService = vesselMetadataService;
         this.vesselSender = vesselSender;
-
-        this.instanceId = UUID.randomUUID().toString();
     }
 
     @Override

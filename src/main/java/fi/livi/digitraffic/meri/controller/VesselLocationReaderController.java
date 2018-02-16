@@ -2,17 +2,16 @@ package fi.livi.digitraffic.meri.controller;
 
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
-import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
@@ -23,6 +22,7 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
+@ConditionalOnProperty("websocketRead.enabled")
 public class VesselLocationReaderController {
     private final List<WebsocketReader> readerList;
 
@@ -37,7 +37,7 @@ public class VesselLocationReaderController {
             final VesselSender vesselSender) {
             final List<WebsocketListener> listeners = Arrays.asList(
                     new VesselLocationDatabaseListener(vesselLocationRepository, lockingService),
-                    new VesselLocationRelayListener(vesselSender, vesselMetadataService),
+                    //new VesselLocationRelayListener(vesselSender, vesselMetadataService),
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 

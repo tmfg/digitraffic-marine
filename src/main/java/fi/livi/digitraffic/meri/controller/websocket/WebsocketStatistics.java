@@ -6,11 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +32,17 @@ public class WebsocketStatistics {
         LOCATIONS, VESSEL_LOCATION, METADATA
     }
 
-    public WebsocketStatistics() {
-        executor.scheduleAtFixedRate(WebsocketStatistics::logMessageCount, 0, 1, TimeUnit.MINUTES);
-        executor.scheduleAtFixedRate(WebsocketStatistics::notifyStatus, 0, 10, TimeUnit.SECONDS);
+    public WebsocketStatistics(
+        @Value("${spring.main.web-environment}") final boolean webApplication,
+        @Value("${websocketRead.enabled}") final boolean websocketReadEnabled) {
+        if(webApplication) {
+            executor.scheduleAtFixedRate(WebsocketStatistics::notifyStatus, 0, 10, TimeUnit.SECONDS);
+            executor.scheduleAtFixedRate(WebsocketStatistics::logSentStatistics, 0, 1, TimeUnit.MINUTES);
+        }
+
+        if(websocketReadEnabled) {
+            executor.scheduleAtFixedRate(WebsocketStatistics::logReadStatistics, 0, 1, TimeUnit.MINUTES);
+        }
     }
 
     private static void notifyStatus() {
@@ -49,15 +57,16 @@ public class WebsocketStatistics {
         }
     }
 
-    private static synchronized void logMessageCount() {
+    private static synchronized void logSentStatistics() {
         for (final WebsocketType websocketType : WebsocketType.values()) {
             final SentStatistics sentStatistics = sentStatisticsMap.get(websocketType);
-            log.info("Sent websocket statistics for webSocketType={} sessions={} messages={}",
-                     websocketType, sentStatistics != null ? sentStatistics.sessions : 0, sentStatistics != null ? sentStatistics.messages : 0);
+            log.info("Sent websocket statistics for webSocketType={} sessions={} messages={}", websocketType, sentStatistics != null ? sentStatistics.sessions : 0, sentStatistics != null ? sentStatistics.messages : 0);
 
             sentStatisticsMap.put(websocketType, new SentStatistics(sentStatistics != null ? sentStatistics.sessions : 0, 0));
         }
+    }
 
+    private static synchronized void logReadStatistics() {
         for (final WebsocketType websocketType : Arrays.asList(WebsocketType.LOCATIONS, WebsocketType.METADATA)) {
             final ReadStatistics readStatistics = readStatisticsMap.get(websocketType);
             log.info("Read websocket statistics for webSocketType={} messages={} status={}",
