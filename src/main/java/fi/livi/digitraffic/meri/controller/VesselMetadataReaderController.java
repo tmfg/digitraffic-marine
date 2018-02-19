@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselMetadataDatabaseListener;
+import fi.livi.digitraffic.meri.controller.reader.VesselMetadataRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
@@ -34,7 +35,7 @@ public class VesselMetadataReaderController {
                                            final VesselSender vesselSender) {
 
         final List<WebsocketListener> listeners = Arrays.asList(new VesselMetadataDatabaseListener(vesselMetadataRepository, lockingService),
-                                                                //new VesselMetadataRelayListener(vesselMetadataService, vesselSender),
+                                                                new VesselMetadataRelayListener(vesselMetadataService, vesselSender),
                                                                 new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.METADATA));
 
         readerList = Arrays.asList(new WebsocketReader(aisLocations5Url, listeners));

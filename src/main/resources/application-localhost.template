@@ -4,6 +4,10 @@
 # http-server port
 server.port = 9001
 
+mqtt.server.url=tcp://10.10.10.10:1883
+mqtt.server.username=updater
+mqtt.server.password=updater
+
 ais.datasource.url=jdbc:postgresql://localhost:54321/marine
 ais.datasource.username=marine
 ais.datasource.password=marine

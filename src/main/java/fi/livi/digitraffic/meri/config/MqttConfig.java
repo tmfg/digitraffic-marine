@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.config;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +21,16 @@ import org.springframework.messaging.MessageHandler;
 @IntegrationComponentScan
 public class MqttConfig {
     @Bean
-    public MqttPahoClientFactory mqttClientFactory() {
+    public MqttPahoClientFactory mqttClientFactory(
+        @Value("${mqtt.server.url}") final String serverUrl,
+        @Value("${mqtt.server.username}") final String username,
+        @Value("${mqtt.server.password}")final String password) {
         final DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
-        factory.setServerURIs("tcp://10.10.10.10:1883");
-        factory.setUserName("updater");
-        factory.setPassword("updater");
+
+        factory.setServerURIs(serverUrl);
+        factory.setUserName(username);
+        factory.setPassword(password);
+
         return factory;
     }
 
