@@ -50,6 +50,5 @@ public class MqttConfig {
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
     public interface VesselGateway {
         void sendToMqtt(final Message data);
-
     }
 }
