@@ -11,13 +11,14 @@
         function connect() {
             console.log('trying to connect...');
 
-            client = new Paho.MQTT.Client("10.10.10.10", 9001, "clientId");
+            client = new Paho.MQTT.Client("10.10.10.10", 9001, "test-html-client");
 
             client.onConnectionLost = function (response) {
                 console.info('Collection lost:' + response.errorMessage);
             }
             client.onMessageArrived = function(message) {
-                addMessage(JSON.parse(message.payloadString));
+                addMessage(message);
+
                 updateList();
             };
 
@@ -46,14 +47,17 @@
         }
 
         function convert(message) {
-            return JSON.stringify(message);
+            var content = message.payloadString;
+            var topic = message.destinationName;
+
+            return topic + ":" + content;
         }
 
         connect();
     </script>
 </head>
 <body>
-    Vessel locations:
+    Messages:
     <div class="locations" />
 </body>
 </html>

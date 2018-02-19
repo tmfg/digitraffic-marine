@@ -10,11 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.config.MqttConfig;
-import fi.livi.digitraffic.meri.controller.websocket.dto.StatusMessageDto;
-import fi.livi.digitraffic.meri.controller.websocket.dto.VesselLocationFeatureDto;
-import fi.livi.digitraffic.meri.controller.websocket.dto.VesselMetadataDto;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
-import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @Component
@@ -36,7 +32,7 @@ public class VesselSender {
 
     public void sendMetadataMessage(final VesselMetadata vesselMetadata) {
         try {
-            final String metadataAsString = objectMapper.writeValueAsString(new VesselMetadataDto(vesselMetadata));
+            final String metadataAsString = objectMapper.writeValueAsString(vesselMetadata);
 
             sendMessage(metadataAsString, String.format(VESSELS_METADATA_TOPIC, vesselMetadata.getMmsi()));
         } catch (final Exception e) {
@@ -46,7 +42,7 @@ public class VesselSender {
 
     public void sendLocationMessage(final VesselLocationFeature vesselLocation) {
         try {
-            final String locationAsString = objectMapper.writeValueAsString(new VesselLocationFeatureDto(vesselLocation));
+            final String locationAsString = objectMapper.writeValueAsString(vesselLocation);
 
             sendMessage(locationAsString, String.format(VESSELS_LOCATIONS_TOPIC, vesselLocation.mmsi));
         } catch (final Exception e) {
@@ -56,7 +52,7 @@ public class VesselSender {
 
     public void sendStatusMessage(final String status) {
         try {
-            final String statusAsString = objectMapper.writeValueAsString(new StatusMessageDto(new StatusMessage(status)));
+            final String statusAsString = objectMapper.writeValueAsString(status);
 
             sendMessage(statusAsString, VESSEL_STATUS_TOPIC);
         } catch (final Exception e) {
