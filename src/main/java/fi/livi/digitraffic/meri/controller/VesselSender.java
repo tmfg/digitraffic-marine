@@ -3,43 +3,39 @@ package fi.livi.digitraffic.meri.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessagingException;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.integration.mqtt.support.MqttHeaders;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.controller.websocket.dto.VesselLocationFeatureDto;
-import fi.livi.digitraffic.meri.controller.websocket.dto.VesselMetadataDto;
-import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.livi.digitraffic.meri.config.MqttConfig;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @Component
 public class VesselSender {
     private static final Logger LOG = LoggerFactory.getLogger(VesselSender.class);
 
-    private final SimpMessagingTemplate template;
+    private final MqttConfig.VesselGateway vesselGateway;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public VesselSender(final SimpMessagingTemplate template) {
-        this.template = template;
+    public VesselSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper) {
+        this.vesselGateway = vesselGateway;
+        this.objectMapper = objectMapper;
     }
 
     public void sendLocationMessage(final VesselLocationFeature vesselLocation) {
-        final VesselLocationFeatureDto message = new VesselLocationFeatureDto(vesselLocation);
         try {
-            template.convertAndSend("/locations", message);
-            template.convertAndSend("/locations/" + message.data.mmsi, message);
-        } catch (final MessagingException me) {
-            LOG.error("error sending", me);
-        }
-    }
+            final String locationAsString = objectMapper.writeValueAsString(vesselLocation);
+            final MessageBuilder<String> payloadBuilder = MessageBuilder.withPayload(locationAsString);
 
-    public void sendMetadataMessage(final VesselMetadata vessel) {
-        final VesselMetadataDto message = new VesselMetadataDto(vessel);
-        try {
-            template.convertAndSend("/locations", message);
-            template.convertAndSend("/locations/" + message.data.getMmsi(), message);
-        } catch (final MessagingException me) {
-            LOG.error("error sending", me);
+            final String topic = String.format("vessels");
+
+            final Message<String> message = payloadBuilder.setHeader(MqttHeaders.TOPIC, topic).build();
+            vesselGateway.sendToMqtt(message);
+        } catch (final Exception e) {
+            LOG.error("error sending", e);
         }
     }
 }

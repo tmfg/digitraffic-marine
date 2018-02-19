@@ -11,7 +11,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import fi.livi.digitraffic.meri.config.MqttConfig;
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
+import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
@@ -27,17 +29,12 @@ public class VesselLocationReaderController {
     private final List<WebsocketReader> readerList;
 
     @Autowired
-    private VesselLocationReaderController(
-            @Value("${ais.locations.123.url}") final String aisLocations123Url,
-            @Value("${ais.locations.27.url}") final String aisLocations27Url,
-            @Value("${ais.locations.9.url}") final String aisLocations9Url,
-            final VesselLocationRepository vesselLocationRepository,
-            final LockingService lockingService,
-            final VesselMetadataService vesselMetadataService,
-            final VesselSender vesselSender) {
+    private VesselLocationReaderController(@Value("${ais.locations.123.url}") final String aisLocations123Url, @Value("${ais.locations.27.url}") final String aisLocations27Url,
+        @Value("${ais.locations.9.url}") final String aisLocations9Url, final VesselLocationRepository vesselLocationRepository, final LockingService lockingService,
+        final VesselMetadataService vesselMetadataService, final VesselSender vesselSender, final MqttConfig.VesselGateway vesselGateway) {
             final List<WebsocketListener> listeners = Arrays.asList(
                     new VesselLocationDatabaseListener(vesselLocationRepository, lockingService),
-                    //new VesselLocationRelayListener(vesselSender, vesselMetadataService),
+                    new VesselLocationRelayListener(vesselSender, vesselMetadataService),
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 

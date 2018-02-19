@@ -1,0 +1,49 @@
+package fi.livi.digitraffic.meri.config;
+
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.annotation.IntegrationComponentScan;
+import org.springframework.integration.annotation.MessagingGateway;
+import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
+import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
+import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHandler;
+
+@ConditionalOnProperty("websocketRead.enabled")
+@Configuration
+@IntegrationComponentScan
+public class MqttConfig {
+    @Bean
+    public MqttPahoClientFactory mqttClientFactory() {
+        final DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
+        factory.setServerURIs("tcp://10.10.10.10:1883");
+        factory.setUserName("updater");
+        factory.setPassword("updater");
+        return factory;
+    }
+
+    @Bean
+    @ServiceActivator(inputChannel = "mqttOutboundChannel")
+    public MessageHandler mqttOutbound(MqttPahoClientFactory mqttPahoClientFactory) {
+        final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("localhost_test_updater", mqttPahoClientFactory);
+        messageHandler.setAsync(true);
+        return messageHandler;
+    }
+
+    @Bean
+    public MessageChannel mqttOutboundChannel() {
+        return new DirectChannel();
+    }
+
+    @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
+    public interface VesselGateway {
+        void sendToMqtt(final Message data);
+
+    }
+}
