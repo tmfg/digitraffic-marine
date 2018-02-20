@@ -1,8 +1,7 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-
 import javax.net.ssl.HttpsURLConnection;
 
 import org.junit.Assert;
@@ -26,7 +25,7 @@ public class PortCallClientTest extends AbstractTestBase {
 
     @Test
     public void testGetList() {
-        final PortCallList list = portCallClient.getList(Instant.now().minus(1, ChronoUnit.HOURS), Instant.now());
+        final PortCallList list = portCallClient.getList(ZonedDateTime.now().minus(1, ChronoUnit.HOURS), ZonedDateTime.now());
 
         Assert.assertNotNull(list);
     }

@@ -5,8 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -75,8 +74,8 @@ public class PortCallUpdaterTest extends AbstractTestBase {
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        Instant from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, ZoneId.systemDefault()).toInstant();
-        Instant to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, ZoneId.systemDefault()).toInstant();
+        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, ZoneOffset.UTC);
+        final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, ZoneOffset.UTC);
 
         portCallUpdater.updatePortCalls(from, to);
 

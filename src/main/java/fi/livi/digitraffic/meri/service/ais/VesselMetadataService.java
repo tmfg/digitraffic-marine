@@ -5,14 +5,13 @@ import static fi.livi.digitraffic.meri.config.AisCacheConfiguration.ALLOWED_MMSI
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,12 +39,9 @@ public class VesselMetadataService {
         this.vesselMetadataRepository = vesselMetadataRepository;
     }
 
-    private Criteria createCriteria() {
-        return entityManager.unwrap(Session.class)
-                .createCriteria(VesselMetadata.class)
-                .setFetchSize(1000);
+    private CriteriaBuilder createCriteriaBuilder() {
+        return entityManager.getCriteriaBuilder();
     }
-
 
     public VesselMetadataJson findAllowedMetadataByMssi(final int mmsi) {
         final VesselMetadataJson metadata = vesselMetadataRepository.findByMmsi(mmsi);
@@ -58,20 +54,29 @@ public class VesselMetadataService {
     }
 
     public List<VesselMetadataJson> findAllowedVesselMetadataFrom(final Long from) {
-        final Criteria c = createCriteria();
-        c.add(getAllowedShipTypeCriteria());
-        if (from != null) {
-            c.add(Restrictions.ge("timestamp", from));
-        }
-        List<VesselMetadata> vesselMetadata = c.list();
-        return vesselMetadata.stream().map(vessel -> (VesselMetadataJson) vessel).collect(Collectors.toList());
+        final CriteriaBuilder cb = createCriteriaBuilder();
+        final CriteriaQuery<VesselMetadataJson> query = cb.createQuery(VesselMetadataJson.class);
+        final Root<VesselMetadata> root = query.from(VesselMetadata.class);
+
+        query.where(getAllowedShipTypeCriteria(root));
+        query.where(cb.ge(root.get("timestamp"), from));
+
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Cacheable(ALLOWED_MMSI_CACHE)
     public Collection<Integer> findAllowedMmsis() {
-        final Criteria c = createCriteria().setProjection(Projections.id());
-        c.add(getAllowedShipTypeCriteria());
-        return c.list();
+        final CriteriaQuery<Integer> query = entityManager.getCriteriaBuilder().createQuery(Integer.class);
+        final Root<VesselMetadata> root = query.from(VesselMetadata.class);
+
+        query.where(getAllowedShipTypeCriteria(root));
+        query.select(root.get("mmsi"));
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    private Expression<Boolean> getAllowedShipTypeCriteria(final Root<VesselMetadata> root) {
+        return root.get("shipType").in(FORBIDDEN_SHIP_TYPES).not();
     }
 
     public static Criterion getAllowedShipTypeCriteria() {

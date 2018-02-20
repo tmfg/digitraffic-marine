@@ -4,8 +4,6 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -72,13 +70,11 @@ public class WinterNavigationService {
 
     @Transactional(readOnly = true)
     public WinterNavigationPortFeatureCollection getWinterNavigationPorts() {
-
         final List<WinterNavigationPort> ports = winterNavigationPortRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
 
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_PORTS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_PORTS.name());
 
-        return new WinterNavigationPortFeatureCollection(
-            lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
+        return new WinterNavigationPortFeatureCollection(lastUpdated,
             ports.stream().map(this::portFeature).collect(Collectors.toList()));
     }
 
@@ -87,7 +83,7 @@ public class WinterNavigationService {
 
         final List<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
 
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_SHIPS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_SHIPS.name());
 
         final List<WinterNavigationShipFeature> shipFeatures =
             ships.stream().map(s -> new WinterNavigationShipFeature(s.getVesselPK(),
@@ -95,24 +91,22 @@ public class WinterNavigationService {
                                                                     new Point(s.getShipState().getLongitude(), s.getShipState().getLatitude())))
                  .collect(Collectors.toList());
 
-        return new WinterNavigationShipFeatureCollection(lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
-                                                         shipFeatures);
+        return new WinterNavigationShipFeatureCollection(lastUpdated, shipFeatures);
     }
 
     @Transactional(readOnly = true)
     public WinterNavigationDirwayFeatureCollection getWinterNavigationDirways() {
         final List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
 
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(WINTER_NAVIGATION_DIRWAYS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_DIRWAYS.name());
 
-        return new WinterNavigationDirwayFeatureCollection(
-            lastUpdated == null ? null : ZonedDateTime.ofInstant(lastUpdated, ZoneId.of("Europe/Helsinki")),
+        return new WinterNavigationDirwayFeatureCollection(lastUpdated,
             dirways.stream().map(d -> new WinterNavigationDirwayFeature(d.getName(), dirwayProperties(d), dirwayGeometry(d.getDirwayPoints())))
                 .collect(Collectors.toList()));
     }
 
     public WinterNavigationShipFeature getWinterNavigationShipByVesselId(String vesselId) {
-        final WinterNavigationShip ship = winterNavigationShipRepository.findOne(vesselId);
+        final WinterNavigationShip ship = winterNavigationShipRepository.getOne(vesselId);
         if (ship == null) {
             throw new ObjectNotFoundException(WinterNavigationShip.class, vesselId);
         }
@@ -122,7 +116,7 @@ public class WinterNavigationService {
     }
 
     public WinterNavigationPortFeature getWinterNavigationPortByLocode(final String locode) {
-        final WinterNavigationPort port = winterNavigationPortRepository.findOne(locode);
+        final WinterNavigationPort port = winterNavigationPortRepository.getOne(locode);
         if (port == null) {
             throw new ObjectNotFoundException(WinterNavigationPort.class, locode);
         }

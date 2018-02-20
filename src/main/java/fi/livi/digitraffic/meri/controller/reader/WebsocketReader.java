@@ -107,6 +107,7 @@ public class WebsocketReader {
             }
 
             public void onError(final Session session, final Throwable thr) {
+                log.info("rikki", thr);
                 log.info("method=onError Connection to url={} caused error errorMessage={}", locationUrl, thr.getMessage().replaceAll("\\s", "_"));
             }
         };
