@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>Testiclient for vessel locations</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+
+    <script>
+
+        var lines = [];
+
+        function connect() {
+            console.log('trying to connect...');
+
+            client = new Paho.MQTT.Client("10.10.10.10", 9001, "test-html-client");
+
+            client.onConnectionLost = function (response) {
+                console.info('Collection lost:' + response.errorMessage);
+            }
+            client.onMessageArrived = function(message) {
+                addMessage(message);
+
+                updateList();
+            };
+
+            client.connect({onSuccess:onConnect});
+        }
+
+        function onConnect() {
+            console.info('Connection open');
+            client.subscribe("vessels/#");
+            //client.subscribe("vessels/+/locations");
+            //client.subscribe("vessels/status");
+        }
+
+        function addMessage(message) {
+            var text = convert(message);
+
+            if (lines.length > 100) {
+                lines.shift();
+            }
+
+            lines.push(text);
+        }
+
+        function updateList() {
+            $(".locations").html(lines.join('<br/>'));
+        }
+
+        function convert(message) {
+            var content = message.payloadString;
+            var topic = message.destinationName;
+
+            return topic + ":" + content;
+        }
+
+        connect();
+    </script>
+</head>
+<body>
+    Messages:
+    <div class="locations" />
+</body>
+</html>

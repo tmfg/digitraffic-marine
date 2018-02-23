@@ -25,8 +25,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping(API_BETA_BASE_PATH)
 public class BetaController {
-
-    private WinterNavigationService winterNavigationService;
+    private final WinterNavigationService winterNavigationService;
 
     @Autowired
     public BetaController(final WinterNavigationService winterNavigationService) {

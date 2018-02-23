@@ -4,6 +4,10 @@
 # http-server port
 server.port = 9001
 
+mqtt.server.url=tcp://10.10.10.10:1883
+mqtt.server.username=updater
+mqtt.server.password=updater
+
 ais.datasource.url=jdbc:postgresql://localhost:54321/marine
 ais.datasource.username=marine
 ais.datasource.password=marine
@@ -24,7 +28,6 @@ winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/se
 
 metadata.csv.baseUrl = https://raw.githubusercontent.com/finnishtransportagency/metadata/master/csv/
 
-quartz.enabled = true
 portCallUpdateJob.frequency = 60000
 portCallUpdateJob.maxTimeFrameToFetch = 360000
 portCallUpdateJob.overlapTimeFrame = 2000
@@ -37,6 +40,16 @@ winterNavigationDirwayUpdateJob.frequency = 60000
 
 # Allowed mmsis cache time in millis
 cache.allowedMmsis = #{60*1000}
+
+# If set to false web controllers are not activated. Should be false for daemon processes.
+spring.main.web-environment=false
+
+# if set to false websocket reading(vessel locations and metadata) are not activated.  Should be true for daemon processes.
+websocketRead.enabled=false
+
+# Is metadata updates on. Should be true only for daemon processes.
+quartz.enabled=false
+
 
 # Logging
 logging.level.fi.livi.digitraffic.meri=INFO

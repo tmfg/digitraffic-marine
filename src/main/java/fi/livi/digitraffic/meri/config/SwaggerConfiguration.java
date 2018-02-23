@@ -13,19 +13,18 @@ import java.util.Date;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 
 import com.google.common.base.Predicate;
-
 import fi.livi.digitraffic.meri.service.AisApiInfoService;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@ConditionalOnProperty(name = "spring.main.web_environment", havingValue = "true", matchIfMissing = true)
+@ConditionalOnWebApplication
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration {
