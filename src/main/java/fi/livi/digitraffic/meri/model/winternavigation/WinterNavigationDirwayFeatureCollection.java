@@ -1,6 +1,5 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
