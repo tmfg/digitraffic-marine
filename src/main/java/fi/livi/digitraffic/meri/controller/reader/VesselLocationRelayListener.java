@@ -25,14 +25,10 @@ public class VesselLocationRelayListener implements WebsocketListener {
             final VesselLocationFeature feature = VesselLocationConverter.convert(ais);
 
             vesselSender.sendLocationMessage(feature);
-//            vesselGateway.sendToMqtt();
-  //          vesselSender.sendLocationMessage(feature);
-    //        VesselEndpoint.sendLocationMessage(feature);
-      //      VesselMMSIEndpoint.sendLocationMessage(feature);
         }
     }
 
-    private boolean isAllowedMmsi(int mmsi) {
+    private boolean isAllowedMmsi(final int mmsi) {
         return vesselMetadataService.findAllowedMmsis().contains(mmsi);
     }
 

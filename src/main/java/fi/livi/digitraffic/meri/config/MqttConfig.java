@@ -16,7 +16,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
-@ConditionalOnProperty("websocketRead.enabled")
+@ConditionalOnProperty("ais.mqtt.enabled")
 @Configuration
 @IntegrationComponentScan
 public class MqttConfig {
@@ -37,7 +37,7 @@ public class MqttConfig {
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound(MqttPahoClientFactory mqttPahoClientFactory) {
-        final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("localhost_test_updater", mqttPahoClientFactory);
+        final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("marine_updater", mqttPahoClientFactory);
         messageHandler.setAsync(true);
         return messageHandler;
     }

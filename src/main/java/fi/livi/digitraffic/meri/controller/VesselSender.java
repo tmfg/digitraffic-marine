@@ -3,6 +3,8 @@ package fi.livi.digitraffic.meri.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.repository.query.Param;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -17,6 +19,7 @@ import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 public class VesselSender {
     private static final Logger LOG = LoggerFactory.getLogger(VesselSender.class);
 
+    @Lazy // this will not be available if mqtt is not enabled
     private final MqttConfig.VesselGateway vesselGateway;
     private final ObjectMapper objectMapper;
 
@@ -24,10 +27,14 @@ public class VesselSender {
     private static final String VESSELS_LOCATIONS_TOPIC = "vessels/%d/locations";
     private static final String VESSEL_STATUS_TOPIC  ="vessels/status";
 
+    private final boolean mqttEnabled;
+
     @Autowired
-    public VesselSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper) {
+    public VesselSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper,
+        @Param("${ais.mqtt.enabled}") final boolean mqttEnabled) {
         this.vesselGateway = vesselGateway;
         this.objectMapper = objectMapper;
+        this.mqttEnabled = mqttEnabled;
     }
 
     public void sendMetadataMessage(final VesselMetadata vesselMetadata) {
@@ -61,9 +68,11 @@ public class VesselSender {
     }
 
     private void sendMessage(final String payLoad, final String topic) {
-        final MessageBuilder<String> payloadBuilder = MessageBuilder.withPayload(payLoad);
-        final Message<String> message = payloadBuilder.setHeader(MqttHeaders.TOPIC, topic).build();
+        if(mqttEnabled) {
+            final MessageBuilder<String> payloadBuilder = MessageBuilder.withPayload(payLoad);
+            final Message<String> message = payloadBuilder.setHeader(MqttHeaders.TOPIC, topic).build();
 
-        vesselGateway.sendToMqtt(message);
+            vesselGateway.sendToMqtt(message);
+        }
     }
 }
