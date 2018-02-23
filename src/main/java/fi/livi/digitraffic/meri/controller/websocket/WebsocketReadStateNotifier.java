@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import fi.livi.digitraffic.meri.controller.VesselSender;
 
 @Component
-@ConditionalOnProperty("websocketRead.enabled")
+@ConditionalOnProperty("ais.websocketRead.enabled")
 public class WebsocketReadStateNotifier {
     private final WebsocketStatistics websocketStatistics;
     private final VesselSender vesselSender;

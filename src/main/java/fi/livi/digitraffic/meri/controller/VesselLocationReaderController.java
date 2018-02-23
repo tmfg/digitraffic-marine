@@ -23,7 +23,7 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
-@ConditionalOnProperty("websocketRead.enabled")
+@ConditionalOnProperty("ais.websocketRead.enabled")
 public class VesselLocationReaderController {
     private final List<WebsocketReader> readerList;
 
