@@ -106,21 +106,24 @@ public class WinterNavigationService {
     }
 
     public WinterNavigationShipFeature getWinterNavigationShipByVesselId(String vesselId) {
-        final WinterNavigationShip ship = winterNavigationShipRepository.getOne(vesselId);
-        if (ship == null) {
-            throw new ObjectNotFoundException(WinterNavigationShip.class, vesselId);
+        final WinterNavigationShip ship = winterNavigationShipRepository.findById(vesselId).orElse(null);
+
+        if (ship != null) {
+            return new WinterNavigationShipFeature(ship.getVesselPK(), shipProperties(ship),
+                new Point(ship.getShipState().getLongitude(), ship.getShipState().getLatitude()));
         }
-        return new WinterNavigationShipFeature(ship.getVesselPK(),
-                                               shipProperties(ship),
-                                               new Point(ship.getShipState().getLongitude(), ship.getShipState().getLatitude()));
+
+        throw new ObjectNotFoundException(WinterNavigationShip.class, vesselId);
     }
 
     public WinterNavigationPortFeature getWinterNavigationPortByLocode(final String locode) {
-        final WinterNavigationPort port = winterNavigationPortRepository.getOne(locode);
-        if (port == null) {
-            throw new ObjectNotFoundException(WinterNavigationPort.class, locode);
+        final WinterNavigationPort port = winterNavigationPortRepository.findById(locode).orElse(null);
+
+        if(port != null) {
+            return portFeature(port);
         }
-        return portFeature(port);
+
+        throw new ObjectNotFoundException(WinterNavigationPort.class, locode);
     }
 
     private Geometry dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {

@@ -70,7 +70,7 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private void update(final DirWayType dirway, final List<WinterNavigationDirway> added, final List<WinterNavigationDirway> updated) {
-        final WinterNavigationDirway old = winterNavigationDirwayRepository.getOne(dirway.getName());
+        final WinterNavigationDirway old = winterNavigationDirwayRepository.findById(dirway.getName()).orElse(null);
 
         if (old == null) {
             added.add(addNew(dirway));
@@ -80,7 +80,7 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private WinterNavigationDirway addNew(final DirWayType dirway) {
-        WinterNavigationDirway d = new WinterNavigationDirway();
+        final WinterNavigationDirway d = new WinterNavigationDirway();
 
         updateData(d, dirway);
 
@@ -88,7 +88,6 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private WinterNavigationDirway update(final WinterNavigationDirway d, final DirWayType dirway) {
-
         updateData(d, dirway);
 
         return d;

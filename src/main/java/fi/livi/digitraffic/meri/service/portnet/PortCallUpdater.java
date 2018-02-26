@@ -32,6 +32,7 @@ import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
 import fi.livi.digitraffic.meri.portnet.xsd.VesselDetails;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
 public class PortCallUpdater {
@@ -63,8 +64,7 @@ public class PortCallUpdater {
         final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS.name());
         final ZonedDateTime now = ZonedDateTime.now();
         final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus(overlapTimeFrame, MILLIS);
-        final ZonedDateTime to = now.toEpochSecond() - from.toEpochSecond() > maxTimeFrameToFetch/1000 ? from.plus(maxTimeFrameToFetch, MILLIS) :
-            now;
+        final ZonedDateTime to = TimeUtil.millisBetween(now, from) > maxTimeFrameToFetch ? from.plus(maxTimeFrameToFetch, MILLIS) : now;
 
         updatePortCalls(from, to);
     }
@@ -118,7 +118,7 @@ public class PortCallUpdater {
     }
 
     private void update(final PortCallNotification pcn, final List<PortCall> added, final List<PortCall> updated) {
-        final PortCall old = portCallRepository.getOne(pcn.getPortCallId().longValue());
+        final PortCall old = portCallRepository.findById(pcn.getPortCallId().longValue()).orElse(null);
 
         if(old == null) {
             added.add(addNew(pcn));

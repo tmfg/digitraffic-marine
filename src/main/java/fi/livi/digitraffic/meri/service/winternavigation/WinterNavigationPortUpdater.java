@@ -90,7 +90,7 @@ public class WinterNavigationPortUpdater {
     }
 
     private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
-        final WinterNavigationPort old = winterNavigationRepository.getOne(port.getPortInfo().getLocode());
+        final WinterNavigationPort old = winterNavigationRepository.findById(port.getPortInfo().getLocode()).orElse(null);
 
         if (old == null) {
             added.add(addNew(port));
@@ -100,7 +100,7 @@ public class WinterNavigationPortUpdater {
     }
 
     private static WinterNavigationPort addNew(final Port port) {
-        WinterNavigationPort p = new WinterNavigationPort();
+        final WinterNavigationPort p = new WinterNavigationPort();
 
         updateData(p, port);
 
@@ -108,7 +108,6 @@ public class WinterNavigationPortUpdater {
     }
 
     private static WinterNavigationPort update(final WinterNavigationPort p, final Port port) {
-
         updateData(p, port);
 
         return p;

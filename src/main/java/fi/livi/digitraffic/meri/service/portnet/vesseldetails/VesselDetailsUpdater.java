@@ -67,17 +67,16 @@ public class VesselDetailsUpdater {
         }
     }
 
-    private void update(final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd,
-        final List<VesselDetails> added, final List<VesselDetails> updated) {
-        final VesselDetails old = vesselDetailsRepository.getOne(vd.getIdentificationData().getVesselId().longValue());
+    private void update(final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd, final List<VesselDetails> added, final List<VesselDetails> updated) {
+        final VesselDetails old = vesselDetailsRepository.findById(vd.getIdentificationData().getVesselId().longValue()).orElse(null);
 
-        if(old == null) {
+        if(old != null) {
+            old.setAll(vd);
+            updated.add(old);
+        } else {
             final VesselDetails vesselDetails = new VesselDetails();
             vesselDetails.setAll(vd);
             added.add(vesselDetails);
-        } else {
-            old.setAll(vd);
-            updated.add(old);
         }
     }
 
