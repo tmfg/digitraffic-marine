@@ -5,8 +5,6 @@ import static fi.livi.digitraffic.meri.service.ais.VesselMetadataService.FORBIDD
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -21,6 +19,7 @@ import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
+import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,10 +35,6 @@ public class VesselLocationService {
         this.entityManager = entityManager;
         this.vesselLocationRepository = vesselLocationRepository;
         this.vesselMetadataRepository = vesselMetadataRepository;
-    }
-
-    private CriteriaBuilder getCriteriaBuilder() {
-        return entityManager.getCriteriaBuilder();
     }
 
     @Transactional(readOnly = true)
@@ -71,41 +66,36 @@ public class VesselLocationService {
     }
 
     private List<VesselLocation> findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
-        final CriteriaBuilder cb = getCriteriaBuilder();
-        final CriteriaQuery<VesselLocation> query = cb.createQuery(VesselLocation.class);
-        final Root<VesselLocation> root = query.from(VesselLocation.class);
-        final List<Predicate> predicateList = new ArrayList();
-        final Subquery<Integer> subquery = getMmsiSubQuery(cb, query, mmsi);
+        final QueryBuilder<VesselLocation, VesselLocation> qb = new QueryBuilder<>(entityManager, VesselLocation.class, VesselLocation
+            .class);
+        final Subquery<Integer> subquery = getMmsiSubQuery(qb, mmsi);
 
         if(mmsi != null) {
-            predicateList.add(cb.equal(root.get("mmsi"), mmsi));
+            qb.equal("mmsi", mmsi);
         }
 
         if(from != null) {
-            predicateList.add(cb.ge(root.get("timestampExternal"), from));
+            qb.gte(qb.get("timestampExternal"), from);
         }
 
         if(to != null) {
-            predicateList.add(cb.le(root.get("timestampExternal"), to));
+            qb.lte(qb.get("timestampExternal"), to);
         }
 
-        predicateList.add(cb.in(root.get("mmsi")).value(subquery));
+        qb.in("mmsi", subquery);
 
-        query.select(root)
-             .where(predicateList.toArray(new Predicate[] {}));
-
-        return entityManager.createQuery(query).getResultList();
+        return qb.getResults();
     }
 
-    private Subquery<Integer> getMmsiSubQuery(final CriteriaBuilder cb, final CriteriaQuery<VesselLocation> query, final Integer mmsi)  {
-        final Subquery<Integer> subquery = query.subquery(Integer.class);
+    private Subquery<Integer> getMmsiSubQuery(final QueryBuilder qb, final Integer mmsi)  {
+        final Subquery<Integer> subquery = qb.subquery(Integer.class);
         final Root<VesselMetadata> root = subquery.from(VesselMetadata.class);
         final List<Predicate> predicateList = new ArrayList<>();
 
-        predicateList.add(cb.in(root.get("shipType")).value(FORBIDDEN_SHIP_TYPES).not());
+        predicateList.add(qb.inPredicate(root.get("shipType"), FORBIDDEN_SHIP_TYPES).not());
 
         if(mmsi != null) {
-            predicateList.add(cb.equal(root.get("mmsi"), mmsi));
+            predicateList.add(qb.equalPredicate(root.get("mmsi"), mmsi));
         }
 
         subquery.select(root.get("mmsi"))

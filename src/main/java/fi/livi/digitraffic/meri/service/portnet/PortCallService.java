@@ -5,16 +5,11 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +22,7 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
+import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 
 @Service
 public class PortCallService {
@@ -43,10 +39,6 @@ public class PortCallService {
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallRepository = portCallRepository;
         this.entityManager = entityManager;
-    }
-
-    private CriteriaBuilder getCriteriaBuilder() {
-        return entityManager.getCriteriaBuilder();
     }
 
     @Transactional(readOnly = true)
@@ -71,56 +63,49 @@ public class PortCallService {
 
     private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
                                       final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
-        final CriteriaBuilder cb = getCriteriaBuilder();
-        final CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        final Root<PortCall> root = query.from(PortCall.class);
-        final List<Predicate> predicateList = new ArrayList();
+        final QueryBuilder<Long, PortCall> qb = new QueryBuilder<>(entityManager, Long.class, PortCall.class);
 
         if (date != null) {
-            predicateList.add(cb.equal(
-                cb.function("to_char", Timestamp.class, root.get("portCallTimestamp"), cb.literal("YYYY-MM-dd")), formatter.format
-                    (date)));
+            qb.equal(qb.function("to_char", Timestamp.class, qb.<Timestamp>get("portCallTimestamp"), qb.literal("YYYY-MM-dd")),
+                formatter.format(date));
         }
         if (from != null) {
-            predicateList.add(cb.greaterThanOrEqualTo(root.get("portCallTimestamp"), Date.from(from.toInstant())));
+            qb.gte(qb.get("portCallTimestamp"), Date.from(from.toInstant()));
         }
         if (locode != null) {
-            predicateList.add(cb.equal(root.get("portToVisit"), locode));
+            qb.equal("portToVisit", locode);
         }
         if (vesselName != null) {
-            predicateList.add(cb.equal(cb.lower(root.get("vesselName")), vesselName.toLowerCase()));
+            qb.equal(qb.lower("vesselName"), vesselName.toLowerCase());
         }
         if(mmsi != null) {
-            predicateList.add(cb.equal(root.get("mmsi"), mmsi));
+            qb.equal("mmsi", mmsi);
         }
         if(imo != null) {
-            predicateList.add(cb.equal(root.get("imoLloyds"), imo));
+            qb.equal("imoLloyds", imo);
         }
 
         if(isNotEmpty(nationality)) {
-            addNationalityRestriction(predicateList, cb, root, nationality);
+            addNationalityRestriction(qb, nationality);
         }
 
         if(vesselTypeCode != null) {
-            predicateList.add(cb.equal(root.get("vesselTypeCode"), vesselTypeCode));
+            qb.equal("vesselTypeCode", vesselTypeCode);
         }
 
-        query.select(root.get("portCallId")).where(predicateList.toArray(new Predicate[] {}));
-
-        return entityManager.createQuery(query).getResultList();
+        return qb.getResults( "portCallId");
     }
 
-    private void addNationalityRestriction(final List<Predicate> predicateList, final CriteriaBuilder cb, final Root<PortCall> root,
-        final List<String> nationality) {
+    private void addNationalityRestriction(final QueryBuilder<Long, PortCall> qb, final List<String> nationality) {
         final List<String> notInList = nationality.stream().filter(n -> StringUtils.startsWith(n, "!")).map(z -> z.substring(1)).collect(Collectors.toList());
         final List<String> inList = nationality.stream().filter(n -> !StringUtils.startsWith(n, "!")).collect(Collectors.toList());
 
         if(isNotEmpty(inList)) {
-            predicateList.add(cb.in(root.get("nationality")).value(inList));
+            qb.in("nationality", inList);
         }
 
         if(isNotEmpty(notInList)) {
-            predicateList.add(cb.in(root.get("nationality")).value(notInList).not());
+            qb.notIn("nationality", notInList);
         }
     }
 }
