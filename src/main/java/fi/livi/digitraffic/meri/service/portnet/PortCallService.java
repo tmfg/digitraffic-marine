@@ -8,11 +8,9 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +20,7 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
+import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 
 @Service
@@ -86,7 +85,7 @@ public class PortCallService {
         }
 
         if(isNotEmpty(nationality)) {
-            addNationalityRestriction(qb, nationality);
+            ShortItemRestrictionUtil.addItemRestrictions(qb, qb.get("nationality"), nationality);
         }
 
         if(vesselTypeCode != null) {
@@ -94,18 +93,5 @@ public class PortCallService {
         }
 
         return qb.getResults( "portCallId");
-    }
-
-    private void addNationalityRestriction(final QueryBuilder<Long, PortCall> qb, final List<String> nationality) {
-        final List<String> notInList = nationality.stream().filter(n -> StringUtils.startsWith(n, "!")).map(z -> z.substring(1)).collect(Collectors.toList());
-        final List<String> inList = nationality.stream().filter(n -> !StringUtils.startsWith(n, "!")).collect(Collectors.toList());
-
-        if(isNotEmpty(inList)) {
-            qb.in("nationality", inList);
-        }
-
-        if(isNotEmpty(notInList)) {
-            qb.notIn("nationality", notInList);
-        }
     }
 }

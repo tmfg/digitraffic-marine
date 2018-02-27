@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -51,7 +52,11 @@ public class QueryBuilder<T, K> {
     }
 
     public <Z> void in(final String attribute, final List<Z> inList) {
-        predicateList.add(inPredicate(root.get(attribute), inList));
+        in(root.get(attribute), inList);
+    }
+
+    public <Z> void in(final Path<Object> path, final List<Z> inList) {
+        predicateList.add(inPredicate(path, inList));
     }
 
     public <S> void in(final String attribute, final Subquery<S> subquery) {
@@ -63,7 +68,15 @@ public class QueryBuilder<T, K> {
     }
 
     public <Z> void notIn(final String attribute, final List<Z> inList) {
-        predicateList.add(cb.in(root.get(attribute)).value(inList).not());
+        notIn(root.get(attribute), inList);
+    }
+
+    public <Z> void notIn(final Path<Object> path, final List<Z> inList) {
+        predicateList.add(inPredicate(path, inList).not());
+    }
+
+    public void like(final String attribute, final String pattern) {
+        predicateList.add(cb.like(root.get(attribute), pattern));
     }
 
     public <E> Expression<E> function(final String functionName, final Class<E> eClazz, final Expression<?>... expressions) {
@@ -102,5 +115,9 @@ public class QueryBuilder<T, K> {
 
     public <S> Subquery<S> subquery(final Class<S> sClass) {
         return query.subquery(sClass);
+    }
+
+    public <J> Join<K, J> join(final String attribute) {
+        return root.join(attribute);
     }
 }
