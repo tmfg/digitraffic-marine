@@ -34,6 +34,13 @@
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <!-- *** https://github.com/logstash/logstash-logback-encoder#including-it-in-your-project *** -->
     <dependencyManagement>
         <dependencies>
