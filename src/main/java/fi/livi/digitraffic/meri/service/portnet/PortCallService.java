@@ -1,26 +1,23 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
-import static org.hibernate.criterion.Restrictions.eq;
-import static org.hibernate.criterion.Restrictions.in;
-import static org.hibernate.criterion.Restrictions.not;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.DateType;
-import org.hibernate.type.StringType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +35,8 @@ public class PortCallService {
 
     private final EntityManager entityManager;
 
+    private final SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd");
+
     public PortCallService(final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallRepository portCallRepository,
                            final EntityManager entityManager) {
@@ -46,10 +45,8 @@ public class PortCallService {
         this.entityManager = entityManager;
     }
 
-    private Criteria createCriteria() {
-        return entityManager.unwrap(Session.class)
-                .createCriteria(PortCall.class)
-                .setFetchSize(1000);
+    private CriteriaBuilder getCriteriaBuilder() {
+        return entityManager.getCriteriaBuilder();
     }
 
     @Transactional(readOnly = true)
@@ -74,48 +71,56 @@ public class PortCallService {
 
     private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
                                       final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
-        final Criteria c = createCriteria().setProjection(Projections.id());
+        final CriteriaBuilder cb = getCriteriaBuilder();
+        final CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        final Root<PortCall> root = query.from(PortCall.class);
+        final List<Predicate> predicateList = new ArrayList();
 
         if (date != null) {
-            c.add(Restrictions.sqlRestriction("TO_CHAR(port_call_timestamp, 'yyyy-MM-dd') = TO_CHAR(?, 'yyyy-MM-dd')", date, DateType.INSTANCE));
+            predicateList.add(cb.equal(
+                cb.function("to_char", Timestamp.class, root.get("portCallTimestamp"), cb.literal("YYYY-MM-dd")), formatter.format
+                    (date)));
         }
         if (from != null) {
-            c.add(Restrictions.gt("portCallTimestamp", new Timestamp(from.toEpochSecond() * 1000)));
+            predicateList.add(cb.greaterThanOrEqualTo(root.get("portCallTimestamp"), Date.from(from.toInstant())));
         }
         if (locode != null) {
-            c.add(eq("portToVisit", locode));
+            predicateList.add(cb.equal(root.get("portToVisit"), locode));
         }
         if (vesselName != null) {
-            c.add(Restrictions.sqlRestriction("lower(vessel_name) = lower(?)", vesselName, StringType.INSTANCE));
+            predicateList.add(cb.equal(cb.lower(root.get("vesselName")), vesselName.toLowerCase()));
         }
         if(mmsi != null) {
-            c.add(eq("mmsi", mmsi));
+            predicateList.add(cb.equal(root.get("mmsi"), mmsi));
         }
         if(imo != null) {
-            c.add(eq("imoLloyds", imo));
+            predicateList.add(cb.equal(root.get("imoLloyds"), imo));
         }
 
         if(isNotEmpty(nationality)) {
-            addNationalityRestriction(c, nationality);
+            addNationalityRestriction(predicateList, cb, root, nationality);
         }
 
         if(vesselTypeCode != null) {
-            c.add(eq("vesselTypeCode", vesselTypeCode));
+            predicateList.add(cb.equal(root.get("vesselTypeCode"), vesselTypeCode));
         }
 
-        return c.list();
+        query.select(root.get("portCallId")).where(predicateList.toArray(new Predicate[] {}));
+
+        return entityManager.createQuery(query).getResultList();
     }
 
-    private void addNationalityRestriction(final Criteria c, final List<String> nationality) {
+    private void addNationalityRestriction(final List<Predicate> predicateList, final CriteriaBuilder cb, final Root<PortCall> root,
+        final List<String> nationality) {
         final List<String> notInList = nationality.stream().filter(n -> StringUtils.startsWith(n, "!")).map(z -> z.substring(1)).collect(Collectors.toList());
         final List<String> inList = nationality.stream().filter(n -> !StringUtils.startsWith(n, "!")).collect(Collectors.toList());
 
         if(isNotEmpty(inList)) {
-            c.add(in("nationality", inList));
-    }
+            predicateList.add(cb.in(root.get("nationality")).value(inList));
+        }
 
         if(isNotEmpty(notInList)) {
-            c.add(not(in("nationality", notInList)));
+            predicateList.add(cb.in(root.get("nationality")).value(notInList).not());
         }
     }
 }
