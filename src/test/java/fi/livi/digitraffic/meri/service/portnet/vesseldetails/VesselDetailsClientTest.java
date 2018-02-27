@@ -2,9 +2,8 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-
 import javax.net.ssl.HttpsURLConnection;
 
 import org.junit.Before;
@@ -28,7 +27,7 @@ public class VesselDetailsClientTest extends AbstractTestBase {
 
     @Test
     public void getVesselList() throws Exception {
-        VesselList vesselList = vesselDetailsClient.getVesselList(Instant.now().minus(1, ChronoUnit.DAYS));
+        final VesselList vesselList = vesselDetailsClient.getVesselList(ZonedDateTime.now().minus(1, ChronoUnit.DAYS));
         assertNotNull(vesselList.getHeader());
     }
 }

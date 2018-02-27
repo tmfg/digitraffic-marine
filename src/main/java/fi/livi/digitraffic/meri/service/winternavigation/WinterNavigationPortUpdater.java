@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,21 +76,21 @@ public class WinterNavigationPortUpdater {
 
         StopWatch stopWatch = StopWatch.createStarted();
         portsWithLocode.forEach(p -> update(p, added, updated));
-        winterNavigationRepository.save(added);
+        winterNavigationRepository.saveAll(added);
         stopWatch.stop();
 
         log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
                  data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toZonedDateTime().toInstant()),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();
     }
 
     private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
-        final WinterNavigationPort old = winterNavigationRepository.findOne(port.getPortInfo().getLocode());
+        final WinterNavigationPort old = winterNavigationRepository.findById(port.getPortInfo().getLocode()).orElse(null);
 
         if (old == null) {
             added.add(addNew(port));
@@ -101,7 +100,7 @@ public class WinterNavigationPortUpdater {
     }
 
     private static WinterNavigationPort addNew(final Port port) {
-        WinterNavigationPort p = new WinterNavigationPort();
+        final WinterNavigationPort p = new WinterNavigationPort();
 
         updateData(p, port);
 
@@ -109,7 +108,6 @@ public class WinterNavigationPortUpdater {
     }
 
     private static WinterNavigationPort update(final WinterNavigationPort p, final Port port) {
-
         updateData(p, port);
 
         return p;

@@ -80,8 +80,8 @@ public class SsnLocationUpdater {
         }
 
         // values in oldMap can be removed, they no longes exist
-        ssnLocationRepository.delete(oldMap.values());
-        ssnLocationRepository.save(newList);
+        ssnLocationRepository.deleteAll(oldMap.values());
+        ssnLocationRepository.saveAll(newList);
 
         log.info("locationsReadCount={} locations, locationsAddedCount={} locationsUpdatedCount={} locationsDeletedCount={} .",
                 newLocations.size(), newList.size(), updates, oldMap.values().size());

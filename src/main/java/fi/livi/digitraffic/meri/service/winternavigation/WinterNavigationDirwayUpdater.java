@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,20 +57,20 @@ public class WinterNavigationDirwayUpdater {
 
         final StopWatch stopWatch = StopWatch.createStarted();
         data.getDirWay().forEach(dirway -> update(dirway, added, updated));
-        winterNavigationDirwayRepository.save(added);
+        winterNavigationDirwayRepository.saveAll(added);
         stopWatch.stop();
 
         log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();
     }
 
     private void update(final DirWayType dirway, final List<WinterNavigationDirway> added, final List<WinterNavigationDirway> updated) {
-        final WinterNavigationDirway old = winterNavigationDirwayRepository.findOne(dirway.getName());
+        final WinterNavigationDirway old = winterNavigationDirwayRepository.findById(dirway.getName()).orElse(null);
 
         if (old == null) {
             added.add(addNew(dirway));
@@ -81,7 +80,7 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private WinterNavigationDirway addNew(final DirWayType dirway) {
-        WinterNavigationDirway d = new WinterNavigationDirway();
+        final WinterNavigationDirway d = new WinterNavigationDirway();
 
         updateData(d, dirway);
 
@@ -89,7 +88,6 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private WinterNavigationDirway update(final WinterNavigationDirway d, final DirWayType dirway) {
-
         updateData(d, dirway);
 
         return d;

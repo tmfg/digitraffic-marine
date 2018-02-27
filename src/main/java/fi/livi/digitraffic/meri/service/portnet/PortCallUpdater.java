@@ -1,14 +1,13 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,6 +32,7 @@ import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
 import fi.livi.digitraffic.meri.portnet.xsd.VesselDetails;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
 public class PortCallUpdater {
@@ -61,22 +61,22 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
-        final Instant now = Instant.now();
-        final Instant from = lastUpdated == null ? now.minusMillis(maxTimeFrameToFetch) : lastUpdated.minusMillis(overlapTimeFrame);
-        final Instant to = now.toEpochMilli() - from.toEpochMilli() > maxTimeFrameToFetch ? from.plusMillis(maxTimeFrameToFetch) : now;
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS.name());
+        final ZonedDateTime now = ZonedDateTime.now();
+        final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus(overlapTimeFrame, MILLIS);
+        final ZonedDateTime to = TimeUtil.millisBetween(now, from) > maxTimeFrameToFetch ? from.plus(maxTimeFrameToFetch, MILLIS) : now;
 
         updatePortCalls(from, to);
     }
 
     @Transactional
-    public void updatePortCalls(final Instant from, final Instant to) {
+    public void updatePortCalls(final ZonedDateTime from, final ZonedDateTime to) {
         log.info("Fetching port calls from server");
 
         final PortCallList list = portCallClient.getList(from, to);
 
         if(isListOk(list)) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(to), getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
 
             final List<PortCall> added = new ArrayList<>();
             final List<PortCall> updated = new ArrayList<>();
@@ -84,7 +84,7 @@ public class PortCallUpdater {
 
             watch.start();
             list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
-            portCallRepository.save(added);
+            portCallRepository.saveAll(added);
             watch.stop();
 
             log.info("portCallAddedCount={} port call, portCallUpdatedCount={}, tookMs={} .", added.size(), updated.size(), watch.getTime());
@@ -118,7 +118,7 @@ public class PortCallUpdater {
     }
 
     private void update(final PortCallNotification pcn, final List<PortCall> added, final List<PortCall> updated) {
-        final PortCall old = portCallRepository.findOne(pcn.getPortCallId().longValue());
+        final PortCall old = portCallRepository.findById(pcn.getPortCallId().longValue()).orElse(null);
 
         if(old == null) {
             added.add(addNew(pcn));

@@ -99,8 +99,8 @@ public class BerthUpdater {
             oldMap.remove(bk);
         }
 
-        berthRepository.delete(oldMap.values());
-        berthRepository.save(newBerths);
+        berthRepository.deleteAll(oldMap.values());
+        berthRepository.saveAll(newBerths);
 
         log.info("Read berthsCount={} berths, berthsAddedCount={} berthsUpdatedCount={} berthsDeletedCount={} .",
                 berthLines.size(), newBerths.size(), updates, oldMap.values().size());
@@ -141,8 +141,8 @@ public class BerthUpdater {
             oldMap.remove(e.getKey());
         }
 
-        portAreaRepository.delete(oldMap.values());
-        portAreaRepository.save(newAreas);
+        portAreaRepository.deleteAll(oldMap.values());
+        portAreaRepository.saveAll(newAreas);
 
         log.info("portAreasAddedCount={} port areas, portAreasUpdatedCount={} portAreasDeletedCount={} .", newAreas.size(), updates, oldMap.values().size());
 

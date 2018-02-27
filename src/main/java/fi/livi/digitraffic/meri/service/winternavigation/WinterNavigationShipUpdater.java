@@ -6,11 +6,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -58,7 +56,6 @@ public class WinterNavigationShipUpdater {
      */
     @Transactional
     public int updateWinterNavigationShips() {
-
         final WinterShips data = winterNavigationClient.getWinterNavigationShips();
 
         final List<WinterNavigationShip> added = new ArrayList<>();
@@ -69,13 +66,13 @@ public class WinterNavigationShipUpdater {
 
         final StopWatch stopWatch = StopWatch.createStarted();
         data.getWinterShip().forEach(ship -> update(ship, added, updated, shipsByVesselPK));
-        winterNavigationShipRepository.save(added);
+        winterNavigationShipRepository.saveAll(added);
         stopWatch.stop();
 
         log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={} , tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_SHIPS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toZonedDateTime().toInstant()),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();

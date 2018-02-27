@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dao;
 
-import java.sql.Date;
+import java.time.ZonedDateTime;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,12 @@ public class UpdatedTimestampRepositoryTest extends AbstractTestBase {
     @Test
     @Transactional
     public void testUpdate() {
-        updatedTimestampRepository.setUpdated("test", new Date(12345), "testi");
+        final ZonedDateTime aika = ZonedDateTime.now();
+
+        updatedTimestampRepository.setUpdated("test", aika, "testi");
+
+        final ZonedDateTime response = updatedTimestampRepository.findLastUpdated("test");
+
+        assertTimesEqual(aika, response);
     }
 }
