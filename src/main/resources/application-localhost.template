@@ -42,7 +42,7 @@ winterNavigationDirwayUpdateJob.frequency = 60000
 cache.allowedMmsis = #{60*1000}
 
 # If set to false web controllers are not activated. Should be false for daemon processes.
-spring.main.web-environment=false
+spring.main.web-environment=true
 
 # if set to false websocket reading(vessel locations and metadata) are not activated.  Should be true for daemon processes.
 ais.websocketRead.enabled=false
