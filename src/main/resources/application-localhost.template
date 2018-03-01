@@ -45,7 +45,7 @@ cache.allowedMmsis = #{60*1000}
 spring.main.web-environment=true
 
 # if set to false websocket reading(vessel locations and metadata) are not activated.  Should be true for daemon processes.
-websocketRead.enabled=false
+ais.websocketRead.enabled=false
 
 # if set to false no messages are sent to mqtt.  Should be true for daemon process
 ais.mqtt.enabled=false

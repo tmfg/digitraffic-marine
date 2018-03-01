@@ -31,7 +31,7 @@ public class WebsocketStatistics {
         LOCATIONS, VESSEL_LOCATION, METADATA
     }
 
-    public WebsocketStatistics(@Value("${websocketRead.enabled}") final boolean websocketReadEnabled) {
+    public WebsocketStatistics(@Value("${ais.websocketRead.enabled}") final boolean websocketReadEnabled) {
         if(websocketReadEnabled) {
             executor.scheduleAtFixedRate(WebsocketStatistics::logReadStatistics, 0, 1, TimeUnit.MINUTES);
         }
