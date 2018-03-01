@@ -57,16 +57,6 @@
         <appender-ref ref="FILE_LOGSTASH" />
     </logger>
 
-    <!-- debugging log (note: javamelody does not use FQCN, so loggers use name="javamelody",
-     not "net.bull.javamelody") -->
-    <logger name="net.bull.javamelody" additivity="true">
-        <level value="ERROR" />
-        <appender-ref ref="FILE_LOGSTASH" />
-    </logger>
-    <logger name="net.bull.javamelody" additivity="false">
-        <appender-ref ref="NULL" />
-    </logger>
-
     <root level="INFO" additivity="false">
         <appender-ref ref="FILE" />
         <appender-ref ref="FILE_LOGSTASH" />

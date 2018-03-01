@@ -12,9 +12,6 @@ ais.datasource.url=jdbc:postgresql://localhost:54321/marine
 ais.datasource.username=marine
 ais.datasource.password=marine
 
-# Format : user:password, one by line or separated by comma
-javamelody.authorized-users = username:password
-
 # AIS-websocket address
 ais.locations.123.url = ws://localhost:6180/arcgis/ws/services/AISPosPublic123/StreamServer/subscribe
 ais.locations.27.url = ws://localhost:6180/arcgis/ws/services/AISPosPublic27/StreamServer/subscribe
