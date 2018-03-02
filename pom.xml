@@ -143,12 +143,6 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
@@ -170,6 +164,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
         <dependency>
@@ -212,24 +211,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <!-- DPO-392 Versions from 2.2.1 on has loop bug on jdbc conection drop. Fixed by using 2.2.0-version
-                 http://stackoverflow.com/questions/35761746/quartz-scheduler-unlimited-attempts-to-connect-with-database
-                 https://jira.terracotta.org/jira/browse/QTZ-470 -->
-            <version>2.3.0</version>
-        </dependency>
-
-        <!--<dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
-        </dependency>-->
-
-        <dependency>
             <groupId>org.osgeo</groupId>
             <artifactId>proj4j</artifactId>
             <version>0.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.3</version>
         </dependency>
 
         <!-- Logging in JSON format for ELK-stack -->
@@ -239,18 +229,18 @@
             <version>5.0</version>
         </dependency>
 
-        <!--= Test dependencies, in groupId alphabethic order =-->
-        <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-            <version>2.3</version>
-        </dependency>
-
         <!-- gzipped http response -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.5</version>
+        </dependency>
+
+        <!-- Test dependencies, in groupId alphabethic order -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

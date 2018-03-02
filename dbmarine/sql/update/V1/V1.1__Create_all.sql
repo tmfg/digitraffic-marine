@@ -130,8 +130,8 @@ OIDS=FALSE
 CREATE TABLE IF NOT EXISTS locking_table(
 lock_name CHARACTER VARYING(40) NOT NULL,
 instance_id CHARACTER VARYING(80),
-lock_locked TIMESTAMP(0) WITHOUT TIME ZONE,
-lock_expires TIMESTAMP(0) WITHOUT TIME ZONE
+lock_locked TIMESTAMP(0) WITH TIME ZONE,
+lock_expires TIMESTAMP(0) WITH TIME ZONE
 )
 WITH (
 OIDS=FALSE
@@ -228,8 +228,8 @@ port_restricted boolean,
 port_closed boolean,
 issue_time TIMESTAMP(6) WITH TIME ZONE,
 last_modified TIMESTAMP(6) WITH TIME ZONE,
-valid_from TIMESTAMP(0) WITHOUT TIME ZONE,
-valid_until TIMESTAMP(0) WITHOUT TIME ZONE,
+valid_from TIMESTAMP(0) WITH TIME ZONE,
+valid_until TIMESTAMP(0) WITH TIME ZONE,
 raw_text CHARACTER VARYING(1024),
 formatted_text CHARACTER VARYING(1024)
 )
@@ -517,7 +517,7 @@ nationality CHARACTER VARYING(3),
 longitude NUMERIC(11,8),
 latitude NUMERIC(11,8),
 sea_area CHARACTER VARYING(128),
-obsolete_date TIMESTAMP(0) WITHOUT TIME ZONE
+obsolete_date TIMESTAMP(0) WITH TIME ZONE
 )
 WITH (
 OIDS=FALSE
