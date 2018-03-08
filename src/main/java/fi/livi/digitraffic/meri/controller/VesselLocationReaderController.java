@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.controller;
 
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
+import fi.livi.digitraffic.meri.controller.reader.VesselLocationLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
-import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketReader;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
@@ -38,7 +37,7 @@ public class VesselLocationReaderController {
             final List<WebsocketListener> listeners = Arrays.asList(
                     new VesselLocationDatabaseListener(vesselLocationRepository, lockingService),
                     new VesselLocationRelayListener(vesselSender, vesselMetadataService),
-                    new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
+                    new VesselLocationLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 
             readerList = Arrays.asList(
