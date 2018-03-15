@@ -36,10 +36,10 @@ public class AisApplicationConfiguration {
 
     @SuppressWarnings("Duplicates")
     @Bean
-    public DataSource datasource(final @Value("${ais.datasource.url}") String url,
-                                 final @Value("${ais.datasource.username}") String username,
-                                 final @Value("${ais.datasource.password}") String password,
-                                 final @Value("${ais.datasource.hikari.maximum-pool-size:20}") Integer maximumPoolSize) {
+    public DataSource datasource(final @Value("${marine.datasource.url}") String url,
+                                 final @Value("${marine.datasource.username}") String username,
+                                 final @Value("${marine.datasource.password}") String password,
+                                 final @Value("${marine.datasource.hikari.maximum-pool-size:20}") Integer maximumPoolSize) {
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
