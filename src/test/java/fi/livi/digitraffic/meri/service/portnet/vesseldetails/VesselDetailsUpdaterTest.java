@@ -48,7 +48,7 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
 
     @Before
     public void before() {
-        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", restTemplate);
+        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl", restTemplate);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);
         server = MockRestServiceServer.createServer(restTemplate);
     }

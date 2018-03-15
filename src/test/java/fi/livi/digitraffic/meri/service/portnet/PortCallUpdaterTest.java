@@ -52,7 +52,7 @@ public class PortCallUpdaterTest extends AbstractTestBase {
 
     @Before
     public void before() {
-        portCallClient = new PortCallClient("portCallUrl/", jax2bRestTemplate);
+        portCallClient = new PortCallClient("portCallUrl", jax2bRestTemplate);
         portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, 42, 42);
         server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
