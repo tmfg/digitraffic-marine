@@ -17,7 +17,7 @@ ais.locations.123.url = ws://localhost:6180/arcgis/ws/services/AISPosPublic123/S
 ais.locations.27.url = ws://localhost:6180/arcgis/ws/services/AISPosPublic27/StreamServer/subscribe
 ais.locations.9.url = ws://localhost:6180/arcgis/ws/services/AISPosPublic9/StreamServer/subscribe
 ais.metadata.5.url = ws://localhost:6180/arcgis/ws/services/AISMetaPublic5/StreamServer/subscribe
-ais.pooki.url = http://localhost:18080/pooki_www/services/rest.ashx
+ais.pooki.url = http://localhost:18080/test/nautical-warnings
 ais.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
 ais.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetails/List/
 

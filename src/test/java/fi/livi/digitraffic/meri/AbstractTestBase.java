@@ -30,19 +30,19 @@ public abstract class AbstractTestBase {
     @Autowired
     protected MockMvc mockMvc;
 
-    protected String readFile(String filename) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(filename).getFile());
+    protected String readFile(final String filename) throws IOException {
+        final ClassLoader classLoader = getClass().getClassLoader();
+        final File file = new File(classLoader.getResource(filename).getFile());
 
         return FileUtils.readFileToString(file, "UTF-8");
     }
 
-    protected Resource loadResource(String pattern) throws IOException {
+    protected Resource loadResource(final String pattern) throws IOException {
         return resourceLoader.getResource(pattern);
     }
 
-    protected String readResourceContent(String resourcePattern) throws IOException {
-        Resource datex2Resource = loadResource(resourcePattern);
+    protected String readResourceContent(final String resourcePattern) throws IOException {
+        final Resource datex2Resource = loadResource(resourcePattern);
         return FileUtils.readFileToString(datex2Resource.getFile(), StandardCharsets.UTF_8);
     }
 

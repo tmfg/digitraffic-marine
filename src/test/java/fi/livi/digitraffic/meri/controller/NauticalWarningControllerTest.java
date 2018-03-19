@@ -18,6 +18,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.util.RestUtil;
 
@@ -73,14 +74,15 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
 
             assertThat("Expected ok response", !RestUtil.isError(response.getStatusCode()));
 
+            final String body = response.getBody();
+
             //TODO Assert actual JSON contents
-            System.out.println(response.toString());
-            assertThat(response.toString(), containsString("{\"id\":1162"));
-            assertThat(response.toString(), containsString("\"areasFi\":\"AHVENANMERI\""));
-            assertThat(response.toString(), containsString("\"creationTime\":\"2015-08-19T00:00:00+03:00\""));
-            assertThat(response.toString(), containsString("\"type\":\"FeatureCollection\""));
-            assertThat(response.toString(), containsString("\"type\":\"Feature\""));
-            assertThat(response.toString(), containsString("\"type\":\"Polygon\""));
+            assertThat(body, containsString("{\"id\":1162"));
+            assertThat(body, containsString("\"areasFi\":\"AHVENANMERI\""));
+            assertThat(body, containsString("\"creationTime\":\"2015-08-19T00:00:00+03:00\""));
+            assertThat(body, containsString("\"type\":\"FeatureCollection\""));
+            assertThat(body, containsString("\"type\":\"Feature\""));
+            assertThat(body, containsString("\"type\":\"Polygon\""));
 
         }
 
