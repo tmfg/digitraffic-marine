@@ -32,7 +32,7 @@ public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBas
             final ZonedDateTime expected = p.getLeft() == null ? null : ZonedDateTime.parse(p.getLeft());
             final ZonedDateTime actual = deserializer.parseDateQuietly(p.getRight());
 
-            Assert.assertEquals(expected, actual);
+            assertTimesEqual(expected, actual);
         });
     }
 }
