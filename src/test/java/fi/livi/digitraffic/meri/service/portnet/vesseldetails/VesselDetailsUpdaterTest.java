@@ -40,7 +40,6 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
 
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
-
     @Autowired
     private Jax2bRestTemplate restTemplate;
 
@@ -48,7 +47,7 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
 
     @Before
     public void before() {
-        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl", restTemplate);
+        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", restTemplate);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);
         server = MockRestServiceServer.createServer(restTemplate);
     }
@@ -57,16 +56,15 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
     @Transactional
     @Rollback
     public void updateVesselDetailsSucceeds() throws IOException {
-
         String response = readFile("vesselDetailsResponse1.xml");
 
-        server.expect(MockRestRequestMatchers.requestTo("vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
+        server.expect(MockRestRequestMatchers.requestTo("/vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
         response = readFile("vesselDetailsResponse2.xml");
 
-        server.expect(MockRestRequestMatchers.requestTo("vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
+        server.expect(MockRestRequestMatchers.requestTo("/vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
