@@ -21,6 +21,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.livi.digitraffic.meri.config.SchedulerConfig;
 
 @Component
+/**
+ * This deserializes times without timezone to zoneddatetimes.  This assumes, that the times
+ * without timezone are in fact in Europe/Helsinki timezone.
+ */
 public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<ZonedDateTime> {
     private static final Logger log = LoggerFactory.getLogger(SchedulerConfig.class);
 
@@ -51,7 +55,7 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
         for (final SimpleDateFormat dateFormat : DATE_FORMATS)  {
             try {
                 final Date date = dateFormat.parse(dateTime);
-                return ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+                return ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("Europe/Helsinki"));
             } catch (final ParseException e) {
                 log.debug("Parse of " + dateTime + " failed", e);
             }
