@@ -92,8 +92,6 @@ public class NauticalWarningController {
         final String url = String.format("%s?crs=EPSG:4326&layer=%s", pookiUrl, status.layer);
         final PookiFeatureCollection collection = restTemplate.getForObject(url, PookiFeatureCollection.class);
 
-        log.info("fetch from {}:{}", url, collection.toString());
-
         return collection;
     }
 
