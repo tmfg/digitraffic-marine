@@ -12,6 +12,8 @@ import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -25,6 +27,7 @@ import fi.livi.digitraffic.meri.util.RestUtil;
 
 public class NauticalWarningControllerTest extends AbstractTestBase {
     private TestRestTemplate template = new TestRestTemplate();
+    private static final Logger log = LoggerFactory.getLogger(NauticalWarningControllerTest.class);
 
     @Autowired
     private PookiDummyController pookiDummyController;
@@ -76,6 +79,8 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
 
             final String body = response.getBody();
 
+            log.info("message from {}:{}", localUrl, body);
+
             //TODO Assert actual JSON contents
             assertThat(body, containsString("{\"id\":1162"));
             assertThat(body, containsString("\"areasFi\":\"AHVENANMERI\""));
@@ -83,9 +88,7 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
             assertThat(body, containsString("\"type\":\"FeatureCollection\""));
             assertThat(body, containsString("\"type\":\"Feature\""));
             assertThat(body, containsString("\"type\":\"Polygon\""));
-
         }
-
     }
 
     @Test
