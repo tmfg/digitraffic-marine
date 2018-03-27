@@ -14,7 +14,5 @@ services:
       POSTGRES_USER: marine
       POSTGRES_PASSWORD: marine
       POSTGRES_DB: marine
-    volumes:
-      - "./files:/files"
     networks:
       - db_network
