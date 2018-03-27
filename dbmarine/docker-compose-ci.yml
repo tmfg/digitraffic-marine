@@ -9,6 +9,7 @@ services:
   db:
     image: postgres:9.6.8
     restart: always
+    build: .
     environment:
       POSTGRES_USER: marine
       POSTGRES_PASSWORD: marine
