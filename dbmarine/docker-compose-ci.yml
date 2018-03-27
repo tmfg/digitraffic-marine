@@ -3,7 +3,7 @@ version: '2.1'
 networks:
   db_network:
     external:
-      name: network
+      name: dnet1
 
 services:
   db:
