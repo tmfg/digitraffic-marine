@@ -38,14 +38,14 @@ public class VesselDetailsService {
             qb.like("name", '%' + vesselName + '%');
         }
         if (mmsi != null) {
-            qb.equal("mmsi", mmsi);
+            qb.equals("mmsi", mmsi);
         }
         if (imo != null) {
-            qb.equal("imoLloiyds", imo);
+            qb.equals("imoLloiyds", imo);
         }
         if (vesselTypeCode != null) {
             final Join<VesselDetails, VesselConstruction> join = qb.join("vesselConstruction");
-            qb.equal(join.get("vesselTypeCode"), vesselTypeCode);
+            qb.equals(join.get("vesselTypeCode"), vesselTypeCode);
         }
         if (!CollectionUtils.isEmpty(nationalities)) {
             final Join<VesselDetails, VesselRegistration> join = qb.join("vesselRegistration");

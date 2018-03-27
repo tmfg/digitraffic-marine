@@ -31,11 +31,11 @@ public class QueryBuilder<T, K> {
         root = query.from(kclazz);
     }
 
-    public void equal(final String attribute, final Object o) {
-        equal(root.get(attribute), o);
+    public void equals(final String attribute, final Object o) {
+        equals(root.get(attribute), o);
     }
 
-    public void equal(final Expression<?> e, final Object o) {
+    public void equals(final Expression<?> e, final Object o) {
         predicateList.add(equalPredicate(e, o));
     }
 

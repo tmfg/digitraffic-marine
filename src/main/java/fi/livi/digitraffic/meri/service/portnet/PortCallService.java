@@ -65,23 +65,23 @@ public class PortCallService {
         final QueryBuilder<Long, PortCall> qb = new QueryBuilder<>(entityManager, Long.class, PortCall.class);
 
         if (date != null) {
-            qb.equal(qb.function("to_char", Timestamp.class, qb.<Timestamp>get("portCallTimestamp"), qb.literal("YYYY-MM-dd")),
+            qb.equals(qb.function("to_char", Timestamp.class, qb.<Timestamp>get("portCallTimestamp"), qb.literal("YYYY-MM-dd")),
                 formatter.format(date));
         }
         if (from != null) {
             qb.gte(qb.get("portCallTimestamp"), Date.from(from.toInstant()));
         }
         if (locode != null) {
-            qb.equal("portToVisit", locode);
+            qb.equals("portToVisit", locode);
         }
         if (vesselName != null) {
-            qb.equal(qb.lower("vesselName"), vesselName.toLowerCase());
+            qb.equals(qb.lower("vesselName"), vesselName.toLowerCase());
         }
         if(mmsi != null) {
-            qb.equal("mmsi", mmsi);
+            qb.equals("mmsi", mmsi);
         }
         if(imo != null) {
-            qb.equal("imoLloyds", imo);
+            qb.equals("imoLloyds", imo);
         }
 
         if(isNotEmpty(nationality)) {
@@ -89,7 +89,7 @@ public class PortCallService {
         }
 
         if(vesselTypeCode != null) {
-            qb.equal("vesselTypeCode", vesselTypeCode);
+            qb.equals("vesselTypeCode", vesselTypeCode);
         }
 
         return qb.getResults( "portCallId");

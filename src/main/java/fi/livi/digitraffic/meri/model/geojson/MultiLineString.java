@@ -12,7 +12,7 @@ public class MultiLineString extends Geometry<List<List<List<Double>>>> {
 
     public MultiLineString() {
         setType("MultiLineString");
-    };
+    }
 
     public void setCoordinates(List<List<List<Double>>> coordinates) {
         super.setCoordinates(coordinates);

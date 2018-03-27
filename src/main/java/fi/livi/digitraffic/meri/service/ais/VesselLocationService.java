@@ -71,7 +71,7 @@ public class VesselLocationService {
         final Subquery<Integer> subquery = getMmsiSubQuery(qb, mmsi);
 
         if(mmsi != null) {
-            qb.equal("mmsi", mmsi);
+            qb.equals("mmsi", mmsi);
         }
 
         if(from != null) {

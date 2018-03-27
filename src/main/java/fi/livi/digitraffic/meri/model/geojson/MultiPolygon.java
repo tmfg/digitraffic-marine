@@ -12,7 +12,7 @@ public class MultiPolygon extends Geometry<List<List<List<List<Double>>>>> {
 
     public MultiPolygon() {
         setType("MultiPolygon");
-    };
+    }
 
     public void setCoordinates(List<List<List<List<Double>>>> coordinates) {
         super.setCoordinates(coordinates);
