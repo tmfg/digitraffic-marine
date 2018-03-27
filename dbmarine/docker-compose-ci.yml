@@ -14,6 +14,6 @@ services:
       POSTGRES_PASSWORD: marine
       POSTGRES_DB: marine
     volumes:
-        - "./wait-for-postgres.sh:/wait-for-postgres.sh"
+        - "./files:/files"
     networks:
       - db_network
