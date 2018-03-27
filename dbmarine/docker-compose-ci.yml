@@ -13,11 +13,7 @@ services:
       POSTGRES_USER: marine
       POSTGRES_PASSWORD: marine
       POSTGRES_DB: marine
+    volumes:
+        - "./wait-for-postgres.sh:/wait-for-postgres.sh"
     networks:
       - db_network
-
-  db-init:
-    build: .
-    links:
-      - "db:db"
-    command: ["./wait-for-postgres.sh", "db", "marine", "marine", "marine"]
