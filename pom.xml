@@ -260,13 +260,13 @@
                 <version>4.2.0</version>
                 <configuration>
                     <excludes>
-                        <exclude>fi.livi.digitraffic.meri.domain.*</exclude>
-                        <exclude>fi.livi.digitraffic.meri.quartz.*</exclude>
-                        <exclude>fi.livi.digitraffic.meri.model.*</exclude>
+                        <exclude>fi/livi/digitraffic/meri/domain/**/*.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/quartz/**/*.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/model/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
