@@ -263,6 +263,9 @@
                         <exclude>fi/livi/digitraffic/meri/domain/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/quartz/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/model/**/*.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/config/**/*.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/aop/**/*.java</exclude>
+                        <exclude>**/dto/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
