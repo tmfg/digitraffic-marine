@@ -261,34 +261,12 @@
                 <configuration>
                     <excludes>
                         <exclude>fi.livi.digitraffic.meri.domain.*</exclude>
+                        <exclude>fi.livi.digitraffic.meri.quartz.*</exclude>
+                        <exclude>fi.livi.digitraffic.meri.model.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <formats>
-                        <format>xml</format>
-                    </formats>
-                    <instrumentation>
-                        <ignoreTrivial>true</ignoreTrivial>
-                        <ignoreMethodAnnotation>fi.livi.digitraffic.meri.annotation.CoverageIgnore</ignoreMethodAnnotation>
-                        <excludes>
-                            <exclude>fi/livi/digitraffic/meri/controller/websocket/**/*.class</exclude>
-                            <exclude>fi/livi/digitraffic/meri/controller/reader/**/*.class</exclude>
-                            <exclude>fi/livi/digitraffic/meri/config/**/*.class</exclude>
-                            <exclude>fi/livi/digitraffic/meri/quartz/**/*.class</exclude>
-                            <exclude>fi/livi/digitraffic/meri/portnet/**/*.class</exclude>
-                            <exclude>fi/livi/digitraffic/meri/domain/**/*.class</exclude>
-                            <exclude>fi/livi/digitraffic/meri/model/**/*.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                </configuration>
-            </plugin>
-
+            
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
