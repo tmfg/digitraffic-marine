@@ -258,6 +258,11 @@
                 <groupId>org.openclover</groupId>
                 <artifactId>clover-maven-plugin</artifactId>
                 <version>4.2.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>fi.livi.digitraffic.meri.domain.*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
 
             <plugin>
