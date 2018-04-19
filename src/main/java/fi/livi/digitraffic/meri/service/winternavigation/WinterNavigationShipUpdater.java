@@ -183,7 +183,12 @@ public class WinterNavigationShipUpdater {
             final ShipActivity activity = new ShipActivity();
             activity.setVesselPK(ship.getVesselPk());
             activity.setOrderNumber(orderNumber);
-            activity.setActivityType(shipActivity.getActivityType());
+            // TODO: Remove this after 24.4.2018 https://issues.solita.fi/browse/DPO-455
+            if (shipActivity.getActivityType().equals("WEATHER_CONDITIONS")) {
+                activity.setActivityType("STOP");
+            } else {
+                activity.setActivityType(shipActivity.getActivityType());
+            }
             activity.setActivityText(shipActivity.getActivityText());
             activity.setBeginTime(findZonedDateTime(shipActivity.getBegintime()));
             activity.setEndTime(findZonedDateTime(shipActivity.getEndtime()));

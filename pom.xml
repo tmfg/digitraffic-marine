@@ -5,7 +5,7 @@
 
     <groupId>fi.fta.digitraffic</groupId>
     <artifactId>AIS</artifactId>
-    <version>1.22.0</version>
+    <version>1.26.0</version>
     <packaging>jar</packaging>
 
     <name>dt-ais</name>
