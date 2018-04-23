@@ -16,7 +16,7 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>info</level>
         </filter>
-        <file>marine-${appType}-logstash.log</file>
+        <file>logs/marine-${appType}-logstash.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>marine-${appType}-logstash.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>2</maxHistory>
@@ -26,7 +26,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- File to write to before rotating. See: http://logback.qos.ch/manual/appenders.html#tbrpFileNamePattern -->
-        <file>marine-daily.log</file>
+        <file>logs/marine-${appType}-daily.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>marine-daily.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>92</maxHistory>
@@ -39,7 +39,7 @@
     <!-- PerformanceMonitor messages logging in separate file -->
     <appender name="FILE_PERFORMANCE_MONITOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- File to write to before rotating. See: http://logback.qos.ch/manual/appenders.html#tbrpFileNamePattern -->
-        <file>marine-performance-daily.log</file>
+        <file>logs/marine-${appType}-performance-daily.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>marine-performance-daily.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>92</maxHistory>
