@@ -38,6 +38,9 @@ winterNavigationDirwayUpdateJob.frequency = 60000
 # Allowed mmsis cache time in millis
 cache.allowedMmsis = #{60*1000}
 
+# daemon or web
+app.type=web
+
 # If set to false web controllers are not activated. Should be false for daemon processes.
 spring.main.web-environment=true
 
