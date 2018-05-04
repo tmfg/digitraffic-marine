@@ -1,4 +1,4 @@
-FROM toke/mosquitto
+FROM eclipse-mosquitto
 
 COPY config/mosquitto.conf /mqtt/config/mosquitto.conf
 COPY config/mosquitto.passwd /mqtt/config/mosquitto.passwd
