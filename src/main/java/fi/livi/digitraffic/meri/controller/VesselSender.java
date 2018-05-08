@@ -61,7 +61,7 @@ public class VesselSender {
 
             sendMessage(statusAsString, VESSEL_STATUS_TOPIC);
         } catch (final Exception e) {
-            LOG.error("error sending location", e);
+            LOG.error("error sending status", e);
         }
     }
 
