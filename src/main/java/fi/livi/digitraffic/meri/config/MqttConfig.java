@@ -30,7 +30,7 @@ public class MqttConfig {
         factory.setServerURIs(serverUrl);
         factory.setUserName(username);
         factory.setPassword(password);
-        factory.getConnectionOptions().setMaxInflight(1000);
+        factory.getConnectionOptions().setMaxInflight(10000);
 
         return factory;
     }
