@@ -30,15 +30,19 @@ public class MqttConfig {
         factory.setServerURIs(serverUrl);
         factory.setUserName(username);
         factory.setPassword(password);
+        factory.getConnectionOptions().setMaxInflight(1000);
 
         return factory;
     }
 
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
-    public MessageHandler mqttOutbound(MqttPahoClientFactory mqttPahoClientFactory) {
+    public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
         final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("marine_updater", mqttPahoClientFactory);
+
         messageHandler.setAsync(true);
+        messageHandler.setAsyncEvents(true);
+
         return messageHandler;
     }
 
