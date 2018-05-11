@@ -1,9 +1,14 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
@@ -11,6 +16,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +26,9 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
-import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
+import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
 
 @Service
 public class PortCallService {
@@ -29,8 +36,6 @@ public class PortCallService {
     private final PortCallRepository portCallRepository;
 
     private final EntityManager entityManager;
-
-    private final SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd");
 
     public PortCallService(final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallRepository portCallRepository,
@@ -65,8 +70,8 @@ public class PortCallService {
         final QueryBuilder<Long, PortCall> qb = new QueryBuilder<>(entityManager, Long.class, PortCall.class);
 
         if (date != null) {
-            qb.equals(qb.function("to_char", Timestamp.class, qb.<Timestamp>get("portCallTimestamp"), qb.literal("YYYY-MM-dd")),
-                formatter.format(date));
+            qb.gte(qb.<Timestamp>get("portCallTimestamp"), date);
+            qb.lt(qb.<Timestamp>get("portCallTimestamp"), DateUtils.addDays(date, 1));
         }
         if (from != null) {
             qb.gte(qb.get("portCallTimestamp"), Date.from(from.toInstant()));

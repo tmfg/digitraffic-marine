@@ -1,6 +1,8 @@
 package fi.livi.digitraffic.meri.util.dao;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -49,6 +51,10 @@ public class QueryBuilder<T, K> {
 
     public <E extends Comparable<? super E>> void lte(final Expression<? extends E> e, final E value) {
         predicateList.add(cb.lessThanOrEqualTo(e, value));
+    }
+
+    public <E extends Comparable<? super E>> void lt(final Expression<? extends E> e, final E value) {
+        predicateList.add(cb.lessThan(e, value));
     }
 
     public <Z> void in(final String attribute, final List<Z> inList) {
