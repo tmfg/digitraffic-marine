@@ -38,12 +38,7 @@ public class MqttConfig {
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
-        final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("marine_updater", mqttPahoClientFactory);
-
-        messageHandler.setAsync(true);
-        messageHandler.setAsyncEvents(true);
-
-        return messageHandler;
+        return new MqttPahoMessageHandler("marine_updater", mqttPahoClientFactory);
     }
 
     @Bean
