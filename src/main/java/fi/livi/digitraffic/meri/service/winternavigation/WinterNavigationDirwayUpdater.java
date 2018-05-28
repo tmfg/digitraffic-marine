@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +56,15 @@ public class WinterNavigationDirwayUpdater {
         final DirWaysType data = winterNavigationClient.getWinterNavigationWaypoints();
 
         final List<String> names = data.getDirWay().stream().map(d -> d.getName()).collect(Collectors.toList());
-        winterNavigationDirwayPointRepository.deleteAllNotIn(names);
-        int deletedCount = winterNavigationDirwayRepository.deleteAllNotIn(names);
+        final long deletedCount;
+
+        if(names.isEmpty()) {
+            deletedCount = winterNavigationDirwayPointRepository.count();
+            winterNavigationDirwayRepository.deleteAll();
+        } else {
+            winterNavigationDirwayPointRepository.deleteAllNotIn(names);
+            deletedCount = winterNavigationDirwayRepository.deleteAllNotIn(names);
+        }
 
         final List<WinterNavigationDirway> added = new ArrayList<>();
         final List<WinterNavigationDirway> updated = new ArrayList<>();
@@ -66,12 +74,11 @@ public class WinterNavigationDirwayUpdater {
         winterNavigationDirwayRepository.save(added);
         stopWatch.stop();
 
-        log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , deletedDirways={} , tookMs={}",
-                 added.size(), updated.size(), deletedCount, stopWatch.getTime());
+        log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , deletedDirways={} , tookMs={}", added
+            .size(), updated.size(), deletedCount, stopWatch.getTime());
 
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
-                                              getClass().getSimpleName());
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS.name(), Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
+            getClass().getSimpleName());
 
         return added.size() + updated.size();
     }
