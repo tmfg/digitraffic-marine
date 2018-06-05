@@ -1,0 +1,6 @@
+<ns4:WaypointsResponse xmlns:ns4="IBNet_Baltice_Schema">
+    <waypoints>
+        <ns2:dataValidTime xmlns:ns2="IBNet_Baltice_Waypoints">2018-01-03T10:11:59.512+02:00</ns2:dataValidTime>
+        <ns2:dataQueryTime xmlns:ns2="IBNet_Baltice_Waypoints">2018-01-03T10:11:59.512+02:00</ns2:dataQueryTime>
+    </waypoints>
+</ns4:WaypointsResponse>

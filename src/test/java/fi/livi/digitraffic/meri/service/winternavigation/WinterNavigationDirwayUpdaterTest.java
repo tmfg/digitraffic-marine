@@ -72,6 +72,19 @@ public class WinterNavigationDirwayUpdaterTest extends AbstractTestBase {
         assertEquals(23.131164517, dirway.getDirwayPoints().get(2).getLongitude(), 0.00000001);
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    public void updateWinterNavigationDirwaysEmpty() throws IOException {
+        when(winterNavigationClient.getWinterNavigationWaypoints()).thenReturn(getResponse("winterNavigationDirwaysResponse_empty.xml"));
+
+        winterNavigationDirwayUpdater.updateWinterNavigationDirways();
+
+        final List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
+        assertEquals(0, dirways.size());
+
+    }
+
     private DirWaysType getResponse(final String filename) throws IOException {
         final JAXBElement<WaypointsResponseType> unmarshal =
             ((JAXBElement<WaypointsResponseType>) jaxb2Marshaller.unmarshal(new StringSource(readFile(filename))));
