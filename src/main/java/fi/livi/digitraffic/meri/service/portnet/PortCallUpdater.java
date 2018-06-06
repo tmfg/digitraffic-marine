@@ -71,8 +71,6 @@ public class PortCallUpdater {
 
     @Transactional
     public void updatePortCalls(final ZonedDateTime from, final ZonedDateTime to) {
-        log.info("Fetching port calls from server");
-
         final PortCallList list = portCallClient.getList(from, to);
 
         if(isListOk(list)) {

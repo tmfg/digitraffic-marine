@@ -30,8 +30,6 @@ public class MqttConfig {
         factory.setServerURIs(serverUrl);
         factory.setUserName(username);
         factory.setPassword(password);
-        // TODO: setMaxInflight is not working at org.springframework.integration:spring-integration-mqtt:5.0.4.RELEASE
-        // TODO: Will be fixed in a future release https://jira.spring.io/browse/INT-4463
         factory.getConnectionOptions().setMaxInflight(10000);
 
         return factory;
