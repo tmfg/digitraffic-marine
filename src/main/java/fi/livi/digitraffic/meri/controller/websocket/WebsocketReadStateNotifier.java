@@ -25,8 +25,6 @@ public class WebsocketReadStateNotifier {
 
     @Scheduled(fixedRate = 10000)
     public void sendReadStatus() {
-        log.info("sending status");
-
         try {
             final WebsocketStatistics.ReadStatistics locationStatus = websocketStatistics.getReadStatistics();
             final String status = locationStatus == null ? UNDEFINED : locationStatus.status;
