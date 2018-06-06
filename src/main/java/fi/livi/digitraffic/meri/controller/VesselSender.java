@@ -57,6 +57,8 @@ public class VesselSender {
 
     public void sendStatusMessage(final String status) {
         try {
+            LOG.info("sending status message " + status);
+
             final String statusAsString = objectMapper.writeValueAsString(status);
 
             sendMessage(statusAsString, VESSEL_STATUS_TOPIC);
