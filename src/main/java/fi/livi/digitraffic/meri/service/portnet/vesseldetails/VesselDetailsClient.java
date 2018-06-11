@@ -15,7 +15,6 @@ import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Service
 public class VesselDetailsClient {
-
     private final String vesselDetailsUrl;
     private final Jax2bRestTemplate restTemplate;
 
@@ -29,10 +28,9 @@ public class VesselDetailsClient {
 
     public VesselList getVesselList(final ZonedDateTime from) {
         final String url = buildUrl(from);
+        final VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
 
-        VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
-
-        logInfo(vesselList);
+//        logInfo(vesselList);
 
         return vesselList;
     }

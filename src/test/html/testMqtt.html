@@ -11,7 +11,7 @@
         function connect() {
             console.log('trying to connect...');
 
-            client = new Paho.MQTT.Client("10.10.10.10", 9001, "test-html-client");
+            client = new Paho.MQTT.Client("marine-test-mqtt-lb-745c4f4aaa8fe5f5.elb.eu-west-1.amazonaws.com", 9001, "test-html-client");
 
             client.onConnectionLost = function (response) {
                 console.info('Collection lost:' + response.errorMessage);
@@ -43,14 +43,15 @@
         }
 
         function updateList() {
-            $(".locations").html(lines.join('<br/>'));
+            $(".messages").html(lines.join('<br/>'));
         }
 
         function convert(message) {
             var content = message.payloadString;
             var topic = message.destinationName;
+            var time = Date.now();
 
-            return topic + ":" + content;
+            return time + ":" + topic + ":" + content;
         }
 
         connect();
@@ -58,6 +59,6 @@
 </head>
 <body>
     Messages:
-    <div class="locations" />
+    <div class="messages" />
 </body>
 </html>
