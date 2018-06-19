@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.config;
 
 
+import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,8 @@ import org.springframework.messaging.MessageHandler;
 @Configuration
 @IntegrationComponentScan
 public class MqttConfig {
+    private final String clientId = "marine_updater_" + MqttClient.generateClientId();
+
     @Bean
     public MqttPahoClientFactory mqttClientFactory(
         @Value("${mqtt.server.url}") final String serverUrl,
@@ -31,6 +34,7 @@ public class MqttConfig {
         factory.setUserName(username);
         factory.setPassword(password);
         factory.getConnectionOptions().setMaxInflight(10000);
+        factory.getConnectionOptions().setAutomaticReconnect(true);
 
         return factory;
     }
@@ -38,8 +42,11 @@ public class MqttConfig {
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
-        final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("marine_updater", mqttPahoClientFactory);
-        messageHandler.setAsync(false);
+        final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
+
+        messageHandler.setAsync(true);
+        messageHandler.setAsyncEvents(true);
+
         return messageHandler;
     }
 
