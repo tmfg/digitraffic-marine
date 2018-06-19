@@ -45,7 +45,6 @@ public class MqttConfig {
         final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
 
         messageHandler.setAsync(true);
-        messageHandler.setAsyncEvents(true);
 
         return messageHandler;
     }
