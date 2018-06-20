@@ -24,11 +24,11 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     }
 
     @Override
-    @Transactional
     public void receiveMessage(final String message) {
         final AISMessage ais = MessageConverter.convertLocation(message);
 
         if(ais.validate() && getLock()) {
+            // repository makes new transaction
             vesselLocationRepository.save(new VesselLocation(ais));
         }
     }

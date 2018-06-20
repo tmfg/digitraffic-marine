@@ -16,6 +16,7 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.slf4j.Logger;
@@ -123,7 +124,13 @@ public class WebsocketReader {
         lastMessageTime = LocalDateTime.now();
 
         if (running.get()) {
-            listeners.parallelStream().forEach(listener -> listener.receiveMessage(message));
+            listeners.parallelStream().forEach(listener -> {
+                final StopWatch sw = StopWatch.createStarted();
+
+                listener.receiveMessage(message);
+
+                log.info("{} took {} ms", listener.getClass().getName(), sw.getTime());
+            });
         } else {
             log.warn("Not handling messages received after shutdown hook");
         }
