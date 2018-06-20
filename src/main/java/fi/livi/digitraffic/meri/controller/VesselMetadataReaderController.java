@@ -28,15 +28,15 @@ public class VesselMetadataReaderController {
     private final List<WebsocketReader> readerList;
 
     @Autowired
-    private VesselMetadataReaderController(@Value("${ais.metadata.5.url}") final String aisLocations5Url,
-                                           final LockingService lockingService,
-                                           final VesselMetadataRepository vesselMetadataRepository,
-                                           final VesselMetadataService vesselMetadataService,
-                                           final VesselSender vesselSender) {
+    private VesselMetadataReaderController(@Value("${ais.metadata.5.url}") final String aisLocations5Url, final LockingService lockingService,
+        final VesselMetadataRepository vesselMetadataRepository, final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
+        final VesselMetadataDatabaseListener vesselMetadataDatabaseListener, final VesselMetadataRelayListener
+        vesselMetadataRelayListener) {
 
-        final List<WebsocketListener> listeners = Arrays.asList(new VesselMetadataDatabaseListener(vesselMetadataRepository, lockingService),
-                                                                new VesselMetadataRelayListener(vesselMetadataService, vesselSender),
-                                                                new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.METADATA));
+        final List<WebsocketListener> listeners = Arrays.asList(
+            vesselMetadataDatabaseListener,
+            vesselMetadataRelayListener,
+            new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.METADATA));
 
         readerList = Arrays.asList(new WebsocketReader(aisLocations5Url, listeners));
 

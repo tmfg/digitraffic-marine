@@ -1,5 +1,8 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
@@ -8,6 +11,9 @@ import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
+@Component
+@ConditionalOnExpression("'${config.test}' != 'true'")
+@ConditionalOnProperty("ais.websocketRead.enabled")
 public class VesselMetadataRelayListener implements WebsocketListener {
     private final VesselMetadataService vesselMetadataService;
     private final VesselSender vesselSender;
