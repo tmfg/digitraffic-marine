@@ -39,7 +39,7 @@ public class VesselLocationReaderController {
         this.vesselLocationRelayListener = vesselLocationRelayListener;
         final List<WebsocketListener> listeners = Arrays.asList(
                     vesselLocationDatabaseListener,
-                    vesselLocationRelayListener
+                    vesselLocationRelayListener,
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 
