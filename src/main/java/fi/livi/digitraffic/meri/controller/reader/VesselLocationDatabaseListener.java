@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
@@ -15,6 +18,9 @@ import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.util.service.LockingService;
 
+@Component
+@ConditionalOnExpression("'${config.test}' != 'true'")
+@ConditionalOnProperty("ais.websocketRead.enabled")
 public class VesselLocationDatabaseListener implements WebsocketListener {
     private final VesselLocationRepository vesselLocationRepository;
     private final LockingService lockingService;

@@ -27,16 +27,19 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 public class VesselLocationReaderController {
     private final List<WebsocketReader> readerList;
 
+    private final VesselLocationDatabaseListener vesselLocationDatabaseListener;
+    private final VesselLocationRelayListener vesselLocationRelayListener;
+
     @Autowired
-    private VesselLocationReaderController(
-                @Value("${ais.locations.123.url}") final String aisLocations123Url,
-                @Value("${ais.locations.27.url}") final String aisLocations27Url,
-                @Value("${ais.locations.9.url}") final String aisLocations9Url,
-                final VesselLocationRepository vesselLocationRepository, final LockingService lockingService,
-                final VesselMetadataService vesselMetadataService, final VesselSender vesselSender) {
-            final List<WebsocketListener> listeners = Arrays.asList(
-                    new VesselLocationDatabaseListener(vesselLocationRepository, lockingService),
-                    new VesselLocationRelayListener(vesselSender, vesselMetadataService),
+    private VesselLocationReaderController(@Value("${ais.locations.123.url}") final String aisLocations123Url, @Value("${ais.locations.27.url}") final String aisLocations27Url,
+        @Value("${ais.locations.9.url}") final String aisLocations9Url, final VesselLocationRepository vesselLocationRepository, final LockingService lockingService,
+        final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
+        final VesselLocationDatabaseListener vesselLocationDatabaseListener, final VesselLocationRelayListener vesselLocationRelayListener) {
+        this.vesselLocationDatabaseListener = vesselLocationDatabaseListener;
+        this.vesselLocationRelayListener = vesselLocationRelayListener;
+        final List<WebsocketListener> listeners = Arrays.asList(
+                    vesselLocationDatabaseListener,
+                    vesselLocationRelayListener
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 
