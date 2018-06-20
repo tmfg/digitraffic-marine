@@ -3,8 +3,8 @@ package fi.livi.digitraffic.meri.controller;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collections;
 
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
@@ -89,7 +89,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 .andExpect(jsonPath("$.features[0].mmsi", is(MMSI)))
         ;
     }
-    
+
     private VesselLocationFeatureCollection generateFeatureCollection() {
         return new VesselLocationFeatureCollection(Collections.singletonList(new VesselLocationFeature(MMSI, null, null)));
     }

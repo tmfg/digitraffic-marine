@@ -1,7 +1,9 @@
 package fi.livi.digitraffic.meri.config;
 
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -30,9 +32,9 @@ public class MqttConfig {
         @Value("${mqtt.server.password}")final String password) {
         final DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
 
-        factory.setServerURIs(serverUrl);
-        factory.setUserName(username);
-        factory.setPassword(password);
+        factory.getConnectionOptions().setServerURIs(ArrayUtils.toArray(serverUrl));
+        factory.getConnectionOptions().setUserName(username);
+        factory.getConnectionOptions().setPassword(password.toCharArray());
         factory.getConnectionOptions().setMaxInflight(10000);
         factory.getConnectionOptions().setAutomaticReconnect(true);
 

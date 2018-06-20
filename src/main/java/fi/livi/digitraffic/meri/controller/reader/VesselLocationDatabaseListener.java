@@ -58,7 +58,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     }
 
     private synchronized List<AISMessage> removeAllMessages() {
-        final List<AISMessage> messages = new ArrayList(messageMap.keySet());
+        final List<AISMessage> messages = new ArrayList(messageMap.values());
 
         messageMap.clear();
 
