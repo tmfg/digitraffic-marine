@@ -46,8 +46,6 @@ public class MqttConfig {
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
         final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
 
-        messageHandler.setAsync(true);
-
         return messageHandler;
     }
 

@@ -125,11 +125,7 @@ public class WebsocketReader {
 
         if (running.get()) {
             listeners.parallelStream().forEach(listener -> {
-                final StopWatch sw = StopWatch.createStarted();
-
                 listener.receiveMessage(message);
-
-                log.info("{} took {} ms", listener.getClass().getName(), sw.getTime());
             });
         } else {
             log.warn("Not handling messages received after shutdown hook");
