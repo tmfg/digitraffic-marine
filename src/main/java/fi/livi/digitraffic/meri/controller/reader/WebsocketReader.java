@@ -124,11 +124,17 @@ public class WebsocketReader {
         lastMessageTime = LocalDateTime.now();
 
         if (running.get()) {
-            listeners.parallelStream().forEach(listener -> {
-                listener.receiveMessage(message);
-            });
+            listeners.stream().forEach(listener -> trySend(listener, message));
         } else {
             log.warn("Not handling messages received after shutdown hook");
+        }
+    }
+
+    private void trySend(final WebsocketListener listener, final String message) {
+        try {
+            listener.receiveMessage(message);
+        } catch(final Exception e) {
+            log.error("exception from listener", e);
         }
     }
 
