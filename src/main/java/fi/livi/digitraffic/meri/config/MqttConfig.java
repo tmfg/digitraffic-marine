@@ -37,7 +37,6 @@ public class MqttConfig {
         factory.getConnectionOptions().setPassword(password.toCharArray());
         factory.getConnectionOptions().setMaxInflight(10000);
         factory.getConnectionOptions().setConnectionTimeout(5);
-        factory.getConnectionOptions().setAutomaticReconnect(true);
 
         return factory;
     }
