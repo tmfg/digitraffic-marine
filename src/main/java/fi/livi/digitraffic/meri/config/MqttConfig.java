@@ -47,6 +47,8 @@ public class MqttConfig {
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
         final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
 
+        messageHandler.setAsyncEvents(true);
+
         return messageHandler;
     }
 
@@ -57,6 +59,6 @@ public class MqttConfig {
 
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
     public interface VesselGateway {
-        Future<Void> sendToMqtt(final Message data);
+        void sendToMqtt(final Message data);
     }
 }
