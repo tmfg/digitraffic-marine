@@ -1,9 +1,10 @@
 package fi.livi.digitraffic.meri.config;
 
 
+import java.util.concurrent.Future;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +57,6 @@ public class MqttConfig {
 
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
     public interface VesselGateway {
-        void sendToMqtt(final Message data);
+        Future<Void> sendToMqtt(final Message data);
     }
 }
