@@ -35,7 +35,7 @@ public class VesselMetadataReaderController {
         vesselMetadataRelayListener) {
 
         final List<WebsocketListener> listeners = Arrays.asList(
-            //vesselMetadataDatabaseListener,
+            vesselMetadataDatabaseListener,
             vesselMetadataRelayListener,
             new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.METADATA));
 

@@ -34,7 +34,7 @@ public class VesselLocationReaderController {
         final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
         final VesselLocationDatabaseListener vesselLocationDatabaseListener, final VesselLocationRelayListener vesselLocationRelayListener) {
         final List<WebsocketListener> listeners = Arrays.asList(
-//                    vesselLocationDatabaseListener,
+                    vesselLocationDatabaseListener,
                     vesselLocationRelayListener,
                     new VesselLocationLoggingListener(),
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
