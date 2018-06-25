@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
+import fi.livi.digitraffic.meri.controller.reader.VesselLocationLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketLoggingListener;
@@ -33,8 +34,9 @@ public class VesselLocationReaderController {
         final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
         final VesselLocationDatabaseListener vesselLocationDatabaseListener, final VesselLocationRelayListener vesselLocationRelayListener) {
         final List<WebsocketListener> listeners = Arrays.asList(
-                    vesselLocationDatabaseListener,
+//                    vesselLocationDatabaseListener,
                     vesselLocationRelayListener,
+                    new VesselLocationLoggingListener(),
                     new WebsocketLoggingListener(WebsocketStatistics.WebsocketType.LOCATIONS)
             );
 

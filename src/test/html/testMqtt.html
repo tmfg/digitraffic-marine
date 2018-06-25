@@ -50,8 +50,16 @@
             var content = message.payloadString;
             var topic = message.destinationName;
             var time = Date.now();
+            var json = JSON.parse(content);
+            var difference;
 
-            return time + ":" + topic + ":" + content;
+            if (typeof json.properties == "undefined") {
+                difference = time - json.timestamp;
+            } else {
+                difference = time - json.properties.timestampExternal;
+            }
+
+            return time + ":(" + difference + "):" + topic + ":" + content;
         }
 
         connect();
