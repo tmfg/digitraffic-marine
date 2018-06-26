@@ -136,7 +136,7 @@ public class WebsocketReader {
 
             listener.receiveMessage(message);
 
-            log.info("{} took {} ms", listener.getClass().getName(), sw.getTime());
+            log.info("listenerClass={} tookMs={}", listener.getClass().getName(), sw.getTime());
         } catch(final Exception e) {
             log.error("exception from listener", e);
         }
