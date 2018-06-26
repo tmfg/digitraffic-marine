@@ -12,20 +12,17 @@ import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 
-public class VesselLocationLoggingListener extends WebsocketLoggingListener {
+public class VesselLocationLoggingListener implements WebsocketListener {
     private static final Logger log = LoggerFactory.getLogger(VesselLocationLoggingListener.class);
 
     private Instant lastLogged = Instant.now();
     private Long maxDifference = null;
 
     public VesselLocationLoggingListener() {
-        super(WebsocketStatistics.WebsocketType.LOCATIONS);
     }
 
     @Override
     public void receiveMessage(final String message) {
-        super.receiveMessage(message);
-
         final AISMessage ais = MessageConverter.convertLocation(message);
         final Instant now = Instant.now();
 
@@ -39,5 +36,10 @@ public class VesselLocationLoggingListener extends WebsocketLoggingListener {
             lastLogged = now;
             maxDifference = null;
         }
+    }
+
+    @Override
+    public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
+        // do nothing
     }
 }
