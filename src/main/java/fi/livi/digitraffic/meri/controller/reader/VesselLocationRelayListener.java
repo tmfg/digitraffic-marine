@@ -28,13 +28,21 @@ public class VesselLocationRelayListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final AISMessage ais = MessageConverter.convertLocation(message);
 
-        // Send only allowed mmsis to WebSocket, ship type 30 fishing boat filtered
-        if (ais.validate() && isAllowedMmsi(ais.attributes.mmsi)) {
+        if (ais.validate()) {
+            doLogAndSend(ais);
+        }
+    }
+
+    private void doLogAndSend(final AISMessage ais) {
+        if (isAllowedMmsi(ais.attributes.mmsi)) {
             final VesselLocationFeature feature = VesselLocationConverter.convert(ais);
 
-            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS);
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, 1, 0);
             vesselSender.sendLocationMessage(feature);
+        } else {
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, 0, 1);
         }
+
     }
 
     private boolean isAllowedMmsi(final int mmsi) {

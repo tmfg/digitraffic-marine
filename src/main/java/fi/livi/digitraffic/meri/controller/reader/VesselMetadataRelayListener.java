@@ -30,11 +30,19 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
 
-        if(vm.validate() && isAllowedMmsi(vm.vesselAttributes.mmsi)) {
+        if(vm.validate()) {
+            doSendAndFilter(vm);
+        }
+    }
+
+    private void doSendAndFilter(final VesselMessage vm) {
+        if(isAllowedMmsi(vm.vesselAttributes.mmsi)) {
             final VesselMetadata vessel = new VesselMetadata(vm.vesselAttributes);
 
-            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA);
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA, 1, 0);
             vesselSender.sendMetadataMessage(vessel);
+        } else {
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA, 0, 1);
         }
     }
 

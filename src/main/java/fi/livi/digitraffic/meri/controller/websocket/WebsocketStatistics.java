@@ -59,14 +59,15 @@ public class WebsocketStatistics {
             final SentStatistics sentStatistics = sentStatisticsMap.get(websocketType);
             log.info("Sent websocket statistics for webSocketType={} messages={}", websocketType, sentStatistics != null ? sentStatistics.messages : 0);
 
-            sentStatisticsMap.put(websocketType, new SentStatistics(0));
+            sentStatisticsMap.put(websocketType, new SentStatistics(0, 0));
         }
     }
 
-    public static synchronized void sentWebsocketStatistics(final WebsocketType type) {
+    public static synchronized void sentWebsocketStatistics(final WebsocketType type, final int sent, final int filtered) {
         final SentStatistics sam = sentStatisticsMap.get(type);
 
-        final SentStatistics newSam = new SentStatistics(sam == null ? 1 : sam.messages + 1);
+        final SentStatistics newSam = new SentStatistics(
+            sam == null ? sent : sam.messages + sent, sam == null ? filtered : sam.filtered + filtered);
 
         sentStatisticsMap.put(type, newSam);
     }
@@ -89,9 +90,11 @@ public class WebsocketStatistics {
 
     private static class SentStatistics {
         final int messages;
+        final int filtered;
 
-        private SentStatistics(final int messages) {
+        private SentStatistics(final int messages, final int filtered) {
             this.messages = messages;
+            this.filtered = filtered;
         }
     }
 
