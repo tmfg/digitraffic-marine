@@ -19,6 +19,7 @@ import fi.livi.digitraffic.meri.controller.reader.ReconnectingHandler;
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
 public class WebsocketStatistics {
+    private static final Map<WebsocketType, SentStatistics> sentStatisticsMap = new ConcurrentHashMap<>();
     private static final Map<WebsocketType, ReadStatistics> readStatisticsMap = new ConcurrentHashMap<>();
 
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -35,6 +36,8 @@ public class WebsocketStatistics {
         if(websocketReadEnabled) {
             executor.scheduleAtFixedRate(WebsocketStatistics::logReadStatistics, 0, 1, TimeUnit.MINUTES);
         }
+
+        executor.scheduleAtFixedRate(WebsocketStatistics::logSentStatistics, 0, 1, TimeUnit.MINUTES);
     }
 
     public synchronized ReadStatistics getReadStatistics() {
@@ -51,6 +54,23 @@ public class WebsocketStatistics {
         }
     }
 
+    private static synchronized void logSentStatistics() {
+        for (final WebsocketType websocketType : Arrays.asList(WebsocketType.LOCATIONS, WebsocketType.METADATA)) {
+            final SentStatistics sentStatistics = sentStatisticsMap.get(websocketType);
+            log.info("Sent websocket statistics for webSocketType={} messages={}", websocketType, sentStatistics != null ? sentStatistics.messages : 0);
+
+            sentStatisticsMap.put(websocketType, new SentStatistics(sentStatistics != null ? sentStatistics.messages : 0));
+        }
+    }
+
+    public static synchronized void sentWebsocketStatistics(final WebsocketType type) {
+        final SentStatistics sam = sentStatisticsMap.get(type);
+
+        final SentStatistics newSam = new SentStatistics(sam == null ? 1 : sam.messages + 1);
+
+        sentStatisticsMap.put(type, newSam);
+    }
+
     public static synchronized void readWebsocketStatistics(final WebsocketType type) {
         final ReadStatistics rs = readStatisticsMap.get(type);
 
@@ -65,6 +85,14 @@ public class WebsocketStatistics {
         final ReadStatistics newRs = new ReadStatistics(rs == null ? 1 : rs.messages, status.name());
 
         readStatisticsMap.put(type, newRs);
+    }
+
+    private static class SentStatistics {
+        final int messages;
+
+        private SentStatistics(final int messages) {
+            this.messages = messages;
+        }
     }
 
     public static class ReadStatistics {

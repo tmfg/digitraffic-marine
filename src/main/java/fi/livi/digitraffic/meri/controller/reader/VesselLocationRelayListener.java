@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.VesselSender;
+import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
@@ -31,6 +32,7 @@ public class VesselLocationRelayListener implements WebsocketListener {
         if (ais.validate() && isAllowedMmsi(ais.attributes.mmsi)) {
             final VesselLocationFeature feature = VesselLocationConverter.convert(ais);
 
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS);
             vesselSender.sendLocationMessage(feature);
         }
     }

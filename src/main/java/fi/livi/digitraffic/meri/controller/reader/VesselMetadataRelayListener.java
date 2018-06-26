@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.VesselSender;
+import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
@@ -32,6 +33,7 @@ public class VesselMetadataRelayListener implements WebsocketListener {
         if(vm.validate() && isAllowedMmsi(vm.vesselAttributes.mmsi)) {
             final VesselMetadata vessel = new VesselMetadata(vm.vesselAttributes);
 
+            WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA);
             vesselSender.sendMetadataMessage(vessel);
         }
     }
