@@ -59,7 +59,7 @@ public class WebsocketStatistics {
             final SentStatistics sentStatistics = sentStatisticsMap.get(websocketType);
             log.info("Sent websocket statistics for webSocketType={} messages={}", websocketType, sentStatistics != null ? sentStatistics.messages : 0);
 
-            sentStatisticsMap.put(websocketType, new SentStatistics(sentStatistics != null ? sentStatistics.messages : 0));
+            sentStatisticsMap.put(websocketType, new SentStatistics(0));
         }
     }
 
