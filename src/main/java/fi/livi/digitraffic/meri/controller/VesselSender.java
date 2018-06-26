@@ -69,7 +69,7 @@ public class VesselSender {
         final MessageBuilder<String> payloadBuilder = MessageBuilder.withPayload(payLoad);
         final Message<String> message = payloadBuilder
                 .setHeader(MqttHeaders.TOPIC, topic)
-                .setHeader(MqttHeaders.QOS, 0L)
+                .setHeader(MqttHeaders.QOS, (Integer)0)
                 .build();
 
         vesselGateway.sendToMqtt(message);
