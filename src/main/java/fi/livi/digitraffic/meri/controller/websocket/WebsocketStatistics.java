@@ -35,9 +35,8 @@ public class WebsocketStatistics {
     public WebsocketStatistics(@Value("${ais.websocketRead.enabled}") final boolean websocketReadEnabled) {
         if(websocketReadEnabled) {
             executor.scheduleAtFixedRate(WebsocketStatistics::logReadStatistics, 0, 1, TimeUnit.MINUTES);
+            executor.scheduleAtFixedRate(WebsocketStatistics::logSentStatistics, 0, 1, TimeUnit.MINUTES);
         }
-
-        executor.scheduleAtFixedRate(WebsocketStatistics::logSentStatistics, 0, 1, TimeUnit.MINUTES);
     }
 
     public synchronized ReadStatistics getReadStatistics() {
