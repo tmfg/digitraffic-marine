@@ -65,7 +65,7 @@ public class VesselSender {
         }
     }
 
-    private void sendMessage(final String payLoad, final String topic) {
+    private synchronized void sendMessage(final String payLoad, final String topic) {
         final MessageBuilder<String> payloadBuilder = MessageBuilder.withPayload(payLoad);
         final Message<String> message = payloadBuilder
                 .setHeader(MqttHeaders.TOPIC, topic)
