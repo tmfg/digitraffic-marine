@@ -13,6 +13,7 @@ import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.annotation.MessagingGateway;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
@@ -22,6 +23,7 @@ import org.springframework.messaging.MessageHandler;
 
 @ConditionalOnProperty("ais.mqtt.enabled")
 @Configuration
+@EnableIntegration
 @IntegrationComponentScan
 public class MqttConfig {
     private final String clientId = "marine_updater_" + MqttClient.generateClientId();
@@ -43,7 +45,7 @@ public class MqttConfig {
     }
 
     @Bean
-    @ServiceActivator(inputChannel = "mqttOutboundChannel")
+    @ServiceActivator(inputChannel = "mqttOutboundChannel", async = "true")
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
         final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
 
