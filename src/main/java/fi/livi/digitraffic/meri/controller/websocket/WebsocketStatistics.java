@@ -57,7 +57,8 @@ public class WebsocketStatistics {
     private static synchronized void logSentStatistics() {
         for (final WebsocketType websocketType : Arrays.asList(WebsocketType.LOCATIONS, WebsocketType.METADATA)) {
             final SentStatistics sentStatistics = sentStatisticsMap.get(websocketType);
-            log.info("Sent websocket statistics for webSocketType={} messages={}", websocketType, sentStatistics != null ? sentStatistics.messages : 0);
+            log.info("Sent websocket statistics for webSocketType={} messages={} filtered={}", websocketType, sentStatistics != null ?
+                sentStatistics.messages : 0, sentStatistics != null ? sentStatistics.filtered : 0);
 
             sentStatisticsMap.put(websocketType, new SentStatistics(0, 0));
         }
