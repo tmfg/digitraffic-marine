@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.util.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +12,17 @@ import fi.livi.digitraffic.meri.util.dao.LockingDao;
 public class LockingService {
     private final LockingDao lockingDao;
 
+    private final String instanceId;
+
     @Autowired
     public LockingService(final LockingDao lockingDao) {
         this.lockingDao = lockingDao;
+        this.instanceId = UUID.randomUUID().toString();
+    }
+
+    @Transactional
+    public boolean acquireLockForAis() {
+        return acquireLock("AIS", instanceId, 2);
     }
 
     @Transactional

@@ -25,15 +25,12 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     private final VesselLocationRepository vesselLocationRepository;
     private final LockingService lockingService;
 
-    private final String instanceId;
-
     private final Map<Integer, AISMessage> messageMap = new HashMap<>();
 
     public VesselLocationDatabaseListener(final VesselLocationRepository vesselLocationRepository,
                                           final LockingService lockingService) {
         this.vesselLocationRepository = vesselLocationRepository;
         this.lockingService = lockingService;
-        this.instanceId = UUID.randomUUID().toString();
     }
 
     @Override
@@ -66,7 +63,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     }
 
     private boolean getLock() {
-        return lockingService.acquireLock("AIS-LOCATIONS", instanceId, 2);
+        return lockingService.acquireLockForAis();
     }
 
     @Override

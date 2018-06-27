@@ -11,6 +11,7 @@ import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
+import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -19,10 +20,13 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     private final VesselMetadataService vesselMetadataService;
     private final VesselSender vesselSender;
 
-    public VesselMetadataRelayListener(final VesselMetadataService vesselMetadataService,
-                                       final VesselSender vesselSender) {
+    private final LockingService lockingService;
+
+    public VesselMetadataRelayListener(final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
+        final LockingService lockingService) {
         this.vesselMetadataService = vesselMetadataService;
         this.vesselSender = vesselSender;
+        this.lockingService = lockingService;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
 
-        if(vm.validate()) {
+        if(vm.validate() && lockingService.acquireLockForAis()) {
             doLogAndSend(vm);
         }
     }

@@ -28,16 +28,12 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     private final VesselMetadataRepository vesselMetadataRepository;
     private final LockingService lockingService;
 
-    private final String instanceId;
-
     private final Map<Integer, VesselMessage> messageMap = new HashMap<>();
 
     public VesselMetadataDatabaseListener(final VesselMetadataRepository vesselMetadataRepository,
                                           final LockingService lockingService) {
         this.vesselMetadataRepository = vesselMetadataRepository;
         this.lockingService = lockingService;
-
-        this.instanceId = UUID.randomUUID().toString();
     }
 
     @Override
@@ -71,7 +67,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     }
 
     private boolean getLock() {
-        return lockingService.acquireLock("AIS-METADATA", instanceId, 2);
+        return lockingService.acquireLockForAis();
     }
 
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
