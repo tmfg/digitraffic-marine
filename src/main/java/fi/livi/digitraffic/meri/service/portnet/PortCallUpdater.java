@@ -74,18 +74,16 @@ public class PortCallUpdater {
         final PortCallList list = portCallClient.getList(from, to);
 
         if(isListOk(list)) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
-
             final List<PortCall> added = new ArrayList<>();
             final List<PortCall> updated = new ArrayList<>();
-            final StopWatch watch = new StopWatch();
 
-            watch.start();
+            final StopWatch watch = StopWatch.createStarted();
             list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
             portCallRepository.saveAll(added);
-            watch.stop();
 
-            log.info("portCallAddedCount={} port call, portCallUpdatedCount={}, tookMs={} .", added.size(), updated.size(), watch.getTime());
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
+
+            log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
         }
     }
 
@@ -94,13 +92,13 @@ public class PortCallUpdater {
 
         switch(status) {
         case "OK":
-            log.info("notificationsFetchedCount={} notifications", CollectionUtils.size(list.getPortCallNotification()));
+            log.info("notificationsFetchedCount={}", CollectionUtils.size(list.getPortCallNotification()));
             break;
         case "NOT_FOUND":
             log.info("No port calls from server");
             break;
         default:
-            log.error("error with status={}", status);
+            log.error("error status={}", status);
             return false;
         }
 
@@ -119,26 +117,16 @@ public class PortCallUpdater {
         final PortCall old = portCallRepository.findById(pcn.getPortCallId().longValue()).orElse(null);
 
         if(old == null) {
-            added.add(addNew(pcn));
+            final PortCall pc = new PortCall();
+
+            updateData(pc, pcn);
+
+            added.add(pc);
         } else {
-            updated.add(update(old, pcn));
+            updateData(old, pcn);
+
+            updated.add(old);
         }
-    }
-
-    private static PortCall update(final PortCall pc, final PortCallNotification pcn) {
-        // update timestamp
-
-        updateData(pc, pcn);
-
-        return pc;
-    }
-
-    private static PortCall addNew(final PortCallNotification pcn) {
-        final PortCall pc = new PortCall();
-
-        updateData(pc, pcn);
-
-        return pc;
     }
 
     private static void updateData(final PortCall pc, final PortCallNotification pcn) {
