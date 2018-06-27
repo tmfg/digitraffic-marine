@@ -49,6 +49,18 @@ public class LockingDao {
             .addValue("expirationSeconds", expirationSeconds);
 
         jdbcTemplate.update(MERGE, params);
+
+        return hasLock(params);
+    }
+
+    public boolean hasLock(final String lockName, final String callerInstanceId) {
+        final MapSqlParameterSource params = new MapSqlParameterSource("lockName", lockName)
+            .addValue("instanceId", callerInstanceId);
+
+        return hasLock(params);
+    }
+
+    private boolean hasLock(final MapSqlParameterSource params) {
         // If lock was acquired successfull then query should return one row
         return jdbcTemplate.queryForList(SELECT, params, String.class).size() == 1;
     }

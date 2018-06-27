@@ -33,7 +33,7 @@ public class VesselLocationRelayListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final AISMessage ais = MessageConverter.convertLocation(message);
 
-        if (ais.validate() && lockingService.acquireLockForAis()) {
+        if (ais.validate() && lockingService.hasLockForAis()) {
             doLogAndSend(ais);
         }
     }

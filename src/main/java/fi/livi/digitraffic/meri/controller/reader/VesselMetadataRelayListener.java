@@ -34,7 +34,7 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
 
-        if(vm.validate() && lockingService.acquireLockForAis()) {
+        if(vm.validate() && lockingService.hasLockForAis()) {
             doLogAndSend(vm);
         }
     }

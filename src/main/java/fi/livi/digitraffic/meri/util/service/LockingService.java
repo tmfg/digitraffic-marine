@@ -14,15 +14,21 @@ public class LockingService {
 
     private final String instanceId;
 
+    private static final String AIS_LOCK = "AIS";
+
     @Autowired
     public LockingService(final LockingDao lockingDao) {
         this.lockingDao = lockingDao;
         this.instanceId = UUID.randomUUID().toString();
     }
 
+    public boolean hasLockForAis() {
+        return lockingDao.hasLock(AIS_LOCK, instanceId);
+    }
+
     @Transactional
     public boolean acquireLockForAis() {
-        return acquireLock("AIS", instanceId, 2);
+        return acquireLock(AIS_LOCK, instanceId, 2);
     }
 
     @Transactional
