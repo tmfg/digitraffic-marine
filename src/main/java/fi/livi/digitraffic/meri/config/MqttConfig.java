@@ -1,8 +1,6 @@
 package fi.livi.digitraffic.meri.config;
 
 
-import java.util.concurrent.Future;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +15,12 @@ import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
+import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 
 @ConditionalOnProperty("ais.mqtt.enabled")
 @Configuration
@@ -60,6 +61,7 @@ public class MqttConfig {
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel",
         defaultRequestTimeout = "2000", defaultReplyTimeout = "2000")
     public interface VesselGateway {
-        void sendToMqtt(final Message data);
+        // Paho does not support concurrency, all calls to this must be synchronized!
+        void sendToMqtt(@Header(MqttHeaders.TOPIC) final String topic, @Payload final String data);
     }
 }
