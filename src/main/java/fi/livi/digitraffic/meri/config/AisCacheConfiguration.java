@@ -16,8 +16,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableCaching
 public class AisCacheConfiguration implements JCacheManagerCustomizer {
+    public static final String CACHE_ALLOWED_MMSI = "allowedMmsis";
 
-    public static final String ALLOWED_MMSI_CACHE = "allowedMmsis";
     private final long allowedMmsisSeconds;
 
     @Autowired
@@ -26,12 +26,16 @@ public class AisCacheConfiguration implements JCacheManagerCustomizer {
     }
 
     @Override
-    public void customize(CacheManager cacheManager) {
-        if (cacheManager.getCache(ALLOWED_MMSI_CACHE) == null) {
-            cacheManager.createCache(ALLOWED_MMSI_CACHE, new MutableConfiguration<>()
-                    .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(new Duration(TimeUnit.MILLISECONDS, allowedMmsisSeconds)))
-                    .setStoreByValue(false)
-                    .setStatisticsEnabled(true));
+    public void customize(final CacheManager cacheManager) {
+        createCacheIfNeeded(cacheManager, CACHE_ALLOWED_MMSI, allowedMmsisSeconds);
+    }
+
+    private void createCacheIfNeeded(final CacheManager cacheManager, final String cacheName, final long duration) {
+        if (cacheManager.getCache(cacheName) == null) {
+            cacheManager.createCache(cacheName, new MutableConfiguration<>()
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(new Duration(TimeUnit.MILLISECONDS, duration)))
+                .setStoreByValue(false)
+                .setStatisticsEnabled(true));
         }
     }
 }
