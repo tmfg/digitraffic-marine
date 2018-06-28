@@ -1,11 +1,10 @@
 package fi.livi.digitraffic.meri.util.service;
 
-import java.time.ZonedDateTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +30,8 @@ public class LockingService {
 
     private static final String AIS_LOCK = "AIS";
 
+    private static final Logger log = LoggerFactory.getLogger(LockingService.class);
+
     public LockingService(final LockingDao lockingDao) {
         this.lockingDao = lockingDao;
         this.instanceId = UUID.randomUUID().toString();
@@ -39,7 +40,12 @@ public class LockingService {
     }
 
     public boolean hasLockForAis() {
-        return hasAisLock.get();
+        final boolean fromAtomic = hasAisLock.get();
+        final boolean fromDb = lockingDao.hasLock(AIS_LOCK, instanceId);
+
+        log.info("lock fromAtomic {} fromDb {}", fromAtomic, fromDb);
+
+        return fromDb;
     }
 
     @Transactional

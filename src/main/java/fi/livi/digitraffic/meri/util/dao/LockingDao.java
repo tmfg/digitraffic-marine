@@ -17,7 +17,8 @@ public class LockingDao {
      * If instance doesn't have the lock but lock exists
      * then checks if previous lock has expired and updates the lock-row.
      */
-    private static final String MERGE = "insert into locking_table(lock_name, instance_id, lock_locked, lock_expires)\n" +
+    private static final String MERGE =
+        "insert into locking_table(lock_name, instance_id, lock_locked, lock_expires)\n" +
         "VALUES (:lockName, :instanceId, current_timestamp, current_timestamp + :expirationSeconds::integer * interval '1 second')\n" +
         "ON CONFLICT (lock_name)\n" +
         "DO UPDATE SET\n" +
@@ -61,7 +62,7 @@ public class LockingDao {
     }
 
     private boolean hasLock(final MapSqlParameterSource params) {
-        // If lock was acquired successfull then query should return one row
+        // If lock was acquired successfully then query should return one row
         return jdbcTemplate.queryForList(SELECT, params, String.class).size() == 1;
     }
 
