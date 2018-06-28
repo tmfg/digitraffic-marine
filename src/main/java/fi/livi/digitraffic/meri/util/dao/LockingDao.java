@@ -48,9 +48,7 @@ public class LockingDao {
             .addValue("instanceId", callerInstanceId)
             .addValue("expirationSeconds", expirationSeconds);
 
-        jdbcTemplate.update(MERGE, params);
-
-        return hasLock(params);
+        return jdbcTemplate.update(MERGE, params) > 0;
     }
 
     public boolean hasLock(final String lockName, final String callerInstanceId) {
