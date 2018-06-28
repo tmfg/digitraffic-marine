@@ -39,13 +39,13 @@ public class LockingService {
         hasAisLock.set(false);
     }
 
-    public synchronized boolean hasLockForAis() {
+    public boolean hasLockForAis() {
         return hasAisLock.get();
     }
 
     @Transactional
     @Scheduled(fixedRate = 1000)
-    private synchronized boolean acquireLockForAis() {
+    protected synchronized boolean acquireLockForAis() {
         hasAisLock.set(acquireLock(AIS_LOCK, instanceId, 2));
 
         return hasAisLock.get();
