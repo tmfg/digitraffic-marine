@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.service.ais;
 
-import static fi.livi.digitraffic.meri.config.AisCacheConfiguration.ALLOWED_MMSI_CACHE;
+import static fi.livi.digitraffic.meri.config.AisCacheConfiguration.CACHE_ALLOWED_MMSI;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class VesselMetadataService {
         return qb.getResults();
     }
 
-    @Cacheable(ALLOWED_MMSI_CACHE)
+    @Cacheable(CACHE_ALLOWED_MMSI)
     public Collection<Integer> findAllowedMmsis() {
         final QueryBuilder<Integer, VesselMetadata> qb = new QueryBuilder<>(entityManager, Integer.class, VesselMetadata.class);
 
