@@ -4,20 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.util.service.LockingService;
 
@@ -49,7 +45,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     private void persistQueue() {
         final List<VesselMessage> messages = removeAllMessages();
 
-        if(getLock()) {
+        if(hasLock()) {
             final List<VesselMetadata> vessels = messages.stream()
                 .map(v -> new VesselMetadata(v.vesselAttributes))
                 .collect(Collectors.toList());
@@ -66,8 +62,8 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
         return messages;
     }
 
-    private boolean getLock() {
-        return lockingService.acquireLockForAis();
+    private boolean hasLock() {
+        return lockingService.hasLockForAis();
     }
 
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {

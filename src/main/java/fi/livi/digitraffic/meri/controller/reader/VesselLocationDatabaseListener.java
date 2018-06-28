@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -47,7 +46,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     private void persistQueue() {
         final List<AISMessage> messages = removeAllMessages();
 
-        if(getLock()) {
+        if(hasLock()) {
             final List<VesselLocation> locations = messages.stream().map(VesselLocation::new).collect(Collectors.toList());
 
             vesselLocationRepository.saveAll(locations);
@@ -62,8 +61,8 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
         return messages;
     }
 
-    private boolean getLock() {
-        return lockingService.acquireLockForAis();
+    private boolean hasLock() {
+        return lockingService.hasLockForAis();
     }
 
     @Override
