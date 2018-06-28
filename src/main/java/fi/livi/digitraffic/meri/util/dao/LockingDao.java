@@ -47,8 +47,8 @@ public class LockingDao {
         final MapSqlParameterSource params = new MapSqlParameterSource("lockName", lockName)
             .addValue("instanceId", callerInstanceId)
             .addValue("expirationSeconds", expirationSeconds);
-
-        return jdbcTemplate.update(MERGE, params) > 0;
+        
+        return hasLock(params);
     }
 
     public boolean hasLock(final String lockName, final String callerInstanceId) {

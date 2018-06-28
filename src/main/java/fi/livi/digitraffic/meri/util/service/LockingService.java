@@ -31,7 +31,6 @@ public class LockingService {
 
     private static final String AIS_LOCK = "AIS";
 
-    @Autowired
     public LockingService(final LockingDao lockingDao) {
         this.lockingDao = lockingDao;
         this.instanceId = UUID.randomUUID().toString();
@@ -45,10 +44,8 @@ public class LockingService {
 
     @Transactional
     @Scheduled(fixedRate = 1000)
-    protected synchronized boolean acquireLockForAis() {
+    protected void acquireLockForAis() {
         hasAisLock.set(acquireLock(AIS_LOCK, instanceId, 2));
-
-        return hasAisLock.get();
     }
 
     private boolean acquireLock(final String lockName, final String callerInstanceId, final int expirationSeconds) {
