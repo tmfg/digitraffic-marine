@@ -1,10 +1,13 @@
 package fi.livi.digitraffic.meri.util.service;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,31 +30,35 @@ public class LockingService {
     private final String instanceId;
 
     private final AtomicBoolean hasAisLock = new AtomicBoolean(false);
+    private final AtomicReference<ZonedDateTime> lastAcquirement = new AtomicReference<>();
 
     private static final String AIS_LOCK = "AIS";
 
-    private static final Logger log = LoggerFactory.getLogger(LockingService.class);
-
+    @Autowired
     public LockingService(final LockingDao lockingDao) {
         this.lockingDao = lockingDao;
         this.instanceId = UUID.randomUUID().toString();
 
-        hasAisLock.set(false);
+        setAisLockValue(false);
     }
 
-    public boolean hasLockForAis() {
-        final boolean fromAtomic = hasAisLock.get();
-        final boolean fromDb = lockingDao.hasLock(AIS_LOCK, instanceId);
-
-        log.info("lock fromAtomic {} fromDb {}", fromAtomic, fromDb);
-
-        return fromDb;
+    public synchronized boolean hasLockForAis() {
+        if(lastAcquirement.get().isBefore(ZonedDateTime.now().minusSeconds(1))) {
+            setAisLockValue(lockingDao.hasLock(AIS_LOCK, instanceId));
+        }
+        return hasAisLock.get();
     }
 
     @Transactional
-    @Scheduled(fixedRate = 1000)
-    protected void acquireLockForAis() {
-        hasAisLock.set(acquireLock(AIS_LOCK, instanceId, 2));
+    public synchronized boolean acquireLockForAis() {
+        setAisLockValue(acquireLock(AIS_LOCK, instanceId, 2));
+
+        return hasAisLock.get();
+    }
+
+    private void setAisLockValue(final boolean value) {
+        hasAisLock.set(value);
+        lastAcquirement.set(ZonedDateTime.now());
     }
 
     private boolean acquireLock(final String lockName, final String callerInstanceId, final int expirationSeconds) {

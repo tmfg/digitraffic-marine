@@ -63,7 +63,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     }
 
     private boolean hasLock() {
-        return lockingService.hasLockForAis();
+        return lockingService.acquireLockForAis();
     }
 
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
