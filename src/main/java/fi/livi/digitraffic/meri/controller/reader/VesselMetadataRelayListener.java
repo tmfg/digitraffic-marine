@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.meri.controller.AisLocker;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.VesselSender;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
@@ -20,13 +21,13 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     private final VesselMetadataService vesselMetadataService;
     private final VesselSender vesselSender;
 
-    private final LockingService lockingService;
+    private final AisLocker aisLocker;
 
     public VesselMetadataRelayListener(final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
-        final LockingService lockingService) {
+        final LockingService lockingService, final AisLocker aisLocker) {
         this.vesselMetadataService = vesselMetadataService;
         this.vesselSender = vesselSender;
-        this.lockingService = lockingService;
+        this.aisLocker = aisLocker;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
 
-        if(vm.validate() && lockingService.hasLockForAis()) {
+        if(vm.validate() && aisLocker.hasLockForAis()) {
             doLogAndSend(vm);
         }
     }

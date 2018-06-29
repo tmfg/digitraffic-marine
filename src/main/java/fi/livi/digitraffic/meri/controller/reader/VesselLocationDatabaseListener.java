@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import fi.livi.digitraffic.meri.controller.AisLocker;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
@@ -22,14 +23,14 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 @ConditionalOnProperty("ais.websocketRead.enabled")
 public class VesselLocationDatabaseListener implements WebsocketListener {
     private final VesselLocationRepository vesselLocationRepository;
-    private final LockingService lockingService;
+    private final AisLocker aisLocker;
 
     private final Map<Integer, AISMessage> messageMap = new HashMap<>();
 
-    public VesselLocationDatabaseListener(final VesselLocationRepository vesselLocationRepository,
-                                          final LockingService lockingService) {
+    public VesselLocationDatabaseListener(final VesselLocationRepository vesselLocationRepository, final LockingService lockingService,
+        final AisLocker aisLocker) {
         this.vesselLocationRepository = vesselLocationRepository;
-        this.lockingService = lockingService;
+        this.aisLocker = aisLocker;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
     private void persistQueue() {
         final List<AISMessage> messages = removeAllMessages();
 
-        if(hasLock()) {
+        if(aisLocker.hasLockForAis()) {
             final List<VesselLocation> locations = messages.stream().map(VesselLocation::new).collect(Collectors.toList());
 
             vesselLocationRepository.saveAll(locations);
@@ -59,10 +60,6 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
         messageMap.clear();
 
         return messages;
-    }
-
-    private boolean hasLock() {
-        return lockingService.hasLockForAis();
     }
 
     @Override
