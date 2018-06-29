@@ -57,6 +57,10 @@ public class LockingService {
     }
 
     private boolean acquireLock(final String lockName, final String callerInstanceId, final int expirationSeconds) {
-        return lockingDao.acquireLock(lockName, callerInstanceId, expirationSeconds);
+        final boolean acquired = lockingDao.acquireLock(lockName, callerInstanceId, expirationSeconds);
+
+        log.info("acquired " + acquired);
+
+        return acquired;
     }
 }
