@@ -51,7 +51,9 @@ public class LockingDao {
             .addValue("instanceId", callerInstanceId)
             .addValue("expirationSeconds", expirationSeconds);
 
-        return jdbcTemplate.update(MERGE, params) > 0;
+        jdbcTemplate.update(MERGE, params);
+
+        return hasLock(params);
     }
 
     @Transactional

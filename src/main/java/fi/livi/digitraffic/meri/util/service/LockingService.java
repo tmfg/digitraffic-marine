@@ -29,7 +29,7 @@ public class LockingService {
 
     private final String instanceId;
 
-    private final AtomicBoolean hasAisLock = new AtomicBoolean(false);
+    private static final AtomicBoolean hasAisLock = new AtomicBoolean(false);
 
     private static final String AIS_LOCK = "AIS";
 
