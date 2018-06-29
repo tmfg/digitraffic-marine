@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class LockingDao {
@@ -19,13 +20,13 @@ public class LockingDao {
      */
     private static final String MERGE =
         "insert into locking_table(lock_name, instance_id, lock_locked, lock_expires)\n" +
-        "VALUES (:lockName, :instanceId, current_timestamp, current_timestamp + :expirationSeconds::integer * interval '1 second')\n" +
+        "VALUES (:lockName, :instanceId, clock_timestamp(), clock_timestamp() + :expirationSeconds::integer * interval '1 second')\n" +
         "ON CONFLICT (lock_name)\n" +
         "DO UPDATE SET\n" +
         "   instance_id = :instanceId,\n" +
-        "   lock_locked = current_timestamp,\n" +
-        "   lock_expires = current_timestamp + :expirationSeconds::integer * interval '1 second'\n" +
-        "where locking_table.instance_id = :instanceId OR locking_table.lock_expires < current_timestamp";
+        "   lock_locked = clock_timestamp(),\n" +
+        "   lock_expires = clock_timestamp() + :expirationSeconds::integer * interval '1 second'\n" +
+        "where locking_table.instance_id = :instanceId OR locking_table.lock_expires < clock_timestamp()";
 
     private static final String RELEASE =
             "DELETE FROM LOCKING_TABLE LT\n" +
@@ -37,13 +38,14 @@ public class LockingDao {
             "FROM LOCKING_TABLE LT\n" +
             "WHERE LT.LOCK_NAME = :lockName\n" +
             "  AND LT.INSTANCE_ID = :instanceId\n" +
-            "  AND LT.LOCK_EXPIRES > current_timestamp";
+            "  AND LT.LOCK_EXPIRES > clock_timestamp()";
 
     @Autowired
     public LockingDao(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Transactional
     public boolean acquireLock(final String lockName, final String callerInstanceId, final int expirationSeconds) {
         final MapSqlParameterSource params = new MapSqlParameterSource("lockName", lockName)
             .addValue("instanceId", callerInstanceId)
@@ -54,6 +56,7 @@ public class LockingDao {
         return hasLock(params);
     }
 
+    @Transactional
     public boolean hasLock(final String lockName, final String callerInstanceId) {
         final MapSqlParameterSource params = new MapSqlParameterSource("lockName", lockName)
             .addValue("instanceId", callerInstanceId);
