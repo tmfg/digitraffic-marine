@@ -11,7 +11,8 @@
         function connect() {
             console.log('trying to connect...');
 
-            client = new Paho.MQTT.Client("marine-test-mqtt-lb-745c4f4aaa8fe5f5.elb.eu-west-1.amazonaws.com", 9001, "test-html-client");
+            client = new Paho.MQTT.Client("marine-test-mqtt-lb-745c4f4aaa8fe5f5.elb.eu-west-1.amazonaws.com", 9001, '');
+            // empty client_id, server will generate one
 
             client.onConnectionLost = function (response) {
                 console.info('Collection lost:' + response.errorMessage);
