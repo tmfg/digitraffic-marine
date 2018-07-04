@@ -70,7 +70,7 @@ public class PortCallController {
             from = ZonedDateTime.now().minusDays(1);
         }
 
-        return portCallService.findPortCalls(date, from, null, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        return portCallService.findPortCalls(date, from, null, null, vesselName, mmsi, imo, nationality, vesselTypeCode);
     }
 
     @ApiOperation("Find port calls")
@@ -105,6 +105,40 @@ public class PortCallController {
             @ApiParam("Return port calls for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
-        return portCallService.findPortCalls(date, from, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        return portCallService.findPortCalls(date, from, null, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
+    }
+
+    @ApiOperation("Find port calls")
+    @GetMapping(path = "/from/{from}/to/{to}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
+                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ResponseBody
+    public PortCallsJson listAllPortCallsFromTo(
+        @ApiParam(value = "Return port calls received after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.",
+                  required = true)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        @PathVariable("from") final ZonedDateTime from,
+
+        @ApiParam(value = "Return port calls received before given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.",
+                  required = true)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        @PathVariable("to") final ZonedDateTime to,
+
+        @ApiParam("Return port calls for given vessel name")
+        @RequestParam(value = "vesselName", required = false) final String vesselName,
+
+        @ApiParam("Return port calls for given mmsi")
+        @RequestParam(value = "mmsi", required = false) final Integer mmsi,
+
+        @ApiParam("Return port calls for given IMO/LLOYDS")
+        @RequestParam(value = "imo", required = false) final Integer imo,
+
+        @ApiParam("Return port calls for vessels with given nationality")
+        @RequestParam(value = "nationality", required = false) final List<String> nationality,
+
+        @ApiParam("Return port calls for given vessel type code")
+        @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
+                                         ) {
+        return portCallService.findPortCalls(null, from, to, null, vesselName, mmsi, imo, nationality, vesselTypeCode);
     }
 }
