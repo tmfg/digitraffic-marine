@@ -16,7 +16,7 @@ public class SsnLocationClient {
     private final RestTemplate restTemplate;
     private final SsnLocationReader ssnLocationReader;
 
-    public SsnLocationClient(@Value("${metadata.csv.baseUrl}") final String baseUrl, final RestTemplateBuilder restTemplateBuilder) {
+    public SsnLocationClient(@Value("${metadata.csv.baseUrl:}") final String baseUrl, final RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.rootUri(baseUrl).build();
         this.ssnLocationReader = new SsnLocationReader();
     }

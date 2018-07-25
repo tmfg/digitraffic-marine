@@ -15,7 +15,7 @@ public class BerthClient {
     private final RestTemplate restTemplate;
     private final BerthReader berthReader;
 
-    public BerthClient(@Value("${metadata.csv.baseUrl}") final String baseUrl, final RestTemplateBuilder restTemplateBuilder) {
+    public BerthClient(@Value("${metadata.csv.baseUrl:}") final String baseUrl, final RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.rootUri(baseUrl).build();
         this.berthReader = new BerthReader();
     }

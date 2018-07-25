@@ -30,7 +30,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
     private final ObjectFactory objectFactory = new ObjectFactory();
 
     @Autowired
-    public WinterNavigationClient(@Value("${winter.navigation.url}") final String winterNavigationUrl,
+    public WinterNavigationClient(@Value("${winter.navigation.url:}") final String winterNavigationUrl,
                                   final Jaxb2Marshaller marshaller) {
         setDefaultUri(winterNavigationUrl);
         setMarshaller(marshaller);
