@@ -50,8 +50,8 @@ public class PortCallUpdater {
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallClient portCallClient,
-                           @Value("${portCallUpdateJob.maxTimeFrameToFetch}") final int maxTimeFrameToFetch,
-                           @Value("${portCallUpdateJob.overlapTimeFrame}") final int overlapTimeFrame) {
+                           @Value("${portCallUpdateJob.maxTimeFrameToFetch:0}") final int maxTimeFrameToFetch,
+                           @Value("${portCallUpdateJob.overlapTimeFrame:0}") final int overlapTimeFrame) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallClient = portCallClient;
