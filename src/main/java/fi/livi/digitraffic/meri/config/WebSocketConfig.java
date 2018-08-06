@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.config;
 
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_WEBSOCKETS_PART_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_WEBSOCKETS_PART_PATH;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

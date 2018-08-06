@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.controller.portnet;
 
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_PORT_CALLS_PATH;
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_PORT_CALLS_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 

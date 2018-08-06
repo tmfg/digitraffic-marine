@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.controller;
 
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_WINTER_NAVIGATION_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_WINTER_NAVIGATION_PATH;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

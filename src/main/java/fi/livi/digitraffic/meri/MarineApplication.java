@@ -10,9 +10,9 @@ import fi.livi.digitraffic.meri.annotation.CoverageIgnore;
 @SpringBootApplication
 @EnableScheduling
 @EnableTransactionManagement
-public class AisApplication {
+public class MarineApplication {
     @CoverageIgnore
     public static void main(final String[] args) {
-        SpringApplication.run(AisApplication.class, args);
+        SpringApplication.run(MarineApplication.class, args);
     }
 }

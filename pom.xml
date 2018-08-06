@@ -4,17 +4,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fi.fta.digitraffic</groupId>
-    <artifactId>AIS</artifactId>
+    <artifactId>marine</artifactId>
     <version>1.27.0</version>
     <packaging>jar</packaging>
 
-    <name>dt-ais</name>
-    <description>Digitraffic AIS</description>
+    <name>dt-marine</name>
+    <description>Digitraffic Marine</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.3.RELEASE</version>
+        <version>2.0.4.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -380,36 +380,14 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>fi.livi.digitraffic.meri.AisApplication</mainClass>
+                            <mainClass>fi.livi.digitraffic.meri.MarineApplication</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
                             <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <AisApplication-Version>${project.version}</AisApplication-Version>
-                            <AisApplication-Build>${buildNumber}</AisApplication-Build>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>fi.livi.digitraffic.meri.AisApplication</mainClass>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <AisApplication-Version>${project.version}</AisApplication-Version>
-                            <AisApplication-Build>${buildNumber}</AisApplication-Build>
+                            <MarineApplication-Version>${project.version}</MarineApplication-Version>
+                            <MarineApplication-Build>${buildNumber}</MarineApplication-Build>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -474,27 +452,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Enable to generate pojos from JSON schema
-            <plugin>
-                <groupId>org.jsonschema2pojo</groupId>
-                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-                <version>0.4.29</version>
-                <configuration>
-                    <sourceDirectory>${basedir}/src/main/resources/schema/</sourceDirectory>
-                    <targetPackage>fi.livi.digitraffic.meri.json</targetPackage>
-                    <outputDirectory>${project.build.directory}/generated-sources/json</outputDirectory>
-                    <useCommonsLang3>true</useCommonsLang3>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
         </plugins>
     </build>
 </project>

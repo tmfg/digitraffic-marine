@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableCaching
-public class AisCacheConfiguration implements JCacheManagerCustomizer {
+public class MarineCacheConfiguration implements JCacheManagerCustomizer {
     public static final String CACHE_ALLOWED_MMSI = "allowedMmsis";
 
     private final long allowedMmsisSeconds;
 
     @Autowired
-    public AisCacheConfiguration(@Value("${cache.allowedMmsis}") final long allowedMmsisSeconds) {
+    public MarineCacheConfiguration(@Value("${cache.allowedMmsis}") final long allowedMmsisSeconds) {
         this.allowedMmsisSeconds = allowedMmsisSeconds;
     }
 

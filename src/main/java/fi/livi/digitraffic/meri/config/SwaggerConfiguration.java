@@ -1,8 +1,8 @@
 package fi.livi.digitraffic.meri.config;
 
 import static com.google.common.base.Predicates.or;
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_BETA_BASE_PATH;
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_BETA_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.service.ais;
 
-import static fi.livi.digitraffic.meri.config.AisCacheConfiguration.CACHE_ALLOWED_MMSI;
+import static fi.livi.digitraffic.meri.config.MarineCacheConfiguration.CACHE_ALLOWED_MMSI;
 
 import java.util.Collection;
 import java.util.Collections;
