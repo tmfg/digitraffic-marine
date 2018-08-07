@@ -15,6 +15,8 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ import fi.livi.digitraffic.meri.portnet.xsd.VesselDetails;
 import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
+@ConditionalOnNotWebApplication
 public class PortCallUpdater {
     private final PortCallRepository portCallRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
