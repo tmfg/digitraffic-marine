@@ -11,6 +11,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,8 @@ import ibnet_baltice_waypoints.DirWayType;
 import ibnet_baltice_waypoints.DirWaysType;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationDirwayUpdater {
-
     private final static Logger log = LoggerFactory.getLogger(WinterNavigationDirwayUpdater.class);
 
     private final WinterNavigationClient winterNavigationClient;

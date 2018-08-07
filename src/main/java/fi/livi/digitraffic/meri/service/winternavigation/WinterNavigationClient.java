@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
@@ -23,8 +24,8 @@ import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationClient extends WebServiceGatewaySupport {
-
     private static final Logger log = LoggerFactory.getLogger(WinterNavigationClient.class);
 
     private final ObjectFactory objectFactory = new ObjectFactory();

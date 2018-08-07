@@ -12,6 +12,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 
 @Service
+@ConditionalOnNotWebApplication
 public class VesselDetailsUpdater {
     private final VesselDetailsRepository vesselDetailsRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;

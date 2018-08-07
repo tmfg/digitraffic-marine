@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet.location;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 
 @Component
+@ConditionalOnNotWebApplication
 public class SsnLocationClient {
     private static final String FILENAME = "/meta_ssn_locodes.csv";
 

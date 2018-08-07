@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 
 import fi.livi.digitraffic.meri.service.portnet.PortCallUpdater;
 
-@DisallowConcurrentExecution
 public class PortCallUpdateJob extends SimpleUpdateJob {
     @Autowired
     public PortCallUpdater portCallUpdater;

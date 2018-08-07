@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +15,7 @@ import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
 import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Service
+@ConditionalOnNotWebApplication
 public class VesselDetailsClient {
     private final String vesselDetailsUrl;
     private final Jax2bRestTemplate restTemplate;
