@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 
 @Component
+@ConditionalOnNotWebApplication
 public class SsnLocationClient {
     private static final String FILENAME = "/meta_ssn_locodes.csv";
 

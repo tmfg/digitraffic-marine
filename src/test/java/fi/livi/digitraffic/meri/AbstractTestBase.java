@@ -11,12 +11,21 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
+import fi.livi.digitraffic.meri.service.portnet.location.LocationCoordinateReader;
+import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationClient;
+import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationUpdater;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -25,10 +34,24 @@ import org.springframework.test.web.servlet.MockMvc;
 public abstract class AbstractTestBase {
 
     @Autowired
-    ResourceLoader resourceLoader;
+    protected ResourceLoader resourceLoader;
 
     @Autowired
     protected MockMvc mockMvc;
+
+    @Configuration
+    static class TestContextConfiguration {
+        @Bean
+        public SsnLocationClient ssnLocationClient(@Value("${metadata.csv.baseUrl:}") final String baseUrl, final RestTemplateBuilder restTemplateBuilder) {
+            return new SsnLocationClient(baseUrl, restTemplateBuilder);
+        }
+
+        @Bean
+        public SsnLocationUpdater ssnLocastionUpdater(final SsnLocationRepository ssnLocationRepository, final SsnLocationClient
+            ssnLocationClient, final LocationCoordinateReader locationCoordinateReader) {
+            return new SsnLocationUpdater(ssnLocationRepository, ssnLocationClient, locationCoordinateReader);
+        }
+    }
 
     protected String readFile(final String filename) throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();
