@@ -115,7 +115,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.2</version>
+            <version>42.2.4</version>
         </dependency>
 
         <dependency>
@@ -393,7 +393,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-xjc-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.2</version>
                 <configuration>
                     <extensions>
                         <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:3.0.5</extension>
@@ -430,7 +430,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>3.1.12</version>
+                <version>3.2.5</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
