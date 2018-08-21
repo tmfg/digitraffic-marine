@@ -73,9 +73,9 @@ public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
         assertEquals(0.00, ship.getShipState().getSpeed(), 0.1);
 
         assertEquals(1, ship.getShipActivities().size());
-        assertEquals("PORT", ship.getShipActivities().get(0).getActivityType());
-        assertEquals("In port", ship.getShipActivities().get(0).getActivityText());
-        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().get(0).getBeginTime().toEpochSecond());
+        assertEquals("PORT", ship.getShipActivities().iterator().next().getActivityType());
+        assertEquals("In port", ship.getShipActivities().iterator().next().getActivityText());
+        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().iterator().next().getBeginTime().toEpochSecond());
         assertEquals(0, ship.getShipPlannedActivities().size());
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
@@ -88,9 +88,9 @@ public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
         assertEquals("under way using engine", ship.getShipState().getAisStateText());
 
         assertEquals(1, ship.getShipActivities().size());
-        assertEquals("FREE", ship.getShipActivities().get(0).getActivityType());
-        assertEquals("Moving freely", ship.getShipActivities().get(0).getActivityText());
-        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().get(0).getBeginTime().toEpochSecond());
+        assertEquals("FREE", ship.getShipActivities().iterator().next().getActivityType());
+        assertEquals("Moving freely", ship.getShipActivities().iterator().next().getActivityText());
+        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().iterator().next().getBeginTime().toEpochSecond());
     }
 
     private WinterShips getResponse(final String filename) throws IOException {

@@ -13,6 +13,6 @@ import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
 public interface WinterNavigationShipRepository extends JpaRepository<WinterNavigationShip, String> {
 
     @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
-    @EntityGraph(attributePaths = { "shipState", "shipVoyage", "shipActivities" })
+    @EntityGraph(attributePaths = { "shipState", "shipVoyage", "shipActivities", "shipPlannedActivities" })
     List<WinterNavigationShip> findDistinctByOrderByVesselPK();
 }
