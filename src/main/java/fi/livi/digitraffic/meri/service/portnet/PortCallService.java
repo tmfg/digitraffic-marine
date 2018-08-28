@@ -55,11 +55,11 @@ public class PortCallService {
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
+    public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final ZonedDateTime to, final String locode, final String vesselName,
                                        final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
         final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
 
-        final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        final List<Long> portCallIds = getPortCallIds(date, from, to, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
 
         if (CollectionUtils.isEmpty(portCallIds)) {
             return new PortCallsJson(lastUpdated, Collections.emptyList());
@@ -74,7 +74,7 @@ public class PortCallService {
         return new PortCallsJson(lastUpdated, portCallList);
     }
 
-    private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
+    private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, ZonedDateTime to, final String locode, final String vesselName,
                                       final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
         final Criteria c = createCriteria().setProjection(Projections.id());
 
@@ -83,6 +83,9 @@ public class PortCallService {
         }
         if (from != null) {
             c.add(Restrictions.gt("portCallTimestamp", new Timestamp(from.toEpochSecond() * 1000)));
+        }
+        if (to != null) {
+            c.add(Restrictions.lt("portCallTimestamp", new Timestamp(to.toEpochSecond() * 1000)));
         }
         if (locode != null) {
             c.add(eq("portToVisit", locode));
