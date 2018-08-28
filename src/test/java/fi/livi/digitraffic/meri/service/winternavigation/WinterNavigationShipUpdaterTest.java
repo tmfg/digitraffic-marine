@@ -59,9 +59,10 @@ public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
         winterNavigationShipUpdater.updateWinterNavigationShips();
 
         Stream<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
+        final long count = ships.count();
         WinterNavigationShip ship = ships.filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
 
-        assertEquals(1802, ships.count());
+        assertEquals(1802, count);
         assertEquals("9386524", ship.getImo());
         assertEquals("A La Marine", ship.getName());
         assertEquals("HK", ship.getNatCode());
