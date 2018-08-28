@@ -64,7 +64,7 @@ public class WinterNavigationShipUpdater {
         final List<WinterNavigationShip> updated = new ArrayList<>();
 
         final Map<String, WinterNavigationShip> shipsByVesselPK =
-            winterNavigationShipRepository.findDistinctByOrderByVesselPK().stream().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
+            winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
 
         final StopWatch stopWatch = StopWatch.createStarted();
         data.getWinterShip().forEach(ship -> update(ship, added, updated, shipsByVesselPK));

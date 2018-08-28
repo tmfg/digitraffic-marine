@@ -1,7 +1,8 @@
 package fi.livi.digitraffic.meri.dao.winternavigation;
 
-import java.util.List;
+import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
+import java.util.stream.Stream;
 import javax.persistence.QueryHint;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -11,8 +12,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
 
 public interface WinterNavigationShipRepository extends JpaRepository<WinterNavigationShip, String> {
-
-    @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
+    @QueryHints({ @QueryHint(name = HINT_FETCH_SIZE, value = "300") })
     @EntityGraph(attributePaths = { "shipState", "shipVoyage", "shipActivities", "shipPlannedActivities" })
-    List<WinterNavigationShip> findDistinctByOrderByVesselPK();
+    Stream<WinterNavigationShip> findDistinctByOrderByVesselPK();
 }
