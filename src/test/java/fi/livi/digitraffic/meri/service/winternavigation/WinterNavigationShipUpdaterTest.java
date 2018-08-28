@@ -5,6 +5,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.bind.JAXBElement;
 
@@ -58,11 +60,10 @@ public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
 
-        Stream<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
-        final long count = ships.count();
-        WinterNavigationShip ship = ships.filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
+        final List<WinterNavigationShip> shipsList = winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toList());
+        WinterNavigationShip ship = shipsList.stream().filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
 
-        assertEquals(1802, count);
+        assertEquals(1802, shipsList.size());
         assertEquals("9386524", ship.getImo());
         assertEquals("A La Marine", ship.getName());
         assertEquals("HK", ship.getNatCode());
@@ -79,7 +80,7 @@ public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
 
-        ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
+        final Stream<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
         ship = ships.filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
 
         assertEquals("A La Marine", ship.getName());
