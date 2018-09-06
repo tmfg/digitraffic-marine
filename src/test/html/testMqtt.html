@@ -11,7 +11,7 @@
         function connect() {
             console.log('trying to connect...');
 
-            client = new Paho.MQTT.Client("mqtt-test-2cee7443807468f0.elb.eu-west-1.amazonaws.com", 9001, '');
+            client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 9001, '');
             // empty client_id, server will generate one
 
             client.onConnectionLost = function (response) {
