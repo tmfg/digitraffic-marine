@@ -1,7 +1,10 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,11 +66,11 @@ public class WinterNavigationShip {
 
     @OneToMany(mappedBy = "vesselPK", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy(value = "orderNumber")
-    private List<ShipActivity> shipActivities = new ArrayList<>();
+    private Set<ShipActivity> shipActivities = new HashSet<>();
 
     @OneToMany(mappedBy = "vesselPK", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy(value = "orderNumber")
-    private List<ShipPlannedActivity> shipPlannedActivities = new ArrayList<>();
+    private Set<ShipPlannedActivity> shipPlannedActivities = new HashSet<>();
 
     public String getMmsi() {
         return mmsi;
@@ -229,11 +232,11 @@ public class WinterNavigationShip {
         this.shipVoyage = shipVoyage;
     }
 
-    public List<ShipActivity> getShipActivities() {
+    public Set<ShipActivity> getShipActivities() {
         return shipActivities;
     }
 
-    public List<ShipPlannedActivity> getShipPlannedActivities() {
+    public Set<ShipPlannedActivity> getShipPlannedActivities() {
         return shipPlannedActivities;
     }
 }

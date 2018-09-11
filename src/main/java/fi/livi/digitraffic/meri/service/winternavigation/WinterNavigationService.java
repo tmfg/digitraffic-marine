@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,7 +179,7 @@ public class WinterNavigationService {
                                       sv.getInEtd(), sv.getDestLocode(), sv.getDestName(), sv.getDestEta());
     }
 
-    private List<ShipActivityProperty> shipActivities(final List<ShipActivity> shipActivities) {
+    private List<ShipActivityProperty> shipActivities(final Set<ShipActivity> shipActivities) {
         return shipActivities.stream()
             .map(a -> new ShipActivityProperty(a.getActivityType(), a.getActivityText(), a.getActivityComment(), a.getBeginTime(),
                                                a.getEndTime(), a.getTimestampBegin(), a.getTimestampEnd(), a.getTimestampCanceled(),
@@ -186,7 +187,7 @@ public class WinterNavigationService {
                                                a.getOperatedVesselName(), a.getConvoyOrder())).collect(Collectors.toList());
     }
 
-    private List<ShipPlannedActivityProperty> shipPlannedActivities(final List<ShipPlannedActivity> shipPlannedActivities) {
+    private List<ShipPlannedActivityProperty> shipPlannedActivities(final Set<ShipPlannedActivity> shipPlannedActivities) {
         return shipPlannedActivities.stream()
             .map(a -> new ShipPlannedActivityProperty(a.getActivityType(), a.getActivityText(), a.getPlannedVesselPK(), a.getPlanningVesselPK(),
                                                       a.getOrdering(), a.getPlannedWhen(), a.getPlannedWhere(), a.getPlanComment(),
