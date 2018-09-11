@@ -18,8 +18,8 @@ EXPOSE 1883 9001
 
 # Passwords below are trivial and superceded by other security mechanisms.
 # See DPO-497 comments.
-RUN mosquitto_passwd -b /mqtt/config/mosquitto.passwd updater updater
+#RUN mosquitto_passwd -b /mqtt/config/mosquitto.passwd updater updater
 
-RUN cat /mqtt/config/mosquitto.passwd
+#RUN cat /mqtt/config/mosquitto.passwd
 
 ENTRYPOINT ["/usr/sbin/mosquitto", "-c", "/mqtt/config/mosquitto.conf"]
