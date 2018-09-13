@@ -3,6 +3,9 @@ FROM debian:9.5-slim
 # copy config and repo keys and all
 COPY config /mqtt/config
 
+# install gnupg
+RUN apt-get update && apt-get -y install gnupg
+
 RUN apt-key add /mqtt/config/mosquitto-repo.gpg.key && \
     cp /mqtt/config/mosquitto-stretch.list /etc/apt/sources.list.d/mosquitto-stretch.list && \
     apt-get update && \
