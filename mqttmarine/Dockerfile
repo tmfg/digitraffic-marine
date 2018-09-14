@@ -6,8 +6,8 @@ COPY config /mqtt/config
 # install gnupg
 #RUN apt-get update && apt-get -y install gnupg
 
-RUN dnf -y install mosquitto-1.5.1-1.fc28 && \
-#RUN dnf -y install mosquitto-1.4.14-4.fc28 && \
+#RUN dnf -y install mosquitto-1.5.1-1.fc28 && \
+RUN dnf -y install mosquitto-1.4.15-1.fc28 && \
     dnf --showduplicates list mosquitto && \
     mkdir -p /mqtt/config /mqtt/data /mqtt/log && \
     dnf clean all --enablerepo=\* && \
