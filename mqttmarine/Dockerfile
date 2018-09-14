@@ -10,7 +10,7 @@ RUN apt-key add /mqtt/config/mosquitto-repo.gpg.key && \
     cp /mqtt/config/mosquitto-stretch.list /etc/apt/sources.list.d/mosquitto-stretch.list && \
     apt-get update && \
 #    apt-cache madison mosquitto && \
-    apt-get -y install mosquitto=1.4.15-0mosquitto4 && \
+    apt-get -y install mosquitto=1.5-0mosquitto2 && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir -p /mqtt/config /mqtt/data /mqtt/log
 
