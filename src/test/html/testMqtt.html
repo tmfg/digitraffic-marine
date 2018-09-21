@@ -12,7 +12,8 @@
             console.log('trying to connect marine mqtt...');
 
             //client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 9001, 'testclient_' + Date.now());
-            client = new Paho.MQTT.Client("b-ca484a09-2fce-475b-a4eb-aac0c813039a-1.mq.eu-west-1.amazonaws.com", 61619, '');
+            client = new
+            Paho.MQTT.Client("", 61619, '');
             client.onConnectionLost = function (response) {
                 console.info(Date.now() + ' Collection lost:' + response.errorMessage);
             }
@@ -22,7 +23,12 @@
                 updateList();
             };
 
-            client.connect({onSuccess:onConnect, mqttVersion:4, useSSL:true, userName:"marine", password:"digitraffic_marine"});
+            client.connect({hosts:["b-afca9ce3-f38d-459d-b495-43d879decdaa-1.mq.eu-west-1.amazonaws.com","b-afca9ce3-f38d-459d-b495-43d879decdaa-2.mq.eu-west-1.amazonaws.com"],
+                ports:[61619,61619],
+                onSuccess:onConnect,
+                mqttVersion:4,
+                useSSL:true,
+                userName:"marine", password:"digitraffic_marine"});
         }
 
         function onConnect() {
