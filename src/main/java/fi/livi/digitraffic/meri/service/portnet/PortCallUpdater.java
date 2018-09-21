@@ -5,6 +5,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,12 +82,25 @@ public class PortCallUpdater {
             final List<PortCall> updated = new ArrayList<>();
 
             final StopWatch watch = StopWatch.createStarted();
+            checkTimestamps(list);
             list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
             portCallRepository.saveAll(added);
 
             updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
 
             log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
+        }
+    }
+
+    private void checkTimestamps(final PortCallList list) {
+        for(final PortCallNotification pcn : list.getPortCallNotification()) {
+            final Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+            final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
+
+            if(timestamp.after(now)) {
+                log.error("portcall %d had timestamp in future(%d > %d) xml:%s", pcn.getPortCallId().longValue(), timestamp.getTime(), now
+                    .getTime(), list.toString());
+            }
         }
     }
 
