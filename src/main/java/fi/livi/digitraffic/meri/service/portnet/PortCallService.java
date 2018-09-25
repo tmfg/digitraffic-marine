@@ -46,11 +46,11 @@ public class PortCallService {
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
+    public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final ZonedDateTime to, final String locode, final String vesselName,
                                        final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
         final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
 
-        final List<Long> portCallIds = getPortCallIds(date, from, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        final List<Long> portCallIds = getPortCallIds(date, from, to, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
 
         if (CollectionUtils.isEmpty(portCallIds)) {
             return new PortCallsJson(lastUpdated, Collections.emptyList());
@@ -65,7 +65,7 @@ public class PortCallService {
         return new PortCallsJson(lastUpdated, portCallList);
     }
 
-    private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, final String locode, final String vesselName,
+    private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, ZonedDateTime to, final String locode, final String vesselName,
                                       final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
         final QueryBuilder<Long, PortCall> qb = new QueryBuilder<>(entityManager, Long.class, PortCall.class);
 
@@ -75,6 +75,9 @@ public class PortCallService {
         }
         if (from != null) {
             qb.gte(qb.get("portCallTimestamp"), Date.from(from.toInstant()));
+        }
+        if (to != null) {
+            c.add(Restrictions.lt("portCallTimestamp", new Timestamp(to.toEpochSecond() * 1000)));
         }
         if (locode != null) {
             qb.equals("portToVisit", locode);
