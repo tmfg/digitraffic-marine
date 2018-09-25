@@ -77,7 +77,7 @@ public class PortCallService {
             qb.gte(qb.get("portCallTimestamp"), Date.from(from.toInstant()));
         }
         if (to != null) {
-            c.add(Restrictions.lt("portCallTimestamp", new Timestamp(to.toEpochSecond() * 1000)));
+            qb.lt(qb.get("portCallTimestamp"), Date.from(to.toInstant()));
         }
         if (locode != null) {
             qb.equals("portToVisit", locode);
