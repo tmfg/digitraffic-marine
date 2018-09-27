@@ -6,6 +6,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,8 @@ public class PortCallUpdater {
     private final int maxTimeFrameToFetch;
     // To make sure that no data is missed because of update turn changing from a node to another
     private final int overlapTimeFrame;
+
+    private static final Timestamp MIN_TIMESTAMP = new Timestamp(Instant.parse("2016-01-01T00:00:00.00Z").toEpochMilli());
 
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
@@ -98,8 +101,9 @@ public class PortCallUpdater {
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
             if(timestamp.after(now)) {
-                log.error("portcall %d had timestamp in future(%d > %d) xml:%s", pcn.getPortCallId().longValue(), timestamp.getTime(), now
-                    .getTime(), list.toString());
+                log.error("portcall %d had timestamp in future(%d > %d) xml:%s", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), list.toString());
+            } else if(timestamp.before(MIN_TIMESTAMP)) {
+                log.error("portcall %d had timestamp too far in past(%d) xml:%s", pcn.getPortCallId().longValue(), timestamp.getTime(), list.toString());
             }
         }
     }
