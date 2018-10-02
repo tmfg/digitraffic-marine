@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.net.ssl.HttpsURLConnection;
@@ -25,6 +26,8 @@ public class PortCallClient {
 
     private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
+    private static final ZoneId FINLAND_ZONE = ZoneId.of("Finland/Helsinki");
+
     @Autowired
     public PortCallClient(@Value("${ais.portnet.portcall.url}") final String portCallUrl,
                           final Jax2bRestTemplate restTemplate) {
@@ -46,10 +49,12 @@ public class PortCallClient {
         return portCallList;
     }
 
+    // no zone in the string!
     public static String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
         return String.format("%s=%s", datePrefix, timestamp.format(DATE_FORMATTER));
     }
 
+    // no zone in the string!
     public static String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
         return timestamp == null ? "" : String.format("%s=%s", timePrefix, timestamp.format(TIME_FORMATTER));
     }
@@ -59,13 +64,16 @@ public class PortCallClient {
     }
 
     private String buildUrl(final ZonedDateTime lastUpdated, final ZonedDateTime now) {
-        final String dateStartParameter = dateToString("startDte", lastUpdated);
-        final String timeStartParameter = timeToString("startTme", lastUpdated);
-        final String dateEndParameter = dateToString("endDte", now);
-        final String timeEndParameter = timeToString("endTme", now);
+        // calls must be in Helsinki time!
+        final ZonedDateTime start = lastUpdated.withZoneSameInstant(FINLAND_ZONE);
+        final ZonedDateTime end = now.withZoneSameInstant(FINLAND_ZONE);
+
+        final String dateStartParameter = dateToString("startDte", start);
+        final String timeStartParameter = timeToString("startTme", start);
+        final String dateEndParameter = dateToString("endDte", end);
+        final String timeEndParameter = timeToString("endTme", end);
 
         // order is important, must be startDte,endDte,startTme,endTme, otherwise 404
-
         return String.format("%s%s&%s&%s&%s", portCallUrl, dateStartParameter, dateEndParameter, timeStartParameter, timeEndParameter);
     }
 }
