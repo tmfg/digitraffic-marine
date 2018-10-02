@@ -1,5 +1,8 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
+import static fi.livi.digitraffic.meri.util.TimeUtil.dateToString;
+import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
+
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
@@ -49,8 +52,8 @@ public class VesselDetailsClient {
     }
 
     private String buildUrl(final ZonedDateTime from) {
-        final String dateFromParameter = PortCallClient.dateToString("fromDte", from);
-        final String timeFromParameter = PortCallClient.timeToString("fromTme", from);
+        final String dateFromParameter = dateToString("fromDte", from);
+        final String timeFromParameter = timeToString("fromTme", from);
 
         return String.format("%s%s&%s", vesselDetailsUrl, dateFromParameter, timeFromParameter);
     }

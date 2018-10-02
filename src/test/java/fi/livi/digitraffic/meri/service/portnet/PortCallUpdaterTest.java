@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -73,8 +74,8 @@ public class PortCallUpdaterTest extends AbstractTestBase {
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, PortCallClient.FINLAND_ZONE);
-        final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, PortCallClient.FINLAND_ZONE);
+        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, FINLAND_ZONE);
+        final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, FINLAND_ZONE);
 
         portCallUpdater.updatePortCalls(from, to);
 
