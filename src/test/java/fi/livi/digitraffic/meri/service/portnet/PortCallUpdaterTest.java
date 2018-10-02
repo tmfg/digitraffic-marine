@@ -73,8 +73,8 @@ public class PortCallUpdaterTest extends AbstractTestBase {
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, ZoneOffset.UTC);
-        final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, ZoneOffset.UTC);
+        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, PortCallClient.FINLAND_ZONE);
+        final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, PortCallClient.FINLAND_ZONE);
 
         portCallUpdater.updatePortCalls(from, to);
 

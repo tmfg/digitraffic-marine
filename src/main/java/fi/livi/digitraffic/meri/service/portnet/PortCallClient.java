@@ -26,7 +26,7 @@ public class PortCallClient {
 
     private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
-    private static final ZoneId FINLAND_ZONE = ZoneId.of("Europe/Helsinki");
+    public static final ZoneId FINLAND_ZONE = ZoneId.of("Europe/Helsinki");
 
     @Autowired
     public PortCallClient(@Value("${ais.portnet.portcall.url}") final String portCallUrl,
