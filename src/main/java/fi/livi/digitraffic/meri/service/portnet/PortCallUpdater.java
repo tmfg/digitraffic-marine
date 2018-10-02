@@ -101,9 +101,9 @@ public class PortCallUpdater {
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
             if(timestamp.after(now)) {
-                log.error("portcall %d had timestamp in future(%d > %d) xml:%s", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), list.toString());
+                log.error("portcallId={} futureTimestamp={}, currentTimestamp={} portCallXml={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), list.toString());
             } else if(timestamp.before(MIN_TIMESTAMP)) {
-                log.error("portcall %d had timestamp too far in past(%d) xml:%s", pcn.getPortCallId().longValue(), timestamp.getTime(), list.toString());
+                log.error("portcallId={} pastTimestamp={}, portCallXml={}", pcn.getPortCallId().longValue(), timestamp.getTime(), list.toString());
             }
         }
     }
