@@ -6,30 +6,37 @@
 
     <script>
 
-        var lines = [];
+        const lines = [];
 
         function connect() {
             console.log('trying to connect...');
-//            var socket = new WebSocket('ws://localhost:9001/api/v1/plain-websockets/locations');
-            var socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/locations');
+            let socket;
+
+            //socket = new WebSocket('ws://localhost:9001/api/v1/plain-websockets/locations');
+            socket = new WebSocket('ws://meri-test.digitraffic.fi/api/v1/plain-websockets/locations');
+
             console.info('Socket is ' + socket.readyState);
+
             socket.onopen = function (event) {
                 console.info('Socket is open');
-            }
+            };
+
             socket.onmessage = function(message) {
                 addMessage(JSON.parse(message.data));
                 updateList();
             };
+
             socket.onclose = function (event) {
                 console.info("onclose ", event);
             };
+
             socket.onerror = function (event) {
                 console.info("onerror ", event);
             };
         }
 
         function addMessage(message) {
-            var text = convert(message);
+            const text = JSON.stringify(message);
 
             if (lines.length > 100) {
                 lines.shift();
@@ -39,18 +46,14 @@
         }
 
         function updateList() {
-            $(".locations").html(lines.join('<br/>'));
-        }
-
-        function convert(message) {
-            return JSON.stringify(message);
+            $(".messages").html(lines.join('<br/>'));
         }
 
         connect();
     </script>
 </head>
 <body>
-    Vessel locations:
-    <div class="locations" />
+    Messages:
+    <div class="messages" />
 </body>
 </html>

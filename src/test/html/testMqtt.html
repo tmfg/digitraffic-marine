@@ -6,29 +6,35 @@
 
     <script>
 
-        var lines = [];
+        const lines = [];
+        let client;
 
         function connect() {
             console.log('trying to connect marine mqtt...');
 
-            //client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 9001, 'testclient_' + Date.now());
-            client = new
-            Paho.MQTT.Client("", 61619, '');
+            client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 9001, 'testclient_' + Date.now());
+
             client.onConnectionLost = function (response) {
-                console.info(Date.now() + ' Collection lost:' + response.errorMessage);
-            }
+                console.info(Date.now() + ' Connection lost:' + response.errorMessage);
+            };
+
             client.onMessageArrived = function(message) {
                 addMessage(message);
 
                 updateList();
             };
 
-            client.connect({hosts:["b-afca9ce3-f38d-459d-b495-43d879decdaa-1.mq.eu-west-1.amazonaws.com","b-afca9ce3-f38d-459d-b495-43d879decdaa-2.mq.eu-west-1.amazonaws.com"],
+            const connectionProperties = {
+                hosts:["b-afca9ce3-f38d-459d-b495-43d879decdaa-1.mq.eu-west-1.amazonaws.com","b-afca9ce3-f38d-459d-b495-43d879decdaa-2.mq.eu-west-1.amazonaws.com"],
                 ports:[61619,61619],
                 onSuccess:onConnect,
                 mqttVersion:4,
                 useSSL:true,
-                userName:"marine", password:"digitraffic_marine"});
+                userName:"marine",
+                password:"digitraffic_marine"
+            };
+
+            client.connect(connectionProperties);
         }
 
         function onConnect() {
@@ -41,7 +47,7 @@
         }
 
         function addMessage(message) {
-            var text = convert(message);
+            const text = convert(message);
 
             if (lines.length > 100) {
                 lines.shift();
@@ -55,19 +61,19 @@
         }
 
         function convert(message) {
-            var content = message.payloadString;
-            var topic = message.destinationName;
-            var time = Date.now();
-            var json = JSON.parse(content);
-            var difference;
+            const content = message.payloadString;
+            const topic = message.destinationName;
+            const time = Date.now();
+            const json = JSON.parse(content);
+            let deltaMs;
 
-            if (typeof json.properties == "undefined") {
-                difference = time - json.timestamp;
+            if (typeof json.properties === "undefined") {
+                deltaMs = time - json.timestamp;
             } else {
-                difference = time - json.properties.timestampExternal;
+                deltaMs = time - json.properties.timestampExternal;
             }
 
-            return time + ":(" + difference + "):" + topic + ":" + content;
+            return "{ now: " + time + ", &Delta;timeMs: " + deltaMs + ", topic: \"" + topic + "\", content: " + content + " }";
         }
 
         connect();
