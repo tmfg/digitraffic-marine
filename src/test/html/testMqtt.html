@@ -1,0 +1,86 @@
+<html>
+<head>
+    <title>Testiclient for vessel locations</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
+
+    <script>
+
+        const lines = [];
+        let client;
+
+        function connect() {
+            console.log('trying to connect marine mqtt...');
+
+            client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 9001, 'testclient_' + Date.now());
+
+            client.onConnectionLost = function (response) {
+                console.info(Date.now() + ' Connection lost:' + response.errorMessage);
+            };
+
+            client.onMessageArrived = function(message) {
+                addMessage(message);
+
+                updateList();
+            };
+
+            const connectionProperties = {
+                hosts:["b-afca9ce3-f38d-459d-b495-43d879decdaa-1.mq.eu-west-1.amazonaws.com","b-afca9ce3-f38d-459d-b495-43d879decdaa-2.mq.eu-west-1.amazonaws.com"],
+                ports:[61619,61619],
+                onSuccess:onConnect,
+                mqttVersion:4,
+                useSSL:true,
+                userName:"marine",
+                password:"digitraffic_marine"
+            };
+
+            client.connect(connectionProperties);
+        }
+
+        function onConnect() {
+            console.info(Date.now() + ' Connection open');
+
+            client.subscribe("vessels/#");
+
+            //client.subscribe("vessels/+/locations");
+            //client.subscribe("vessels/status");
+        }
+
+        function addMessage(message) {
+            const text = convert(message);
+
+            if (lines.length > 100) {
+                lines.shift();
+            }
+
+            lines.push(text);
+        }
+
+        function updateList() {
+            $(".messages").html(lines.join('<br/>'));
+        }
+
+        function convert(message) {
+            const content = message.payloadString;
+            const topic = message.destinationName;
+            const time = Date.now();
+            const json = JSON.parse(content);
+            let deltaMs;
+
+            if (typeof json.properties === "undefined") {
+                deltaMs = time - json.timestamp;
+            } else {
+                deltaMs = time - json.properties.timestampExternal;
+            }
+
+            return "{ now: " + time + ", &Delta;timeMs: " + deltaMs + ", topic: \"" + topic + "\", content: " + content + " }";
+        }
+
+        connect();
+    </script>
+</head>
+<body>
+    Messages:
+    <div class="messages" />
+</body>
+</html>
