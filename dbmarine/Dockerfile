@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-slim
+FROM java:8
 
 MAINTAINER Digitraffic
 
