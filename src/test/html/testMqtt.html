@@ -5,36 +5,43 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
 
     <script>
-
         const lines = [];
+        var messageCount = 0;
         let client;
 
         function connect() {
             console.log('trying to connect marine mqtt...');
 
-            client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 9001, 'testclient_' + Date.now());
+            client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 61619, 'testclient_' + Date.now());
 
             client.onConnectionLost = function (response) {
                 console.info(Date.now() + ' Connection lost:' + response.errorMessage);
             };
 
             client.onMessageArrived = function(message) {
+                messageCount++;
+
                 addMessage(message);
 
                 updateList();
             };
 
             const connectionProperties = {
-                hosts:["b-afca9ce3-f38d-459d-b495-43d879decdaa-1.mq.eu-west-1.amazonaws.com","b-afca9ce3-f38d-459d-b495-43d879decdaa-2.mq.eu-west-1.amazonaws.com"],
-                ports:[61619,61619],
                 onSuccess:onConnect,
                 mqttVersion:4,
                 useSSL:true,
-                userName:"marine",
-                password:"digitraffic_marine"
+                userName:"digitraffic",
+                password:"digitrafficPassword"
             };
 
             client.connect(connectionProperties);
+
+            window.setInterval(logMessageCount, 60*1000);
+        }
+
+        function logMessageCount() {
+            console.info(Date.now() + ' ' + messageCount + ' messages per minute');
+            messageCount = 0;
         }
 
         function onConnect() {
