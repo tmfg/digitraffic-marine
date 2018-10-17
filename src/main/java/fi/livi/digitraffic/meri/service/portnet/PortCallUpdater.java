@@ -6,10 +6,10 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -18,9 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
@@ -101,9 +103,17 @@ public class PortCallUpdater {
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
             if(timestamp.after(now)) {
-                log.error("portcallId={} futureTimestamp={}, currentTimestamp={} portCallXml={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), list.toString());
+                try {
+                    log.error("method=checkTimestamps portCallId={} futureTimestamp={}, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                } catch (JsonProcessingException e) {
+                    log.error("method=checkTimestamps", e);
+                }
             } else if(timestamp.before(MIN_TIMESTAMP)) {
-                log.error("portcallId={} pastTimestamp={}, portCallXml={}", pcn.getPortCallId().longValue(), timestamp.getTime(), list.toString());
+                try {
+                    log.error("method=checkTimestamps portCallId={} pastTimestamp={}, portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
+                } catch (JsonProcessingException e) {
+                    log.error("method=checkTimestamps", e);
+                }
             }
         }
     }
