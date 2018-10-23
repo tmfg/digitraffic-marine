@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fi.fta.digitraffic</groupId>
@@ -257,7 +257,7 @@
             <plugin>
                 <groupId>org.openclover</groupId>
                 <artifactId>clover-maven-plugin</artifactId>
-                <version>4.2.1</version>
+                <version>4.3.1</version>
                 <configuration>
                     <excludes>
                         <exclude>fi/livi/digitraffic/meri/domain/**/*.java</exclude>
@@ -282,62 +282,43 @@
             </plugin>
             <!-- generate build number -->
             <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>buildnumber-maven-plugin</artifactId>-->
-                <!--<version>1.4</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>generate-buildNumber</id>-->
-                        <!--<phase>validate</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>create</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<doCheck>false</doCheck>-->
-                    <!--<doUpdate>false</doUpdate>-->
-                    <!--&lt;!&ndash; This ensures that even if we are not connected to scm the revision is generated &ndash;&gt;-->
-                    <!--<revisionOnScmFailure />-->
-                    <!--<format>{0}</format>-->
-                    <!--&lt;!&ndash;<format>{0,date,yyyy-MM-dd_HH:mm:ss}</format>&ndash;&gt;-->
-                    <!--<items>-->
-                        <!--&lt;!&ndash;<item>timestamp</item>&ndash;&gt;-->
-                        <!--<item>buildNumber</item>-->
-                    <!--</items>-->
-                <!--</configuration>-->
+            <!--<groupId>org.codehaus.mojo</groupId>-->
+            <!--<artifactId>buildnumber-maven-plugin</artifactId>-->
+            <!--<version>1.4</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>generate-buildNumber</id>-->
+            <!--<phase>validate</phase>-->
+            <!--<goals>-->
+            <!--<goal>create</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<doCheck>false</doCheck>-->
+            <!--<doUpdate>false</doUpdate>-->
+            <!--&lt;!&ndash; This ensures that even if we are not connected to scm the revision is generated &ndash;&gt;-->
+            <!--<revisionOnScmFailure />-->
+            <!--<format>{0}</format>-->
+            <!--&lt;!&ndash;<format>{0,date,yyyy-MM-dd_HH:mm:ss}</format>&ndash;&gt;-->
+            <!--<items>-->
+            <!--&lt;!&ndash;<item>timestamp</item>&ndash;&gt;-->
+            <!--<item>buildNumber</item>-->
+            <!--</items>-->
+            <!--</configuration>-->
             <!--</plugin>-->
 
-
-<!--
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.2.4</version>
-                <executions>
-                    <execution>
-                        <id>get-the-git-infos</id>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>validate-the-git-infos</id>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
+                <version>2.2.5</version>
 
                 <configuration>
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                     <prefix>git</prefix>
-                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+                    <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
                     <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
-                    &lt;!&ndash; false is default here, it prints some more information during the build &ndash;&gt;
-                    <verbose>false</verbose>
-                    &lt;!&ndash; this is false by default, forces the plugin to generate the git.properties file &ndash;&gt;
+                    <verbose>true</verbose>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
                     <format>properties</format>
@@ -345,34 +326,23 @@
                     <injectAllReactorProjects>false</injectAllReactorProjects>
                     <failOnNoGitDirectory>true</failOnNoGitDirectory>
                     <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
-                    <skip>false</skip>
-                    <runOnlyOnce>false</runOnlyOnce>
                     <excludeProperties>
-                        &lt;!&ndash; <excludeProperty>git.user.*</excludeProperty> &ndash;&gt;
+                        <excludeProperty>git.commit.user.*</excludeProperty>
+                        <excludeProperty>git.build.user.*</excludeProperty>
+                        <excludeProperty>git.build.host</excludeProperty>
                     </excludeProperties>
-                    <includeOnlyProperties>
-                        &lt;!&ndash; <includeOnlyProperty>^git.commit.id.full$</includeOnlyProperty> &ndash;&gt;
-                    </includeOnlyProperties>
-                    <useNativeGit>false</useNativeGit>
-                    <abbrevLength>7</abbrevLength>
-                    <commitIdGenerationMode>flat</commitIdGenerationMode>
                     <gitDescribe>
-                        &lt;!&ndash; don't generate the describe property &ndash;&gt;
                         <skip>false</skip>
-                        &lt;!&ndash; if no tag was found "near" this commit, just print the commit's id instead, helpful when you always expect this field to be not-empty &ndash;&gt;
-                        <always>false</always>
-                        &lt;!&ndash; how many chars should be displayed as the commit object id? 7 is git's default, 0 has a special meaning (see end of this README.md), and 40 is the maximum value here &ndash;&gt;
+                        <always>true</always>
                         <abbrev>7</abbrev>
-                        &lt;!&ndash; when the build is triggered while the repo is in "dirty state", append this suffix &ndash;&gt;
                         <dirty>-dirty</dirty>
-                        &lt;!&ndash; Only consider tags matching the given pattern. This can be used to avoid leaking private tags from the repository. &ndash;&gt;
                         <match>*</match>
-                        &lt;!&ndash; always print using the "tag-commits_from_tag-g_commit_id-maybe_dirty" format, even if "on" a tag. The distance will always be 0 if you're "on" the tag. &ndash;&gt;
+                        <tags>false</tags>
                         <forceLongFormat>false</forceLongFormat>
                     </gitDescribe>
+                    <evaluateOnCommit>HEAD</evaluateOnCommit>
                 </configuration>
             </plugin>
--->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
