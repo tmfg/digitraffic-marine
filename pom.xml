@@ -18,6 +18,10 @@
         <relativePath/>
     </parent>
 
+    <prerequisites>
+        <maven>3.0.5</maven>
+    </prerequisites>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -72,7 +76,7 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.3</version>
         </dependency>
 
         <dependency>
@@ -226,7 +230,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.1</version>
+            <version>5.2</version>
         </dependency>
 
         <!-- gzipped http response -->
@@ -273,7 +277,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>3.3.1</version>
+                <version>3.3.2</version>
             </plugin>
 
             <plugin>
