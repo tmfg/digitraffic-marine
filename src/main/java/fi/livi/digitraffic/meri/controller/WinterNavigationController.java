@@ -65,8 +65,8 @@ public class WinterNavigationController {
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation ship"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
-    public WinterNavigationShipFeature getWinterNavigationShipByVesselId(@ApiParam(value = "Vessel identification code. Equals IMO-<IMO-code> when vessel IMO is present. " +
-                                                                                           "Otherwise MMSI-<MMSI-code> (Maritime Mobile Service Identity).", required = true)
+    public WinterNavigationShipFeature getWinterNavigationShipByVesselId(@ApiParam(value = "Vessel identification code. Equals " +
+        "IMO-{IMO-code} when vessel IMO is present. Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true)
                                                                          @PathVariable("vesselId") final String vesselId) {
 
         return winterNavigationService.getWinterNavigationShipByVesselId(vesselId);
