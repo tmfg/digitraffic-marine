@@ -102,7 +102,13 @@ public class PortCallUpdater {
             final Timestamp now = new Timestamp(Instant.now().toEpochMilli());
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
-            if(timestamp.after(now)) {
+            if(timestamp == null) {
+                try {
+                    log.error("method=checkTimestamps portCallId={} futureTimestamp=null, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                } catch (JsonProcessingException e) {
+                    log.error("method=checkTimestamps", e);
+                }
+            } else if(timestamp.after(now)) {
                 try {
                     log.error("method=checkTimestamps portCallId={} futureTimestamp={}, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
                 } catch (JsonProcessingException e) {
