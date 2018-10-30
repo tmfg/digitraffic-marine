@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
@@ -57,8 +57,8 @@ public class WinterNavigationDirwayUpdater {
 
         try {
             data = winterNavigationClient.getWinterNavigationWaypoints();
-        } catch(final Exception e) {
-            log.error("exception when fetching waypoints", e);
+        } catch(final SoapFaultClientException e) {
+            log.error("exception when fetching waypoints", e.getSoapFault());
 
             return -1;
         }

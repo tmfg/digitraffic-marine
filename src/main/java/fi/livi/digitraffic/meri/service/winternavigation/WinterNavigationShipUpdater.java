@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
@@ -62,8 +63,8 @@ public class WinterNavigationShipUpdater {
 
         try {
             data = winterNavigationClient.getWinterNavigationShips();
-        } catch(final Exception e) {
-            log.error("exception when fetching ships", e);
+        } catch(final SoapFaultClientException e) {
+            log.error("exception when fetching waypoints", e.getSoapFault());
 
             return -1;
         }
