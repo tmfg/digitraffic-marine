@@ -58,7 +58,15 @@ public class WinterNavigationShipUpdater {
      */
     @Transactional
     public int updateWinterNavigationShips() {
-        final WinterShips data = winterNavigationClient.getWinterNavigationShips();
+        final WinterShips data;
+
+        try {
+            data = winterNavigationClient.getWinterNavigationShips();
+        } catch(final Exception e) {
+            log.error("exception when fetching ships", e);
+
+            return -1;
+        }
 
         final List<WinterNavigationShip> added = new ArrayList<>();
         final List<WinterNavigationShip> updated = new ArrayList<>();

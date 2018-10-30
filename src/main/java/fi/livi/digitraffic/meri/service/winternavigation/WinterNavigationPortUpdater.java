@@ -52,8 +52,15 @@ public class WinterNavigationPortUpdater {
      */
     @Transactional
     public int updateWinterNavigationPorts() {
+        final Ports data;
 
-        final Ports data = winterNavigationClient.getWinterNavigationPorts();
+        try {
+            data = winterNavigationClient.getWinterNavigationPorts();
+        } catch(final Exception e) {
+            log.error("exception when fetching ports", e);
+
+            return -1;
+        }
 
         final Map<Boolean, List<Port>> ports =
             data.getPort().stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.getPortInfo().getLocode())));

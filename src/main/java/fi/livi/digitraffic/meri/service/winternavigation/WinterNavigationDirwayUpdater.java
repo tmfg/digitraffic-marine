@@ -53,7 +53,15 @@ public class WinterNavigationDirwayUpdater {
      */
     @Transactional
     public int updateWinterNavigationDirways() {
-        final DirWaysType data = winterNavigationClient.getWinterNavigationWaypoints();
+        final DirWaysType data;
+
+        try {
+            data = winterNavigationClient.getWinterNavigationWaypoints();
+        } catch(final Exception e) {
+            log.error("exception when fetching waypoints", e);
+
+            return -1;
+        }
 
         final List<String> names = data.getDirWay().stream().map(d -> d.getName()).collect(Collectors.toList());
         final long deletedCount;

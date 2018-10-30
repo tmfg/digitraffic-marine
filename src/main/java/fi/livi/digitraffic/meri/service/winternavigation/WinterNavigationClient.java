@@ -37,7 +37,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setMarshaller(marshaller);
         setUnmarshaller(marshaller);
 
-        HttpComponentsMessageSender sender = new HttpComponentsMessageSender();
+        final HttpComponentsMessageSender sender = new HttpComponentsMessageSender();
         sender.setConnectionTimeout(30000);
         sender.setReadTimeout(30000);
         setMessageSender(sender);
