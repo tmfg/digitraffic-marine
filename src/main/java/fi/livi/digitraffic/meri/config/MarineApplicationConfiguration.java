@@ -13,7 +13,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@EnableWebSocketMessageBroker
 @EnableJpaRepositories(basePackages = "fi.livi.digitraffic.meri.dao")
 public class MarineApplicationConfiguration {
     public static final String API_V1_BASE_PATH = "/api/v1";
