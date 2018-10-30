@@ -58,7 +58,7 @@ public class WinterNavigationDirwayUpdater {
         try {
             data = winterNavigationClient.getWinterNavigationWaypoints();
         } catch(final SoapFaultClientException e) {
-            log.error("exception when fetching waypoints", e.getSoapFault());
+            log.error("exception when fetching waypoints:{}", e.getSoapFault());
 
             return -1;
         }
