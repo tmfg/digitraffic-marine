@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
@@ -57,8 +58,8 @@ public class WinterNavigationDirwayUpdater {
 
         try {
             data = winterNavigationClient.getWinterNavigationWaypoints();
-        } catch(final SoapFaultClientException e) {
-            log.error("exception when fetching waypoints:{}", e.getSoapFault().getFaultCode());
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
 
             return -1;
         }

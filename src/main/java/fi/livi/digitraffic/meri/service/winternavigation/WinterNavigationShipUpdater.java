@@ -63,8 +63,8 @@ public class WinterNavigationShipUpdater {
 
         try {
             data = winterNavigationClient.getWinterNavigationShips();
-        } catch(final SoapFaultClientException e) {
-            log.error("exception when fetching waypoints:{}", e.getSoapFault().getFaultCode());
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
 
             return -1;
         }
