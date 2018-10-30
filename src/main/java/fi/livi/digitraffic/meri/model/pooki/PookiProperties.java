@@ -1,4 +1,3 @@
-
 package fi.livi.digitraffic.meri.model.pooki;
 
 import java.io.Serializable;
@@ -7,7 +6,6 @@ import java.time.ZonedDateTime;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -105,57 +103,58 @@ public class PookiProperties implements Serializable {
     @ApiModelProperty("Notificator")
     private String notificator;
 
-    public PookiProperties(@JsonProperty("ID") final Integer id,
-                           @JsonProperty("ALUEET_FI") final String areasFi,
-                           @JsonProperty("ALUEET_SV") final String areasSv,
-                           @JsonProperty("ALUEET_EN") final String areasEn,
-                           @JsonProperty("NUMERO") final Integer number,
-                           @JsonProperty("SIJAINTI_FI") final String locationFi,
-                           @JsonProperty("SIJAINTI_SV") final String locationSv,
-                           @JsonProperty("SIJAINTI_EN") final String locationEn,
-                           @JsonProperty("SISALTO_FI") final String contentsFi,
-                           @JsonProperty("SISALTO_SV") final String contentsSv,
-                           @JsonProperty("SISALTO_EN") final String contentsEn,
-                           @JsonProperty("PAIVAYS") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime creationTime,
-                           @JsonProperty("TYYPPI_FI") final String typeFi,
-                           @JsonProperty("TYYPPI_SV") final String typeSv,
-                           @JsonProperty("TYYPPI_EN") final String typeEn,
-                           @JsonProperty("VOIMASSA_ALKAA") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime validityStartTime,
-                           @JsonProperty("VOIMASSA_PAATTYY") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime validityEndTime,
-                           @JsonProperty("VALITTUKOHDE_TOOLTIP") final String tooltip,
-                           @JsonProperty("VIRTUAALINENTURVALAITE") final Boolean virtualNavaids,
-                           @JsonProperty("NAVTEX") final Boolean navtex,
-                           @JsonProperty("asdfTALLENNUSPAIVA") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime recordingTime,
-                           @JsonProperty("TURVALAITE_TXT") final String navaidInfo,
-                           @JsonProperty("VAYLAALUE_TXT") final String fairwayInfo,
-                           @JsonProperty("NAVIGOINTILINJA_TXT") final String navigationLineInfo,
-                           @JsonProperty("ANTOPAIVA") @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime publishingTime,
-                           @JsonProperty("TIEDOKSIANTAJA") final String notificator) {
+    public PookiProperties(final Integer id,
+                           final String alueetFi,
+                           final String alueetSv,
+                           final String alueetEn,
+                           final Integer number,
+                           final String sijaintiFi,
+                           final String sijaintiSv,
+                           final String sijaintiEn,
+                           final String sisaltoFi,
+                           final String sisaltoSv,
+                           final String sisaltoEn,
+                           @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime paivays,
+                           final String tyyppiFi,
+                           final String tyyppiSv,
+                           final String tyyppiEn,
+                           @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime voimassaAlkaa,
+                           @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime voimassaPaattyy,
+                           final String valittykohdeTooltip,
+                           final Boolean virtuaalinenturvalaite,
+                           final Boolean navtex,
+                           @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class)                         final ZonedDateTime asdfTallennuspaiva,
+                           final String turvalaiteTxt,
+                           final String vaylaalueTxt,
+                           final String navigointilinjaTxt,
+                           @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final
+                           ZonedDateTime antopaiva,
+                           final String tiedoksiantaja) {
         this.id = id;
-        this.areasFi = areasFi;
-        this.areasSv = areasSv;
-        this.areasEn = areasEn;
+        this.areasFi = alueetFi;
+        this.areasSv = alueetSv;
+        this.areasEn = alueetEn;
         this.number = number;
-        this.locationFi = locationFi;
-        this.locationSv = locationSv;
-        this.locationEn = locationEn;
-        this.contentsFi = contentsFi;
-        this.contentsSv = contentsSv;
-        this.contentsEn = contentsEn;
-        this.creationTime = creationTime;
-        this.typeFi = typeFi;
-        this.typeSv = typeSv;
-        this.typeEn = typeEn;
-        this.validityStartTime = validityStartTime;
-        this.validityEndTime = validityEndTime;
-        this.tooltip = tooltip;
-        this.virtualNavaids = virtualNavaids;
+        this.locationFi = sijaintiFi;
+        this.locationSv = sijaintiSv;
+        this.locationEn = sijaintiEn;
+        this.contentsFi = sisaltoFi;
+        this.contentsSv = sisaltoSv;
+        this.contentsEn = sisaltoEn;
+        this.creationTime = paivays;
+        this.typeFi = tyyppiFi;
+        this.typeSv = tyyppiSv;
+        this.typeEn = tyyppiEn;
+        this.validityStartTime = voimassaAlkaa;
+        this.validityEndTime = voimassaPaattyy;
+        this.tooltip = valittykohdeTooltip;
+        this.virtualNavaids = virtuaalinenturvalaite;
         this.navtex = navtex;
-        this.navaidInfo = navaidInfo;
-        this.fairwayInfo = fairwayInfo;
-        this.navigationLineInfo = navigationLineInfo;
-        this.publishingTime = publishingTime;
-        this.notificator = notificator;
+        this.navaidInfo = turvalaiteTxt;
+        this.fairwayInfo = vaylaalueTxt;
+        this.navigationLineInfo = navigointilinjaTxt;
+        this.publishingTime = antopaiva;
+        this.notificator = tiedoksiantaja;
     }
 
     @Override
