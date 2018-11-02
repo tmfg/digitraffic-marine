@@ -34,7 +34,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ports")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ports", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ports", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation ports"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -43,7 +43,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ships")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ships", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ships", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation ships"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -52,7 +52,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation dirways")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/dirways", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/dirways", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation dirways"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -61,7 +61,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ship")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ships/{vesselId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ships/{vesselId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation ship"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -73,7 +73,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation port")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ports/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ports/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation port"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
