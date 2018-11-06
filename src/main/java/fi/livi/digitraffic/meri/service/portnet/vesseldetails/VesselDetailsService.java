@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Join;
 
@@ -41,7 +42,7 @@ public class VesselDetailsService {
             qb.equals("mmsi", mmsi);
         }
         if (imo != null) {
-            qb.equals("imoLloiyds", imo);
+            qb.equals("imoLloyds", imo);
         }
         if (vesselTypeCode != null) {
             final Join<VesselDetails, VesselConstruction> join = qb.join("vesselConstruction");
