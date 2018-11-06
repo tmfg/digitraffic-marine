@@ -15,6 +15,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
@@ -25,6 +26,7 @@ import fi.livi.digitraffic.meri.domain.portnet.PortArea;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaKey;
 
 @Service
+@ConditionalOnNotWebApplication
 public class BerthUpdater {
     private final PortAreaRepository portAreaRepository;
     private final BerthRepository berthRepository;

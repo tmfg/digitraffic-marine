@@ -2,38 +2,59 @@
 <head>
     <title>Testiclient for vessel locations</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" ></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
 
     <script>
-
-        var lines = [];
+        const lines = [];
+        var messageCount = 0;
+        let client;
 
         function connect() {
-            console.log('trying to connect...');
+            console.log('trying to connect marine mqtt...');
 
-            client = new Paho.MQTT.Client("marine-test-mqtt-lb-745c4f4aaa8fe5f5.elb.eu-west-1.amazonaws.com", 9001, "test-html-client");
+            client = new Paho.MQTT.Client("meri-aws-mqtt-test.digitraffic.fi", 61619, 'testclient_' + Date.now());
 
             client.onConnectionLost = function (response) {
-                console.info('Collection lost:' + response.errorMessage);
-            }
+                console.info(Date.now() + ' Connection lost:' + response.errorMessage);
+            };
+
             client.onMessageArrived = function(message) {
+                messageCount++;
+
                 addMessage(message);
 
                 updateList();
             };
 
-            client.connect({onSuccess:onConnect});
+            const connectionProperties = {
+                onSuccess:onConnect,
+                mqttVersion:4,
+                useSSL:true,
+                userName:"digitraffic",
+                password:"digitrafficPassword"
+            };
+
+            client.connect(connectionProperties);
+
+            window.setInterval(logMessageCount, 60*1000);
+        }
+
+        function logMessageCount() {
+            console.info(Date.now() + ' ' + messageCount + ' messages per minute');
+            messageCount = 0;
         }
 
         function onConnect() {
-            console.info('Connection open');
+            console.info(Date.now() + ' Connection open');
+
             client.subscribe("vessels/#");
+
             //client.subscribe("vessels/+/locations");
             //client.subscribe("vessels/status");
         }
 
         function addMessage(message) {
-            var text = convert(message);
+            const text = convert(message);
 
             if (lines.length > 100) {
                 lines.shift();
@@ -47,19 +68,19 @@
         }
 
         function convert(message) {
-            var content = message.payloadString;
-            var topic = message.destinationName;
-            var time = Date.now();
-            var json = JSON.parse(content);
-            var difference;
+            const content = message.payloadString;
+            const topic = message.destinationName;
+            const time = Date.now();
+            const json = JSON.parse(content);
+            let deltaMs;
 
-            if (typeof json.properties == "undefined") {
-                difference = time - json.timestamp;
+            if (typeof json.properties === "undefined") {
+                deltaMs = time - json.timestamp;
             } else {
-                difference = time - json.properties.timestampExternal;
+                deltaMs = time - json.properties.timestampExternal;
             }
 
-            return time + ":(" + difference + "):" + topic + ":" + content;
+            return "{ now: " + time + ", &Delta;timeMs: " + deltaMs + ", topic: \"" + topic + "\", content: " + content + " }";
         }
 
         connect();

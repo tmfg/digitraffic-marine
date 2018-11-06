@@ -65,10 +65,8 @@ public class VesselSender {
         }
     }
 
-    private void sendMessage(final String payLoad, final String topic) {
-        final MessageBuilder<String> payloadBuilder = MessageBuilder.withPayload(payLoad);
-        final Message<String> message = payloadBuilder.setHeader(MqttHeaders.TOPIC, topic).build();
-
-        vesselGateway.sendToMqtt(message);
+    // This must be synchronized, because Paho does not support concurrency!
+    private synchronized void sendMessage(final String payLoad, final String topic) {
+        vesselGateway.sendToMqtt(topic, payLoad);
     }
 }

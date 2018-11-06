@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

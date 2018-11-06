@@ -15,8 +15,10 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
@@ -32,6 +34,7 @@ import ibnet_baltice_winterships.WinterShip;
 import ibnet_baltice_winterships.WinterShips;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationShipUpdater {
 
     private final static Logger log = LoggerFactory.getLogger(WinterNavigationShipUpdater.class);
@@ -56,13 +59,21 @@ public class WinterNavigationShipUpdater {
      */
     @Transactional
     public int updateWinterNavigationShips() {
-        final WinterShips data = winterNavigationClient.getWinterNavigationShips();
+        final WinterShips data;
+
+        try {
+            data = winterNavigationClient.getWinterNavigationShips();
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
+
+            return -1;
+        }
 
         final List<WinterNavigationShip> added = new ArrayList<>();
         final List<WinterNavigationShip> updated = new ArrayList<>();
 
         final Map<String, WinterNavigationShip> shipsByVesselPK =
-            winterNavigationShipRepository.findDistinctByOrderByVesselPK().stream().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
+            winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
 
         final StopWatch stopWatch = StopWatch.createStarted();
         data.getWinterShip().forEach(ship -> update(ship, added, updated, shipsByVesselPK));
@@ -183,12 +194,7 @@ public class WinterNavigationShipUpdater {
             final ShipActivity activity = new ShipActivity();
             activity.setVesselPK(ship.getVesselPk());
             activity.setOrderNumber(orderNumber);
-            // TODO: Remove this after 24.4.2018 https://issues.solita.fi/browse/DPO-455
-            if (shipActivity.getActivityType().equals("WEATHER_CONDITIONS")) {
-                activity.setActivityType("STOP");
-            } else {
-                activity.setActivityType(shipActivity.getActivityType());
-            }
+            activity.setActivityType(shipActivity.getActivityType());
             activity.setActivityText(shipActivity.getActivityText());
             activity.setBeginTime(findZonedDateTime(shipActivity.getBegintime()));
             activity.setEndTime(findZonedDateTime(shipActivity.getEndtime()));

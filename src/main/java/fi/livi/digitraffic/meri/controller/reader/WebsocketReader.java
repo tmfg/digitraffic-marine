@@ -131,14 +131,10 @@ public class WebsocketReader {
     }
 
     private void trySend(final WebsocketListener listener, final String message) {
-        final StopWatch sw = StopWatch.createStarted();
-
         try {
             listener.receiveMessage(message);
         } catch(final Exception e) {
             log.error("exception from listener", e);
-        } finally {
-            log.info("listenerClass={} tookMs={}", listener.getClass().getName(), sw.getTime());
         }
     }
 

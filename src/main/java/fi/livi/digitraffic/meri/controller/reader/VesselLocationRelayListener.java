@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import fi.livi.digitraffic.meri.controller.AisLocker;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.VesselSender;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
@@ -11,6 +12,7 @@ import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
+import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -19,16 +21,20 @@ public class VesselLocationRelayListener implements WebsocketListener {
     private final VesselSender vesselSender;
     private final VesselMetadataService vesselMetadataService;
 
-    public VesselLocationRelayListener(final VesselSender vesselSender, final VesselMetadataService vesselMetadataService) {
+    private final AisLocker aisLocker;
+
+    public VesselLocationRelayListener(final VesselSender vesselSender, final VesselMetadataService vesselMetadataService,
+        final LockingService lockingService, final AisLocker aisLocker) {
         this.vesselSender = vesselSender;
         this.vesselMetadataService = vesselMetadataService;
+        this.aisLocker = aisLocker;
     }
 
     @Override
     public void receiveMessage(final String message) {
         final AISMessage ais = MessageConverter.convertLocation(message);
 
-        if (ais.validate()) {
+        if (ais.validate() && aisLocker.hasLockForAis()) {
             doLogAndSend(ais);
         }
     }

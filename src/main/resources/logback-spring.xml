@@ -28,7 +28,7 @@
         <!-- File to write to before rotating. See: http://logback.qos.ch/manual/appenders.html#tbrpFileNamePattern -->
         <file>logs/marine-${appType}-daily.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>marine-daily.%d{yyyy-MM-dd-HH}.log.gz</fileNamePattern>
+            <fileNamePattern>marine-${appType}-daily.%d{yyyy-MM-dd-HH}.log.gz</fileNamePattern>
             <maxHistory>92</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -41,7 +41,7 @@
         <!-- File to write to before rotating. See: http://logback.qos.ch/manual/appenders.html#tbrpFileNamePattern -->
         <file>logs/marine-${appType}-performance-daily.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>marine-performance-daily.%d{yyyy-MM-dd-HH}.log.gz</fileNamePattern>
+            <fileNamePattern>marine-${appType}-performance-daily.%d{yyyy-MM-dd-HH}.log.gz</fileNamePattern>
             <maxHistory>92</maxHistory>
         </rollingPolicy>
         <encoder>

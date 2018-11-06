@@ -6,14 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
@@ -25,8 +27,8 @@ import ibnet_baltice_waypoints.DirWayType;
 import ibnet_baltice_waypoints.DirWaysType;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationDirwayUpdater {
-
     private final static Logger log = LoggerFactory.getLogger(WinterNavigationDirwayUpdater.class);
 
     private final WinterNavigationClient winterNavigationClient;
@@ -52,7 +54,15 @@ public class WinterNavigationDirwayUpdater {
      */
     @Transactional
     public int updateWinterNavigationDirways() {
-        final DirWaysType data = winterNavigationClient.getWinterNavigationWaypoints();
+        final DirWaysType data;
+
+        try {
+            data = winterNavigationClient.getWinterNavigationWaypoints();
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
+
+            return -1;
+        }
 
         final List<String> names = data.getDirWay().stream().map(d -> d.getName()).collect(Collectors.toList());
         final long deletedCount;

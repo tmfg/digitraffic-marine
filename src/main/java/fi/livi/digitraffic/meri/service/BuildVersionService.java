@@ -7,15 +7,15 @@ import com.jcabi.manifests.Manifests;
 @Service
 public class BuildVersionService {
     public String getAppVersion() {
-        if (Manifests.exists("AisApplication-Version")) {
-            return Manifests.read("AisApplication-Version");
+        if (Manifests.exists("MarineApplication-Version")) {
+            return Manifests.read("MarineApplication-Version");
         }
         return "DEV-BUILD";
     }
 
     public String getAppBuildRevision() {
-        if (Manifests.exists("AisApplication-Build")) {
-            return Manifests.read("AisApplication-Build");
+        if (Manifests.exists("MarineApplication-Build")) {
+            return Manifests.read("MarineApplication-Build");
         }
         return "X";
     }

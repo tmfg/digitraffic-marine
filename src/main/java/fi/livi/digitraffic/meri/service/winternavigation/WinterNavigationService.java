@@ -8,7 +8,9 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,23 +72,22 @@ public class WinterNavigationService {
 
     @Transactional(readOnly = true)
     public WinterNavigationPortFeatureCollection getWinterNavigationPorts() {
-        final List<WinterNavigationPort> ports = winterNavigationPortRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
+        final Stream<WinterNavigationPort> ports = winterNavigationPortRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
 
         final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_PORTS.name());
 
         return new WinterNavigationPortFeatureCollection(lastUpdated,
-            ports.stream().map(this::portFeature).collect(Collectors.toList()));
+            ports.map(this::portFeature).collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)
     public WinterNavigationShipFeatureCollection getWinterNavigationShips() {
-
-        final List<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
+        final Stream<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
 
         final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_SHIPS.name());
 
         final List<WinterNavigationShipFeature> shipFeatures =
-            ships.stream().map(s -> new WinterNavigationShipFeature(s.getVesselPK(),
+            ships.map(s -> new WinterNavigationShipFeature(s.getVesselPK(),
                                                                     shipProperties(s),
                                                                     new Point(s.getShipState().getLongitude(), s.getShipState().getLatitude())))
                  .collect(Collectors.toList());
@@ -175,7 +176,7 @@ public class WinterNavigationService {
                                       sv.getInEtd(), sv.getDestLocode(), sv.getDestName(), sv.getDestEta());
     }
 
-    private List<ShipActivityProperty> shipActivities(final List<ShipActivity> shipActivities) {
+    private List<ShipActivityProperty> shipActivities(final Set<ShipActivity> shipActivities) {
         return shipActivities.stream()
             .map(a -> new ShipActivityProperty(a.getActivityType(), a.getActivityText(), a.getActivityComment(), a.getBeginTime(),
                                                a.getEndTime(), a.getTimestampBegin(), a.getTimestampEnd(), a.getTimestampCanceled(),
@@ -183,7 +184,7 @@ public class WinterNavigationService {
                                                a.getOperatedVesselName(), a.getConvoyOrder())).collect(Collectors.toList());
     }
 
-    private List<ShipPlannedActivityProperty> shipPlannedActivities(final List<ShipPlannedActivity> shipPlannedActivities) {
+    private List<ShipPlannedActivityProperty> shipPlannedActivities(final Set<ShipPlannedActivity> shipPlannedActivities) {
         return shipPlannedActivities.stream()
             .map(a -> new ShipPlannedActivityProperty(a.getActivityType(), a.getActivityText(), a.getPlannedVesselPK(), a.getPlanningVesselPK(),
                                                       a.getOrdering(), a.getPlannedWhen(), a.getPlannedWhere(), a.getPlanComment(),

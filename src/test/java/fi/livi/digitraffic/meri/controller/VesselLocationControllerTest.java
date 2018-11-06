@@ -2,9 +2,7 @@ package fi.livi.digitraffic.meri.controller;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -14,14 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collections;
 
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
-import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
+import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
@@ -37,8 +32,8 @@ public class VesselLocationControllerTest extends AbstractTestBase {
     public void vesselLocationsByMssiEmpty() throws Exception {
         when(vesselLocationService.findAllowedLocations(anyInt(), any(), any())).thenReturn(emptyFeatureCollection());
 
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_LOCATIONS_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -50,8 +45,8 @@ public class VesselLocationControllerTest extends AbstractTestBase {
     public void vesselLocationsByMssi() throws Exception {
         when(vesselLocationService.findAllowedLocations(anyInt(), any(), any())).thenReturn(generateFeatureCollection());
 
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_LOCATIONS_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -65,8 +60,8 @@ public class VesselLocationControllerTest extends AbstractTestBase {
     public void vesselLocationsByTimestampEmpty() throws Exception {
         when(vesselLocationService.findAllowedLocations(any(), any())).thenReturn(emptyFeatureCollection());
 
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_LOCATIONS_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -79,8 +74,8 @@ public class VesselLocationControllerTest extends AbstractTestBase {
     public void vesselLocationsByTimestamp() throws Exception {
         when(vesselLocationService.findAllowedLocations(any(), any())).thenReturn(generateFeatureCollection());
 
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_LOCATIONS_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

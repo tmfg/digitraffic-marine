@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.VesselMetadataBuilder;
-import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
+import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 
 public class VesselMetadataControllerIntegrationTest extends AbstractTestBase {
@@ -27,8 +27,8 @@ public class VesselMetadataControllerIntegrationTest extends AbstractTestBase {
     public void vesselMetadataByMssiNotFound() throws Exception {
         when(vesselMetadataRepository.findByMmsi(anyInt())).thenReturn(null);
 
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_METADATA_PART_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_METADATA_PART_PATH +
                 VesselMetadataController.VESSELS_PATH + "/" + MMSI))
                 .andExpect(status().isNotFound())
         ;
@@ -38,8 +38,8 @@ public class VesselMetadataControllerIntegrationTest extends AbstractTestBase {
     public void vesselMetadataByMssi() throws Exception {
         when(vesselMetadataRepository.findByMmsi(anyInt())).thenReturn(new VesselMetadataBuilder(MMSI).build());
 
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_METADATA_PART_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_METADATA_PART_PATH +
         VesselMetadataController.VESSELS_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -51,8 +51,8 @@ public class VesselMetadataControllerIntegrationTest extends AbstractTestBase {
     public void vesselMetadataByMssiForbiddenShiptype() throws Exception {
         when(vesselMetadataRepository.findByMmsi(anyInt())).thenReturn(new VesselMetadataBuilder(MMSI).shipType(30).build());
 
-                mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                        AisApplicationConfiguration.API_METADATA_PART_PATH +
+                mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                        MarineApplicationConfiguration.API_METADATA_PART_PATH +
                         VesselMetadataController.VESSELS_PATH + "/" + MMSI))
                         .andExpect(status().isNotFound())
         ;

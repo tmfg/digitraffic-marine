@@ -12,8 +12,10 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
@@ -25,8 +27,8 @@ import ibnet_baltice_ports.Restriction;
 import ibnet_baltice_ports.Restrictions;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationPortUpdater {
-
     private final WinterNavigationClient winterNavigationClient;
 
     private final WinterNavigationPortRepository winterNavigationRepository;
@@ -51,8 +53,15 @@ public class WinterNavigationPortUpdater {
      */
     @Transactional
     public int updateWinterNavigationPorts() {
+        final Ports data;
 
-        final Ports data = winterNavigationClient.getWinterNavigationPorts();
+        try {
+            data = winterNavigationClient.getWinterNavigationPorts();
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
+
+            return -1;
+        }
 
         final Map<Boolean, List<Port>> ports =
             data.getPort().stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.getPortInfo().getLocode())));

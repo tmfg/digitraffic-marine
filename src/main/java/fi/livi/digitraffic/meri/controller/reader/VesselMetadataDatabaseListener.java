@@ -4,20 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.meri.controller.AisLocker;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.util.service.LockingService;
 
@@ -26,18 +23,14 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 @ConditionalOnProperty("ais.websocketRead.enabled")
 public class VesselMetadataDatabaseListener implements WebsocketListener {
     private final VesselMetadataRepository vesselMetadataRepository;
-    private final LockingService lockingService;
-
-    private final String instanceId;
+    private final AisLocker aisLocker;
 
     private final Map<Integer, VesselMessage> messageMap = new HashMap<>();
 
-    public VesselMetadataDatabaseListener(final VesselMetadataRepository vesselMetadataRepository,
-                                          final LockingService lockingService) {
+    public VesselMetadataDatabaseListener(final VesselMetadataRepository vesselMetadataRepository, final LockingService lockingService,
+        final AisLocker aisLocker) {
         this.vesselMetadataRepository = vesselMetadataRepository;
-        this.lockingService = lockingService;
-
-        this.instanceId = UUID.randomUUID().toString();
+        this.aisLocker = aisLocker;
     }
 
     @Override
@@ -53,7 +46,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
     private void persistQueue() {
         final List<VesselMessage> messages = removeAllMessages();
 
-        if(getLock()) {
+        if(aisLocker.hasLockForAis()) {
             final List<VesselMetadata> vessels = messages.stream()
                 .map(v -> new VesselMetadata(v.vesselAttributes))
                 .collect(Collectors.toList());
@@ -68,10 +61,6 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
         messageMap.clear();
 
         return messages;
-    }
-
-    private boolean getLock() {
-        return lockingService.acquireLock("AIS-METADATA", instanceId, 2);
     }
 
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {

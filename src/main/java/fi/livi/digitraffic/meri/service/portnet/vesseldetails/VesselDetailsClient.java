@@ -1,10 +1,14 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
+import static fi.livi.digitraffic.meri.util.TimeUtil.dateToString;
+import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
+
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +18,7 @@ import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
 import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Service
+@ConditionalOnNotWebApplication
 public class VesselDetailsClient {
     private final String vesselDetailsUrl;
     private final Jax2bRestTemplate restTemplate;
@@ -47,8 +52,8 @@ public class VesselDetailsClient {
     }
 
     private String buildUrl(final ZonedDateTime from) {
-        final String dateFromParameter = PortCallClient.dateToString("fromDte", from);
-        final String timeFromParameter = PortCallClient.timeToString("fromTme", from);
+        final String dateFromParameter = dateToString("fromDte", from);
+        final String timeFromParameter = timeToString("fromTme", from);
 
         return String.format("%s%s&%s", vesselDetailsUrl, dateFromParameter, timeFromParameter);
     }
