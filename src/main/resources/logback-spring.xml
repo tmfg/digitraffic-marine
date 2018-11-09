@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <springProperty name="appType" source="app.type"/>
+
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <!-- Log message format -->
         <encoder>
@@ -14,9 +16,9 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>info</level>
         </filter>
-        <file>ais-logstash.log</file>
+        <file>logs/marine-${appType}-logstash.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>ais-logstash.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>marine-${appType}-logstash.%d{yyyy-MM-dd-HH}.log.gz</fileNamePattern>
             <maxHistory>2</maxHistory>
         </rollingPolicy>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
@@ -24,9 +26,9 @@
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- File to write to before rotating. See: http://logback.qos.ch/manual/appenders.html#tbrpFileNamePattern -->
-        <file>ais-daily.log</file>
+        <file>logs/marine-${appType}-daily.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>ais-daily.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>marine-${appType}-daily.%d{yyyy-MM-dd-HH}.log.gz</fileNamePattern>
             <maxHistory>92</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -37,9 +39,9 @@
     <!-- PerformanceMonitor messages logging in separate file -->
     <appender name="FILE_PERFORMANCE_MONITOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- File to write to before rotating. See: http://logback.qos.ch/manual/appenders.html#tbrpFileNamePattern -->
-        <file>ais-performance-daily.log</file>
+        <file>logs/marine-${appType}-performance-daily.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>ais-performance-daily.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>marine-${appType}-performance-daily.%d{yyyy-MM-dd-HH}.log.gz</fileNamePattern>
             <maxHistory>92</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -57,22 +59,10 @@
         <appender-ref ref="FILE_LOGSTASH" />
     </logger>
 
-    <!-- debugging log (note: javamelody does not use FQCN, so loggers use name="javamelody",
-     not "net.bull.javamelody") -->
-    <logger name="net.bull.javamelody" additivity="true">
-        <level value="ERROR" />
-        <appender-ref ref="FILE_LOGSTASH" />
-    </logger>
-    <logger name="net.bull.javamelody" additivity="false">
-        <appender-ref ref="NULL" />
-    </logger>
-
     <root level="INFO" additivity="false">
         <appender-ref ref="FILE" />
         <appender-ref ref="FILE_LOGSTASH" />
-        <springProfile name="localhost">
-            <appender-ref ref="CONSOLE" />
-        </springProfile>
+        <appender-ref ref="CONSOLE" />
     </root>
 
 </configuration>

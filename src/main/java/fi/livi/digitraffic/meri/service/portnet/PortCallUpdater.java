@@ -1,12 +1,13 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -16,8 +17,12 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
@@ -33,8 +38,10 @@ import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
 import fi.livi.digitraffic.meri.portnet.xsd.VesselDetails;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
+@ConditionalOnNotWebApplication
 public class PortCallUpdater {
     private final PortCallRepository portCallRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
@@ -47,11 +54,13 @@ public class PortCallUpdater {
     // To make sure that no data is missed because of update turn changing from a node to another
     private final int overlapTimeFrame;
 
+    private static final Timestamp MIN_TIMESTAMP = new Timestamp(Instant.parse("2016-01-01T00:00:00.00Z").toEpochMilli());
+
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallClient portCallClient,
-                           @Value("${portCallUpdateJob.maxTimeFrameToFetch}") final int maxTimeFrameToFetch,
-                           @Value("${portCallUpdateJob.overlapTimeFrame}") final int overlapTimeFrame) {
+                           @Value("${portCallUpdateJob.maxTimeFrameToFetch:0}") final int maxTimeFrameToFetch,
+                           @Value("${portCallUpdateJob.overlapTimeFrame:0}") final int overlapTimeFrame) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallClient = portCallClient;
@@ -61,33 +70,57 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(PORT_CALLS.name());
-        final Instant now = Instant.now();
-        final Instant from = lastUpdated == null ? now.minusMillis(maxTimeFrameToFetch) : lastUpdated.minusMillis(overlapTimeFrame);
-        final Instant to = now.toEpochMilli() - from.toEpochMilli() > maxTimeFrameToFetch ? from.plusMillis(maxTimeFrameToFetch) : now;
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS.name());
+        final ZonedDateTime now = ZonedDateTime.now().minusMinutes(1); // be sure not to go into future
+        final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus(overlapTimeFrame, MILLIS);
+        final ZonedDateTime to = TimeUtil.millisBetween(now, from) > maxTimeFrameToFetch ? from.plus(maxTimeFrameToFetch, MILLIS) : now;
 
         updatePortCalls(from, to);
     }
 
     @Transactional
-    public void updatePortCalls(final Instant from, final Instant to) {
-        log.info("Fetching port calls from server");
-
+    public void updatePortCalls(final ZonedDateTime from, final ZonedDateTime to) {
         final PortCallList list = portCallClient.getList(from, to);
 
         if(isListOk(list)) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), Date.from(to), getClass().getSimpleName());
-
             final List<PortCall> added = new ArrayList<>();
             final List<PortCall> updated = new ArrayList<>();
-            final StopWatch watch = new StopWatch();
 
-            watch.start();
+            final StopWatch watch = StopWatch.createStarted();
+            checkTimestamps(list);
             list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
-            portCallRepository.save(added);
-            watch.stop();
+            portCallRepository.saveAll(added);
 
-            log.info("portCallAddedCount={} port call, portCallUpdatedCount={}, tookMs={} .", added.size(), updated.size(), watch.getTime());
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
+
+            log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
+        }
+    }
+
+    private void checkTimestamps(final PortCallList list) {
+        for(final PortCallNotification pcn : list.getPortCallNotification()) {
+            final Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+            final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
+
+            if(timestamp == null) {
+                try {
+                    log.error("method=checkTimestamps portCallId={} futureTimestamp=null, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                } catch (JsonProcessingException e) {
+                    log.error("method=checkTimestamps", e);
+                }
+            } else if(timestamp.after(now)) {
+                try {
+                    log.error("method=checkTimestamps portCallId={} futureTimestamp={}, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                } catch (JsonProcessingException e) {
+                    log.error("method=checkTimestamps", e);
+                }
+            } else if(timestamp.before(MIN_TIMESTAMP)) {
+                try {
+                    log.error("method=checkTimestamps portCallId={} pastTimestamp={}, portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
+                } catch (JsonProcessingException e) {
+                    log.error("method=checkTimestamps", e);
+                }
+            }
         }
     }
 
@@ -96,13 +129,13 @@ public class PortCallUpdater {
 
         switch(status) {
         case "OK":
-            log.info("notificationsFetchedCount={} notifications", CollectionUtils.size(list.getPortCallNotification()));
+            log.info("notificationsFetchedCount={}", CollectionUtils.size(list.getPortCallNotification()));
             break;
         case "NOT_FOUND":
             log.info("No port calls from server");
             break;
         default:
-            log.error("error with status={}", status);
+            log.error("error status={}", status);
             return false;
         }
 
@@ -118,29 +151,19 @@ public class PortCallUpdater {
     }
 
     private void update(final PortCallNotification pcn, final List<PortCall> added, final List<PortCall> updated) {
-        final PortCall old = portCallRepository.findOne(pcn.getPortCallId().longValue());
+        final PortCall old = portCallRepository.findById(pcn.getPortCallId().longValue()).orElse(null);
 
         if(old == null) {
-            added.add(addNew(pcn));
+            final PortCall pc = new PortCall();
+
+            updateData(pc, pcn);
+
+            added.add(pc);
         } else {
-            updated.add(update(old, pcn));
+            updateData(old, pcn);
+
+            updated.add(old);
         }
-    }
-
-    private static PortCall update(final PortCall pc, final PortCallNotification pcn) {
-        // update timestamp
-
-        updateData(pc, pcn);
-
-        return pc;
-    }
-
-    private static PortCall addNew(final PortCallNotification pcn) {
-        final PortCall pc = new PortCall();
-
-        updateData(pc, pcn);
-
-        return pc;
     }
 
     private static void updateData(final PortCall pc, final PortCallNotification pcn) {

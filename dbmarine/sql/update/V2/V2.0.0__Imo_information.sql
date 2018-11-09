@@ -1,0 +1,1 @@
+alter table imo_information alter column brief_particulars_voyage type varchar(1024);

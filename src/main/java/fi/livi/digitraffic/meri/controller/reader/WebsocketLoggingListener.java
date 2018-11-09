@@ -1,6 +1,10 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
+import java.time.Instant;
+
+import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
 
 public class WebsocketLoggingListener implements WebsocketListener {
     private final WebsocketStatistics.WebsocketType type;

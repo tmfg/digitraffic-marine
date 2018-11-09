@@ -12,7 +12,7 @@ public class MultiPoint extends Geometry<List<List<Double>>> {
 
     public MultiPoint() {
         setType("MultiPoint");
-    };
+    }
 
     public void setCoordinates(List<List<Double>> coordinates) {
         super.setCoordinates(coordinates);

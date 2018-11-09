@@ -24,7 +24,7 @@ public class PookiFeatureCollection extends GeoJsonObject {
     @JsonProperty("features")
     private List<PookiFeature> features = new ArrayList<>();
 
-    public void setFeatures(List<PookiFeature> features) {
+    public void setFeatures(final List<PookiFeature> features) {
         this.features = features;
     }
 

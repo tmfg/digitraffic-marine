@@ -14,12 +14,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 
 @Service
+@ConditionalOnNotWebApplication
 public class SsnLocationUpdater {
     private final SsnLocationRepository ssnLocationRepository;
     private final SsnLocationClient ssnLocationReader;
@@ -80,8 +82,8 @@ public class SsnLocationUpdater {
         }
 
         // values in oldMap can be removed, they no longes exist
-        ssnLocationRepository.delete(oldMap.values());
-        ssnLocationRepository.save(newList);
+        ssnLocationRepository.deleteAll(oldMap.values());
+        ssnLocationRepository.saveAll(newList);
 
         log.info("locationsReadCount={} locations, locationsAddedCount={} locationsUpdatedCount={} locationsDeletedCount={} .",
                 newLocations.size(), newList.size(), updates, oldMap.values().size());
