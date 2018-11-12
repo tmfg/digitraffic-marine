@@ -102,24 +102,17 @@ public class PortCallUpdater {
             final Timestamp now = new Timestamp(Instant.now().toEpochMilli());
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
-            if(timestamp == null) {
-                try {
+            try {
+                if(timestamp == null) {
                     log.error("method=checkTimestamps portCallId={} futureTimestamp=null, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
-                } catch (JsonProcessingException e) {
-                    log.error("method=checkTimestamps", e);
-                }
-            } else if(timestamp.after(now)) {
-                try {
+                } else if(timestamp.after(now)) {
                     log.error("method=checkTimestamps portCallId={} futureTimestamp={}, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
-                } catch (JsonProcessingException e) {
-                    log.error("method=checkTimestamps", e);
+                } else if(timestamp.before(MIN_TIMESTAMP)) {
+                    log.error("method=checkTimestamps portCallId={} pastTimestamp={}, portCallList={}", pcn.getPortCallId().longValue(),
+                        timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
                 }
-            } else if(timestamp.before(MIN_TIMESTAMP)) {
-                try {
-                    log.error("method=checkTimestamps portCallId={} pastTimestamp={}, portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
-                } catch (JsonProcessingException e) {
-                    log.error("method=checkTimestamps", e);
-                }
+            } catch (JsonProcessingException e) {
+                log.error("method=checkTimestamps", e);
             }
         }
     }
