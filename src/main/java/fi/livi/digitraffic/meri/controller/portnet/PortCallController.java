@@ -31,11 +31,14 @@ import io.swagger.annotations.ApiResponses;
 public class PortCallController {
     private final PortCallService portCallService;
 
+    private static final String RESULTS_SIZE_LIMIT_1000_NOTE = "If the search result size exceeds 1000 items, the operation will return an error. " +
+                                                               "In this case you should try to narrow down your search criteria.";
+
     public PortCallController(final PortCallService portCallService) {
         this.portCallService = portCallService;
     }
 
-    @ApiOperation("Find port calls")
+    @ApiOperation(value = "Find port calls", notes = RESULTS_SIZE_LIMIT_1000_NOTE)
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
@@ -73,7 +76,7 @@ public class PortCallController {
         return portCallService.findPortCalls(date, from, null, null, vesselName, mmsi, imo, nationality, vesselTypeCode);
     }
 
-    @ApiOperation("Find port calls")
+    @ApiOperation(value = "Find port calls", notes = RESULTS_SIZE_LIMIT_1000_NOTE)
     @GetMapping(path = "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
@@ -108,7 +111,7 @@ public class PortCallController {
         return portCallService.findPortCalls(date, from, null, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
     }
 
-    @ApiOperation("Find port calls")
+    @ApiOperation(value = "Find port calls", notes = RESULTS_SIZE_LIMIT_1000_NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })

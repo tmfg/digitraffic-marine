@@ -57,7 +57,7 @@ public class PortCallService {
         }
 
         if (portCallIds.size() > 1000) {
-            throw new BadRequestException("Too big resultset, try narrow down");
+            throw new BadRequestException("The search result is too big (over 1000 items), try to narrow down your search criteria.");
         }
 
         final List<PortCallJson> portCallList = portCallRepository.findByPortCallIdIn(portCallIds);
