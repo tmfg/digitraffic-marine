@@ -4,16 +4,14 @@ import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
 import static fi.livi.digitraffic.meri.util.TimeUtil.dateToString;
 import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import javax.net.ssl.HttpsURLConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
@@ -34,6 +32,7 @@ public class PortCallClient {
         this.restTemplate = restTemplate;
     }
 
+    @Retryable
     public PortCallList getList(final ZonedDateTime lastUpdated, final ZonedDateTime now) {
         final String url = buildUrl(lastUpdated, now);
 
