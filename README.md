@@ -44,6 +44,21 @@ Or build the JAR file with:
 
  	$ java -Dspring.profiles.active=localhost -jar target/AIS-0.0.1-SNAPSHOT.jar
 
+### Generate SchemaSpy schemas from the db with Maven
+
+    $ mvn exec:exec@schemaspy
+
+Generated schemas can be found at `dbmarine/schemaspy/schema` -directory    
+
+Or with custom parameters.
+    
+    $ mvn exec:exec@schemaspy -Dexec.args="-o=/tmp/schema"
+
+Or without Maven
+
+    $ cd dbmarine/schemaspy
+    $ get-deps-and-run-schemaspy.sh [-o=/tmp/schema]
+
 ### Misc commands
 
 Check for Maven dependency updates
