@@ -56,3 +56,9 @@ crashlytics-build.properties
 buildNumber.properties
 *.log.gz
 application-localhost.properties
+
+# SchemaSpyn generoimat schemat ja kirjastot
+/dbmarine/schemaspy/schema
+/dbmarine/schemaspy/lib
+
+/javamelody
