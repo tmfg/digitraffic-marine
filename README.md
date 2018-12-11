@@ -6,7 +6,10 @@
 1. Java 1.8 JDK
 2. Maven
 3. Git client
-4. Oracle 11g database
+4. Postgresql-database
+5. (optional) mqtt-server
+
+You can run postgresql and mqtt in docker.  See dbmarine/README.md and mqttmarine/README.md for details.
 
 ### Clone project to your computer
 
@@ -17,16 +20,6 @@
 
 To configure project copy ***src/main/resources/application-localhost.template*** -file
 as ***application-localhost.properties*** and configure it according to your environment.
-
-### Configure Oracle JDBC driver
-
-Download Oracle JDBC driver and add it to your local Maven repository.
-
-	$ mvn install:install-file -DgroupId=com.oracle.jdbc -DartifactId=ojdbc7 \
-	  -Dversion=12.1.0.2 -Dpackaging=jar  -DgeneratePom=true -Dfile=ojdbc7-12.1.0.2.jar
-
-**Or** add Maven repository that contains OJDBC-driver to project's pom.xml inside repositories-tag.
-
 
 ### Build project
 
@@ -50,6 +43,21 @@ Or build the JAR file with:
  And run the JAR by typing:
 
  	$ java -Dspring.profiles.active=localhost -jar target/AIS-0.0.1-SNAPSHOT.jar
+
+### Generate SchemaSpy schemas from the db with Maven
+
+    $ mvn exec:exec@schemaspy
+
+Generated schemas can be found at `dbmarine/schemaspy/schema` -directory    
+
+Or with custom parameters.
+    
+    $ mvn exec:exec@schemaspy -Dexec.args="-o=/tmp/schema"
+
+Or without Maven
+
+    $ cd dbmarine/schemaspy
+    $ get-deps-and-run-schemaspy.sh [-o=/tmp/schema]
 
 ### Misc commands
 

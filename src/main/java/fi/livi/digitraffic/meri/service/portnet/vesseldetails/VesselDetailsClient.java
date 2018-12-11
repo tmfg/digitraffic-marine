@@ -1,24 +1,25 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
-import java.time.Instant;
-import java.time.ZoneId;
+import static fi.livi.digitraffic.meri.util.TimeUtil.dateToString;
+import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
+
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
 import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Service
+@ConditionalOnNotWebApplication
 public class VesselDetailsClient {
-
     private final String vesselDetailsUrl;
     private final Jax2bRestTemplate restTemplate;
 
@@ -30,12 +31,11 @@ public class VesselDetailsClient {
         this.restTemplate = restTemplate;
     }
 
-    public VesselList getVesselList(final Instant from) {
+    public VesselList getVesselList(final ZonedDateTime from) {
         final String url = buildUrl(from);
+        final VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
 
-        VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
-
-        logInfo(vesselList);
+//        logInfo(vesselList);
 
         return vesselList;
     }
@@ -51,10 +51,9 @@ public class VesselDetailsClient {
         }
     }
 
-    private String buildUrl(final Instant from) {
-        final ZonedDateTime fromDt = from.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault());
-        final String dateFromParameter = PortCallClient.dateToString("fromDte", fromDt);
-        final String timeFromParameter = PortCallClient.timeToString("fromTme", fromDt);
+    private String buildUrl(final ZonedDateTime from) {
+        final String dateFromParameter = dateToString("fromDte", from);
+        final String timeFromParameter = timeToString("fromTme", from);
 
         return String.format("%s%s&%s", vesselDetailsUrl, dateFromParameter, timeFromParameter);
     }

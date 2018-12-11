@@ -49,14 +49,16 @@ crashlytics-build.properties
 # Created by .ignore support plugin (hsz.mobi)
 
 # Ignore developer local conf
-/src/main/resources/application-localhost.properties
+/src/main/resources/application-default.properties
 
 /target/
 **/*.log
 buildNumber.properties
 *.log.gz
-/javamelody
+application-localhost.properties
 
-# Ignoroidaan, koska ei olla varmoja voiko sql-lauseet julkaista
-/db/sql
-/db/pom.xml
+# SchemaSpyn generoimat schemat ja kirjastot
+/dbmarine/schemaspy/schema
+/dbmarine/schemaspy/lib
+
+/javamelody

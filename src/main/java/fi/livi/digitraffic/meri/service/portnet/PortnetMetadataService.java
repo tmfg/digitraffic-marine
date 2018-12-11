@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +50,7 @@ public class PortnetMetadataService {
     @Transactional(readOnly = true)
     public CodeDescriptions listCodeDescriptions() {
         return new CodeDescriptions(
-                updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
                                 codeDescriptionRepository.listAllCargoTypes(),
                                 codeDescriptionRepository.listAllVesselTypes(),
                                 codeDescriptionRepository.listAllAgentTypes()
@@ -60,7 +60,7 @@ public class PortnetMetadataService {
     @Transactional(readOnly = true)
     public FeatureCollectionList listaAllMetadata() {
         return SsnLocationConverter.convert(
-                updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
                 ssnLocationRepository.findAll(),
                 portAreaRepository.findAll(),
                 berthRepository.findAll()
@@ -76,7 +76,7 @@ public class PortnetMetadataService {
         }
 
         return SsnLocationConverter.convert(
-                updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
                 Collections.singletonList(location),
                 portAreaRepository.findByPortAreaKeyLocode(locode),
                 berthRepository.findByBerthKeyLocode(locode)
@@ -89,7 +89,7 @@ public class PortnetMetadataService {
         final boolean isFinland = StringUtils.equals(country, "Finland");
 
         return SsnLocationConverter.convert(
-                updatedTimestampRepository.getLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
                 ssnLocationRepository.findByCountryIgnoreCase(country),
                 isFinland ? portAreaRepository.findAll() : Collections.emptyList(),
                 isFinland ? berthRepository.findAll() : Collections.emptyList());

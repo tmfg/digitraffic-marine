@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +12,10 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
@@ -26,8 +27,8 @@ import ibnet_baltice_ports.Restriction;
 import ibnet_baltice_ports.Restrictions;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationPortUpdater {
-
     private final WinterNavigationClient winterNavigationClient;
 
     private final WinterNavigationPortRepository winterNavigationRepository;
@@ -52,8 +53,15 @@ public class WinterNavigationPortUpdater {
      */
     @Transactional
     public int updateWinterNavigationPorts() {
+        final Ports data;
 
-        final Ports data = winterNavigationClient.getWinterNavigationPorts();
+        try {
+            data = winterNavigationClient.getWinterNavigationPorts();
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
+
+            return -1;
+        }
 
         final Map<Boolean, List<Port>> ports =
             data.getPort().stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.getPortInfo().getLocode())));
@@ -77,21 +85,21 @@ public class WinterNavigationPortUpdater {
 
         StopWatch stopWatch = StopWatch.createStarted();
         portsWithLocode.forEach(p -> update(p, added, updated));
-        winterNavigationRepository.save(added);
+        winterNavigationRepository.saveAll(added);
         stopWatch.stop();
 
         log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
                  data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toZonedDateTime().toInstant()),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();
     }
 
     private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
-        final WinterNavigationPort old = winterNavigationRepository.findOne(port.getPortInfo().getLocode());
+        final WinterNavigationPort old = winterNavigationRepository.findById(port.getPortInfo().getLocode()).orElse(null);
 
         if (old == null) {
             added.add(addNew(port));
@@ -101,7 +109,7 @@ public class WinterNavigationPortUpdater {
     }
 
     private static WinterNavigationPort addNew(final Port port) {
-        WinterNavigationPort p = new WinterNavigationPort();
+        final WinterNavigationPort p = new WinterNavigationPort();
 
         updateData(p, port);
 
@@ -109,7 +117,6 @@ public class WinterNavigationPortUpdater {
     }
 
     private static WinterNavigationPort update(final WinterNavigationPort p, final Port port) {
-
         updateData(p, port);
 
         return p;

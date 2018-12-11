@@ -10,15 +10,15 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.config.AisApplicationConfiguration;
+import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 
 
 public class PortcallControllerTest extends AbstractTestBase {
 
     @Test
     public void listAllPortCalls() throws Exception {
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_PORT_CALLS_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_PORT_CALLS_PATH +
                 "?vesselName=test"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -28,8 +28,8 @@ public class PortcallControllerTest extends AbstractTestBase {
 
     @Test
     public void listPortCallsFromLocodeByVesselName() throws Exception {
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_PORT_CALLS_PATH +
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_PORT_CALLS_PATH +
                 "/FIHEL?vesselName=test"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -39,8 +39,8 @@ public class PortcallControllerTest extends AbstractTestBase {
 
     @Test
     public void listAllPortCallsFromLocodeSucceeds() throws Exception {
-        mockMvc.perform(get(AisApplicationConfiguration.API_V1_BASE_PATH +
-                AisApplicationConfiguration.API_PORT_CALLS_PATH + "/FIHEL"))
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                MarineApplicationConfiguration.API_PORT_CALLS_PATH + "/FIHEL"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))

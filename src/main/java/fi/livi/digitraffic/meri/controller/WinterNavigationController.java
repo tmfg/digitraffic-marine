@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.controller;
 
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_WINTER_NAVIGATION_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_WINTER_NAVIGATION_PATH;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,7 +34,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ports")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ports", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ports", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation ports"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -43,7 +43,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ships")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ships", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ships", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation ships"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -52,7 +52,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation dirways")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/dirways", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/dirways", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation dirways"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -61,19 +61,19 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ship")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ships/{vesselId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ships/{vesselId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation ship"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
-    public WinterNavigationShipFeature getWinterNavigationShipByVesselId(@ApiParam(value = "Vessel identification code. Equals IMO-<IMO-code> when vessel IMO is present. " +
-                                                                                           "Otherwise MMSI-<MMSI-code> (Maritime Mobile Service Identity).", required = true)
+    public WinterNavigationShipFeature getWinterNavigationShipByVesselId(@ApiParam(value = "Vessel identification code. Equals " +
+        "IMO-{IMO-code} when vessel IMO is present. Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true)
                                                                          @PathVariable("vesselId") final String vesselId) {
 
         return winterNavigationService.getWinterNavigationShipByVesselId(vesselId);
     }
 
     @ApiOperation("Return winter navigation port")
-    @GetMapping(path = API_WINTER_NAVIGATION_PATH + "/ports/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/ports/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation port"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody

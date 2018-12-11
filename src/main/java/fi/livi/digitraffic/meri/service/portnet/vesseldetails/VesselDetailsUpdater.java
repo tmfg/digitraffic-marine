@@ -2,8 +2,7 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.VESSEL_DETAILS;
 
-import java.sql.Date;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +22,7 @@ import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 
 @Service
+@ConditionalOnNotWebApplication
 public class VesselDetailsUpdater {
     private final VesselDetailsRepository vesselDetailsRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
@@ -41,19 +42,19 @@ public class VesselDetailsUpdater {
 
     @Transactional
     public void update() {
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(VESSEL_DETAILS.toString());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(VESSEL_DETAILS.toString());
 
         updateVesselDetails(lastUpdated);
     }
 
-    protected void updateVesselDetails(Instant lastUpdated) {
-        final Instant now = Instant.now();
-        final Instant from = lastUpdated == null ? now.minus(1, ChronoUnit.DAYS) : lastUpdated;
+    protected void updateVesselDetails(final ZonedDateTime lastUpdated) {
+        final ZonedDateTime now = ZonedDateTime.now();
+        final ZonedDateTime from = lastUpdated == null ? now.minus(1, ChronoUnit.DAYS) : lastUpdated;
 
         final VesselList vesselList = vesselDetailsClient.getVesselList(from);
 
         if (isListOk(vesselList)) {
-            updatedTimestampRepository.setUpdated(VESSEL_DETAILS.name(), Date.from(now), getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(VESSEL_DETAILS.name(), now, getClass().getSimpleName());
 
             final List<VesselDetails> added = new ArrayList<>();
             final List<VesselDetails> updated = new ArrayList<>();
@@ -61,23 +62,23 @@ public class VesselDetailsUpdater {
 
             watch.start();
             vesselList.getVesselDetails().forEach(vesselDetails -> update(vesselDetails, added, updated));
-            vesselDetailsRepository.save(added);
+            vesselDetailsRepository.saveAll(added);
             watch.stop();
 
             log.info("vesselDetailAddedCount={} vesselDetailUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
         }
     }
 
-    private void update(fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd, List<VesselDetails> added, List<VesselDetails> updated) {
-        final VesselDetails old = vesselDetailsRepository.findOne(vd.getIdentificationData().getVesselId().longValue());
+    private void update(final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd, final List<VesselDetails> added, final List<VesselDetails> updated) {
+        final VesselDetails old = vesselDetailsRepository.findById(vd.getIdentificationData().getVesselId().longValue()).orElse(null);
 
-        if(old == null) {
+        if(old != null) {
+            old.setAll(vd);
+            updated.add(old);
+        } else {
             final VesselDetails vesselDetails = new VesselDetails();
             vesselDetails.setAll(vd);
             added.add(vesselDetails);
-        } else {
-            old.setAll(vd);
-            updated.add(old);
         }
     }
 

@@ -15,6 +15,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
@@ -25,6 +26,7 @@ import fi.livi.digitraffic.meri.domain.portnet.PortArea;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaKey;
 
 @Service
+@ConditionalOnNotWebApplication
 public class BerthUpdater {
     private final PortAreaRepository portAreaRepository;
     private final BerthRepository berthRepository;
@@ -99,8 +101,8 @@ public class BerthUpdater {
             oldMap.remove(bk);
         }
 
-        berthRepository.delete(oldMap.values());
-        berthRepository.save(newBerths);
+        berthRepository.deleteAll(oldMap.values());
+        berthRepository.saveAll(newBerths);
 
         log.info("Read berthsCount={} berths, berthsAddedCount={} berthsUpdatedCount={} berthsDeletedCount={} .",
                 berthLines.size(), newBerths.size(), updates, oldMap.values().size());
@@ -141,8 +143,8 @@ public class BerthUpdater {
             oldMap.remove(e.getKey());
         }
 
-        portAreaRepository.delete(oldMap.values());
-        portAreaRepository.save(newAreas);
+        portAreaRepository.deleteAll(oldMap.values());
+        portAreaRepository.saveAll(newAreas);
 
         log.info("portAreasAddedCount={} port areas, portAreasUpdatedCount={} portAreasDeletedCount={} .", newAreas.size(), updates, oldMap.values().size());
 

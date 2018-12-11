@@ -6,17 +6,16 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +33,7 @@ import ibnet_baltice_winterships.WinterShip;
 import ibnet_baltice_winterships.WinterShips;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationShipUpdater {
 
     private final static Logger log = LoggerFactory.getLogger(WinterNavigationShipUpdater.class);
@@ -58,24 +58,31 @@ public class WinterNavigationShipUpdater {
      */
     @Transactional
     public int updateWinterNavigationShips() {
+        final WinterShips data;
 
-        final WinterShips data = winterNavigationClient.getWinterNavigationShips();
+        try {
+            data = winterNavigationClient.getWinterNavigationShips();
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
+
+            return -1;
+        }
 
         final List<WinterNavigationShip> added = new ArrayList<>();
         final List<WinterNavigationShip> updated = new ArrayList<>();
 
         final Map<String, WinterNavigationShip> shipsByVesselPK =
-            winterNavigationShipRepository.findDistinctByOrderByVesselPK().stream().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
+            winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
 
         final StopWatch stopWatch = StopWatch.createStarted();
         data.getWinterShip().forEach(ship -> update(ship, added, updated, shipsByVesselPK));
-        winterNavigationShipRepository.save(added);
+        winterNavigationShipRepository.saveAll(added);
         stopWatch.stop();
 
         log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={} , tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_SHIPS.name(),
-                                              Date.from(data.getDataValidTime().toGregorianCalendar().toZonedDateTime().toInstant()),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 
         return added.size() + updated.size();

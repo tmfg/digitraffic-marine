@@ -1,0 +1,1 @@
+update updated_timestamp set updated_time = '1.1.2017 00:00:00' where updated_name = 'PORT_CALLS';

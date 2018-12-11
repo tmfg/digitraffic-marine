@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.domain.portnet.PortArea;
@@ -21,6 +22,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
 @Component
+@ConditionalOnNotWebApplication
 public class PortAreaCoordinateReader {
     private static final Logger log = LoggerFactory.getLogger(PortAreaCoordinateReader.class);
 

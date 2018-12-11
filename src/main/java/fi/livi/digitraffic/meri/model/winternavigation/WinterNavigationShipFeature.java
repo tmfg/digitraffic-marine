@@ -14,8 +14,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "GeoJSON Feature object")
 public class WinterNavigationShipFeature {
 
-    @ApiModelProperty(value = "Vessel identification code. Equals IMO-<IMO-code> when vessel IMO is present. " +
-                              "Otherwise MMSI-<MMSI-code> (Maritime Mobile Service Identity).", required = true)
+    @ApiModelProperty(value = "Vessel identification code. Equals IMO-{IMO-code} when vessel IMO is present. " +
+                              "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true)
     public final String vesselId;
 
     @ApiModelProperty(value = "GeoJSON Properties object", required = true)

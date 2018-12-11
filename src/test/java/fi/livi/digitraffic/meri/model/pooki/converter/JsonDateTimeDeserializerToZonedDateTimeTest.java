@@ -12,7 +12,6 @@ import org.junit.Test;
 import fi.livi.digitraffic.meri.AbstractTestBase;
 
 public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBase {
-
     @Test
     public void testJsonParsing() throws IOException {
         final List<Pair<String, String >> values =

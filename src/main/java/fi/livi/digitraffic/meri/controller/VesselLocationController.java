@@ -1,11 +1,12 @@
 package fi.livi.digitraffic.meri.controller;
 
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_LOCATIONS_PATH;
-import static fi.livi.digitraffic.meri.config.AisApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_LOCATIONS_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 
 import java.time.ZonedDateTime;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -24,7 +25,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_LOCATIONS_PATH)
 public class VesselLocationController {
-    private static final Logger LOG = Logger.getLogger(VesselLocationController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VesselLocationController.class);
 
     private final VesselLocationService vesselLocationService;
 

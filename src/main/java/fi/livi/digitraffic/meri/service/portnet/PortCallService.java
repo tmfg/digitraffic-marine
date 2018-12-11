@@ -1,28 +1,22 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
-import static org.hibernate.criterion.Restrictions.eq;
-import static org.hibernate.criterion.Restrictions.in;
-import static org.hibernate.criterion.Restrictions.not;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.persistence.EntityManager;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.DateType;
-import org.hibernate.type.StringType;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +26,9 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
+import fi.livi.digitraffic.meri.util.TimeUtil;
+import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
+import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
 
 @Service
 public class PortCallService {
@@ -48,16 +45,10 @@ public class PortCallService {
         this.entityManager = entityManager;
     }
 
-    private Criteria createCriteria() {
-        return entityManager.unwrap(Session.class)
-                .createCriteria(PortCall.class)
-                .setFetchSize(1000);
-    }
-
     @Transactional(readOnly = true)
     public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final ZonedDateTime to, final String locode, final String vesselName,
                                        final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
-        final Instant lastUpdated = updatedTimestampRepository.getLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
 
         final List<Long> portCallIds = getPortCallIds(date, from, to, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
 
@@ -66,7 +57,7 @@ public class PortCallService {
         }
 
         if (portCallIds.size() > 1000) {
-            throw new BadRequestException("Too big resultset, try narrow down");
+            throw new BadRequestException("The search result is too big (over 1000 items), try to narrow down your search criteria.");
         }
 
         final List<PortCallJson> portCallList = portCallRepository.findByPortCallIdIn(portCallIds);
@@ -76,51 +67,39 @@ public class PortCallService {
 
     private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, ZonedDateTime to, final String locode, final String vesselName,
                                       final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
-        final Criteria c = createCriteria().setProjection(Projections.id());
+        final QueryBuilder<Long, PortCall> qb = new QueryBuilder<>(entityManager, Long.class, PortCall.class);
 
         if (date != null) {
-            c.add(Restrictions.sqlRestriction("TO_CHAR(port_call_timestamp, 'yyyy-MM-dd') = TO_CHAR(?, 'yyyy-MM-dd')", date, DateType.INSTANCE));
+            qb.gte(qb.<Timestamp>get("portCallTimestamp"), date);
+            qb.lt(qb.<Timestamp>get("portCallTimestamp"), DateUtils.addDays(date, 1));
         }
         if (from != null) {
-            c.add(Restrictions.gt("portCallTimestamp", new Timestamp(from.toEpochSecond() * 1000)));
+            qb.gte(qb.get("portCallTimestamp"), Date.from(from.toInstant()));
         }
         if (to != null) {
-            c.add(Restrictions.lt("portCallTimestamp", new Timestamp(to.toEpochSecond() * 1000)));
+            qb.lt(qb.get("portCallTimestamp"), Date.from(to.toInstant()));
         }
         if (locode != null) {
-            c.add(eq("portToVisit", locode));
+            qb.equals("portToVisit", locode);
         }
         if (vesselName != null) {
-            c.add(Restrictions.sqlRestriction("lower(vessel_name) = lower(?)", vesselName, StringType.INSTANCE));
+            qb.equals(qb.lower("vesselName"), vesselName.toLowerCase());
         }
         if(mmsi != null) {
-            c.add(eq("mmsi", mmsi));
+            qb.equals("mmsi", mmsi);
         }
         if(imo != null) {
-            c.add(eq("imoLloyds", imo));
+            qb.equals("imoLloyds", imo);
         }
 
         if(isNotEmpty(nationality)) {
-            addNationalityRestriction(c, nationality);
+            ShortItemRestrictionUtil.addItemRestrictions(qb, qb.get("nationality"), nationality);
         }
 
         if(vesselTypeCode != null) {
-            c.add(eq("vesselTypeCode", vesselTypeCode));
+            qb.equals("vesselTypeCode", vesselTypeCode);
         }
 
-        return c.list();
-    }
-
-    private void addNationalityRestriction(final Criteria c, final List<String> nationality) {
-        final List<String> notInList = nationality.stream().filter(n -> StringUtils.startsWith(n, "!")).map(z -> z.substring(1)).collect(Collectors.toList());
-        final List<String> inList = nationality.stream().filter(n -> !StringUtils.startsWith(n, "!")).collect(Collectors.toList());
-
-        if(isNotEmpty(inList)) {
-            c.add(in("nationality", inList));
-    }
-
-        if(isNotEmpty(notInList)) {
-            c.add(not(in("nationality", notInList)));
-        }
+        return qb.getResults( "portCallId");
     }
 }

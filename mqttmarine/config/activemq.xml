@@ -1,0 +1,67 @@
+<beans>
+    <broker xmlns="http://activemq.org/config/1.0" brokerName="DigitrafficMq"
+            populateJMSXUserID="true" useJmx="true" persistent="true">
+
+        <!-- We only allow Stomp clients -->
+        <transportConnectors>
+            <transportConnector name="stomp" uri="stomp://localhost:61613"/>
+        </transportConnectors>
+
+        <!-- Do not create an ActiveMQ JMX connector.  Use the Sun JMX connector
+             instead, and hook ActiveMQ to it. -->
+        <managementContext>
+            <managementContext createConnector="false" />
+        </managementContext>
+
+        <plugins>
+            <simpleAuthenticationPlugin anonymousAccessAllowed="true" />
+
+            <simpleAuthenticationPlugin>
+                <users>
+                    <authenticationUser username="sa" password="manager" groups="producers,consumers,admins" />
+                    <authenticationUser username="updater" password="updater" groups="producers,consumers" />
+                </users>
+            </simpleAuthenticationPlugin>
+            <authorizationPlugin>
+                <map>
+                    <authorizationMap>
+                        <authorizationEntries>
+                            <authorizationEntry admin="producers,consumers" read="producers,consumers" topic="ActiveMQ.Advisory.&gt;" write="producers,consumers"/>
+                            <authorizationEntry admin="producers" read="producers,consumers,anonymous" topic="&gt;" write="producers"/>
+                        </authorizationEntries>
+                        <tempDestinationAuthorizationEntry>
+                            <tempDestinationAuthorizationEntry admin="producers" read="consumers,producers,anonymous" write="producers"/>
+                        </tempDestinationAuthorizationEntry>
+                    </authorizationMap>
+                </map>
+            </authorizationPlugin>
+        </plugins>
+
+    </broker>
+
+    <!-- Do not create ActiveMQ.Agent topic, as it does not work if
+         destination security is enabled -->
+    <!-- <commandAgent xmlns="http://activemq.org/config/1.0"/> -->
+
+    <!-- Web Console.  Auth is via JAAS.  Beware: jetty-plus-6.1.4.jar contains the
+         JAAS classes, and is not included with ActiveMQ.  You need to download
+         separately.  Web Console queue browser will fail, as it tries to use JMS
+         to browse the queue, and that requires a password.
+    -->
+
+    <jetty xmlns="http://mortbay.com/schemas/jetty/1.0">
+        <connectors>
+            <nioConnector port="8161" />
+        </connectors>
+
+        <userRealms>
+            <!-- "name" must match the realm in web.xml, and "loginModuleName" must be defined in login.conf -->
+            <jaasUserRealm name="ActiveMQ" loginModuleName="ActiveMQ"
+                           callbackHandlerClass="org.mortbay.jetty.plus.jaas.callback.DefaultCallbackHandler" />
+        </userRealms>
+
+        <handlers>
+            <webAppContext contextPath="/admin" resourceBase="${activemq.base}/webapps/admin" logUrlOnStart="true" />
+        </handlers>
+    </jetty>
+</beans>

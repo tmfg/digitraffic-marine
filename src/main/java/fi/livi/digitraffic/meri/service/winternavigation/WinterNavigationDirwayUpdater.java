@@ -2,19 +2,20 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
@@ -26,8 +27,8 @@ import ibnet_baltice_waypoints.DirWayType;
 import ibnet_baltice_waypoints.DirWaysType;
 
 @Service
+@ConditionalOnNotWebApplication
 public class WinterNavigationDirwayUpdater {
-
     private final static Logger log = LoggerFactory.getLogger(WinterNavigationDirwayUpdater.class);
 
     private final WinterNavigationClient winterNavigationClient;
@@ -53,7 +54,15 @@ public class WinterNavigationDirwayUpdater {
      */
     @Transactional
     public int updateWinterNavigationDirways() {
-        final DirWaysType data = winterNavigationClient.getWinterNavigationWaypoints();
+        final DirWaysType data;
+
+        try {
+            data = winterNavigationClient.getWinterNavigationWaypoints();
+        } catch(final Exception e) {
+            SoapFaultLogger.logException(log, e);
+
+            return -1;
+        }
 
         final List<String> names = data.getDirWay().stream().map(d -> d.getName()).collect(Collectors.toList());
         final long deletedCount;
@@ -71,20 +80,21 @@ public class WinterNavigationDirwayUpdater {
 
         final StopWatch stopWatch = StopWatch.createStarted();
         data.getDirWay().forEach(dirway -> update(dirway, added, updated));
-        winterNavigationDirwayRepository.save(added);
+        winterNavigationDirwayRepository.saveAll(added);
         stopWatch.stop();
 
         log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , deletedDirways={} , tookMs={}", added
             .size(), updated.size(), deletedCount, stopWatch.getTime());
 
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS.name(), Date.from(data.getDataValidTime().toGregorianCalendar().toInstant()),
-            getClass().getSimpleName());
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS.name(),
+                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
+                                              getClass().getSimpleName());
 
         return added.size() + updated.size();
     }
 
     private void update(final DirWayType dirway, final List<WinterNavigationDirway> added, final List<WinterNavigationDirway> updated) {
-        final WinterNavigationDirway old = winterNavigationDirwayRepository.findOne(dirway.getName());
+        final WinterNavigationDirway old = winterNavigationDirwayRepository.findById(dirway.getName()).orElse(null);
 
         if (old == null) {
             added.add(addNew(dirway));
@@ -94,7 +104,7 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private WinterNavigationDirway addNew(final DirWayType dirway) {
-        WinterNavigationDirway d = new WinterNavigationDirway();
+        final WinterNavigationDirway d = new WinterNavigationDirway();
 
         updateData(d, dirway);
 
@@ -102,7 +112,6 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private WinterNavigationDirway update(final WinterNavigationDirway d, final DirWayType dirway) {
-
         updateData(d, dirway);
 
         return d;
