@@ -77,16 +77,17 @@ public class VesselLocationController {
     @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromPoint(
-            @ApiParam("Radius of search circle in kilometers (km) using haversine formula.")
+            @ApiParam(value = "Radius of search circle in kilometers (km) using haversine formula.", required = true)
             @PathVariable(value = "radius")
             final double radius,
-            @ApiParam("Latitude of the point")
+            @ApiParam(value = "Latitude of the point", required = true)
             @PathVariable(value = "latitude")
             final double latitude,
-            @ApiParam("Longitude of the point")
+            @ApiParam(value = "Longitude of the point", required = true)
             @PathVariable(value = "longitude")
             final double longitude,
-            @ApiParam("Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
+            @ApiParam(value = "Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g" +
+                ". 2016-10-31T06:30:00.000Z.", required = true)
             @PathVariable(value = "from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             final ZonedDateTime from) {
@@ -100,13 +101,14 @@ public class VesselLocationController {
     @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromMMSI(
-            @ApiParam("Radius of search circle in kilometers (km) using haversine formula.")
+            @ApiParam(value = "Radius of search circle in kilometers (km) using haversine formula.", required = true)
             @PathVariable(value = "radius")
             final double radius,
-            @ApiParam("MMSI of the vessel")
+            @ApiParam(value = "MMSI of the vessel", required = true)
             @PathVariable(value = "mmsi")
             final int mmsi,
-            @ApiParam("Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
+            @ApiParam(value = "Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g" +
+                ". 2016-10-31T06:30:00.000Z.", required = true)
             @PathVariable(value = "from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             final ZonedDateTime from) {
