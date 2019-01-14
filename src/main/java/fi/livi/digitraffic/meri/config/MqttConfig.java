@@ -45,6 +45,7 @@ public class MqttConfig {
     }
 
     @Bean
+    @ConditionalOnProperty("ais.mqtt.enabled")
     @ServiceActivator(inputChannel = "mqttOutboundChannel", async = "true")
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
         final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
@@ -57,6 +58,7 @@ public class MqttConfig {
         return new DirectChannel();
     }
 
+    @ConditionalOnProperty("ais.mqtt.enabled")
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel", defaultRequestTimeout = "2000", defaultReplyTimeout = "2000")
     public interface VesselGateway {
         // Paho does not support concurrency, all calls to this must be synchronized!
