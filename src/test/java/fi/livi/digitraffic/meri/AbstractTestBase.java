@@ -38,21 +38,7 @@ public abstract class AbstractTestBase {
 
     @Autowired
     protected MockMvc mockMvc;
-
-    @Configuration
-    static class TestContextConfiguration {
-        @Bean
-        public SsnLocationClient ssnLocationClient(@Value("${metadata.csv.baseUrl:}") final String baseUrl, final RestTemplateBuilder restTemplateBuilder) {
-            return new SsnLocationClient(baseUrl, restTemplateBuilder);
-        }
-
-        @Bean
-        public SsnLocationUpdater ssnLocastionUpdater(final SsnLocationRepository ssnLocationRepository, final SsnLocationClient
-            ssnLocationClient, final LocationCoordinateReader locationCoordinateReader) {
-            return new SsnLocationUpdater(ssnLocationRepository, ssnLocationClient, locationCoordinateReader);
-        }
-    }
-
+    
     protected String readFile(final String filename) throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();
         final File file = new File(classLoader.getResource(filename).getFile());
