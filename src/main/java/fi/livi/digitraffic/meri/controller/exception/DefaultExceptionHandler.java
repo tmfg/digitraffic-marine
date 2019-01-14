@@ -8,11 +8,15 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.catalina.connector.ClientAbortException;
+import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -50,6 +54,14 @@ public class DefaultExceptionHandler {
                                     HttpStatus.BAD_REQUEST);
     }
 
+    private ResponseEntity<ErrorResponse> createResponseEntity(final ErrorResponse response, final HttpStatus status) {
+        final HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        return new ResponseEntity<>(response, headers, status);
+    }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(final MissingServletRequestParameterException exception, final ServletWebRequest request) {
@@ -59,7 +71,7 @@ public class DefaultExceptionHandler {
         log.info("Query parameter missing. uri={} queryString={} requiredName={} requiredType={}",
                 request.getRequest().getRequestURI(), request.getRequest().getQueryString(), parameterName, requiredType);
 
-        return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
+        return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 String.format("Missing parameter. Target type: %s, parameter: %s",
@@ -76,7 +88,7 @@ public class DefaultExceptionHandler {
         log.info("Constraint violation. uri={} queryString={} violations={}",
                  request.getRequest().getRequestURI(), request.getRequest().getQueryString(), message);
 
-        return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
+        return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                                                       HttpStatus.BAD_REQUEST.value(),
                                                       HttpStatus.BAD_REQUEST.getReasonPhrase(),
                                                       message,
@@ -99,7 +111,7 @@ public class DefaultExceptionHandler {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
+        return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                                                       status.value(),
                                                       status.getReasonPhrase(),
                                                       exception.getMessage(),
@@ -112,7 +124,7 @@ public class DefaultExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMediaTypeNotAcceptable(final Exception exception, final ServletWebRequest request) {
         log.info(HttpStatus.NOT_ACCEPTABLE.value() + " " + HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(), exception);
 
-        return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
+        return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                 HttpStatus.NOT_ACCEPTABLE.value(),
                 HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(),
                 "Media type not acceptable",
@@ -132,7 +144,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleMethodNotSupportedException(final Exception exception, final ServletWebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
+        return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                                                       HttpStatus.METHOD_NOT_ALLOWED.value(),
                                                       HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
                                                       "Method not allowed",
@@ -145,7 +157,7 @@ public class DefaultExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(final Exception exception, final ServletWebRequest request) {
         log.error(HttpStatus.INTERNAL_SERVER_ERROR.value() + " " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), exception);
 
-        return new ResponseEntity<>(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
+        return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                                                       HttpStatus.INTERNAL_SERVER_ERROR.value(),
                                                       HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                                                       "Unknown error",
