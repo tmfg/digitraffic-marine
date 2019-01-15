@@ -12,7 +12,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "fi.livi.digitraffic.meri.dao")
+@EnableJpaRepositories(basePackages = "fi.livi.digitraffic.meri.dao", enableDefaultTransactions = false)
 public class MarineApplicationConfiguration {
     public static final String API_V1_BASE_PATH = "/api/v1";
     public static final String API_BETA_BASE_PATH = "/api/beta";
