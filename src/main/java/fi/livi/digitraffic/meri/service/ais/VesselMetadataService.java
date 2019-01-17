@@ -5,6 +5,7 @@ import static fi.livi.digitraffic.meri.config.MarineCacheConfiguration.CACHE_ALL
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
+import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
@@ -63,5 +65,14 @@ public class VesselMetadataService {
         qb.notIn("shipType", FORBIDDEN_SHIP_TYPES);
 
         return qb.getResults("mmsi");
+    }
+
+    @Transactional
+    public void saveVessels(final List<VesselMessage> messages) {
+        final List<VesselMetadata> vessels = messages.stream()
+            .map(v -> new VesselMetadata(v.vesselAttributes))
+            .collect(Collectors.toList());
+
+        vesselMetadataRepository.saveAll(vessels);
     }
 }
