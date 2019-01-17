@@ -4,6 +4,7 @@ import static fi.livi.digitraffic.meri.service.ais.VesselMetadataService.FORBIDD
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -17,6 +18,7 @@ import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
+import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
@@ -102,5 +104,12 @@ public class VesselLocationService {
                 .where(predicateList.toArray(new Predicate[] {}));
 
         return subquery;
+    }
+
+    @Transactional
+    public void saveLocations(final List<AISMessage> messages) {
+        final List<VesselLocation> locations = messages.stream().map(VesselLocation::new).collect(Collectors.toList());
+
+        vesselLocationRepository.saveAll(locations);
     }
 }
