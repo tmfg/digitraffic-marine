@@ -16,20 +16,21 @@ import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
+import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("ais.websocketRead.enabled")
 public class VesselMetadataDatabaseListener implements WebsocketListener {
-    private final VesselMetadataRepository vesselMetadataRepository;
+    private final VesselMetadataService vesselMetadataService;
     private final AisLocker aisLocker;
 
     private final Map<Integer, VesselMessage> messageMap = new HashMap<>();
 
-    public VesselMetadataDatabaseListener(final VesselMetadataRepository vesselMetadataRepository, final LockingService lockingService,
-        final AisLocker aisLocker) {
-        this.vesselMetadataRepository = vesselMetadataRepository;
+    public VesselMetadataDatabaseListener(final LockingService lockingService,
+        final VesselMetadataService vesselMetadataService, final AisLocker aisLocker) {
+        this.vesselMetadataService = vesselMetadataService;
         this.aisLocker = aisLocker;
     }
 
@@ -47,11 +48,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener {
         final List<VesselMessage> messages = removeAllMessages();
 
         if(aisLocker.hasLockForAis()) {
-            final List<VesselMetadata> vessels = messages.stream()
-                .map(v -> new VesselMetadata(v.vesselAttributes))
-                .collect(Collectors.toList());
-
-            vesselMetadataRepository.saveAll(vessels);
+            vesselMetadataService.saveVessels(messages);
         }
     }
 

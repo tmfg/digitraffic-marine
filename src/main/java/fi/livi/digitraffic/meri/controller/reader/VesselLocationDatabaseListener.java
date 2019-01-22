@@ -16,20 +16,21 @@ import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
+import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("ais.websocketRead.enabled")
 public class VesselLocationDatabaseListener implements WebsocketListener {
-    private final VesselLocationRepository vesselLocationRepository;
+    private final VesselLocationService vesselLocationService;
     private final AisLocker aisLocker;
 
     private final Map<Integer, AISMessage> messageMap = new HashMap<>();
 
-    public VesselLocationDatabaseListener(final VesselLocationRepository vesselLocationRepository, final LockingService lockingService,
-        final AisLocker aisLocker) {
-        this.vesselLocationRepository = vesselLocationRepository;
+    public VesselLocationDatabaseListener(final LockingService lockingService,
+        final VesselLocationService vesselLocationService, final AisLocker aisLocker) {
+        this.vesselLocationService = vesselLocationService;
         this.aisLocker = aisLocker;
     }
 
@@ -48,9 +49,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener {
         final List<AISMessage> messages = removeAllMessages();
 
         if(aisLocker.hasLockForAis()) {
-            final List<VesselLocation> locations = messages.stream().map(VesselLocation::new).collect(Collectors.toList());
-
-            vesselLocationRepository.saveAll(locations);
+            vesselLocationService.saveLocations(messages);
         }
     }
 

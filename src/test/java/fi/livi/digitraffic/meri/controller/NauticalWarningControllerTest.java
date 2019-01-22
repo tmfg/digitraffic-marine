@@ -50,7 +50,7 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
     }
 
     @Test
-    @Ignore("FIXME! Does not work when dockerized")
+//    @Ignore("FIXME! Does not work when dockerized")
     public void testAllNauticalWarnings() throws Exception {
         // Mock Pooki API identifier for this test
         final String key = new Object() {
@@ -203,7 +203,8 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
         final ResponseEntity<String> response = template
                 .getForEntity(String.format("%s/%s/published", localUrl, API), String.class);
         final String body = response.getBody();
-        assertThat(body, containsString(String.format("\"status\":%s", HttpStatus.BAD_GATEWAY)));
+        assertThat(body, containsString(String.format("\"status\":%s", HttpStatus.BAD_GATEWAY.value())));
+        assertThat(body, containsString(String.format("\"error\":\"%s\"", HttpStatus.BAD_GATEWAY.getReasonPhrase())));
         assertThat(body, containsString("\"message\":\"Bad Gateway. Pooki responded twice with error response.\""));
     }
 }
