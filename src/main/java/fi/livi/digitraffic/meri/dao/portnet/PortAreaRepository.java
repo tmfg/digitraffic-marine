@@ -10,7 +10,6 @@ import fi.livi.digitraffic.meri.domain.portnet.PortArea;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaKey;
 
 @Repository
-@ConditionalOnWebApplication
 public interface PortAreaRepository extends JpaRepository<PortArea, PortAreaKey> {
     List<PortArea> findByPortAreaKeyLocode(final String locode);
 }

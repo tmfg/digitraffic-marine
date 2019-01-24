@@ -4,6 +4,7 @@ import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_WINTER_NAVIGATION_PATH;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_WINTER_NAVIGATION_PATH)
+@ConditionalOnWebApplication
 public class WinterNavigationController {
 
     private WinterNavigationService winterNavigationService;
