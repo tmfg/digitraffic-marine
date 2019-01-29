@@ -259,6 +259,9 @@
                 <version>4.3.1</version>
                 <configuration>
                     <excludes>
+                        <exclude>fi/livi/digitraffic/meri/MarineApplication.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/controller/reader/**/*.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/controller/websocket/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/domain/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/quartz/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/model/**/*.java</exclude>
