@@ -93,7 +93,10 @@ public class PortCallUpdater {
     private boolean getAndUpdate(final ZonedDateTime from, final ZonedDateTime to, final boolean setUpdatedOnFail) {
         final PortCallList list = portCallClient.getList(from, to);
 
-        isListOk(list);
+        // if error from server, no need to retry
+        if(!isListOk(list)) {
+            return true;
+        }
 
         final boolean timeStampsOk = checkTimestamps(list);
 
