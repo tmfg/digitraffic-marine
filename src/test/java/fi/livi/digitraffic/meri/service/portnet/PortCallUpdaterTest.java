@@ -105,4 +105,11 @@ public class PortCallUpdaterTest extends AbstractTestBase {
         assertEquals("FOO", updatedPortCall.getPortToVisit());
         assertEquals("Vessel name", updatedPortCall.getVesselName());
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void timestampCheck() {
+
+    }
 }
