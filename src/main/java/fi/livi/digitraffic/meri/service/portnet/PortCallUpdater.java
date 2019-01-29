@@ -81,15 +81,16 @@ public class PortCallUpdater {
     @Transactional
     public void updatePortCalls(final ZonedDateTime from, final ZonedDateTime to) {
         // if timestampcheck failed, try again!
-        if(!getAndUpdate(from, to)) {
+        if(!getAndUpdate(from, to, false)) {
             log.error("retrying port calls");
 
-            getAndUpdate(from, to);
+            // second time, set portcalls updated anyway
+            getAndUpdate(from, to, true);
         }
     }
 
     /// return true if the timestampcheck was successful
-    private boolean getAndUpdate(final ZonedDateTime from, final ZonedDateTime to) {
+    private boolean getAndUpdate(final ZonedDateTime from, final ZonedDateTime to, final boolean setUpdatedOnFail) {
         final PortCallList list = portCallClient.getList(from, to);
 
         isListOk(list);
@@ -98,7 +99,10 @@ public class PortCallUpdater {
 
         if(timeStampsOk) {
             updatePortCalls(list);
+        }
 
+        // set portcalls updated if timestamps were ok or tried second time
+        if(timeStampsOk || setUpdatedOnFail) {
             updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
         }
 
