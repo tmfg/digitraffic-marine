@@ -37,7 +37,7 @@ public class MarineApplicationConfiguration {
                                  final @Value("${marine.datasource.password}") String password,
                                  final @Value("${marine.datasource.hikari.maximum-pool-size:20}") Integer maximumPoolSize) {
 
-        HikariConfig config = new HikariConfig();
+        final HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
