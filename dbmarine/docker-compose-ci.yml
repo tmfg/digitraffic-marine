@@ -18,9 +18,8 @@ services:
 
   db-wait:
       build: .
-      volumes:
-          - "./sql:/sql"
-          - "~/.m2:/root/.m2"
+      networks:
+          - db_network
       links:
           - "db:db"
       command: ["./wait-for-postgres.sh", "db", "marine", "marine", "marine"]
