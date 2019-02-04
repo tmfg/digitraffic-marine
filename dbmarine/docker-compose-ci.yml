@@ -16,7 +16,7 @@ services:
     networks:
       - db_network
 
-  db-init:
+  db-wait:
       build: .
       volumes:
           - "./sql:/sql"
