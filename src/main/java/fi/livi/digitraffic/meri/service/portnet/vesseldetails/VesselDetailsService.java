@@ -9,6 +9,7 @@ import javax.persistence.criteria.Join;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
 
 @Service
+@ConditionalOnWebApplication
 public class VesselDetailsService {
     private final EntityManager entityManager;
 

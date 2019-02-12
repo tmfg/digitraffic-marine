@@ -3,6 +3,10 @@ package fi.livi.digitraffic.meri.service.portnet;
 import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -16,8 +20,10 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
@@ -33,13 +39,6 @@ import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 public class PortCallUpdaterTest extends AbstractTestBase {
-
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
-    private PortCallClient portCallClient;
-
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
-    private PortCallUpdater portCallUpdater;
-
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
 
@@ -49,11 +48,13 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     @Autowired
     private Jax2bRestTemplate jax2bRestTemplate;
 
+    private PortCallClient portCallClient;
+    private PortCallUpdater portCallUpdater;
     private MockRestServiceServer server;
 
     @Before
     public void before() {
-        portCallClient = new PortCallClient("portCallUrl/", jax2bRestTemplate);
+        portCallClient = Mockito.spy(new PortCallClient("portCallUrl/", jax2bRestTemplate));
         portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, 42, 42);
         server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
@@ -62,13 +63,13 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     @Transactional
     @Rollback
     public void updatePortCallsSucceeds() throws IOException {
-        String response = readFile("portCallResponse1.xml");
+        String response = readFile("portcalls/portCallResponse1.xml");
 
         server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        response = readFile("portCallResponse2.xml");
+        response = readFile("portcalls/portCallResponse2.xml");
 
         server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
@@ -104,5 +105,27 @@ public class PortCallUpdaterTest extends AbstractTestBase {
 
         assertEquals("FOO", updatedPortCall.getPortToVisit());
         assertEquals("Vessel name", updatedPortCall.getVesselName());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void timestampCheck() throws IOException {
+        String response = readFile("portcalls/portCallResponse_timestamp.xml");
+
+        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
+            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
+
+        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
+            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
+
+        final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, FINLAND_ZONE);
+        final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, FINLAND_ZONE);
+
+        portCallUpdater.updatePortCalls(from, to);
+
+        verify(portCallClient, times(2)).getList(any(), any());
     }
 }
