@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_PORT_CALLS_PATH)
+@ConditionalOnWebApplication
 public class PortCallController {
     private final PortCallService portCallService;
 

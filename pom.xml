@@ -5,7 +5,7 @@
 
     <groupId>fi.fta.digitraffic</groupId>
     <artifactId>marine</artifactId>
-    <version>2.4.0</version>
+    <version>2.5.0</version>
     <packaging>jar</packaging>
 
     <name>dt-marine</name>
@@ -14,7 +14,6 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <!-- version 2.1.1 does not work -->
         <version>2.1.2.RELEASE</version>
         <relativePath/>
     </parent>
@@ -226,7 +225,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.2</version>
+            <version>5.3</version>
         </dependency>
 
         <!-- gzipped http response -->
@@ -260,6 +259,9 @@
                 <version>4.3.1</version>
                 <configuration>
                     <excludes>
+                        <exclude>fi/livi/digitraffic/meri/MarineApplication.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/controller/reader/**/*.java</exclude>
+                        <exclude>fi/livi/digitraffic/meri/controller/websocket/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/domain/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/quartz/**/*.java</exclude>
                         <exclude>fi/livi/digitraffic/meri/model/**/*.java</exclude>
@@ -280,33 +282,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- generate build number -->
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>buildnumber-maven-plugin</artifactId>-->
-            <!--<version>1.4</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>generate-buildNumber</id>-->
-            <!--<phase>validate</phase>-->
-            <!--<goals>-->
-            <!--<goal>create</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<doCheck>false</doCheck>-->
-            <!--<doUpdate>false</doUpdate>-->
-            <!--&lt;!&ndash; This ensures that even if we are not connected to scm the revision is generated &ndash;&gt;-->
-            <!--<revisionOnScmFailure />-->
-            <!--<format>{0}</format>-->
-            <!--&lt;!&ndash;<format>{0,date,yyyy-MM-dd_HH:mm:ss}</format>&ndash;&gt;-->
-            <!--<items>-->
-            <!--&lt;!&ndash;<item>timestamp</item>&ndash;&gt;-->
-            <!--<item>buildNumber</item>-->
-            <!--</items>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
 
             <plugin>
                 <groupId>pl.project13.maven</groupId>

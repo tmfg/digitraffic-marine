@@ -80,41 +80,71 @@ public class PortCallUpdater {
 
     @Transactional
     public void updatePortCalls(final ZonedDateTime from, final ZonedDateTime to) {
-        final PortCallList list = portCallClient.getList(from, to);
+        // if timestampcheck failed, try again!
+        if(!getAndUpdate(from, to, false)) {
+            log.error("retrying port calls");
 
-        if(isListOk(list)) {
-            final List<PortCall> added = new ArrayList<>();
-            final List<PortCall> updated = new ArrayList<>();
-
-            final StopWatch watch = StopWatch.createStarted();
-            checkTimestamps(list);
-            list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
-            portCallRepository.saveAll(added);
-
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
-
-            log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
+            // second time, set portcalls updated anyway
+            getAndUpdate(from, to, true);
         }
     }
 
-    private void checkTimestamps(final PortCallList list) {
+    /// return true if the timestampcheck was successful
+    private boolean getAndUpdate(final ZonedDateTime from, final ZonedDateTime to, final boolean setUpdatedOnFail) {
+        final PortCallList list = portCallClient.getList(from, to);
+
+        // if error from server, no need to retry
+        if(!isListOk(list)) {
+            return true;
+        }
+
+        final boolean timeStampsOk = checkTimestamps(list);
+
+        if(timeStampsOk) {
+            updatePortCalls(list);
+        }
+
+        // set portcalls updated if timestamps were ok or tried second time
+        if(timeStampsOk || setUpdatedOnFail) {
+            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
+        }
+
+        return timeStampsOk;
+    }
+
+    private void updatePortCalls(final PortCallList list) {
+        final List<PortCall> added = new ArrayList<>();
+        final List<PortCall> updated = new ArrayList<>();
+
+        final StopWatch watch = StopWatch.createStarted();
+        list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
+        portCallRepository.saveAll(added);
+
+        log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
+    }
+
+    private boolean checkTimestamps(final PortCallList list) {
         for(final PortCallNotification pcn : list.getPortCallNotification()) {
             final Timestamp now = new Timestamp(Instant.now().toEpochMilli());
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
             try {
                 if(timestamp == null) {
-                    log.error("method=checkTimestamps portCallId={} futureTimestamp=null, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                    log.warn("method=checkTimestamps portCallId={} futureTimestamp=null, currentTimestamp={} portCallList={}",
+                        pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
                 } else if(timestamp.after(now)) {
-                    log.error("method=checkTimestamps portCallId={} futureTimestamp={}, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                    log.warn("method=checkTimestamps portCallId={} futureTimestamp={}, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
                 } else if(timestamp.before(MIN_TIMESTAMP)) {
-                    log.error("method=checkTimestamps portCallId={} pastTimestamp={}, portCallList={}", pcn.getPortCallId().longValue(),
+                    log.warn("method=checkTimestamps portCallId={} pastTimestamp={}, portCallList={}", pcn.getPortCallId().longValue(),
                         timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
+                    return false;
                 }
-            } catch (JsonProcessingException e) {
+            } catch (final JsonProcessingException e) {
                 log.error("method=checkTimestamps", e);
             }
         }
+
+        return true;
     }
 
     private static boolean isListOk(final PortCallList list) {

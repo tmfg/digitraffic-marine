@@ -28,8 +28,6 @@ import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketMessagi
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import fi.livi.digitraffic.meri.annotation.CoverageIgnore;
-
 @SpringBootApplication(exclude = {
     ActiveMQAutoConfiguration.class,
     AppOpticsMetricsExportAutoConfiguration.class,
@@ -57,7 +55,6 @@ import fi.livi.digitraffic.meri.annotation.CoverageIgnore;
 @EnableScheduling
 @EnableTransactionManagement
 public class MarineApplication {
-    @CoverageIgnore
     public static void main(final String[] args) {
         SpringApplication.run(MarineApplication.class, args);
     }
