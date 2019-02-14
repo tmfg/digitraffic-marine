@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 
+// Poistetaan ei enaa tarpeellinen
+// Talla on yritetty metsastaa viivetta
 public class VesselLocationLoggingListener implements WebsocketListener {
     private static final Logger log = LoggerFactory.getLogger(VesselLocationLoggingListener.class);
 

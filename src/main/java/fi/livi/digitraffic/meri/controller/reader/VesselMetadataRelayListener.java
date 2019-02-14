@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
+import fi.livi.digitraffic.meri.controller.AisMessageConverter;
+import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -7,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.AisLocker;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.controller.VesselSender;
+import fi.livi.digitraffic.meri.controller.VesselMqttSender;
 import fi.livi.digitraffic.meri.controller.websocket.WebsocketStatistics;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
@@ -17,14 +19,15 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("ais.websocketRead.enabled")
-public class VesselMetadataRelayListener implements WebsocketListener {
+public class VesselMetadataRelayListener implements WebsocketListener, AisMessageListener {
     private final VesselMetadataService vesselMetadataService;
-    private final VesselSender vesselSender;
+    private final VesselMqttSender vesselSender;
 
     private final AisLocker aisLocker;
 
-    public VesselMetadataRelayListener(final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
-        final LockingService lockingService, final AisLocker aisLocker) {
+    public VesselMetadataRelayListener(final VesselMetadataService vesselMetadataService,
+                                       final VesselMqttSender vesselSender,
+                                       final AisLocker aisLocker) {
         this.vesselMetadataService = vesselMetadataService;
         this.vesselSender = vesselSender;
         this.aisLocker = aisLocker;
@@ -35,18 +38,20 @@ public class VesselMetadataRelayListener implements WebsocketListener {
     public void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
 
-        if(vm.validate() && aisLocker.hasLockForAis()) {
+        if (vm.validate() && aisLocker.hasLockForAis()) {
             doLogAndSend(vm);
         }
     }
 
     private void doLogAndSend(final VesselMessage vm) {
-        if(isAllowedMmsi(vm.vesselAttributes.mmsi)) {
+        if (isAllowedMmsi(vm.vesselAttributes.mmsi)) {
             final VesselMetadata vessel = new VesselMetadata(vm.vesselAttributes);
 
+            VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.METADATA, 1, 0);
             WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA, 1, 0);
             vesselSender.sendMetadataMessage(vessel);
         } else {
+            VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.METADATA, 0, 1);
             WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.METADATA, 0, 1);
         }
     }
@@ -57,5 +62,24 @@ public class VesselMetadataRelayListener implements WebsocketListener {
 
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
         // no need to do anything
+    }
+
+    @Override
+    public void receiveMessage(AisRadioMsg message) {
+        final VesselMessage vm = AisMessageConverter.convertMetadata(message);
+
+        if (vm.validate() && aisLocker.hasLockForAis()) {
+            doLogAndSend(vm);
+
+            /**
+            // Only for testing
+            //if(isAllowedMmsi(vm.vesselAttributes.mmsi)) {
+                VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.METADATA, 1, 0);
+                vesselSender.sendNewAisMessage(new VesselMetadata(vm.vesselAttributes), null);
+            //} else {
+                //VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.METADATA, 0, 1);
+            //}
+             */
+        }
     }
 }

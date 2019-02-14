@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.integration.mqtt.support.MqttHeaders;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,8 +15,8 @@ import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @ConditionalOnProperty("ais.mqtt.enabled")
 @Component
-public class VesselSender {
-    private static final Logger LOG = LoggerFactory.getLogger(VesselSender.class);
+public class VesselMqttSender {
+    private static final Logger LOG = LoggerFactory.getLogger(VesselMqttSender.class);
 
     @Lazy // this will not be available if mqtt is not enabled
     private final MqttConfig.VesselGateway vesselGateway;
@@ -30,7 +27,7 @@ public class VesselSender {
     private static final String VESSEL_STATUS_TOPIC  ="vessels/status";
 
     @Autowired
-    public VesselSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper) {
+    public VesselMqttSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper) {
         this.vesselGateway = vesselGateway;
         this.objectMapper = objectMapper;
     }
@@ -68,5 +65,18 @@ public class VesselSender {
     // This must be synchronized, because Paho does not support concurrency!
     private synchronized void sendMessage(final String payLoad, final String topic) {
         vesselGateway.sendToMqtt(topic, payLoad);
+    }
+
+    public void sendNewAisMessage(VesselMetadata meta, VesselLocationFeature location) {
+        try {
+            String msg = meta != null ? objectMapper.writeValueAsString(meta) : objectMapper.writeValueAsString(location);
+            String topic = meta != null ? "vessels/%d/metadata2" : "vessels/%d/locations2";
+
+            sendMessage(msg, topic);
+        } catch (Exception e) {
+            LOG.error("error sending new message", e);
+        }
+
+
     }
 }

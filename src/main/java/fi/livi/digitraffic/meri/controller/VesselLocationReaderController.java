@@ -31,7 +31,7 @@ public class VesselLocationReaderController {
     @Autowired
     private VesselLocationReaderController(@Value("${ais.locations.123.url}") final String aisLocations123Url, @Value("${ais.locations.27.url}") final String aisLocations27Url,
         @Value("${ais.locations.9.url}") final String aisLocations9Url, final VesselLocationRepository vesselLocationRepository, final LockingService lockingService,
-        final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
+        final VesselMetadataService vesselMetadataService, final VesselMqttSender vesselSender,
         final VesselLocationDatabaseListener vesselLocationDatabaseListener, final VesselLocationRelayListener vesselLocationRelayListener) {
         final List<WebsocketListener> listeners = Arrays.asList(
                     vesselLocationDatabaseListener,

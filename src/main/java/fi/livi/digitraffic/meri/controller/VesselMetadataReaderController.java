@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.controller.reader.VesselLocationLoggingListener;
 import fi.livi.digitraffic.meri.controller.reader.VesselMetadataDatabaseListener;
 import fi.livi.digitraffic.meri.controller.reader.VesselMetadataRelayListener;
 import fi.livi.digitraffic.meri.controller.reader.WebsocketListener;
@@ -30,7 +29,7 @@ public class VesselMetadataReaderController {
 
     @Autowired
     private VesselMetadataReaderController(@Value("${ais.metadata.5.url}") final String aisLocations5Url, final LockingService lockingService,
-        final VesselMetadataRepository vesselMetadataRepository, final VesselMetadataService vesselMetadataService, final VesselSender vesselSender,
+        final VesselMetadataRepository vesselMetadataRepository, final VesselMetadataService vesselMetadataService, final VesselMqttSender vesselSender,
         final VesselMetadataDatabaseListener vesselMetadataDatabaseListener, final VesselMetadataRelayListener
         vesselMetadataRelayListener) {
 
