@@ -16,9 +16,9 @@ import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 
 @Repository
 public interface PortAreaRepository extends JpaRepository<PortArea, PortAreaKey> {
-    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="0"))
+    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="100"))
     Stream<PortArea> streamAllBy();
 
-    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="0"))
+    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="100"))
     Stream<PortArea> streamByPortAreaKeyLocode(final String locode);
 }

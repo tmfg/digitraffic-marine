@@ -12,11 +12,11 @@ import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 
 @Repository
 public interface SsnLocationRepository extends JpaRepository<SsnLocation, String> {
-    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="0"))
+    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="100"))
     Stream<SsnLocation> streamAllBy();
 
     SsnLocation findByLocode(final String locode);
 
-    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="0"))
+    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="100"))
     Stream<SsnLocation> streamByCountryIgnoreCase(final String country);
 }

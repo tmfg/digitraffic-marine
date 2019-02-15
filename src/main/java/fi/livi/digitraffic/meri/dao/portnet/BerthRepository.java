@@ -16,9 +16,9 @@ import fi.livi.digitraffic.meri.domain.portnet.PortArea;
 
 @Repository
 public interface BerthRepository extends JpaRepository<Berth, BerthKey> {
-    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="0"))
+    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="100"))
     Stream<Berth> streamAllBy();
 
-    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="0"))
+    @QueryHints(@QueryHint(name="org.hibernate.fetchSize", value="100"))
     Stream<Berth> streamByBerthKeyLocode(final String locode);
 }
