@@ -65,6 +65,7 @@ public class SchedulerConfig {
         config.setMaxLifetime(570000);
         config.setIdleTimeout(500000);
         config.setConnectionTimeout(60000);
+        config.setPoolName("quartz_pool");
 
         // Auto commit must be true for Quartz
         config.setAutoCommit(true);
