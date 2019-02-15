@@ -48,9 +48,6 @@ public class MarineApplicationConfiguration {
         config.setIdleTimeout(500000);
         config.setConnectionTimeout(60000);
 
-        // Auto commit must be true for Quartz
-        config.setAutoCommit(true);
-
         return new HikariDataSource(config);
     }
 }
