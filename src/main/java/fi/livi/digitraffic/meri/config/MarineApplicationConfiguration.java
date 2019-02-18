@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -50,6 +51,20 @@ public class MarineApplicationConfiguration {
         config.setConnectionTimeout(60000);
         config.setPoolName("application_pool");
 
+        // register mbeans for debug
+        config.setRegisterMbeans(true);
+
         return new HikariDataSource(config);
+    }
+
+    @Bean
+    // fix bug in spring boot, tries to export hikari beans twice
+    public MBeanExporter exporter() {
+        final MBeanExporter exporter = new MBeanExporter();
+
+        exporter.setAutodetect(true);
+        exporter.setExcludedBeans("dataSource", "quartzDataSource");
+
+        return exporter;
     }
 }
