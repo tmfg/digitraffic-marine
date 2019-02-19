@@ -40,8 +40,8 @@ import fi.livi.digitraffic.meri.quartz.WinterNavigationShipUpdateJob;
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
 @ConditionalOnNotWebApplication
-public class SchedulerConfig {
-    private static final Logger log = LoggerFactory.getLogger(SchedulerConfig.class);
+public class QuartzSchedulerConfig {
+    private static final Logger log = LoggerFactory.getLogger(QuartzSchedulerConfig.class);
 
     @Bean
     public JobFactory jobFactory(final ApplicationContext applicationContext)     {
@@ -60,7 +60,7 @@ public class SchedulerConfig {
         config.setUsername(username);
         config.setPassword(password);
 
-        config.setMaximumPoolSize(4);
+        config.setMaximumPoolSize(8);
 
         config.setMaxLifetime(570000);
         config.setIdleTimeout(500000);
