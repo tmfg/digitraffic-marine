@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import fi.livi.digitraffic.meri.config.SchedulerConfig;
+import fi.livi.digitraffic.meri.config.QuartzSchedulerConfig;
 
 @Component
 /**
@@ -27,7 +27,7 @@ import fi.livi.digitraffic.meri.config.SchedulerConfig;
  * without timezone are in fact in Europe/Helsinki timezone.
  */
 public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<ZonedDateTime> {
-    private static final Logger log = LoggerFactory.getLogger(SchedulerConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonDateTimeDeserializerToZonedDateTime.class);
 
     private final SimpleDateFormat[] DATE_FORMATS =
             new SimpleDateFormat[] { new SimpleDateFormat("d.M.yyyy h:m:s"),
