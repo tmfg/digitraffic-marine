@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,23 +26,29 @@ import org.springframework.stereotype.Component;
 public class VesselLoggingListener implements AisMessageListener {
     private static final Logger log = LoggerFactory.getLogger(VesselLoggingListener.class);
 
-    private static final Map<AISMessageType, SentStatistics> sentStatisticsMap = new ConcurrentHashMap<>();
-    private static final Map<AISMessageType, ReadStatistics> readStatisticsMap = new ConcurrentHashMap<>();
+    private static final Map<AISLoggingType, SentStatistics> sentStatisticsMap = new ConcurrentHashMap<>();
+    private static final Map<AISLoggingType, ReadStatistics> readStatisticsMap = new ConcurrentHashMap<>();
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     private final AisLocker aisLocker;
+    private final VesselMqttSender vesselSender;
+    private final AisMessageReader messageReader;
 
-    public VesselLoggingListener(final AisLocker aisLocker, final VesselMqttSender vesselSender) {
+    public VesselLoggingListener(final AisLocker aisLocker,
+                                 final VesselMqttSender vesselSender,
+                                 final AisMessageReader messageReader) {
         this.aisLocker = aisLocker;
+        this.vesselSender = vesselSender;
+        this.messageReader = messageReader;
 
-        executor.scheduleAtFixedRate(this::logReadStatistics, 20, 60, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(this::logSentStatistics, 20, 60, TimeUnit.SECONDS);
-        //executor.scheduleAtFixedRate(this::readStatus, 20, 10, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(this::logReadStatistics, 30, 60, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(this::logSentStatistics, 30, 60, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(this::readStatus, 30, 10, TimeUnit.SECONDS);
     }
 
-    public enum AISMessageType {
-        POSITION, METADATA
+    public enum AISLoggingType {
+        POSITION, METADATA, CONNECTION, STATUS
     }
 
     @PreDestroy
@@ -50,58 +57,103 @@ public class VesselLoggingListener implements AisMessageListener {
     }
 
     @Override
-    public void receiveMessage(AisRadioMsg message) {
-        readAisMessagesStatistics(message.isPositionMsg() ? AISMessageType.POSITION : AISMessageType.METADATA, 1, AisTcpSocketClient.ConnectionStatus.CONNECTED);
-    }
+    public synchronized void receiveMessage(AisRadioMsg message) {
+        AISLoggingType type = (message.getMessageType() == AisRadioMsg.MessageType.POSITION) ? AISLoggingType.POSITION : AISLoggingType.METADATA;
+        int readMessageCount = message.isMmsiAllowed() ? 1 : 0;
+        int filteredMessageCount = !message.isMmsiAllowed() ? 1 : 0;
 
-    public static synchronized void readAisMessagesStatistics(final AISMessageType type, final int messageCount, final AisTcpSocketClient.ConnectionStatus connectionStatus) {
         final ReadStatistics rs = readStatisticsMap.get(type);
-        final int problem = connectionStatus == AisTcpSocketClient.ConnectionStatus.CONNECT_FAILURE ? 1 : 0;
 
-        final ReadStatistics newRs = rs == null ?
-            new ReadStatistics(messageCount, connectionStatus, problem) :
-            new ReadStatistics(rs.messages + messageCount, connectionStatus, rs.readProblems + problem);
+        final ReadStatistics newRs = (rs == null) ?
+            new ReadStatistics(readMessageCount, filteredMessageCount) :
+            new ReadStatistics(rs.messages + readMessageCount, rs.filtered + filteredMessageCount);
 
         readStatisticsMap.put(type, newRs);
+
+        readAisConnectionStatus(AisTcpSocketClient.ConnectionStatus.CONNECTED, messageReader.getMessageQueueSize());
     }
 
-    public static synchronized void readAisMessagesStatus(final AisTcpSocketClient.ConnectionStatus connectionStatus) {
-        readAisMessagesStatistics(AISMessageType.POSITION, 0, connectionStatus);
-        readAisMessagesStatistics(AISMessageType.METADATA, 0, connectionStatus);
+    public static synchronized void readAisConnectionStatus(final AisTcpSocketClient.ConnectionStatus connectionStatus) {
+        readAisConnectionStatus(connectionStatus, -1);
     }
 
-    public static synchronized void sentAisMessagesStatistics(final AISMessageType type, final int sent, final int filtered) {
+    private static synchronized void readAisConnectionStatus(final AisTcpSocketClient.ConnectionStatus connectionStatus, final int queueSize) {
+        boolean countAverage = (queueSize != -1);
+        int problem = (connectionStatus == AisTcpSocketClient.ConnectionStatus.CONNECT_FAILURE) ? 1 : 0;
+        final ConnectionStatistics cs = (ConnectionStatistics)readStatisticsMap.get(AISLoggingType.CONNECTION);
+
+        if (countAverage) {
+            final ConnectionStatistics newCs = (cs == null) ?
+                new ConnectionStatistics(1, connectionStatus, problem, queueSize, queueSize) :
+                new ConnectionStatistics(cs.messages + 1, connectionStatus, cs.readProblems + problem, cs.messageQueue + queueSize, Math.max(cs.messageQueueMax, queueSize));
+
+            readStatisticsMap.put(AISLoggingType.CONNECTION, newCs);
+        } else {
+            final ConnectionStatistics newCs = (cs == null) ?
+                new ConnectionStatistics(0, connectionStatus, problem, 0, 0) :
+                new ConnectionStatistics(cs.messages, connectionStatus, cs.readProblems + problem, cs.messageQueue, Math.max(cs.messageQueueMax, queueSize));
+
+            readStatisticsMap.put(AISLoggingType.CONNECTION, newCs);
+        }
+    }
+
+    public static synchronized void sentAisMessagesStatistics(final AISLoggingType type, final boolean sendSuccessful) {
+        int messages = sendSuccessful ? 1 : 0;
+        int failures = sendSuccessful ? 0 : 1;
+
         final SentStatistics ss = sentStatisticsMap.get(type);
 
-        final SentStatistics newSs = ss == null ?
-            new SentStatistics(sent, filtered) :
-            new SentStatistics(ss.messages + sent, ss.filtered + filtered);
+        final SentStatistics newSs = (ss == null) ?
+            new SentStatistics(messages, failures) :
+            new SentStatistics(ss.messages + messages, ss.failures + failures);
 
         sentStatisticsMap.put(type, newSs);
     }
 
     private synchronized void logReadStatistics() {
-        for (final AISMessageType aisMessageType : Arrays.asList(AISMessageType.POSITION, AISMessageType.METADATA)) {
-            final ReadStatistics readStatistics = readStatisticsMap.get(aisMessageType);
+        for (final AISLoggingType aisLoggingType : Arrays.asList(AISLoggingType.POSITION, AISLoggingType.METADATA, AISLoggingType.CONNECTION)) {
+            final ReadStatistics readStatistics = readStatisticsMap.get(aisLoggingType);
 
-            log.info("Read ais-message statistics for messageType={} messages={} status={} connectionProblems={}",
-                aisMessageType,
-                readStatistics != null ? readStatistics.messages : 0,
-                readStatistics != null ? readStatistics.status.toString() : AisTcpSocketClient.ConnectionStatus.UNDEFINED.toString(),
-                readStatistics != null ? readStatistics.readProblems : 0
-            );
+            if (readStatistics instanceof ConnectionStatistics) {
+                AisTcpSocketClient.ConnectionStatus status = readStatistics != null ? ((ConnectionStatistics)readStatistics).status : AisTcpSocketClient.ConnectionStatus.UNDEFINED;
 
-            readStatisticsMap.put(aisMessageType, new ReadStatistics(0, readStatistics != null ? readStatistics.status : AisTcpSocketClient.ConnectionStatus.UNDEFINED, 0));
+                log.info("Read ais-message statistics for messageType={} status={} connectionProblems={} maxQueue={} averageQueue={}",
+                    aisLoggingType,
+                    status.toString(),
+                    readStatistics != null ? ((ConnectionStatistics)readStatistics).readProblems : 0,
+                    readStatistics != null ? ((ConnectionStatistics)readStatistics).messageQueueMax : 0,
+                    getAverageQueueSize((ConnectionStatistics)readStatistics)
+                );
+
+                readStatisticsMap.put(aisLoggingType, new ConnectionStatistics(0, status, 0, 0,0));
+            } else {
+                log.info("Read ais-message statistics for messageType={} read={} filtered={}",
+                    aisLoggingType,
+                    readStatistics != null ? readStatistics.messages : 0,
+                    readStatistics != null ? readStatistics.filtered : 0
+                );
+
+                readStatisticsMap.put(aisLoggingType, new ReadStatistics(0, 0));
+            }
         }
     }
 
+    private int getAverageQueueSize(final ConnectionStatistics connectionStatistics) {
+        if (connectionStatistics == null || connectionStatistics.messages == 0) {
+            return  0;
+        }
+
+        return connectionStatistics.messageQueue / connectionStatistics.messages;
+    }
+
     private synchronized void logSentStatistics() {
-        for (final AISMessageType aisMessageType : Arrays.asList(AISMessageType.POSITION, AISMessageType.METADATA)) {
+        for (final AISLoggingType aisMessageType : Arrays.asList(AISLoggingType.POSITION, AISLoggingType.METADATA, AISLoggingType.STATUS)) {
             final SentStatistics sentStatistics = sentStatisticsMap.get(aisMessageType);
-            log.info("Sent ais-message statistics for messageType={} messages={} filtered={}",
+
+            log.info("Sent ais-message statistics for messageType={} messages={} failures={}",
                 aisMessageType,
                 sentStatistics != null ? sentStatistics.messages : 0,
-                sentStatistics != null ? sentStatistics.filtered : 0);
+                sentStatistics != null ? sentStatistics.failures : 0);
 
             sentStatisticsMap.put(aisMessageType, new SentStatistics(0, 0));
         }
@@ -109,33 +161,98 @@ public class VesselLoggingListener implements AisMessageListener {
 
     private synchronized void readStatus() {
         if (aisLocker.hasLockForAis()) {
-            try {
+            ConnectionStatistics cs = (ConnectionStatistics)readStatisticsMap.get(AISLoggingType.CONNECTION);
 
+            int errorsCount = 0;
+
+            for (final AISLoggingType aisMessageType : Arrays.asList(AISLoggingType.POSITION, AISLoggingType.METADATA, AISLoggingType.STATUS)) {
+                final SentStatistics sentStatistics = sentStatisticsMap.get(aisMessageType);
+
+                if (sentStatistics != null) {
+                    errorsCount += sentStatistics.failures;
+                }
+            }
+
+            StatusMessage statusMessage = new StatusMessage(
+                (cs != null) ? cs.status.toString() : AisTcpSocketClient.ConnectionStatus.UNDEFINED.toString(),
+                (cs != null) ? cs.readProblems : 0,
+                errorsCount
+            );
+
+            try {
+                boolean sendStatus = vesselSender.sendNewStatusMessage(statusMessage);
+
+                sentAisMessagesStatistics(AISLoggingType.STATUS, sendStatus);
             } catch (Exception e) {
-                log.info("Exception notifying", e);
+                log.error("Json parse error", e);
             }
         }
     }
 
     private static class SentStatistics {
         final int messages;
-        final int filtered;
+        final int failures;
 
-        private SentStatistics(final int messages, final int filtered) {
+        private SentStatistics(int messages, int failures) {
             this.messages = messages;
-            this.filtered = filtered;
+            this.failures = failures;
         }
     }
 
     private static class ReadStatistics {
         final int messages;
+        final int filtered;
+
+        private ReadStatistics(int messages, int filtered) {
+            this.messages = messages;
+            this.filtered = filtered;
+        }
+    }
+
+    private static class ConnectionStatistics extends ReadStatistics {
         final AisTcpSocketClient.ConnectionStatus status;
         final int readProblems;
+        final int messageQueue;
+        final int messageQueueMax;
 
-        private ReadStatistics(final int messages, final AisTcpSocketClient.ConnectionStatus status, final int readProblems) {
-            this.messages = messages;
+        private ConnectionStatistics(int messages, AisTcpSocketClient.ConnectionStatus status, int readProblems, int messageQueue, int messageQueueMax) {
+            super(messages, 0);
+
             this.status = status;
             this.readProblems = readProblems;
+            this.messageQueue = messageQueue;
+            this.messageQueueMax = messageQueueMax;
+        }
+    }
+
+    private class StatusMessage {
+        private final String connectionStatus;
+        private final int readErrors;
+        private final int sendErrors;
+        private final ZonedDateTime timeStamp;
+
+        private StatusMessage(String connectionStatus, int readErrors, int sendErrors) {
+            this.connectionStatus = connectionStatus;
+            this.readErrors = readErrors;
+            this.sendErrors = sendErrors;
+
+            timeStamp = ZonedDateTime.now();
+        }
+
+        public String getStatus() {
+            return connectionStatus;
+        }
+
+        public ZonedDateTime getUpdateTime() {
+            return timeStamp;
+        }
+
+        public int getReadErrors() {
+            return readErrors;
+        }
+
+        public int getSentErrors() {
+            return sendErrors;
         }
     }
 }

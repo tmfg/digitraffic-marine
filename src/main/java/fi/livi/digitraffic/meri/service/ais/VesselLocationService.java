@@ -68,19 +68,18 @@ public class VesselLocationService {
     }
 
     private List<VesselLocation> findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
-        final QueryBuilder<VesselLocation, VesselLocation> qb = new QueryBuilder<>(entityManager, VesselLocation.class, VesselLocation
-            .class);
+        final QueryBuilder<VesselLocation, VesselLocation> qb = new QueryBuilder<>(entityManager, VesselLocation.class, VesselLocation.class);
         final Subquery<Integer> subquery = getMmsiSubQuery(qb, mmsi);
 
-        if(mmsi != null) {
+        if (mmsi != null) {
             qb.equals("mmsi", mmsi);
         }
 
-        if(from != null) {
+        if (from != null) {
             qb.gte(qb.get("timestampExternal"), from);
         }
 
-        if(to != null) {
+        if (to != null) {
             qb.lte(qb.get("timestampExternal"), to);
         }
 
@@ -96,7 +95,7 @@ public class VesselLocationService {
 
         predicateList.add(qb.inPredicate(root.get("shipType"), FORBIDDEN_SHIP_TYPES).not());
 
-        if(mmsi != null) {
+        if (mmsi != null) {
             predicateList.add(qb.equalPredicate(root.get("mmsi"), mmsi));
         }
 

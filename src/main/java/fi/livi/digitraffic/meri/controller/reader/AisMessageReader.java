@@ -46,9 +46,9 @@ public class AisMessageReader implements Runnable {
 
     private final AisTcpSocketClient aisTcpSocketClient;
     private String cachedFirstPart = null;
-    private AtomicBoolean readinEnabled = new AtomicBoolean(false);
+    private AtomicBoolean readingEnabled = new AtomicBoolean(false);
 
-    private final LinkedBlockingQueue<AisRadioMsg> queue = new LinkedBlockingQueue<AisRadioMsg>(16384);
+    private final LinkedBlockingQueue<AisRadioMsg> queue = new LinkedBlockingQueue<AisRadioMsg>(4096);
 
     public AisMessageReader(final AisTcpSocketClient aisTcpSocketClient) {
         this.aisTcpSocketClient = aisTcpSocketClient;
@@ -70,9 +70,13 @@ public class AisMessageReader implements Runnable {
         return null;
     }
 
+    public int getMessageQueueSize() {
+        return queue.size();
+    }
+
     @PostConstruct
     public void setUp() {
-        readinEnabled.set(true);
+        readingEnabled.set(true);
 
         Executors.newSingleThreadExecutor().submit(this);
     }
@@ -81,7 +85,7 @@ public class AisMessageReader implements Runnable {
     public void destroy() {
         log.debug("Shutting down ais reader");
         try {
-            readinEnabled.set(false);
+            readingEnabled.set(false);
             aisTcpSocketClient.close();
         } catch (Exception e) {
             log.error("Failed to close connection", e);
@@ -90,7 +94,7 @@ public class AisMessageReader implements Runnable {
 
     @Override
     public void run() {
-        while (readinEnabled.get()) {
+        while (readingEnabled.get()) {
             if (aisTcpSocketClient.isConnected()) {
                 final String rawAisMessage = aisTcpSocketClient.readLine();
 
@@ -111,7 +115,7 @@ public class AisMessageReader implements Runnable {
 
                             if (msg != null) {
                                 if (!queue.offer(msg)) {
-                                    log.warn("AIS message queue is full. message is ignored");
+                                    log.error("AIS message queue is full! Message is ignored");
                                 }
                             }
                         } else if (AisRadioMsgParser.getPartNumber(rawAisMessage) == 1) {
@@ -145,64 +149,7 @@ public class AisMessageReader implements Runnable {
             }
         }
 
-        readinEnabled.set(false);
-
-        /**
-        try {
-            if (aisTcpSocketClient.connect()) {
-                while (readinEnabled.get()) {
-                    final String rawAisMessage = aisTcpSocketClient.readLine();
-                    final boolean multipartMessage = AisRadioMsgParser.isMultipartRadioMessage(rawAisMessage);
-
-                    //log.info("Raw message: {}, multipart: {}", rawAisMessage, multipartMessage);
-
-                    if (rawAisMessage != null) {
-                        if (AisRadioMsgParser.isSupportedMessageType(rawAisMessage)) {
-
-                            if (cachedFirstPart != null && !(multipartMessage && AisRadioMsgParser.getPartNumber(rawAisMessage) == 2)) {
-                                cachedFirstPart = null;
-                            }
-
-                            // TODO! no response, no execption
-                            AisRadioMsgParser.validateChecksum(rawAisMessage);
-
-                            if (!multipartMessage || (cachedFirstPart != null && AisRadioMsgParser.getPartNumber(rawAisMessage) == 2)) {
-                                // Parse message and deliver result
-                                final AisRadioMsg msg = parse(rawAisMessage);
-
-                                if (msg != null) {
-                                    if (!queue.offer(msg)) {
-                                        log.warn("AIS message queue is full. message is ignored");
-                                    }
-                                }
-                            } else if (AisRadioMsgParser.getPartNumber(rawAisMessage) == 1) {
-                                // cache first part now
-                                cachedFirstPart = rawAisMessage;
-                            }
-                        } else {
-                            log.info("Not supported message");
-                            if (cachedFirstPart != null) {
-                                cachedFirstPart = null;
-                            }
-                        }
-                    } else {
-                        try {
-                            TimeUnit.SECONDS.sleep(10);
-                        } catch (InterruptedException e) {
-                            log.warn("keskeytetty, mut miks");
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-            } else {
-                log.warn("Unable to establish connection to VTS server");
-            }
-        } catch (IOException ioe) {
-            log.error("Failed to establish connection", ioe);
-        } catch (Exception e) {
-            log.error("Undefined error", e);
-        }
-*/
+        readingEnabled.set(false);
     }
 
     private AisRadioMsg parse(final String messagePart) {

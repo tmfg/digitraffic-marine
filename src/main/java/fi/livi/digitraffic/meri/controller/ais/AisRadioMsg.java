@@ -26,23 +26,33 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+//import java.util.function.Function;
+//import java.util.stream.Collectors;
 
 import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.*;
 
 public class AisRadioMsg {
-    // maintains insertion order
+    public enum MessageType {POSITION, METADATA};
+    public enum MessageClass {CLASS_A, CLASS_B};
+
+    // maintains insertion order NOTE! Is this order important???
     private Map<String, Object> parameters = new LinkedHashMap<>();
     private List<String> rawDataParts;
     private String binaryMsg;
     private int readOffset = 0;
-    private long time = 0;
 
-    public AisRadioMsg(String binaryMsg, List<String> rawDataParts) {
+    private final long time;
+    private final MessageType messageType;
+    private final MessageClass messageClass;
+    private boolean mmsiAllowed = false;
+
+    public AisRadioMsg(String binaryMsg, List<String> rawDataParts, MessageType messageType, MessageClass messageClass) {
         this.rawDataParts = rawDataParts;
         this.binaryMsg = binaryMsg;
+
         this.time = Instant.now().toEpochMilli();
+        this.messageType = messageType;
+        this.messageClass = messageClass;
 
         add(MESSAGE_ID, getUnsignedInteger(6));
         add(REPEAT_INDICATOR, getUnsignedInteger(2));
@@ -87,6 +97,22 @@ public class AisRadioMsg {
 
     public final int getUserId() {
         return getIntParam(USER_ID);
+    }
+
+    public final boolean isMmsiAllowed() {
+        return mmsiAllowed;
+    }
+
+    public final void setMmsiAllowed(boolean mmsiAllowed) {
+        this.mmsiAllowed = mmsiAllowed;
+    }
+
+    public final MessageClass getMessageClass() {
+        return messageClass;
+    }
+
+    public final MessageType getMessageType() {
+        return messageType;
     }
 
     protected Set<Map.Entry<String, Object>> getParameterEntrySet() {
@@ -160,6 +186,7 @@ public class AisRadioMsg {
         return String.format("%02d", getUnsignedInteger(size));
     }
 
+    /**
     @Override
     public String toString() {
         return toRawAndParsedDataString();
@@ -188,4 +215,5 @@ public class AisRadioMsg {
     private String getParsedEntry(String key, Object value) {
         return key + "§" + value;
     }
+    */
 }

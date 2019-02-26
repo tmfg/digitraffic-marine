@@ -37,6 +37,7 @@ public class AisRadioMsgParser {
     private static final Set<String> SUPPORTED_MESSAGE_CLASS_SUFFIXES = new HashSet<>(Arrays.asList("1", "2", "3", "5", "9", "18", "19", "24A", "24B", "27"));
     private static final Set<String> SUPPORTED_METADATA_CLASS_SUFFIXES = new HashSet<>(Arrays.asList("5", "24A", "24B"));
     private static final Set<String> SUPPORTED_POSITION_CLASS_SUFFIXES = new HashSet<>(Arrays.asList("1", "2", "3", "9", "18", "19", "27"));
+    private static final Set<String> CLASS_B_MESSAGE_SUFFIXES = new HashSet<>(Arrays.asList("18", "19", "24A", "24B"));
 
     private enum RAW_LINE_COLUMN {
         MESSAGE_TYPE, TOTAL_NUMBER_OF_SENTENCES_NEEDED, SENTENCE_NUMBER,
@@ -81,12 +82,16 @@ public class AisRadioMsgParser {
             return null;
         }
 
-        final AisRadioMsg msg = new AisRadioMsg(binaryMsg, rawLines);
+        final AisRadioMsg msg = new AisRadioMsg(
+            binaryMsg,
+            rawLines,
+            getMessageType(msgClassSuffix),
+            getMessageClass(msgClassSuffix));
 
         switch (msgClassSuffix) {
             case "1":
             case "2":
-            case "3":
+            case "3": //  Position message (class A)
                 msg.add(NAVIGATIONAL_STATUS, msg.getUnsignedInteger(4));
                 msg.add(RATE_OF_TURN, msg.getSignedInteger(8));
                 msg.add(SOG, msg.getUnsignedDecimal(10, 10, 1));
@@ -102,7 +107,7 @@ public class AisRadioMsgParser {
                 msg.add(COMMUNICATION_STATE, msg.getHexString(19));
 
                 break;
-            case "5": // Metadata
+            case "5": // Metadata message (class A)
                 msg.add(AIS_VERSION_INDICATOR, msg.getUnsignedInteger(2));
                 msg.add(IMO_NUMBER, msg.getUnsignedInteger(30));
                 msg.add(CALL_SIGN, msg.getStringValue(42));
@@ -114,14 +119,15 @@ public class AisRadioMsgParser {
                 msg.add(C_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION, msg.getC_DimensionOfShip());
                 msg.add(D_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION, msg.getD_DimensionOfShip());
                 msg.add(TYPE_OF_ELECTRONIC_POSITION_FIXING_DEVICE, msg.getUnsignedInteger(4));
-                msg.add(ETA, msg.getEta20bits());
+                //msg.add(ETA, msg.getEta20bits());
+                msg.add(ETA, msg.getUnsignedInteger(20));
                 msg.add(MAXIMUM_PRESENT_STATIC_DRAUGHT, msg.getUnsignedDecimal(8, 10, 1));
                 msg.add(DESTINATION, msg.getStringValue(120));
                 msg.add(DTE, msg.getUnsignedInteger(1));
                 msg.add(SPARE, msg.getUnsignedInteger(1));
 
                 break;
-            case "9":
+            case "9": // Standard Search and Rescue Aircraft Position Report
                 msg.add(ALTITUDE_GNSS, msg.getUnsignedInteger(12));
                 msg.add(SOG, msg.getUnsignedInteger(10));
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
@@ -139,7 +145,7 @@ public class AisRadioMsgParser {
                 msg.add(COMMUNICATION_STATE, msg.getHexString(19));
 
                 break;
-            case "18":
+            case "18": // Position message (class B)
                 msg.add(SPARE, msg.getUnsignedInteger(8));
                 msg.add(SOG, msg.getUnsignedDecimal(10, 10, 1));
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
@@ -160,7 +166,7 @@ public class AisRadioMsgParser {
                 msg.add(COMMUNICATION_STATE, msg.getHexString(19));
 
                 break;
-            case "19":
+            case "19": // Position message extended (class B)
                 msg.add(SPARE, msg.getUnsignedInteger(8));
                 msg.add(SOG, msg.getUnsignedDecimal(10, 10, 1));
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
@@ -184,12 +190,12 @@ public class AisRadioMsgParser {
                 msg.add(SPARE3, msg.getUnsignedInteger(4));
 
                 break;
-            case "24A": // Metadata
+            case "24A": // Metadata part A (class B)
                 msg.add(PART_NUMBER, msg.getUnsignedInteger(2));
                 msg.add(NAME, msg.getStringValue(120));
 
                 break;
-            case "24B": // Metadata
+            case "24B": // Metadata part B (class B)
                 msg.add(PART_NUMBER, msg.getUnsignedInteger(2));
                 msg.add(TYPE_OF_SHIP_AND_CARGO_TYPE, msg.getUnsignedInteger(8));
                 msg.add(VENDOR_ID, msg.getHexString(42));
@@ -203,7 +209,7 @@ public class AisRadioMsgParser {
                 msg.add(SPARE, msg.getUnsignedInteger(2));
 
                 break;
-            case "27":
+            case "27": // Long-range automatic identification system broadcast message (class A & B)
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
                 msg.add(RAIM_FLAG, msg.getUnsignedInteger(1));
                 msg.add(NAVIGATIONAL_STATUS, msg.getUnsignedInteger(4));
@@ -234,10 +240,10 @@ public class AisRadioMsgParser {
 
         String info = "[calculated=" + calculated + ", received=" + received + ", sentence=" + rawLine + "]";
         if (!calculated.equals(received)) {
-            LOGGER.error("Wrong checksum {}", info);
-        } else {
-            LOGGER.debug("Checksum ok {}", info);
-        }
+            LOGGER.warn("Wrong checksum {}", info);
+        } //else {
+            //LOGGER.debug("Checksum ok {}", info);
+        //}
     }
 
     private static String calculateChecksum(String rawLine) {
@@ -274,11 +280,19 @@ public class AisRadioMsgParser {
         return "";
     }
 
+    private static AisRadioMsg.MessageType getMessageType(String msgClassSuffix) {
+        return SUPPORTED_METADATA_CLASS_SUFFIXES.contains(msgClassSuffix) ? AisRadioMsg.MessageType.METADATA : AisRadioMsg.MessageType.POSITION;
+    }
+
+    private static AisRadioMsg.MessageClass getMessageClass(String msgClassSuffix) {
+        return CLASS_B_MESSAGE_SUFFIXES.contains(msgClassSuffix) ? AisRadioMsg.MessageClass.CLASS_B : AisRadioMsg.MessageClass.CLASS_A;
+    }
+    /**
     public static boolean isPositionMessage(String binaryMsg) {
         return SUPPORTED_POSITION_CLASS_SUFFIXES.contains(getMessageClassSuffix(binaryMsg));
     }
 
     public static boolean isMetadataMessage(String binaryMsg) {
         return SUPPORTED_METADATA_CLASS_SUFFIXES.contains(getMessageClassSuffix(binaryMsg));
-    }
+    }*/
 }

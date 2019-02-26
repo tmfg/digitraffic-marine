@@ -32,34 +32,47 @@ public class VesselMqttSender {
         this.objectMapper = objectMapper;
     }
 
-    public void sendMetadataMessage(final VesselMetadata vesselMetadata) {
+    public boolean sendMetadataMessage(final VesselMetadata vesselMetadata) {
         try {
             final String metadataAsString = objectMapper.writeValueAsString(vesselMetadata);
 
             sendMessage(metadataAsString, String.format(VESSELS_METADATA_TOPIC, vesselMetadata.getMmsi()));
+
+            return true;
         } catch (final Exception e) {
             LOG.error("error sending metadata", e);
         }
+
+        return false;
     }
 
-    public void sendLocationMessage(final VesselLocationFeature vesselLocation) {
+    public boolean sendLocationMessage(final VesselLocationFeature vesselLocation) {
         try {
             final String locationAsString = objectMapper.writeValueAsString(vesselLocation);
 
             sendMessage(locationAsString, String.format(VESSELS_LOCATIONS_TOPIC, vesselLocation.mmsi));
+
+            return true;
         } catch (final Exception e) {
             LOG.error("error sending location", e);
         }
+
+        return false;
     }
 
-    public void sendStatusMessage(final String status) {
+    // Change String to Object
+    public boolean sendStatusMessage(final String status) {
         try {
             final String statusAsString = objectMapper.writeValueAsString(status);
 
             sendMessage(statusAsString, VESSEL_STATUS_TOPIC);
+
+            return true;
         } catch (final Exception e) {
             LOG.error("error sending status", e);
         }
+
+        return false;
     }
 
     // This must be synchronized, because Paho does not support concurrency!
@@ -67,16 +80,35 @@ public class VesselMqttSender {
         vesselGateway.sendToMqtt(topic, payLoad);
     }
 
-    public void sendNewAisMessage(VesselMetadata meta, VesselLocationFeature location) {
+    public boolean sendNewStatusMessage(Object status) {
         try {
-            String msg = meta != null ? objectMapper.writeValueAsString(meta) : objectMapper.writeValueAsString(location);
-            String topic = meta != null ? "vessels/%d/metadata2" : "vessels/%d/locations2";
+            final String statusAsString = objectMapper.writeValueAsString(status);
+
+            sendMessage(statusAsString, "vessels/beta/status");
+
+            return true;
+        } catch (final Exception e) {
+            LOG.error("error sending status", e);
+        }
+
+        return false;
+    }
+
+    // Remove this
+    public boolean sendNewAisMessage(VesselMetadata meta, VesselLocationFeature location) {
+        try {
+            String msg = (meta != null) ? objectMapper.writeValueAsString(meta) : objectMapper.writeValueAsString(location);
+            String topic = (meta != null) ?
+                String.format("vessels/beta/%d/metadata", meta.getMmsi()) :
+                String.format("vessels/beta/%d/locations", location.mmsi);
 
             sendMessage(msg, topic);
+
+            return true;
         } catch (Exception e) {
             LOG.error("error sending new message", e);
         }
 
-
+        return false;
     }
 }

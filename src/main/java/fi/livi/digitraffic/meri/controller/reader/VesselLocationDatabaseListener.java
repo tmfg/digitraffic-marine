@@ -36,6 +36,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener, AisMes
         this.aisLocker = aisLocker;
     }
 
+    // Remove
     @Override
     public synchronized void receiveMessage(final String message) {
         final AISMessage ais = MessageConverter.convertLocation(message);
@@ -63,6 +64,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener, AisMes
         return messages;
     }
 
+    // Remove
     @Override
     public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
         // no need to do anything
@@ -72,8 +74,8 @@ public class VesselLocationDatabaseListener implements WebsocketListener, AisMes
     public void receiveMessage(AisRadioMsg message) {
         final AISMessage ais = AisMessageConverter.convertLocation(message);
 
-        if (ais.validate()) {
-            //messageMap.put(ais.attributes.mmsi, ais);
+        if (ais.validate() && message.isMmsiAllowed()) {
+            messageMap.put(ais.attributes.mmsi, ais);
         }
     }
 }

@@ -14,7 +14,6 @@ import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
-import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -33,6 +32,7 @@ public class VesselLocationRelayListener implements WebsocketListener, AisMessag
         this.aisLocker = aisLocker;
     }
 
+    // Remove
     @Override
     public void receiveMessage(final String message) {
         final AISMessage ais = MessageConverter.convertLocation(message);
@@ -42,24 +42,24 @@ public class VesselLocationRelayListener implements WebsocketListener, AisMessag
         }
     }
 
+    // Remove
     private void doLogAndSend(final AISMessage ais) {
         if (isAllowedMmsi(ais.attributes.mmsi)) {
             final VesselLocationFeature feature = VesselLocationConverter.convert(ais);
 
-            VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.POSITION, 1, 0);
             WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, 1, 0);
             vesselSender.sendLocationMessage(feature);
         } else {
-            VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.POSITION, 0, 1);
             WebsocketStatistics.sentWebsocketStatistics(WebsocketStatistics.WebsocketType.LOCATIONS, 0, 1);
         }
-
     }
 
+    // Remove
     private boolean isAllowedMmsi(final int mmsi) {
         return vesselMetadataService.findAllowedMmsis().contains(mmsi);
     }
 
+    // Remove
     @Override
     public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
         // no need to do anything
@@ -67,20 +67,15 @@ public class VesselLocationRelayListener implements WebsocketListener, AisMessag
 
     @Override
     public void receiveMessage(AisRadioMsg message) {
-        final AISMessage ais = AisMessageConverter.convertLocation(message);
+        if (aisLocker.hasLockForAis()) {
+            final AISMessage ais = AisMessageConverter.convertLocation(message);
 
-        if (ais.validate() && aisLocker.hasLockForAis()) {
-            doLogAndSend(ais);
+            if (ais.validate() && message.isMmsiAllowed()) {
+                // TODO! change name sendMessage
+                boolean sendStatus = vesselSender.sendNewAisMessage(null, VesselLocationConverter.convert(ais));
 
-            /**
-            // Only for testing
-            //if (isAllowedMmsi(ais.attributes.mmsi)) {
-                VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.POSITION, 1, 0);
-                vesselSender.sendNewAisMessage(null, VesselLocationConverter.convert(ais));
-            //} else {
-                //VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISMessageType.POSITION, 0, 1);
-            //}
-             */
+                VesselLoggingListener.sentAisMessagesStatistics(VesselLoggingListener.AISLoggingType.POSITION, sendStatus);
+            }
         }
     }
 }

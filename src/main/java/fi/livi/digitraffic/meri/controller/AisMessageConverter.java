@@ -49,19 +49,28 @@ public final class AisMessageConverter {
             aisRadioMsg.getTimestamp(),
             aisRadioMsg.getStringParam(CALL_SIGN), // String
             aisRadioMsg.getStringParam(NAME), // String
-            getIntValue(aisRadioMsg, TYPE_OF_SHIP_AND_CARGO_TYPE, 0),
+            getMaskedShipAndCargoType(getIntValue(aisRadioMsg, TYPE_OF_SHIP_AND_CARGO_TYPE, 0)),
             getIntValue(aisRadioMsg, A_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION, 0),
             getIntValue(aisRadioMsg, B_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION, 0),
             getIntValue(aisRadioMsg, C_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION, 0),
             getIntValue(aisRadioMsg, C_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION, 0),
             getIntValue(aisRadioMsg, TYPE_OF_ELECTRONIC_POSITION_FIXING_DEVICE, 0),
-            Integer.parseInt(getStringValue(aisRadioMsg, ETA, "2460")), // String
+            getIntValue(aisRadioMsg, ETA, 2460),
+            //Integer.parseInt(getStringValue(aisRadioMsg, ETA, "2460")), // String
             aisRadioMsg.getDecimalParam(MAXIMUM_PRESENT_STATIC_DRAUGHT).intValue(), // BigDecimal
             aisRadioMsg.getStringParam(DESTINATION) // String
         );
 
         final VesselMessage msg = new VesselMessage(attributes);
         return msg;
+    }
+
+    public static int getShipType(final AisRadioMsg aisRadioMsg) {
+        if (aisRadioMsg == null) {
+            return 0;
+        }
+
+        return getIntValue(aisRadioMsg, TYPE_OF_SHIP_AND_CARGO_TYPE, 0);
     }
 
     private static int getIntValue(final AisRadioMsg aisRadioMsg, final String name, final int defaultValue) {
@@ -86,5 +95,26 @@ public final class AisMessageConverter {
         }
 
         return aisRadioMsg.getStringParam(name);
+    }
+
+    /**
+     * Mask ship type with following rules:
+     * < 10 -> 0
+     * 10 - 19 -> 10
+     * 20 - 29 -> 20
+     * 30 - 39 -> keep original value
+     * 40 - 49 -> 40
+     * 50 - 59 -> keep original value
+     * 60 - 69 -> 60
+     * 70 - 79 -> 70
+     * 80 - 89 -> 80
+     * 90 - 99 -> 90
+     * > 99 -> 0
+     * @param shipType
+     * @return
+     */
+    private static int getMaskedShipAndCargoType(int shipType) {
+        int tenth = shipType / 10;
+        return (tenth == 3 || tenth == 5) ? shipType : (tenth < 10 ? tenth * 10 : 0);
     }
 }

@@ -36,6 +36,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener, AisMes
         this.aisLocker = aisLocker;
     }
 
+    // Remove
     @Override
     public synchronized void receiveMessage(final String message) {
         final VesselMessage vm = MessageConverter.convertMetadata(message);
@@ -62,6 +63,7 @@ public class VesselMetadataDatabaseListener implements WebsocketListener, AisMes
         return messages;
     }
 
+    // Remove
     @Override public void connectionStatus(final ReconnectingHandler.ConnectionStatus status) {
         // no need to do anything
     }
@@ -70,8 +72,8 @@ public class VesselMetadataDatabaseListener implements WebsocketListener, AisMes
     public void receiveMessage(AisRadioMsg message) {
         final  VesselMessage vm = AisMessageConverter.convertMetadata(message);
 
-        if (vm.validate()) {
-            //messageMap.put(vm.vesselAttributes.mmsi, vm);
+        if (vm.validate() /**&& message.isMmsiAllowed()*/) {
+            messageMap.put(vm.vesselAttributes.mmsi, vm);
         }
     }
 }
