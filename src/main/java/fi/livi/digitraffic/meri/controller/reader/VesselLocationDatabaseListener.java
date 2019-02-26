@@ -75,7 +75,7 @@ public class VesselLocationDatabaseListener implements WebsocketListener, AisMes
         final AISMessage ais = AisMessageConverter.convertLocation(message);
 
         if (ais.validate() && message.isMmsiAllowed()) {
-            messageMap.put(ais.attributes.mmsi, ais);
+            //messageMap.put(ais.attributes.mmsi, ais);
         }
     }
 }

@@ -72,8 +72,8 @@ public class VesselMetadataDatabaseListener implements WebsocketListener, AisMes
     public void receiveMessage(AisRadioMsg message) {
         final  VesselMessage vm = AisMessageConverter.convertMetadata(message);
 
-        if (vm.validate() /**&& message.isMmsiAllowed()*/) {
-            messageMap.put(vm.vesselAttributes.mmsi, vm);
+        if (vm.validate()) {
+            //messageMap.put(vm.vesselAttributes.mmsi, vm);
         }
     }
 }
