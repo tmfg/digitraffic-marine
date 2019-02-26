@@ -5,7 +5,9 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -30,9 +32,9 @@ public class MarineApplicationConfiguration {
         return new MethodValidationPostProcessor();
     }
 
-    @SuppressWarnings("Duplicates")
     @Bean
-    public DataSource datasource(final @Value("${marine.datasource.url}") String url,
+    @Primary
+    public DataSource dataSource(final @Value("${marine.datasource.url}") String url,
                                  final @Value("${marine.datasource.username}") String username,
                                  final @Value("${marine.datasource.password}") String password,
                                  final @Value("${marine.datasource.hikari.maximum-pool-size:20}") Integer maximumPoolSize) {
@@ -47,10 +49,22 @@ public class MarineApplicationConfiguration {
         config.setMaxLifetime(570000);
         config.setIdleTimeout(500000);
         config.setConnectionTimeout(60000);
+        config.setPoolName("application_pool");
 
-        // Auto commit must be true for Quartz
-        config.setAutoCommit(true);
+        // register mbeans for debug
+        config.setRegisterMbeans(true);
 
         return new HikariDataSource(config);
+    }
+
+    @Bean
+    // fix bug in spring boot, tries to export hikari beans twice
+    public MBeanExporter exporter() {
+        final MBeanExporter exporter = new MBeanExporter();
+
+        exporter.setAutodetect(true);
+        exporter.setExcludedBeans("dataSource", "quartzDataSource");
+
+        return exporter;
     }
 }

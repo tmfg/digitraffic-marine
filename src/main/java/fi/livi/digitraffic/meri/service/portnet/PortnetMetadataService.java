@@ -3,8 +3,8 @@ package fi.livi.digitraffic.meri.service.portnet;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -63,9 +63,9 @@ public class PortnetMetadataService {
     public FeatureCollectionList listaAllMetadata() {
         return SsnLocationConverter.convert(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
-                ssnLocationRepository.findAll(),
-                portAreaRepository.findAll(),
-                berthRepository.findAll()
+                ssnLocationRepository.streamAllBy(),
+                portAreaRepository.streamAllBy(),
+                berthRepository.streamAllBy()
         );
     }
 
@@ -79,9 +79,9 @@ public class PortnetMetadataService {
 
         return SsnLocationConverter.convert(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
-                Collections.singletonList(location),
-                portAreaRepository.findByPortAreaKeyLocode(locode),
-                berthRepository.findByBerthKeyLocode(locode)
+                Stream.of(location),
+                portAreaRepository.streamByPortAreaKeyLocode(locode),
+                berthRepository.streamByBerthKeyLocode(locode)
                 );
     }
 
@@ -92,9 +92,9 @@ public class PortnetMetadataService {
 
         return SsnLocationConverter.convert(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
-                ssnLocationRepository.findByCountryIgnoreCase(country),
-                isFinland ? portAreaRepository.findAll() : Collections.emptyList(),
-                isFinland ? berthRepository.findAll() : Collections.emptyList());
+                ssnLocationRepository.streamByCountryIgnoreCase(country),
+                isFinland ? portAreaRepository.streamAllBy() : Stream.empty(),
+                isFinland ? berthRepository.streamAllBy() : Stream.empty());
     }
 
     @Transactional(readOnly = true)

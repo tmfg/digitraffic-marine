@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.controller.portnet;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import fi.livi.digitraffic.meri.domain.portnet.Berth;
 import fi.livi.digitraffic.meri.domain.portnet.PortArea;
@@ -22,19 +23,16 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationProperties;
 public final class SsnLocationConverter {
     private SsnLocationConverter() {}
 
-    public static FeatureCollectionList convert(final ZonedDateTime timestamp, final List<SsnLocation> locations, final List<PortArea> portAreas, final List<Berth> berths) {
+    public static FeatureCollectionList convert(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
+        final Stream<PortArea> portAreas, final Stream<Berth> berths) {
         return new FeatureCollectionList(timestamp,
                 convertSsnLocations(locations),
                 convertPortAreas(portAreas),
                 convertBerths(berths));
     }
 
-    private static BerthFeatureCollection convertBerths(final List<Berth> berths) {
-        if(berths.isEmpty()) {
-            return null;
-        }
-
-        return new BerthFeatureCollection(berths.stream().map(SsnLocationConverter::convertBerth).collect(Collectors.toList()));
+    private static BerthFeatureCollection convertBerths(final Stream<Berth> berths) {
+        return new BerthFeatureCollection(berths.map(SsnLocationConverter::convertBerth).collect(Collectors.toList()));
     }
 
     private static BerthFeature convertBerth(final Berth b) {
@@ -43,12 +41,8 @@ public final class SsnLocationConverter {
         return new BerthFeature(b.getBerthKey().getLocode(), b.getBerthKey().getPortAreaCode(), b.getBerthKey().getBerthCode(), p);
     }
 
-    private static PortAreaFeatureCollection convertPortAreas(final List<PortArea> portAreas) {
-        if(portAreas.isEmpty()) {
-            return null;
-        }
-
-        return new PortAreaFeatureCollection(portAreas.stream().map(SsnLocationConverter::convertPortArea).collect(Collectors.toList()));
+    private static PortAreaFeatureCollection convertPortAreas(final Stream<PortArea> portAreas) {
+        return new PortAreaFeatureCollection(portAreas.map(SsnLocationConverter::convertPortArea).collect(Collectors.toList()));
     }
 
     private static PortAreaFeature convertPortArea(final PortArea pa) {
@@ -57,12 +51,8 @@ public final class SsnLocationConverter {
         return new PortAreaFeature(pa.getPortAreaKey().getLocode(), pa.getPortAreaKey().getPortAreaCode(), p, g);
     }
 
-    private static SsnLocationFeatureCollection convertSsnLocations(final List<SsnLocation> locations) {
-        if(locations.isEmpty()) {
-            return null;
-        }
-
-        return new SsnLocationFeatureCollection(locations.stream().map(SsnLocationConverter::convertLocation).collect(Collectors.toList()));
+    private static SsnLocationFeatureCollection convertSsnLocations(final Stream<SsnLocation> locations) {
+        return new SsnLocationFeatureCollection(locations.map(SsnLocationConverter::convertLocation).collect(Collectors.toList()));
     }
 
     private static SsnLocationFeature convertLocation(final SsnLocation l) {
