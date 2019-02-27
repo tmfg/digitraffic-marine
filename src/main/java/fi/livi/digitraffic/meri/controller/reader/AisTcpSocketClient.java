@@ -177,6 +177,7 @@ public class AisTcpSocketClient implements AutoCloseable {
     }
 
     public boolean reconnect() throws Exception {
+        log.info("Reconnect to {}:{}", aisAddress, aisPort);
         close();
         return connect();
     }

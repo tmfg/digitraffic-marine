@@ -25,7 +25,7 @@ import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+//import java.util.Set;
 //import java.util.function.Function;
 //import java.util.stream.Collectors;
 
@@ -115,9 +115,11 @@ public class AisRadioMsg {
         return messageType;
     }
 
+    /**
     protected Set<Map.Entry<String, Object>> getParameterEntrySet() {
         return parameters.entrySet();
     }
+     */
 
     private String getNextSubstring(int size) {
         String ret = binaryMsg.substring(readOffset, readOffset + size);
