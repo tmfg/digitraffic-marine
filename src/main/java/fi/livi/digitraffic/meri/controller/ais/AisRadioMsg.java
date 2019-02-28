@@ -25,9 +25,6 @@ import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-//import java.util.Set;
-//import java.util.function.Function;
-//import java.util.stream.Collectors;
 
 import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.*;
 
@@ -115,12 +112,6 @@ public class AisRadioMsg {
         return messageType;
     }
 
-    /**
-    protected Set<Map.Entry<String, Object>> getParameterEntrySet() {
-        return parameters.entrySet();
-    }
-     */
-
     private String getNextSubstring(int size) {
         String ret = binaryMsg.substring(readOffset, readOffset + size);
         readOffset += size;
@@ -187,35 +178,4 @@ public class AisRadioMsg {
     private String getEtaPart(int size) {
         return String.format("%02d", getUnsignedInteger(size));
     }
-
-    /**
-    @Override
-    public String toString() {
-        return toRawAndParsedDataString();
-    }
-
-    public final String toRawAndParsedDataString() {
-        return "{\"data\":{\"raw\":" + toRawDataString() + ",\"parsed\":\"" + toParsedDataString() + "\"}}";
-    }
-
-    private String toRawDataString() {
-        return "[\"" + String.join("\",\"", rawDataParts) + "\"]";
-    }
-
-    public final String toParsedDataString() {
-        return toDataString(v -> getParsedEntry(v.getKey(), v.getValue()));
-    }
-
-    public final boolean isPositionMsg() {
-        return AisRadioMsgParser.isPositionMessage(binaryMsg);
-    }
-
-    private String toDataString(Function<Map.Entry<String, Object>, String> mapper) {
-        return getParameterEntrySet().stream().map(mapper).collect(Collectors.joining("|"));
-    }
-
-    private String getParsedEntry(String key, Object value) {
-        return key + "§" + value;
-    }
-    */
 }

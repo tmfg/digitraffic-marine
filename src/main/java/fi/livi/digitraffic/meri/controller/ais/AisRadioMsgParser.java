@@ -239,11 +239,10 @@ public class AisRadioMsgParser {
         String received = getColumnValue(RAW_LINE_COLUMN.NUMBER_OF_FILL_BITS_AND_CHECK_VALUE, rawLine).split("\\*")[1];
 
         String info = "[calculated=" + calculated + ", received=" + received + ", sentence=" + rawLine + "]";
+
         if (!calculated.equals(received)) {
             LOGGER.warn("Wrong checksum {}", info);
-        } //else {
-            //LOGGER.debug("Checksum ok {}", info);
-        //}
+        }
     }
 
     private static String calculateChecksum(String rawLine) {
@@ -287,12 +286,4 @@ public class AisRadioMsgParser {
     private static AisRadioMsg.MessageClass getMessageClass(String msgClassSuffix) {
         return CLASS_B_MESSAGE_SUFFIXES.contains(msgClassSuffix) ? AisRadioMsg.MessageClass.CLASS_B : AisRadioMsg.MessageClass.CLASS_A;
     }
-    /**
-    public static boolean isPositionMessage(String binaryMsg) {
-        return SUPPORTED_POSITION_CLASS_SUFFIXES.contains(getMessageClassSuffix(binaryMsg));
-    }
-
-    public static boolean isMetadataMessage(String binaryMsg) {
-        return SUPPORTED_METADATA_CLASS_SUFFIXES.contains(getMessageClassSuffix(binaryMsg));
-    }*/
 }

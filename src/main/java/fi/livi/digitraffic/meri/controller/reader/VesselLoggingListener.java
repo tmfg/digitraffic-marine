@@ -98,27 +98,7 @@ public class VesselLoggingListener implements AisMessageListener {
         readStatisticsMap.put(AISLoggingType.CONNECTION, newCs);
         //readAisConnectionStatus(connectionStatus, -1);
     }
-/**
-    private static synchronized void readAisConnectionStatus(final AisTcpSocketClient.ConnectionStatus connectionStatus, final int queueSize) {
-        boolean countAverage = (queueSize != -1);
-        int problem = (connectionStatus == AisTcpSocketClient.ConnectionStatus.CONNECT_FAILURE) ? 1 : 0;
-        final ConnectionStatistics cs = (ConnectionStatistics)readStatisticsMap.get(AISLoggingType.CONNECTION);
 
-        if (countAverage) {
-            final ConnectionStatistics newCs = (cs == null) ?
-                new ConnectionStatistics(1, connectionStatus, problem, queueSize, queueSize) :
-                new ConnectionStatistics(cs.messages + 1, connectionStatus, cs.readProblems + problem, cs.messageQueue + queueSize, Math.max(cs.messageQueueMax, queueSize));
-
-            readStatisticsMap.put(AISLoggingType.CONNECTION, newCs);
-        } else {
-            final ConnectionStatistics newCs = (cs == null) ?
-                new ConnectionStatistics(0, connectionStatus, problem, 0, 0) :
-                new ConnectionStatistics(cs.messages, connectionStatus, cs.readProblems + problem, cs.messageQueue, Math.max(cs.messageQueueMax, queueSize));
-
-            readStatisticsMap.put(AISLoggingType.CONNECTION, newCs);
-        }
-    }
-*/
     public static synchronized void sentAisMessagesStatistics(final AISLoggingType type, final boolean sendSuccessful) {
         int messages = sendSuccessful ? 1 : 0;
         int failures = sendSuccessful ? 0 : 1;

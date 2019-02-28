@@ -5,6 +5,7 @@ import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 
 import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.*;
+import java.math.BigDecimal;
 
 public final class AisMessageConverter {
     private AisMessageConverter() {}
@@ -77,7 +78,7 @@ public final class AisMessageConverter {
             return 0;
         }
 
-        return aisRadioMsg.getDecimalParam(MAXIMUM_PRESENT_STATIC_DRAUGHT).intValue() * 10;
+        return aisRadioMsg.getDecimalParam(MAXIMUM_PRESENT_STATIC_DRAUGHT).multiply(BigDecimal.TEN).intValue();
     }
 
     private static int getIntValue(final AisRadioMsg aisRadioMsg, final String name, final int defaultValue) {

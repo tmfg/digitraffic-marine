@@ -63,10 +63,6 @@ public class AisTcpSocketClientHealthCheck {
 
             try {
                 aisTcpSocketClient.reconnect();
-
-                //if (aisTcpSocketClient.isConnected()) {
-                    //connectionStatus(AisTcpSocketClient.ConnectionStatus.CONNECTED);
-                //}
             } catch (Exception e) {
                 log.error("Failed to reconnect", e);
             }
