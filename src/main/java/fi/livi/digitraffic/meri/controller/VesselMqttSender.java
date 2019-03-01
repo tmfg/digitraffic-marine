@@ -60,8 +60,7 @@ public class VesselMqttSender {
         return false;
     }
 
-    // Change String to Object
-    public boolean sendStatusMessage(final String status) {
+    public boolean sendStatusMessage(final Object status) {
         try {
             final String statusAsString = objectMapper.writeValueAsString(status);
 
@@ -78,37 +77,5 @@ public class VesselMqttSender {
     // This must be synchronized, because Paho does not support concurrency!
     private synchronized void sendMessage(final String payLoad, final String topic) {
         vesselGateway.sendToMqtt(topic, payLoad);
-    }
-
-    public boolean sendNewStatusMessage(Object status) {
-        try {
-            final String statusAsString = objectMapper.writeValueAsString(status);
-
-            sendMessage(statusAsString, "vessels/beta/status");
-
-            return true;
-        } catch (final Exception e) {
-            LOG.error("error sending status", e);
-        }
-
-        return false;
-    }
-
-    // Remove this
-    public boolean sendNewAisMessage(VesselMetadata meta, VesselLocationFeature location) {
-        try {
-            String msg = (meta != null) ? objectMapper.writeValueAsString(meta) : objectMapper.writeValueAsString(location);
-            String topic = (meta != null) ?
-                String.format("vessels/beta/%d/metadata", meta.getMmsi()) :
-                String.format("vessels/beta/%d/locations", location.mmsi);
-
-            sendMessage(msg, topic);
-
-            return true;
-        } catch (Exception e) {
-            LOG.error("error sending new message", e);
-        }
-
-        return false;
     }
 }

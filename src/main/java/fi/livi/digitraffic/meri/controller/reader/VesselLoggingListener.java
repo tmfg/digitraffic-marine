@@ -83,7 +83,6 @@ public class VesselLoggingListener implements AisMessageListener {
             new ConnectionStatistics(cs.messages + 1, AisTcpSocketClient.ConnectionStatus.CONNECTED, cs.readProblems, cs.messageQueue + queueSize, Math.max(cs.messageQueueMax, queueSize));
 
         readStatisticsMap.put(AISLoggingType.CONNECTION, newCs);
-        //readAisConnectionStatus(AisTcpSocketClient.ConnectionStatus.CONNECTED, messageReader.getMessageQueueSize());
     }
 
     public static synchronized void readAisConnectionStatus(final AisTcpSocketClient.ConnectionStatus connectionStatus) {
@@ -96,7 +95,6 @@ public class VesselLoggingListener implements AisMessageListener {
             new ConnectionStatistics(cs.messages, connectionStatus, cs.readProblems + problem, cs.messageQueue, Math.max(cs.messageQueueMax, 0));
 
         readStatisticsMap.put(AISLoggingType.CONNECTION, newCs);
-        //readAisConnectionStatus(connectionStatus, -1);
     }
 
     public static synchronized void sentAisMessagesStatistics(final AISLoggingType type, final boolean sendSuccessful) {
@@ -185,7 +183,7 @@ public class VesselLoggingListener implements AisMessageListener {
             );
 
             try {
-                boolean sendStatus = vesselSender.sendNewStatusMessage(statusMessage);
+                boolean sendStatus = vesselSender.sendStatusMessage(statusMessage);
 
                 sentAisMessagesStatistics(AISLoggingType.STATUS, sendStatus);
             } catch (Exception e) {

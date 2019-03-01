@@ -29,8 +29,8 @@ import java.util.Map;
 import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.*;
 
 public class AisRadioMsg {
-    public enum MessageType {POSITION, METADATA};
-    public enum MessageClass {CLASS_A, CLASS_B};
+    public enum MessageType {POSITION, METADATA}
+    public enum MessageClass {CLASS_A, CLASS_B}
 
     // maintains insertion order NOTE! Is this order important???
     private Map<String, Object> parameters = new LinkedHashMap<>();
