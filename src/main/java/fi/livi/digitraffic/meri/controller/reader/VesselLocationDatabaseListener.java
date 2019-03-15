@@ -48,7 +48,7 @@ public class VesselLocationDatabaseListener implements AisMessageListener {
     }
 
     @Override
-    public void receiveMessage(final AisRadioMsg message) {
+    public synchronized void receiveMessage(final AisRadioMsg message) {
         if (message.isMmsiAllowed()) {
             final AISMessage ais = AisMessageConverter.convertLocation(message);
 

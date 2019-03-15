@@ -49,7 +49,7 @@ public class VesselMetadataDatabaseListener implements AisMessageListener {
 
 
     @Override
-    public void receiveMessage(final AisRadioMsg message) {
+    public synchronized void receiveMessage(final AisRadioMsg message) {
         final VesselMessage vm = AisMessageConverter.convertMetadata(message);
 
         if (vm.validate()) {
