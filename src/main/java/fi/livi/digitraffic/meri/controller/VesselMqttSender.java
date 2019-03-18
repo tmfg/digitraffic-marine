@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.integration.mqtt.support.MqttHeaders;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,8 +15,8 @@ import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
 @ConditionalOnProperty("ais.mqtt.enabled")
 @Component
-public class VesselSender {
-    private static final Logger LOG = LoggerFactory.getLogger(VesselSender.class);
+public class VesselMqttSender {
+    private static final Logger LOG = LoggerFactory.getLogger(VesselMqttSender.class);
 
     @Lazy // this will not be available if mqtt is not enabled
     private final MqttConfig.VesselGateway vesselGateway;
@@ -30,39 +27,51 @@ public class VesselSender {
     private static final String VESSEL_STATUS_TOPIC  ="vessels/status";
 
     @Autowired
-    public VesselSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper) {
+    public VesselMqttSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper) {
         this.vesselGateway = vesselGateway;
         this.objectMapper = objectMapper;
     }
 
-    public void sendMetadataMessage(final VesselMetadata vesselMetadata) {
+    public boolean sendMetadataMessage(final VesselMetadata vesselMetadata) {
         try {
             final String metadataAsString = objectMapper.writeValueAsString(vesselMetadata);
 
             sendMessage(metadataAsString, String.format(VESSELS_METADATA_TOPIC, vesselMetadata.getMmsi()));
+
+            return true;
         } catch (final Exception e) {
             LOG.error("error sending metadata", e);
         }
+
+        return false;
     }
 
-    public void sendLocationMessage(final VesselLocationFeature vesselLocation) {
+    public boolean sendLocationMessage(final VesselLocationFeature vesselLocation) {
         try {
             final String locationAsString = objectMapper.writeValueAsString(vesselLocation);
 
             sendMessage(locationAsString, String.format(VESSELS_LOCATIONS_TOPIC, vesselLocation.mmsi));
+
+            return true;
         } catch (final Exception e) {
             LOG.error("error sending location", e);
         }
+
+        return false;
     }
 
-    public void sendStatusMessage(final String status) {
+    public boolean sendStatusMessage(final Object status) {
         try {
             final String statusAsString = objectMapper.writeValueAsString(status);
 
             sendMessage(statusAsString, VESSEL_STATUS_TOPIC);
+
+            return true;
         } catch (final Exception e) {
             LOG.error("error sending status", e);
         }
+
+        return false;
     }
 
     // This must be synchronized, because Paho does not support concurrency!

@@ -42,7 +42,7 @@ public interface VesselMetadataJson {
             + "15 = internal GNSS", allowableValues = "range[0,15]", required = true)
     int getPosType();
 
-    @ApiModelProperty(value = "Maximum present static draught in 1/10m", allowableValues = "range[0,255]", required = true)
+    @ApiModelProperty(value = "Maximum present static draught in 1/10m, 255 = draught 25.5 m or greater, 0 = not available (default)", allowableValues = "range[0,255]", required = true)
     int getDraught();
 
     @ApiModelProperty(value = "Vessel International Maritime Organization (IMO) number", required = true)

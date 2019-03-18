@@ -21,7 +21,7 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @Service
 @ConditionalOnExpression("'${config.test}' != 'true'")
-@ConditionalOnProperty("ais.websocketRead.enabled")
+@ConditionalOnProperty("ais.reader.enabled")
 public class AisLocker {
     private final LockingService lockingService;
 
