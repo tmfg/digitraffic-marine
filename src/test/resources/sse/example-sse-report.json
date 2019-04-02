@@ -1,0 +1,38 @@
+{
+    "SSE_Reports": [
+        {
+            "Site": {
+                "SiteName": "Kipsi",
+                "SiteNumber": 20243
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-03-29T15:01:30+03:00",
+                "SeaState": "CALM | LIGHT | MODERATE | BREEZE | GALE | STORM",
+                "Trend": "Unknown | NoChange | Ascending | Descending",
+                "WindWaveDir": "0-359",
+                "Confidence": "POOR | MODERATE | GOOD"
+            },
+            "Extra_Fields": {
+                "Temperature": 12,
+                "Batt_Voltage": 12.5
+            }
+        },
+        {
+            "Site": {
+                "SiteName": "Example",
+                "SiteNumber": 1234
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-03-29T15:01:30+03:00",
+                "SeaState": "CALM | LIGHT | MODERATE | BREEZE | GALE | STORM",
+                "Trend": "Unknown | NoChange | Ascending | Descending",
+                "WindWaveDir": "0-359",
+                "Confidence": "POOR | MODERATE | GOOD"
+            },
+            "Extra_Fields": {
+                "Temperature": 12,
+                "Batt_Voltage": 12.5
+            }
+        }
+    ]
+}
