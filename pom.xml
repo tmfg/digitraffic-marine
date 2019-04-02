@@ -410,6 +410,25 @@
             </plugin>
 
             <plugin>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <version>1.0.0</version>
+
+                <configuration>
+                    <sourceDirectory>${basedir}/src/main/resources/schema/json/</sourceDirectory>
+                    <targetPackage>fi.livi.digitraffic.meri.external</targetPackage>
+                    <outputDirectory>${project.build.directory}/generated-sources/json</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
