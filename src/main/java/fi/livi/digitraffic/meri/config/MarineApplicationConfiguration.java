@@ -22,10 +22,10 @@ public class MarineApplicationConfiguration {
     public static final String API_LOCATIONS_PATH = "/locations";
     public static final String API_PORT_CALLS_PATH = "/port-calls";
     public static final String API_WINTER_NAVIGATION_PATH = "/winter-navigation";
+    public static final String API_SSE_PATH = "/sse";
 
     /**
      * Enables bean validation for controller parameters
-     * @return
      */
     @Bean
     public MethodValidationPostProcessor methodValidationPostProcessor() {
