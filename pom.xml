@@ -319,6 +319,18 @@
                 </configuration>
             </plugin>
 
+            <!-- Noo need to annotate JSON constuctor parameters names -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -418,6 +430,8 @@
                     <sourceDirectory>${basedir}/src/main/resources/schema/json/</sourceDirectory>
                     <targetPackage>fi.livi.digitraffic.meri.external</targetPackage>
                     <outputDirectory>${project.build.directory}/generated-sources/json</outputDirectory>
+                    <dateTimeType>java.time.ZonedDateTime</dateTimeType>
+                    <dateType>java.time.LocalDate</dateType>
                 </configuration>
                 <executions>
                     <execution>
