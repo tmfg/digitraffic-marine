@@ -7,10 +7,10 @@
             },
             "SSE_Fields": {
                 "Last_Update": "2019-03-29T15:01:30+03:00",
-                "SeaState": "CALM | LIGHT | MODERATE | BREEZE | GALE | STORM",
-                "Trend": "Unknown | NoChange | Ascending | Descending",
-                "WindWaveDir": "0-359",
-                "Confidence": "POOR | MODERATE | GOOD"
+                "SeaState": "CALM",
+                "Trend": "Ascending",
+                "WindWaveDir": "359",
+                "Confidence": "MODERATE"
             },
             "Extra_Fields": {
                 "Temperature": 12,
@@ -20,18 +20,21 @@
         {
             "Site": {
                 "SiteName": "Example",
-                "SiteNumber": 1234
+                "SiteNumber": 1234,
+                "Field_X": 12.5
             },
             "SSE_Fields": {
                 "Last_Update": "2019-03-29T15:01:30+03:00",
-                "SeaState": "CALM | LIGHT | MODERATE | BREEZE | GALE | STORM",
-                "Trend": "Unknown | NoChange | Ascending | Descending",
-                "WindWaveDir": "0-359",
-                "Confidence": "POOR | MODERATE | GOOD"
+                "SeaState": "STORM",
+                "Trend": "Descending",
+                "WindWaveDir": "0",
+                "Confidence": "GOOD",
+                "Field_Y": 12.5
             },
             "Extra_Fields": {
                 "Temperature": 12,
-                "Batt_Voltage": 12.5
+                "Batt_Voltage": 12.5,
+                "Field_Z": 12.5
             }
         }
     ]

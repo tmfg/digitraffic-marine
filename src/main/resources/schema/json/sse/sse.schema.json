@@ -75,7 +75,7 @@
                             },
                             "SeaState": {
                                 "$id": "#/properties/SSE_Reports/items/properties/SSE_Fields/properties/SeaState",
-                                "type": "array",
+                                "type": "string",
                                 "enum": [
                                     "CALM",
                                     "LIGHT",
@@ -91,7 +91,7 @@
                             },
                             "Trend": {
                                 "$id": "#/properties/SSE_Reports/items/properties/SSE_Fields/properties/Trend",
-                                "type": "array",
+                                "type": "string",
                                 "enum": [
                                     "Unknown",
                                     "NoChange",
@@ -116,7 +116,7 @@
                             },
                             "Confidence": {
                                 "$id": "#/properties/SSE_Reports/items/properties/SSE_Fields/properties/Confidence",
-                                "type": "array",
+                                "type": "string",
                                 "enum": [
                                     "POOR",
                                     "MODERATE",
