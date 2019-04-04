@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import fi.livi.digitraffic.meri.external.sse.SSEFields;
+import fi.livi.digitraffic.meri.external.tlsc.sse.SSEFields;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
 

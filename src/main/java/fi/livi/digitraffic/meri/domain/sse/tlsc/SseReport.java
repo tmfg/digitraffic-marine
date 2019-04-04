@@ -11,45 +11,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.util.StringUtil;
 
-/**
- * The Items Schema
- * <p>
- * 
- * 
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "site",
+    "sseSite",
     "sseFields",
-    "extraFields",
-    "additionalProperties"
+    "sseExtraFields"
 })
 public class SseReport {
 
-    private Site site;
+    private SseSite sseSite;
     private SseFields sseFields;
-    private ExtraFields extraFields;
+    private SseExtraFields sseExtraFields;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public SseReport() {
     }
 
-    public SseReport(final Site site, final SseFields sseFields, final ExtraFields extraFields, final Map<String, Object> additionalProperties) {
-        this(site, sseFields, extraFields);
+    public SseReport(final SseSite sseSite, final SseFields sseFields, final SseExtraFields sseExtraFields, final Map<String, Object> additionalProperties) {
+        this(sseSite, sseFields, sseExtraFields);
         this.additionalProperties = additionalProperties;
     }
 
-    public SseReport(Site site, SseFields sseFields, ExtraFields extraFields) {
-        this.site = site;
+    public SseReport(SseSite sseSite, SseFields sseFields, SseExtraFields sseExtraFields) {
+        this.sseSite = sseSite;
         this.sseFields = sseFields;
-        this.extraFields = extraFields;
+        this.sseExtraFields = sseExtraFields;
     }
 
-    public Site getSite() {
-        return site;
+    public SseSite getSseSite() {
+        return sseSite;
     }
-    public void setSite(Site site) {
-        this.site = site;
+    public void setSseSite(SseSite sseSite) {
+        this.sseSite = sseSite;
     }
     public SseFields getSseFields() {
         return sseFields;
@@ -58,11 +51,11 @@ public class SseReport {
     public void setSseFields(SseFields sseFields) {
         this.sseFields = sseFields;
     }
-    public ExtraFields getExtraFields() {
-        return extraFields;
+    public SseExtraFields getSseExtraFields() {
+        return sseExtraFields;
     }
-    public void setExtraFields(ExtraFields extraFields) {
-        this.extraFields = extraFields;
+    public void setSseExtraFields(SseExtraFields sseExtraFields) {
+        this.sseExtraFields = sseExtraFields;
     }
 
     @JsonAnyGetter

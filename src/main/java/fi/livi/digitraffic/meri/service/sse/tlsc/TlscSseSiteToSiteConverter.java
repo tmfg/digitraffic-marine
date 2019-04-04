@@ -4,19 +4,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.converter.AutoRegisteredConverter;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.ExtraFields;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.Site;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseFields;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReport;
-import fi.livi.digitraffic.meri.external.sse.SSEReport;
+import fi.livi.digitraffic.meri.domain.sse.tlsc.SseSite;
 
 @ConditionalOnWebApplication
 @Component
 public class TlscSseSiteToSiteConverter
-    extends AutoRegisteredConverter<fi.livi.digitraffic.meri.external.sse.Site, Site> {
+    extends AutoRegisteredConverter<fi.livi.digitraffic.meri.external.tlsc.sse.Site, SseSite> {
 
     @Override
-    public Site convert(fi.livi.digitraffic.meri.external.sse.Site source) {
-        return new Site(source.getSiteName(), source.getSiteNumber(), source.getAdditionalProperties());
+    public SseSite convert(fi.livi.digitraffic.meri.external.tlsc.sse.Site source) {
+        return new SseSite(source.getSiteName(), source.getSiteNumber(), source.getAdditionalProperties());
     }
 }

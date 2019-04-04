@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.dao.sse.SseJsonRepository;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseJson;
+import fi.livi.digitraffic.meri.dao.sse.SseReportContainerRepository;
+import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReportContainer;
 import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReport;
-import fi.livi.digitraffic.meri.external.sse.TlscSseReports;
+import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 
 @Service
 public class SseService {
@@ -24,15 +24,15 @@ public class SseService {
 
     private final ConversionService conversionService;
     private final ObjectMapper objectMapper;
-    private final SseJsonRepository sseJsonRepository;
+    private final SseReportContainerRepository sseReportContainerRepository;
 
     public SseService(@Qualifier("conversionService")
                       final ConversionService conversionService,
                       final ObjectMapper objectMapper,
-                      final SseJsonRepository sseJsonRepository) {
+                      final SseReportContainerRepository sseReportContainerRepository) {
         this.conversionService = conversionService;
         this.objectMapper = objectMapper;
-        this.sseJsonRepository = sseJsonRepository;
+        this.sseReportContainerRepository = sseReportContainerRepository;
     }
 
     @Transactional
@@ -40,7 +40,7 @@ public class SseService {
         tlscSseReports.getSSEReports().stream().forEach(r -> {
             final SseReport result = conversionService.convert(r, SseReport.class);
             try {
-                SseJson saved = sseJsonRepository.save(new SseJson(result));
+                SseReportContainer saved = sseReportContainerRepository.save(new SseReportContainer(result));
                 log.info("method=saveTlscSseReports id={} report=\n{}", saved.getId(), objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(saved));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
@@ -49,7 +49,7 @@ public class SseService {
     }
 
     @Transactional(readOnly = true)
-    public List<SseJson> findAll() {
-        return sseJsonRepository.findAll();
+    public List<SseReportContainer> findAll() {
+        return sseReportContainerRepository.findAll();
     }
 }

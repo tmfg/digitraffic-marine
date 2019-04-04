@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseJson;
-import fi.livi.digitraffic.meri.external.sse.TlscSseReports;
+import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReportContainer;
+import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.service.sse.SseService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -33,6 +33,7 @@ import io.swagger.annotations.ApiResponses;
 public class SSEController {
 
     private static final Logger log = LoggerFactory.getLogger(SSEController.class);
+    private static final String PATH_ADD = "add";
 
     private final SseService sseService;
     private final ObjectMapper objectMapper;
@@ -46,14 +47,14 @@ public class SSEController {
     @ApiOperation("Return list of all berths, port areas and locations.")
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<SseJson> listAllSseDatas() {
+    public List<SseReportContainer> listAllSseDatas() {
         return sseService.findAll();
     }
 
 
 //    @ApiIgnore
     @ApiOperation("Saving Sea State Estimation data")
-    @RequestMapping(path = "add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(path = PATH_ADD, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses(@ApiResponse(code = 200, message = "Successful post of SSE data"))
     public ResponseEntity<Void> postSseData(@RequestBody
                                             TlscSseReports tlscSseReports) throws JsonProcessingException {

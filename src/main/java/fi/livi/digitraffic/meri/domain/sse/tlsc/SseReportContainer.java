@@ -22,13 +22,13 @@ import fi.livi.digitraffic.meri.util.StringUtil;
 @TypeDef(name = "SSEReportUserType", typeClass = SSEReportUserType.class)
 @Entity
 @DynamicUpdate
-@Table(name = "SSE_JSON")
-public class SseJson {
+@Table(name = "SSE_REPORT_CONTAINER")
+public class SseReportContainer {
 
     @Id
-    @GenericGenerator(name = "SEQ_SSE_JSON", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-                      parameters = @Parameter(name = "sequence_name", value = "SEQ_SSE_JSON"))
-    @GeneratedValue(generator = "SEQ_SSE_JSON")
+    @GenericGenerator(name = "SEQ_SSE_REPORT_CONTAINER", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+                      parameters = @Parameter(name = "sequence_name", value = "SEQ_SSE_REPORT_CONTAINER"))
+    @GeneratedValue(generator = "SEQ_SSE_REPORT_CONTAINER")
     private Long id;
 
 
@@ -42,11 +42,10 @@ public class SseJson {
     @Type(type = "SSEReportUserType")
     private SseReport report;
 
-    public SseJson() {
+    public SseReportContainer() {
     }
 
-    @JsonCreator
-    public SseJson(final SseReport report) {
+    public SseReportContainer(final SseReport report) {
         this.report = report;
         created = ZonedDateTime.now();
     }

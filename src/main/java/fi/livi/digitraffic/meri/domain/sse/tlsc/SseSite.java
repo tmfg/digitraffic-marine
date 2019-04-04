@@ -7,54 +7,46 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.util.StringUtil;
 
-/**
- * The Extra_fields Schema
- * <p>
- * 
- * 
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "temperature",
-    "batteryVoltage",
-    "additionalProperties"
+    "SiteName",
+    "SiteNumber"
 })
-public class ExtraFields {
+public class SseSite {
 
-    private Integer temperature;
-    private Double batteryVoltage;
-
-    @JsonIgnore
+    private String siteName;
+    private Integer siteNumber;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public ExtraFields(final Integer temperature, final Double battVoltage, final Map<String, Object> additionalProperties) {
-        this(temperature, battVoltage);
+    public SseSite() {
+    }
+
+    public SseSite(final String siteName, final Integer siteNumber, final Map<String, Object> additionalProperties) {
+        this(siteName, siteNumber);
         this.additionalProperties = additionalProperties;
     }
 
-    @JsonCreator
-    public ExtraFields(final Integer temperature, final Double battVoltage) {
-        this.temperature = temperature;
-        this.batteryVoltage = battVoltage;
+    public SseSite(final String siteName, final Integer siteNumber) {
+        this.siteName = siteName;
+        this.siteNumber = siteNumber;
     }
 
-    public Integer getTemperature() {
-        return temperature;
+    public String getSiteName() {
+        return siteName;
     }
-    public void setTemperature(Integer temperature) {
-        this.temperature = temperature;
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
     }
-    public Double getBatteryVoltage() {
-        return batteryVoltage;
+    public Integer getSiteNumber() {
+        return siteNumber;
     }
-    public void setBatteryVoltage(Double batteryVoltage) {
-        this.batteryVoltage = batteryVoltage;
+    public void setSiteNumber(Integer siteNumber) {
+        this.siteNumber = siteNumber;
     }
 
     @JsonAnyGetter

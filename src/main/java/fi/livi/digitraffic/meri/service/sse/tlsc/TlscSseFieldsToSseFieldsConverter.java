@@ -9,10 +9,10 @@ import fi.livi.digitraffic.meri.domain.sse.tlsc.SseFields;
 @ConditionalOnWebApplication
 @Component
 public class TlscSseFieldsToSseFieldsConverter
-    extends AutoRegisteredConverter<fi.livi.digitraffic.meri.external.sse.SSEFields, SseFields> {
+    extends AutoRegisteredConverter<fi.livi.digitraffic.meri.external.tlsc.sse.SSEFields, SseFields> {
 
     @Override
-    public SseFields convert(fi.livi.digitraffic.meri.external.sse.SSEFields src) {
+    public SseFields convert(fi.livi.digitraffic.meri.external.tlsc.sse.SSEFields src) {
         return new SseFields(src.getLastUpdate(),
                              src.getSeaState(),
                              src.getTrend(),
