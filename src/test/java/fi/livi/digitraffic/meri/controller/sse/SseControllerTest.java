@@ -26,8 +26,6 @@ public class SseControllerTest extends AbstractTestBase {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final int MMSI = 12345;
-
     @Test
     public void addSseData() throws Exception {
         final String postJson = readFile("sse/example-sse-report.json");
@@ -38,7 +36,7 @@ public class SseControllerTest extends AbstractTestBase {
 
         mockMvc.perform(post(MarineApplicationConfiguration.API_V1_BASE_PATH +
                              MarineApplicationConfiguration.API_SSE_PATH +
-                             SSEController.ADD_PATH)
+                             SseController.ADD_PATH)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(postJson))
                 .andExpect(status().isOk())

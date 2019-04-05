@@ -14,12 +14,10 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
-import fi.livi.digitraffic.meri.config.postgres.SSEReportUserType;
+import fi.livi.digitraffic.meri.config.postgres.SseReportUserType;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
-@TypeDef(name = "SSEReportUserType", typeClass = SSEReportUserType.class)
+@TypeDef(name = "SseReportUserType", typeClass = SseReportUserType.class)
 @Entity
 @DynamicUpdate
 @Table(name = "SSE_REPORT_CONTAINER")
@@ -39,7 +37,7 @@ public class SseReportContainer {
     private ZonedDateTime handled;
 
     @Column
-    @Type(type = "SSEReportUserType")
+    @Type(type = "SseReportUserType")
     private SseReport report;
 
     public SseReportContainer() {

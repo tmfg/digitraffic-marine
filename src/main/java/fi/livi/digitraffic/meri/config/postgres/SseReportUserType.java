@@ -29,16 +29,16 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import fi.livi.digitraffic.meri.config.SpringContext;
 import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReport;
 
-public class SSEReportUserType implements UserType {
+public class SseReportUserType implements UserType {
 
-    private static final Logger log = LoggerFactory.getLogger(SSEReportUserType.class);
+    private static final Logger log = LoggerFactory.getLogger(SseReportUserType.class);
     private ObjectWriter writer;
     private ObjectReader reader;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    public SSEReportUserType() {
+    public SseReportUserType() {
     }
 
     private void initObjectReaderAndWriter() {

@@ -26,21 +26,19 @@ import fi.livi.digitraffic.meri.service.sse.SseService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_SSE_PATH)
 @ConditionalOnWebApplication
-public class SSEController {
+public class SseController {
 
-    private static final Logger log = LoggerFactory.getLogger(SSEController.class);
+    private static final Logger log = LoggerFactory.getLogger(SseController.class);
     public static final String ADD_PATH = "/add";
 
     private final SseService sseService;
     private final ObjectMapper objectMapper;
 
-    public SSEController(final SseService sseService,
+    public SseController(final SseService sseService,
                          final ObjectMapper objectMapper) {
         this.sseService = sseService;
         this.objectMapper = objectMapper;
@@ -54,9 +52,8 @@ public class SSEController {
     }
 
 
+// TODO uncomment as we don't wan this to be in swagger documentation.
 //    @ApiIgnore
-    @ApiOperation("Saving Sea State Estimation data")
-    @ApiResponses(@ApiResponse(code = 200, message = "Successful post of SSE data"))
     @PostMapping(path = ADD_PATH, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public AddInfo addSseData(@RequestBody TlscSseReports tlscSseReports) throws JsonProcessingException {
