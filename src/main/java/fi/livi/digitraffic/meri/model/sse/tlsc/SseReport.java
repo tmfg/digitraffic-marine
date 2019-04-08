@@ -1,5 +1,5 @@
 
-package fi.livi.digitraffic.meri.domain.sse.tlsc;
+package fi.livi.digitraffic.meri.model.sse.tlsc;
 
 import java.util.HashMap;
 import java.util.Map;

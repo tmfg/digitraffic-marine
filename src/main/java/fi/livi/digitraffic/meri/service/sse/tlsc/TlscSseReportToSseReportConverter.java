@@ -4,10 +4,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.converter.AutoRegisteredConverter;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseExtraFields;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseSite;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseFields;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReport;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
 
 @ConditionalOnWebApplication

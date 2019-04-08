@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import fi.livi.digitraffic.meri.config.SpringContext;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReport;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
 
 public class SseReportUserType implements UserType {
 

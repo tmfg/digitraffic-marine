@@ -19,10 +19,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseExtraFields;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseFields;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReport;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseSite;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
 import fi.livi.digitraffic.meri.external.tlsc.sse.ExtraFields;
 import fi.livi.digitraffic.meri.external.tlsc.sse.SSEFields;
 import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;

@@ -15,6 +15,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import fi.livi.digitraffic.meri.config.postgres.SseReportUserType;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
 @TypeDef(name = "SseReportUserType", typeClass = SseReportUserType.class)

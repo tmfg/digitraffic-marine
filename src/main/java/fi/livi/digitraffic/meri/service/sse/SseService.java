@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.dao.sse.SseReportContainerRepository;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReport;
+import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
 import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReportContainer;
 import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
