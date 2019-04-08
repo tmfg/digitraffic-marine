@@ -60,7 +60,7 @@ public class SseServiceTest extends AbstractTestBase {
         verifyConverterTimes(0, ExtraFields.class, SseExtraFields.class);
 
 //        Mockito.verify(sseReportContainerRepository, Mockito.times(0))
-//            .save(any(SseReportContainer.class));
+//            .save(any(SseTlscReport.class));
 
         Mockito.verify(conversionService, Mockito.times(0))
             .convert(any(Site.class), eq(SseSite.class));
@@ -79,7 +79,7 @@ public class SseServiceTest extends AbstractTestBase {
         verifyConverterTimes(2, ExtraFields.class, SseExtraFields.class);
 
 //        Mockito.verify(sseReportContainerRepository, Mockito.times(2))
-//            .save(any(SseReportContainer.class));
+//            .save(any(SseTlscReport.class));
 
         Assert.assertEquals(2, saved);
     }

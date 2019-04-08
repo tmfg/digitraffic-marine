@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.dao.sse.SseReportContainerRepository;
+import fi.livi.digitraffic.meri.dao.sse.SseTlscReportRepository;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReportContainer;
+import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.util.StringUtil;
@@ -25,15 +25,15 @@ public class SseService {
 
     private final ConversionService conversionService;
     private final ObjectMapper objectMapper;
-    private final SseReportContainerRepository sseReportContainerRepository;
+    private final SseTlscReportRepository sseTlscReportRepository;
 
     @Autowired
     public SseService(final ConversionService conversionService,
                       final ObjectMapper objectMapper,
-                      final SseReportContainerRepository sseReportContainerRepository) {
+                      final SseTlscReportRepository sseTlscReportRepository) {
         this.conversionService = conversionService;
         this.objectMapper = objectMapper;
-        this.sseReportContainerRepository = sseReportContainerRepository;
+        this.sseTlscReportRepository = sseTlscReportRepository;
     }
 
     @Transactional
@@ -41,7 +41,7 @@ public class SseService {
         int count = 0;
         for (final SSEReport report : tlscSseReports.getSSEReports()) {
             final SseReport result = conversionService.convert(report, SseReport.class);
-            SseReportContainer saved = sseReportContainerRepository.save(new SseReportContainer(result));
+            SseTlscReport saved = sseTlscReportRepository.save(new SseTlscReport(result));
             count++;
             log.info("method=saveTlscSseReports id={} report=\n{}", saved.getId(), StringUtil.toJsonString(saved));
         }
@@ -50,7 +50,7 @@ public class SseService {
     }
 
     @Transactional(readOnly = true)
-    public List<SseReportContainer> findAll() {
-        return sseReportContainerRepository.findAll();
+    public List<SseTlscReport> findAll() {
+        return sseTlscReportRepository.findAll();
     }
 }

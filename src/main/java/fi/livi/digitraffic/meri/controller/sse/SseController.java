@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseReportContainer;
+import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.service.sse.SseService;
 import io.swagger.annotations.ApiModel;
@@ -47,7 +47,7 @@ public class SseController {
     @ApiOperation("Return list of all berths, port areas and locations.")
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<SseReportContainer> listAllSseDatas() {
+    public List<SseTlscReport> listAllSseDatas() {
         return sseService.findAll();
     }
 
