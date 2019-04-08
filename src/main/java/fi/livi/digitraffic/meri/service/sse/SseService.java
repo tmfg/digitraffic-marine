@@ -43,7 +43,7 @@ public class SseService {
             final SseReport result = conversionService.convert(report, SseReport.class);
             SseTlscReport saved = sseTlscReportRepository.save(new SseTlscReport(result));
             count++;
-            log.info("method=saveTlscSseReports id={} report=\n{}", saved.getId(), StringUtil.toJsonString(saved));
+            log.info("method=saveTlscSseReports report=\n{}", StringUtil.toJsonString(saved));
         }
         log.info("method=saveTlscSseReports countSaved={}", count);
         return count;
