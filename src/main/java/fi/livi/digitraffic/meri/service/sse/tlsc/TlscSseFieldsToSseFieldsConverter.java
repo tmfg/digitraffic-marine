@@ -18,7 +18,7 @@ public class TlscSseFieldsToSseFieldsConverter
     @Override
     public SseFields convert(fi.livi.digitraffic.meri.external.tlsc.sse.SSEFields src) {
         if (!src.getAdditionalProperties().isEmpty()) {
-            log.warn("No mapings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
+            log.warn("No mappings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
         }
         return new SseFields(src.getLastUpdate(),
                              src.getSeaState(),

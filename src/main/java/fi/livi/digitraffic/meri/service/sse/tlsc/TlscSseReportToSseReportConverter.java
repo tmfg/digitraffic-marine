@@ -26,7 +26,7 @@ public class TlscSseReportToSseReportConverter
         final SseFields sseFields = convert(src.getSSEFields(), SseFields.class);
         final SseExtraFields sseExtraFields = convert(src.getExtraFields(), SseExtraFields.class);
         if (!src.getAdditionalProperties().isEmpty()) {
-            log.warn("No mapings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
+            log.warn("No mappings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
         }
         return new SseReport(sseSite, sseFields, sseExtraFields, src.getAdditionalProperties());
     }

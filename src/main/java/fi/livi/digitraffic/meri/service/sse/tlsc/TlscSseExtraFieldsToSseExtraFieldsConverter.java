@@ -18,7 +18,7 @@ public class TlscSseExtraFieldsToSseExtraFieldsConverter
     @Override
     public SseExtraFields convert(fi.livi.digitraffic.meri.external.tlsc.sse.ExtraFields src) {
         if (!src.getAdditionalProperties().isEmpty()) {
-            log.warn("No mapings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
+            log.warn("No mappings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
         }
         return new SseExtraFields(src.getTemperature(), src.getBattVoltage(), src.getAdditionalProperties());
     }
