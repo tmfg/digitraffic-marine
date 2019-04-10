@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.model.geojson.FeatureCollection;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 @JsonPropertyOrder({
         "type",
@@ -13,14 +13,9 @@ import io.swagger.annotations.ApiModelProperty;
         "features",
 })
 @ApiModel(description = "GeoJSON FeatureCollection object")
-public class PortAreaFeatureCollection {
-    @ApiModelProperty(required = true)
-    public final List<PortAreaFeature> features;
-
-    @ApiModelProperty(allowableValues = "FeatureCollection", required = true)
-    public final String type = "FeatureCollection";
+public class PortAreaFeatureCollection extends FeatureCollection<PortAreaFeature> {
 
     public PortAreaFeatureCollection(final List<PortAreaFeature> features) {
-        this.features = features;
+        super(features);
     }
 }

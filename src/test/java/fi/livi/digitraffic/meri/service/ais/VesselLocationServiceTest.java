@@ -79,12 +79,12 @@ public class VesselLocationServiceTest extends AbstractTestBase {
                 vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius1, p2.y, p2.x, now);
 
         assertFalse("Vessel should not be found withing radius " + radius1,
-                    featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+                    featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
 
         featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius2, p2.y, p2.x, now);
 
         assertTrue("Vessel should be found withing radius " + radius2,
-                   featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+                   featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
     }
 
     @Test
@@ -110,11 +110,11 @@ public class VesselLocationServiceTest extends AbstractTestBase {
         VesselLocationFeatureCollection featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius1, MMSI, now);
 
         assertFalse("Vessel should not be found withing radius " + radius1,
-                    featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+                    featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
 
         featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius2, MMSI, now);
 
         assertTrue("Vessel should be found withing radius " + radius2,
-                   featureCollection.features.stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+                   featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
     }
 }
