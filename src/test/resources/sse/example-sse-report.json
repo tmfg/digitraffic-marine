@@ -6,35 +6,38 @@
                 "SiteNumber": 20243
             },
             "SSE_Fields": {
-                "Last_Update": "2019-03-29T15:01:30+03:00",
+                "Last_Update": "2019-04-11T12:33:20+03:00",
                 "SeaState": "CALM",
-                "Trend": "Ascending",
-                "WindWaveDir": "359",
+                "Trend": "DESCENDING",
+                "WindWaveDir": 119,
                 "Confidence": "MODERATE"
             },
             "Extra_Fields": {
-                "Temperature": 12,
-                "Batt_Voltage": 12.5
+                "Temperature": 2,
+                "Heel_Angle": 2.5,
+                "Light_Status": "ON D",
+                "Coord_Latitude":  59.44507,
+                "Coord_Longitude": 21.22558
             }
         },
         {
             "Site": {
-                "SiteName": "Example",
-                "SiteNumber": 1234,
-                "Field_X": 12.5
+                "SiteName": "Hattukari",
+                "SiteNumber": 20169
             },
             "SSE_Fields": {
-                "Last_Update": "2019-03-29T15:01:30+03:00",
-                "SeaState": "STORM",
-                "Trend": "Descending",
-                "WindWaveDir": "0",
-                "Confidence": "GOOD",
-                "Field_Y": 12.5
+                "Last_Update": "2019-02-12T14:40:00+03:00",
+                "SeaState": "CALM",
+                "Trend": "ASCENDING",
+                "WindWaveDir": 110,
+                "Confidence": "MODERATE"
             },
             "Extra_Fields": {
-                "Temperature": 12,
-                "Batt_Voltage": 12.5,
-                "Field_Z": 12.5
+                "Temperature": 5,
+                "Heel_Angle": 5.6,
+                "Light_Status": "ON",
+                "Coord_Latitude": 54.55432,
+                "Coord_Longitude": 21.33210
             }
         }
     ]

@@ -100,7 +100,7 @@ public class SseTlscReportUserType implements UserType {
         try {
             return getReader().readValue(cellContent.getBytes("UTF-8"));
         } catch (final Exception ex) {
-            throw new RuntimeException("Failed to convert String to SseMessage: " + ex.getMessage(), ex);
+            throw new RuntimeException("Failed to convert String to SseReport: " + ex.getMessage(), ex);
         }
     }
 
@@ -121,7 +121,7 @@ public class SseTlscReportUserType implements UserType {
             w.flush();
             ps.setObject(idx, w.toString(), Types.OTHER);
         } catch (final Exception ex) {
-            throw new RuntimeException("Failed to convert sse message to String: " + ex.getMessage(), ex);
+            throw new RuntimeException("Failed to convert SseReport to String: " + ex.getMessage(), ex);
         }
     }
 

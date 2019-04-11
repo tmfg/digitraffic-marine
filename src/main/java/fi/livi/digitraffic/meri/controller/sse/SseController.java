@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
+import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -46,9 +47,16 @@ public class SseController {
     }
 
     @ApiOperation("Return list of all berths, port areas and locations.")
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/raw", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<SseTlscReport> listAllSseDatas() {
+        return sseService.findAllRaw();
+    }
+
+    @ApiOperation("Return all SSE datas as GeoJSON")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public SseFeatureCollection getAll() {
         return sseService.findAll();
     }
 

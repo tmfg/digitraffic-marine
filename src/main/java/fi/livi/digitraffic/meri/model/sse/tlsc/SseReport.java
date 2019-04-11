@@ -22,7 +22,7 @@ public class SseReport {
     private SseSite sseSite;
     private SseFields sseFields;
     private SseExtraFields sseExtraFields;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public SseReport() {
     }
