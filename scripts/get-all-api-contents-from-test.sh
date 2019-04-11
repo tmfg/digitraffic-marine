@@ -10,7 +10,7 @@ echo "Running at dir $(pwd)"
 
 SCHEMA=$(curl -s https://meri-test.digitraffic.fi/api/v1/metadata/documentation/v2/api-docs?group=metadata-api | jq)
 
-SERVICE_HOST=$(echo ${SCHEMA} | jq -r '.host' )
+SERVICE_HOST=https://$(echo ${SCHEMA} | jq -r '.host' )
 echo SERVICE_HOST: $SERVICE_HOST
 
 SERVICE_PATHS=$(echo ${SCHEMA} | jq -r '.paths | keys | .[]')
