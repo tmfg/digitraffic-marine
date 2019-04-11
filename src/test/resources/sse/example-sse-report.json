@@ -15,7 +15,7 @@
             "Extra_Fields": {
                 "Temperature": 2,
                 "Heel_Angle": 2.5,
-                "Light_Status": "ON D",
+                "Light_Status": "ON_D",
                 "Coord_Latitude":  59.44507,
                 "Coord_Longitude": 21.22558
             }

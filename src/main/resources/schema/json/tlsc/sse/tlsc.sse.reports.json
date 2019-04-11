@@ -86,7 +86,7 @@
                                 ],
                                 "title": "The Seastate Schema",
                                 "examples": [
-                                    "CALM | LIGHT | MODERATE | BREEZE | GALE | STORM"
+                                    "CALM", "LIGHT", "MODERATE", "BREEZE", "GALE", "STORM"
                                 ]
                             },
                             "Trend": {
@@ -100,7 +100,7 @@
                                 ],
                                 "title": "The Trend Schema",
                                 "examples": [
-                                    "UNKNOWN | NO_CHANGE | ASCENDING | DESCENDING"
+                                    "UNKNOWN", "NO_CHANGE", "ASCENDING", "DESCENDING"
                                 ]
                             },
                             "WindWaveDir": {
@@ -124,7 +124,7 @@
                                 ],
                                 "title": "The Confidence Schema",
                                 "examples": [
-                                    "POOR | MODERATE | GOOD"
+                                    "POOR", "MODERATE", "GOOD"
                                 ]
                             }
                         }
@@ -158,11 +158,11 @@
                                 "enum": [
                                     "ON",
                                     "OFF",
-                                    "ON D"
+                                    "ON_D"
                                 ],
                                 "title": "The Light_status Schema",
                                 "examples": [
-                                    "ON"
+                                    "ON", "OFF", "ON_D"
                                 ]
                             },
                             "Coord_Latitude": {
