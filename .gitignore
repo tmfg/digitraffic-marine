@@ -62,3 +62,4 @@ application-localhost.properties
 /dbmarine/schemaspy/lib
 
 /javamelody
+/src/test/resources/sse/post-sse-report-meri-test.sh
