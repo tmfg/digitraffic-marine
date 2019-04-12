@@ -38,9 +38,8 @@ public class SseProperties {
     private Double heelAngle;
 
     @ApiModelProperty(value = "Status of the flashlight. Normally ON at nighttime and OFF at daytime. " +
-                              "ON_D means that light is flashing with alternative flash character, which usually " +
-                              "means different light intensity and possible flash character from the " +
-                              "main flash character. Normally used on daytime.")
+                              "ON_D means that light characteristics are alternated (ie. intensity and frequency) " +
+                              "compared to normal ON operation, used normally on daytime.")
     private LightStatus lightStatus;
 
     @ApiModelProperty(value = "Temperature of the air. Since the sensor is inside of the buoy and sunlight can " +
