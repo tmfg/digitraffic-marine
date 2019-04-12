@@ -54,7 +54,7 @@ public class VesselDetailsUpdater {
         final VesselList vesselList = vesselDetailsClient.getVesselList(from);
 
         if (isListOk(vesselList)) {
-            updatedTimestampRepository.setUpdated(VESSEL_DETAILS.name(), now, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(VESSEL_DETAILS, now, getClass().getSimpleName());
 
             final List<VesselDetails> added = new ArrayList<>();
             final List<VesselDetails> updated = new ArrayList<>();

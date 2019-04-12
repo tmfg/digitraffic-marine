@@ -86,7 +86,7 @@ public class WinterNavigationDirwayUpdater {
         log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , deletedDirways={} , tookMs={}", added
             .size(), updated.size(), deletedCount, stopWatch.getTime());
 
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS.name(),
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS,
                                               data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 

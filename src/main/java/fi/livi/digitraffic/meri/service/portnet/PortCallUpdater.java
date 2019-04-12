@@ -106,7 +106,7 @@ public class PortCallUpdater {
 
         // set portcalls updated if timestamps were ok or tried second time
         if(timeStampsOk || setUpdatedOnFail) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS, to, getClass().getSimpleName());
         }
 
         return timeStampsOk;
