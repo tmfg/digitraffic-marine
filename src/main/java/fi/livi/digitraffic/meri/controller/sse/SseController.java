@@ -48,7 +48,8 @@ public class SseController {
         this.objectMapper = objectMapper;
     }
 
-    @ApiOperation("Return list of all berths, port areas and locations.")
+    @ApiIgnore // TODO remove this operation from the release
+    @ApiOperation("Return all SSE (Sea State Estimation) datas as raw-data")
     @GetMapping(path = "/raw", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<SseTlscReport> listAllSseDatas() {

@@ -22,7 +22,9 @@ import fi.livi.digitraffic.meri.util.StringUtil;
 })
 public class SseExtraFields {
 
+    /** WGS84 coordinates in decimal degrees. */
     private Double coordLatitude;
+    /** WGS84 coordinates in decimal degrees. */
     private Double coordLongitude;
     private Double heelAngle;
     private LightStatus lightStatus;
