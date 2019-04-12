@@ -10,36 +10,42 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(description = "GeoJSON properties of SseFeature")
 public class SseProperties {
 
-    @ApiModelProperty(value = "Site name", required = true)
+    @ApiModelProperty(value = "Site name of the buoy", required = true)
     public final String siteName;
 
     /* SSE fields */
     @ApiModelProperty(value = "Data last updated", required = true)
     private ZonedDateTime lastUpdate;
 
-    @ApiModelProperty(value = "TODO", required = true)
+    @ApiModelProperty(value = "Sea state", required = true)
     private SeaState seaState;
 
-    @ApiModelProperty(value = "TODO", required = true)
+    @ApiModelProperty(value = "Trend of condition change", required = true)
     private Trend trend;
 
-    @ApiModelProperty(value = "TODO", required = true)
+    @ApiModelProperty(value = "Wind and wave direction in degrees from north", allowableValues = "range[0, 359]", required = true)
     private Integer windWaveDir;
 
-    @ApiModelProperty(value = "TODO", required = true)
+    @ApiModelProperty(value = "Reliability of the SSE data", required = true)
     private Confidence confidence;
 
     /* Extra fields / metadata */
 
-    @ApiModelProperty(value = "TODO")
+    @ApiModelProperty(value = "Heel angle of the buoy, 0 is upright", allowableValues = "range[0, 90]")
     private Double heelAngle;
 
-    @ApiModelProperty(value = "TODO")
+    @ApiModelProperty(value = "Status of the flashlight. Normally ON at nighttime and OFF at daytime. " +
+                              "ON_D means that light is flashing with alternative flash character, which usually " +
+                              "means different light intensity and possible flash character from the " +
+                              "main flash character. Normally used on daytime.")
     private LightStatus lightStatus;
 
-    @ApiModelProperty(value = "TODO")
+    @ApiModelProperty(value = "Temperature of the air. Since the sensor is inside of the buoy and sunlight can " +
+                              "heat up the enclosure this can be used only as a reference measurement as it can " +
+                              "show higher readings than the actual air temperature")
     private Integer temperature;
 
     private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -190,7 +196,7 @@ public class SseProperties {
 
         ON,
         OFF,
-        ON_D;
+        ON_D; // Light flashing with alternative flash character, normally on daytime
 
         public static LightStatus fromValue(final Enum lightStatus) {
             if (lightStatus != null) {

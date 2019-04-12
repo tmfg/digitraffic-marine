@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
         "geometry",
         "properties"
 })
-@ApiModel(description = "GeoJSON Feature object")
+@ApiModel(description = "GeoJSON Feature object of SSE data")
 public class SseFeature extends Feature<Point, SseProperties> {
 
     @ApiModelProperty(value = "Identifier of the site")

@@ -24,11 +24,13 @@ import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
+@Api(description = "Sea State Estimation Controller")
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_SSE_PATH)
 @ConditionalOnWebApplication
@@ -53,15 +55,13 @@ public class SseController {
         return sseService.findAllRaw();
     }
 
-    @ApiOperation("Return all SSE datas as GeoJSON")
+    @ApiOperation("Return all SSE (Sea State Estimation) datas as GeoJSON")
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public SseFeatureCollection getAll() {
         return sseService.findAll();
     }
 
-
-// TODO uncomment as we don't wan this to be in swagger documentation.
     @ApiIgnore
     @PostMapping(path = ADD_PATH, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
