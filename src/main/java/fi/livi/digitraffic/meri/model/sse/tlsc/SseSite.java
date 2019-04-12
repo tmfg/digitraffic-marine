@@ -12,11 +12,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.util.StringUtil;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "SiteName",
-    "SiteNumber"
-})
 public class SseSite {
 
     private String siteName;

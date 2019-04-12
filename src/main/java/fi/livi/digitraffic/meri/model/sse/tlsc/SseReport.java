@@ -11,12 +11,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.util.StringUtil;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "sseSite",
-    "sseFields",
-    "sseExtraFields"
-})
 public class SseReport {
 
     private SseSite sseSite;

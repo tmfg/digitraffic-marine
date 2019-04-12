@@ -15,11 +15,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.util.StringUtil;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "temperature",
-    "batteryVoltage"
-})
 public class SseExtraFields {
 
     /** WGS84 coordinates in decimal degrees. */
