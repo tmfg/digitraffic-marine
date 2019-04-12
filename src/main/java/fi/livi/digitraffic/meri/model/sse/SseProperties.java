@@ -195,7 +195,7 @@ public class SseProperties {
 
         ON,
         OFF,
-        ON_D; // Light flashing with alternative flash character, normally on daytime
+        ON_D; // Light flashing with alternative flash characteristics, normally on daytime
 
         public static LightStatus fromValue(final Enum lightStatus) {
             if (lightStatus != null) {
