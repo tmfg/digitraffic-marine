@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service.sse;
 
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.sse.SseTlscReportRepository;
+import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
+import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
+import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.sse.SseFeature;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
@@ -21,9 +27,6 @@ import fi.livi.digitraffic.meri.model.sse.SseProperties;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
-import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
-import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
@@ -35,14 +38,17 @@ public class SseService {
     private final ConversionService conversionService;
     private final ObjectMapper objectMapper;
     private final SseTlscReportRepository sseTlscReportRepository;
+    private final UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
     public SseService(final ConversionService conversionService,
                       final ObjectMapper objectMapper,
-                      final SseTlscReportRepository sseTlscReportRepository) {
+                      final SseTlscReportRepository sseTlscReportRepository,
+                      final UpdatedTimestampRepository updatedTimestampRepository) {
         this.conversionService = conversionService;
         this.objectMapper = objectMapper;
         this.sseTlscReportRepository = sseTlscReportRepository;
+        this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
     @Transactional
@@ -54,6 +60,7 @@ public class SseService {
             count++;
             log.info("method=saveTlscSseReports report=\n{}", StringUtil.toJsonString(saved));
         }
+        updatedTimestampRepository.setUpdated(SSE_DATA.name(), ZonedDateTime.now(), getClass().getSimpleName());
         log.info("method=saveTlscSseReports countSaved={}", count);
         return count;
     }
@@ -93,6 +100,9 @@ public class SseService {
             }
             return null;
         }).collect(Collectors.toList());
-        return new SseFeatureCollection(ZonedDateTime.now(), features);
+
+        final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
+
+        return new SseFeatureCollection(updated, features);
     }
 }

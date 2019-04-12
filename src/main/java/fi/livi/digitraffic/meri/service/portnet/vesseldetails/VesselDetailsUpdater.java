@@ -42,7 +42,7 @@ public class VesselDetailsUpdater {
 
     @Transactional
     public void update() {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(VESSEL_DETAILS.toString());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(VESSEL_DETAILS);
 
         updateVesselDetails(lastUpdated);
     }

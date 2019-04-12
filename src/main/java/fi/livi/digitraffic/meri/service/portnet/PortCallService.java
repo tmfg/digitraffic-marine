@@ -1,18 +1,14 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import static java.time.ZoneOffset.UTC;
-import static java.time.temporal.ChronoUnit.DAYS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,7 +22,6 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
-import fi.livi.digitraffic.meri.util.TimeUtil;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
 
@@ -48,7 +43,7 @@ public class PortCallService {
     @Transactional(readOnly = true)
     public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final ZonedDateTime to, final String locode, final String vesselName,
                                        final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(UpdatedTimestampRepository.UpdatedName.PORT_CALLS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS);
 
         final List<Long> portCallIds = getPortCallIds(date, from, to, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
 

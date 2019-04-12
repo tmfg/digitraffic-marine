@@ -15,7 +15,13 @@ import fi.livi.digitraffic.meri.util.dao.SqlRepository;
 @Repository
 public interface UpdatedTimestampRepository extends SqlRepository {
     enum UpdatedName {
-        PORT_CALLS, PORT_METADATA, VESSEL_DETAILS, WINTER_NAVIGATION_PORTS, WINTER_NAVIGATION_SHIPS, WINTER_NAVIGATION_DIRWAYS
+        PORT_CALLS,
+        PORT_METADATA,
+        SSE_DATA,
+        VESSEL_DETAILS,
+        WINTER_NAVIGATION_PORTS,
+        WINTER_NAVIGATION_SHIPS,
+        WINTER_NAVIGATION_DIRWAYS
     }
 
     @Modifying
@@ -26,11 +32,15 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         "   updated_by = :by", nativeQuery = true)
     void setUpdated(@Param("name")final String name, @Param("time")final ZonedDateTime time, @Param("by")final String by);
 
+    default void setUpdated(@Param("name")final UpdatedName name, @Param("time")final ZonedDateTime time, @Param("by")final String by) {
+        setUpdated(name.name(), time, by);
+    }
+
     @Query(value = "select updated_time from updated_timestamp where updated_name = :name", nativeQuery = true)
     Instant findLastUpdatedInstant(@Param("name") final String name);
 
-    default ZonedDateTime findLastUpdated(final String name) {
-        final Instant i = findLastUpdatedInstant(name);
+    default ZonedDateTime findLastUpdated(final UpdatedName name) {
+        final Instant i = findLastUpdatedInstant(name.name());
 
         return i == null ? null : i.atZone(UTC);
     }

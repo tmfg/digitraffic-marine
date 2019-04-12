@@ -74,7 +74,7 @@ public class WinterNavigationService {
     public WinterNavigationPortFeatureCollection getWinterNavigationPorts() {
         final Stream<WinterNavigationPort> ports = winterNavigationPortRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_PORTS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_PORTS);
 
         return new WinterNavigationPortFeatureCollection(lastUpdated,
             ports.map(this::portFeature).collect(Collectors.toList()));
@@ -84,7 +84,7 @@ public class WinterNavigationService {
     public WinterNavigationShipFeatureCollection getWinterNavigationShips() {
         final Stream<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_SHIPS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_SHIPS);
 
         final List<WinterNavigationShipFeature> shipFeatures =
             ships.map(s -> new WinterNavigationShipFeature(s.getVesselPK(),
@@ -99,7 +99,7 @@ public class WinterNavigationService {
     public WinterNavigationDirwayFeatureCollection getWinterNavigationDirways() {
         final List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_DIRWAYS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_DIRWAYS);
 
         return new WinterNavigationDirwayFeatureCollection(lastUpdated,
             dirways.stream().map(d -> new WinterNavigationDirwayFeature(d.getName(), dirwayProperties(d), dirwayGeometry(d.getDirwayPoints())))
