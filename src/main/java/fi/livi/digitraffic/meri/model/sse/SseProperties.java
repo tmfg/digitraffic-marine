@@ -17,7 +17,7 @@ public class SseProperties {
     public final String siteName;
 
     /* SSE fields */
-    @ApiModelProperty(value = "Data last updated", required = true)
+    @ApiModelProperty(value = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
     private ZonedDateTime lastUpdate;
 
     @ApiModelProperty(value = "Sea state", required = true)
@@ -34,7 +34,7 @@ public class SseProperties {
 
     /* Extra fields / metadata */
 
-    @ApiModelProperty(value = "Heel angle of the buoy, 0 is upright", allowableValues = "range[0, 90]")
+    @ApiModelProperty(value = "Heel angle of the buoy in degrees (°), 0 is upright and it´s unsigned", allowableValues = "range[0, 90]")
     private Double heelAngle;
 
     @ApiModelProperty(value = "Status of the flashlight. Normally ON at nighttime and OFF at daytime. " +
@@ -42,7 +42,7 @@ public class SseProperties {
                               "compared to normal ON operation, used normally on daytime.")
     private LightStatus lightStatus;
 
-    @ApiModelProperty(value = "Temperature of the air. Since the sensor is inside of the buoy and sunlight can " +
+    @ApiModelProperty(value = "Temperature of the air in celsius degree (°C). Since the sensor is inside of the buoy and sunlight can " +
                               "heat up the enclosure this can be used only as a reference measurement as it can " +
                               "show higher readings than the actual air temperature")
     private Integer temperature;
