@@ -24,7 +24,7 @@ public class SseExtraFields {
     private Integer temperature;
 
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public SseExtraFields() {
     }

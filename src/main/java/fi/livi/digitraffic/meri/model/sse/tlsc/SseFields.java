@@ -22,7 +22,7 @@ public class SseFields {
     private Trend trend;
     private Integer windWaveDir;
     private Confidence confidence;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public SseFields(final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
                      final Confidence confidence, Map<String, Object> additionalProperties) {

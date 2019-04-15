@@ -13,7 +13,7 @@ public class SseSite {
 
     private String siteName;
     private Integer siteNumber;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public SseSite() {
     }

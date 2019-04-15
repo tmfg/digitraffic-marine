@@ -47,7 +47,7 @@ public class SseProperties {
                               "show higher readings than the actual air temperature")
     private Integer temperature;
 
-    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<>();
 
     public SseProperties(String siteName, ZonedDateTime lastUpdate, SeaState seaState, Trend trend, Integer windWaveDir,
                          Confidence confidence, Double heelAngle, LightStatus lightStatus, Integer temperature) {
