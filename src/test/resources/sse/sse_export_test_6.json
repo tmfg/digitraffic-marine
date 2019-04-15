@@ -1,0 +1,104 @@
+{
+    "SSE_Reports": [
+        {
+            "Site": {
+                "SiteName": "Hankon.p.alem",
+                "SiteNumber": 11639
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-04-12T16:30:24+02:00",
+                "SeaState": "CALM",
+                "Trend": "UNKNOWN",
+                "WindWaveDir": 71,
+                "Confidence": "GOOD"
+            },
+            "Extra_Fields": {
+                "Temperature": 12,
+                "Heel_Angle": 1.9,
+                "Light_Status": "OFF",
+                "Coord_Latitude": 59.82200,
+                "Coord_Longitude": 22.92276
+            }
+        },
+        {
+            "Site": {
+                "SiteName": "Nuhja",
+                "SiteNumber": 20245
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-04-12T16:30:26+02:00",
+                "SeaState": "LIGHT",
+                "Trend": "UNKNOWN",
+                "WindWaveDir": 197,
+                "Confidence": "GOOD"
+            },
+            "Extra_Fields": {
+                "Temperature": 14,
+                "Heel_Angle": 7.2,
+                "Light_Status": "OFF",
+                "Coord_Latitude": 60.78699,
+                "Coord_Longitude": 21.36519
+            }
+        },
+        {
+            "Site": {
+                "SiteName": "Hankon.p.ylem",
+                "SiteNumber": 11337
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-04-12T16:30:30+02:00",
+                "SeaState": "CALM",
+                "Trend": "UNKNOWN",
+                "WindWaveDir": 102,
+                "Confidence": "GOOD"
+            },
+            "Extra_Fields": {
+                "Temperature": 14,
+                "Heel_Angle": 2.0,
+                "Light_Status": "OFF",
+                "Coord_Latitude": 59.82381,
+                "Coord_Longitude": 22.91960
+            }
+        },
+        {
+            "Site": {
+                "SiteName": "Nuhja",
+                "SiteNumber": 20245
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-04-12T16:30:47+02:00",
+                "SeaState": "CALM",
+                "Trend": "DESCENDING",
+                "WindWaveDir": 197,
+                "Confidence": "GOOD"
+            },
+            "Extra_Fields": {
+                "Temperature": 14,
+                "Heel_Angle": 7.2,
+                "Light_Status": "OFF",
+                "Coord_Latitude": 60.78699,
+                "Coord_Longitude": 21.36519
+            }
+        },
+        {
+            "Site": {
+                "SiteName": "Hankon.p.alem",
+                "SiteNumber": 11639
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-04-12T16:30:45+02:00",
+                "SeaState": "CALM",
+                "Trend": "NO_CHANGE",
+                "WindWaveDir": 71,
+                "Confidence": "GOOD"
+            },
+            "Extra_Fields": {
+                "Temperature": 12,
+                "Heel_Angle": 1.9,
+                "Light_Status": "OFF",
+                "Coord_Latitude": 59.82200,
+                "Coord_Longitude": 22.92276
+            }
+        }
+        ]
+    }
