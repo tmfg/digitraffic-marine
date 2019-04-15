@@ -70,6 +70,8 @@ public class SseService {
         return sseTlscReportRepository.findAll();
     }
 
+    // TODO just for testing and beta-api
+    @Transactional(readOnly = true)
     public SseFeatureCollection findAll() {
         final List<SseFeature> features = findAllRaw().stream().map(r -> {
             final SseSite site = r.getReport().getSseSite();
