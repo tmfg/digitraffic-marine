@@ -3,13 +3,10 @@ package fi.livi.digitraffic.meri.controller.sse;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_SSE_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +17,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.service.sse.SseService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
@@ -45,15 +40,6 @@ public class SseController {
         this.objectMapper = objectMapper;
     }
 
-    @ApiOperation("Return list of all berths, port areas and locations.")
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public List<SseTlscReport> listAllSseDatas() {
-        return sseService.findAll();
-    }
-
-
-// TODO uncomment as we don't wan this to be in swagger documentation.
     @ApiIgnore
     @PostMapping(path = ADD_PATH, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody

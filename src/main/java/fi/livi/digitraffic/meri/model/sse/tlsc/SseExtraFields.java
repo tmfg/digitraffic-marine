@@ -1,6 +1,8 @@
 
 package fi.livi.digitraffic.meri.model.sse.tlsc;
 
+import static fi.livi.digitraffic.meri.model.sse.SseProperties.LightStatus;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,26 +17,69 @@ import fi.livi.digitraffic.meri.util.StringUtil;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "temperature",
-    "batteryVoltage"
-})
+                       "temperature",
+                       "batteryVoltage"
+                   })
 public class SseExtraFields {
 
+    private Double coordLatitude;
+    private Double coordLongitude;
+    private Double heelAngle;
+    private LightStatus lightStatus;
     private Integer temperature;
-    private Double batteryVoltage;
 
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
-    public SseExtraFields(final Integer temperature, final Double battVoltage, final Map<String, Object> additionalProperties) {
-        this(temperature, battVoltage);
-        this.additionalProperties = additionalProperties;
+    public SseExtraFields() {
     }
 
     @JsonCreator
-    public SseExtraFields(final Integer temperature, final Double battVoltage) {
+    public SseExtraFields(final Double coordLatitude, final Double coordLongitude, final Double heelAngle,
+                          final LightStatus lightStatus, final Integer temperature) {
+        this.coordLatitude = coordLatitude;
+        this.coordLongitude = coordLongitude;
+        this.heelAngle = heelAngle;
+        this.lightStatus = lightStatus;
         this.temperature = temperature;
-        this.batteryVoltage = battVoltage;
+    }
+
+    public SseExtraFields(final Double coordLatitude, final Double coordLongitude, final Double heelAngle, final LightStatus lightStatus,
+                          final Integer temperature, final Map<String, Object> additionalProperties) {
+        this(coordLatitude, coordLongitude, heelAngle, lightStatus, temperature);
+        this.additionalProperties = additionalProperties;
+    }
+
+    public Double getCoordLatitude() {
+        return coordLatitude;
+    }
+
+    public void setCoordLatitude(Double coordLatitude) {
+        this.coordLatitude = coordLatitude;
+    }
+
+    public Double getCoordLongitude() {
+        return coordLongitude;
+    }
+
+    public void setCoordLongitude(Double coordLongitude) {
+        this.coordLongitude = coordLongitude;
+    }
+
+    public Double getHeelAngle() {
+        return heelAngle;
+    }
+
+    public void setHeelAngle(Double heelAngle) {
+        this.heelAngle = heelAngle;
+    }
+
+    public LightStatus getLightStatus() {
+        return lightStatus;
+    }
+
+    public void setLightStatus(LightStatus lightStatus) {
+        this.lightStatus = lightStatus;
     }
 
     public Integer getTemperature() {
@@ -42,12 +87,6 @@ public class SseExtraFields {
     }
     public void setTemperature(Integer temperature) {
         this.temperature = temperature;
-    }
-    public Double getBatteryVoltage() {
-        return batteryVoltage;
-    }
-    public void setBatteryVoltage(Double batteryVoltage) {
-        this.batteryVoltage = batteryVoltage;
     }
 
     @JsonAnyGetter

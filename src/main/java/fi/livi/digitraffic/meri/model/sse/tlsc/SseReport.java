@@ -13,16 +13,16 @@ import fi.livi.digitraffic.meri.util.StringUtil;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "sseSite",
-    "sseFields",
-    "sseExtraFields"
-})
+                       "sseSite",
+                       "sseFields",
+                       "sseExtraFields"
+                   })
 public class SseReport {
 
     private SseSite sseSite;
     private SseFields sseFields;
     private SseExtraFields sseExtraFields;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public SseReport() {
     }

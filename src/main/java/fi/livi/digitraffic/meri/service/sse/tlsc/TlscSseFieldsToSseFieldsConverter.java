@@ -1,5 +1,9 @@
 package fi.livi.digitraffic.meri.service.sse.tlsc;
 
+import static fi.livi.digitraffic.meri.model.sse.SseProperties.Confidence;
+import static fi.livi.digitraffic.meri.model.sse.SseProperties.SeaState;
+import static fi.livi.digitraffic.meri.model.sse.SseProperties.Trend;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -21,10 +25,10 @@ public class TlscSseFieldsToSseFieldsConverter
             log.warn("No mappings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
         }
         return new SseFields(src.getLastUpdate(),
-                             src.getSeaState(),
-                             src.getTrend(),
-                             src.getWindWaveDir(),
-                             src.getConfidence(),
-                             src.getAdditionalProperties());
+            SeaState.fromValue(src.getSeaState()),
+            Trend.fromValue(src.getTrend()),
+            src.getWindWaveDir(),
+            Confidence.fromValue(src.getConfidence()),
+            src.getAdditionalProperties());
     }
 }

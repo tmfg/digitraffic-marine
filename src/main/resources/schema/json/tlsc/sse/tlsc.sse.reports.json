@@ -86,21 +86,21 @@
                                 ],
                                 "title": "The Seastate Schema",
                                 "examples": [
-                                    "CALM | LIGHT | MODERATE | BREEZE | GALE | STORM"
+                                    "CALM", "LIGHT", "MODERATE", "BREEZE", "GALE", "STORM"
                                 ]
                             },
                             "Trend": {
                                 "$id": "#/properties/SSE_Reports/items/properties/SSE_Fields/properties/Trend",
                                 "type": "string",
                                 "enum": [
-                                    "Unknown",
-                                    "NoChange",
-                                    "Ascending",
-                                    "Descending"
+                                    "UNKNOWN",
+                                    "NO_CHANGE",
+                                    "ASCENDING",
+                                    "DESCENDING"
                                 ],
                                 "title": "The Trend Schema",
                                 "examples": [
-                                    "Unknown | NoChange | Ascending | Descending"
+                                    "UNKNOWN", "NO_CHANGE", "ASCENDING", "DESCENDING"
                                 ]
                             },
                             "WindWaveDir": {
@@ -124,7 +124,7 @@
                                 ],
                                 "title": "The Confidence Schema",
                                 "examples": [
-                                    "POOR | MODERATE | GOOD"
+                                    "POOR", "MODERATE", "GOOD"
                                 ]
                             }
                         }
@@ -143,12 +143,42 @@
                                     12
                                 ]
                             },
-                            "Batt_Voltage": {
-                                "$id": "#/properties/SSE_Reports/items/properties/Extra_Fields/properties/Batt_Voltage",
+                            "Heel_Angle": {
+                                "$id": "#/properties/SSE_Reports/items/properties/Extra_Fields/properties/Heel_Angle",
                                 "type": "number",
-                                "title": "The Batt_voltage Schema",
+                                "title": "The Heel_angle Schema",
+                                "default": 0.0,
                                 "examples": [
-                                    12.5
+                                    2.5
+                                ]
+                            },
+                            "Light_Status": {
+                                "$id": "#/properties/SSE_Reports/items/properties/Extra_Fields/properties/Light_Status",
+                                "type": "string",
+                                "enum": [
+                                    "ON",
+                                    "OFF",
+                                    "ON_D"
+                                ],
+                                "title": "The Light_status Schema",
+                                "examples": [
+                                    "ON", "OFF", "ON_D"
+                                ]
+                            },
+                            "Coord_Latitude": {
+                                "$id": "#/properties/SSE_Reports/items/properties/Extra_Fields/properties/Coord_Latitude",
+                                "type": "number",
+                                "title": "The Coord_latitude Schema",
+                                "examples": [
+                                    12.12345
+                                ]
+                            },
+                            "Coord_Longitude": {
+                                "$id": "#/properties/SSE_Reports/items/properties/Extra_Fields/properties/Coord_Longitude",
+                                "type": "number",
+                                "title": "The Coord_longitude Schema",
+                                "examples": [
+                                    33.12345
                                 ]
                             }
                         }
