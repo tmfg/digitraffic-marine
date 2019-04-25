@@ -28,9 +28,11 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import fi.livi.digitraffic.meri.quartz.AutowiringSpringBeanJobFactory;
 import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
+import fi.livi.digitraffic.meri.quartz.SseReportUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
 import fi.livi.digitraffic.meri.quartz.WinterNavigationDirwayUpdateJob;
@@ -143,6 +145,11 @@ public class QuartzSchedulerConfig {
     }
 
     @Bean
+    public JobDetailFactoryBean sseReportUpdateJobUpdateJobDetail() {
+        return createJobDetail(SseReportUpdateJob.class);
+    }
+
+    @Bean
     public SimpleTriggerFactoryBean portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail,
                                                              @Value("${portCallUpdateJob.frequency}") final long frequency) {
         return createTrigger(portCallUpdateJobDetail, frequency);
@@ -182,6 +189,12 @@ public class QuartzSchedulerConfig {
     public SimpleTriggerFactoryBean winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail,
                                                                            @Value("${winterNavigationDirwayUpdateJob.frequency}") final long frequency) {
         return createTrigger(winterNavigationDirwayUpdateJobDetail, frequency);
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean sseReportUpdateJobUpdateJobDetailTrigger(final JobDetail sseReportUpdateJobUpdateJobDetail,
+                                                                            @Value("${sseReportUpdateJobUpdateJob.frequency}") final long frequency) {
+        return createTrigger(sseReportUpdateJobUpdateJobDetail, frequency);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {

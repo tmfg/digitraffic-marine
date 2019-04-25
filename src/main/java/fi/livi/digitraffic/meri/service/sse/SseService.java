@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.service.sse;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +14,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
 import fi.livi.digitraffic.meri.dao.sse.SseTlscReportRepository;
 import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
@@ -36,18 +36,18 @@ public class SseService {
     private static final Logger log = LoggerFactory.getLogger(SseService.class);
 
     private final ConversionService conversionService;
-    private final ObjectMapper objectMapper;
     private final SseTlscReportRepository sseTlscReportRepository;
+    private final SseReportRepository sseReportRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
     public SseService(final ConversionService conversionService,
-                      final ObjectMapper objectMapper,
                       final SseTlscReportRepository sseTlscReportRepository,
+                      final SseReportRepository sseReportRepository,
                       final UpdatedTimestampRepository updatedTimestampRepository) {
         this.conversionService = conversionService;
-        this.objectMapper = objectMapper;
         this.sseTlscReportRepository = sseTlscReportRepository;
+        this.sseReportRepository = sseReportRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
@@ -65,38 +65,68 @@ public class SseService {
         return count;
     }
 
-    @Transactional(readOnly = true)
-    public List<SseTlscReport> findAllRaw() {
-        return sseTlscReportRepository.findAll();
+    @Transactional
+    public int handleUnhandledSseReports(final Integer maxCountToHandle) {
+        final List<SseTlscReport> unhandledReports = sseTlscReportRepository.findUnhandeldOldestFirst(maxCountToHandle);
+        unhandledReports.forEach(report -> saveUnhandledSseReportToDomainAndMarkAsHandled(report));
+        if (!unhandledReports.isEmpty()) {
+            log.info("method=handleUnhandledSseReports handledCount={}", unhandledReports.size());
+        }
+        return unhandledReports.size();
     }
 
-    // TODO just for testing and beta-api
-    @Transactional(readOnly = true)
-    public SseFeatureCollection findAll() {
-        final List<SseFeature> features = findAllRaw().stream().map(r -> {
-            final SseSite site = r.getReport().getSseSite();
-            final SseFields sseFields = r.getReport().getSseFields();
-            final SseExtraFields extraFields = r.getReport().getSseExtraFields();
-            final SseProperties sseProperties = new SseProperties(
+    private void saveUnhandledSseReportToDomainAndMarkAsHandled(final SseTlscReport report) {
+
+        final SseReport toHandle = report.getReport();
+        final SseSite site = toHandle.getSseSite();
+        final SseFields sseFields = toHandle.getSseFields();
+        final SseExtraFields extraFields = toHandle.getSseExtraFields();
+
+        final fi.livi.digitraffic.meri.domain.sse.SseReport toSave =
+            new fi.livi.digitraffic.meri.domain.sse.SseReport(
+                ZonedDateTime.now(),
+                true,
+                site.getSiteNumber(),
                 site.getSiteName(),
                 sseFields.getLastUpdate(),
-                SseProperties.SeaState.fromValue(sseFields.getSeaState()),
-                SseProperties.Trend.fromValue(sseFields.getTrend()),
+                sseFields.getSeaState(),
+                sseFields.getTrend(),
                 sseFields.getWindWaveDir(),
-                SseProperties.Confidence.fromValue(sseFields.getConfidence()),
-                extraFields.getHeelAngle(),
-                SseProperties.LightStatus.fromValue(extraFields.getLightStatus()),
-                extraFields.getTemperature());
+                sseFields.getConfidence(),
+                BigDecimal.valueOf(extraFields.getHeelAngle()),
+                extraFields.getLightStatus(),
+                extraFields.getTemperature(),
+                BigDecimal.valueOf(extraFields.getCoordLongitude()),
+                BigDecimal.valueOf(extraFields.getCoordLatitude()));
 
-            sseProperties.addAdditionalProperties(site.getAdditionalProperties());
-            sseProperties.addAdditionalProperties(sseFields.getAdditionalProperties());
-            sseProperties.addAdditionalProperties(extraFields.getAdditionalProperties());
+        sseReportRepository.markSiteLatestReportAsNotLatest(toSave.getSiteNumber());
+        sseReportRepository.save(toSave);
+        sseTlscReportRepository.markHandled(report.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public SseFeatureCollection findLatest() {
+        final List<fi.livi.digitraffic.meri.domain.sse.SseReport> latest = sseReportRepository.findByLatestIsTrueOrderBySiteNumber();
+
+        final List<SseFeature> features = sseReportRepository.findByLatestIsTrueOrderBySiteNumber().stream().map(r -> {
+
+            final SseProperties sseProperties = new SseProperties(
+                r.getSiteName(),
+                r.getLastUpdate(),
+                r.getSeaState(),
+                r.getTrend(),
+                r.getWindWaveDir(),
+                r.getConfidence(),
+                r.getHeelAngle(),
+                r.getLightStatus(),
+                r.getTemperature());
 
             try {
-                if (extraFields.getCoordLongitude() == null || extraFields.getCoordLatitude() == null) {
-                    return new SseFeature(new Point(), sseProperties, site.getSiteNumber());
+                if (r.getLongitude() == null || r.getLatitude() == null) {
+                    return new SseFeature(new Point(), sseProperties, r.getSiteNumber());
                 }
-                return new SseFeature(new Point( extraFields.getCoordLongitude(), extraFields.getCoordLatitude()), sseProperties, site.getSiteNumber());
+                return new SseFeature(new Point(r.getLongitude().doubleValue(), r.getLatitude().doubleValue()),
+                                      sseProperties, r.getSiteNumber());
             } catch (Exception e) {
                 e.printStackTrace();
             }

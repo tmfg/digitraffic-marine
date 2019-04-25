@@ -24,11 +24,11 @@ public class BetaController {
         this.sseService = sseService;
     }
 
-    @ApiOperation("Return all SSE (Sea State Estimation) datas as GeoJSON")
+    @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON")
     @GetMapping(path = "/sse", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public SseFeatureCollection getAll() {
-        return sseService.findAll();
+    public SseFeatureCollection findLatest() {
+        return sseService.findLatest();
     }
 
 }

@@ -6,16 +6,36 @@
                 "SiteNumber": 20243
             },
             "SSE_Fields": {
-                "Last_Update": "2019-04-11T12:33:20+03:00",
+                "Last_Update": "2019-04-11T12:30:00+03:00",
                 "SeaState": "CALM",
-                "Trend": "DESCENDING",
+                "Trend": "ASCENDING",
+                "WindWaveDir": 110,
+                "Confidence": "MODERATE"
+            },
+            "Extra_Fields": {
+                "Temperature": 2,
+                "Heel_Angle": 5,
+                "Light_Status": "OFF",
+                "Coord_Latitude":  59.34507,
+                "Coord_Longitude": 21.12558
+            }
+        },
+        {
+            "Site": {
+                "SiteName": "Kipsi",
+                "SiteNumber": 20243
+            },
+            "SSE_Fields": {
+                "Last_Update": "2019-04-11T12:33:20+03:00",
+                "SeaState": "BREEZE",
+                "Trend": "ASCENDING",
                 "WindWaveDir": 119,
                 "Confidence": "MODERATE"
             },
             "Extra_Fields": {
                 "Temperature": 2,
-                "Heel_Angle": 2.5,
-                "Light_Status": "ON_D",
+                "Heel_Angle": 7.5,
+                "Light_Status": "OFF",
                 "Coord_Latitude":  59.44507,
                 "Coord_Longitude": 21.22558
             }
@@ -26,7 +46,7 @@
                 "SiteNumber": 20169
             },
             "SSE_Fields": {
-                "Last_Update": "2019-02-12T14:40:00+03:00",
+                "Last_Update": "2019-02-11T12:40:00+03:00",
                 "SeaState": "CALM",
                 "Trend": "ASCENDING",
                 "WindWaveDir": 110,

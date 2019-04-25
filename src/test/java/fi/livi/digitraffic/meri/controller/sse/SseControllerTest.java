@@ -28,7 +28,7 @@ public class SseControllerTest extends AbstractTestBase {
 
     @Test
     public void addSseData() throws Exception {
-        final String postJson = readFile("sse/example-sse-report.json");
+        final String postJson = readFile("sse/example-sse-report1.json");
 
         final TlscSseReports resultObject = objectMapper.readerFor(TlscSseReports.class).readValue(postJson);
 

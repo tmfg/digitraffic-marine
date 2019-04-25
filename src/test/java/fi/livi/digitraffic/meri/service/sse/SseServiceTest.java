@@ -1,37 +1,34 @@
 package fi.livi.digitraffic.meri.service.sse;
 
+import static fi.livi.digitraffic.meri.model.sse.SseProperties.Confidence;
+import static fi.livi.digitraffic.meri.model.sse.SseProperties.LightStatus;
+import static fi.livi.digitraffic.meri.model.sse.SseProperties.Trend;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+
+import java.io.IOException;
 
 import javax.transaction.Transactional;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.test.annotation.Rollback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.dao.sse.SseTlscReportRepository;
-import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
-import fi.livi.digitraffic.meri.external.tlsc.sse.ExtraFields;
-import fi.livi.digitraffic.meri.external.tlsc.sse.SSEFields;
-import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
-import fi.livi.digitraffic.meri.external.tlsc.sse.Site;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
+import fi.livi.digitraffic.meri.model.sse.SseFeature;
+import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
+import fi.livi.digitraffic.meri.model.sse.SseProperties.SeaState;
 
 @Transactional
 public class SseServiceTest extends AbstractTestBase {
@@ -45,47 +42,69 @@ public class SseServiceTest extends AbstractTestBase {
     @Qualifier("conversionService")
     private ConversionService conversionService;
 
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
-    private SseTlscReportRepository sseTlscReportRepository;
-
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Transactional
+    @Rollback
     @Test
-    public void saveTlscSseReports() throws Exception {
+    public void handleUnhandledSseReports() throws IOException {
 
-        final String postJson = readFile("sse/example-sse-report.json");
+        // First update
+        saveNewTlscReports("example-sse-report1.json");
+        final int handledFirst = sseService.handleUnhandledSseReports(10);
+        SseFeatureCollection latestFirst = sseService.findLatest();
+        log.info("{}", latestFirst);
 
+        Assert.assertEquals(2, latestFirst.getFeatures().size());
+        Assert.assertEquals("Hattukari", latestFirst.getFeatures().get(0).getProperties().getSiteName());
+
+        // Second update
+        saveNewTlscReports("example-sse-report2.json");
+        final int handledSecond = sseService.handleUnhandledSseReports(10);
+        SseFeatureCollection latestSecond = sseService.findLatest();
+
+        Assert.assertEquals(2, latestSecond.getFeatures().size());
+        Assert.assertEquals("Hattukari", latestSecond.getFeatures().get(0).getProperties().getSiteName());
+
+        final SseFeature kipsiFirst = latestFirst.getFeatures().get(1);
+        final SseFeature kipsiSecond = latestSecond.getFeatures().get(1);
+
+        Assert.assertEquals(20243, kipsiFirst.getSiteNumber());
+        Assert.assertEquals(20243, kipsiSecond.getSiteNumber());
+
+        Assert.assertEquals("Kipsi", kipsiFirst.getProperties().getSiteName());
+        Assert.assertEquals("Kipsi", kipsiSecond.getProperties().getSiteName());
+
+        Assert.assertEquals(SeaState.BREEZE, kipsiFirst.getProperties().getSeaState());
+        Assert.assertEquals(SeaState.STORM, kipsiSecond.getProperties().getSeaState());
+
+        Assert.assertEquals(Trend.ASCENDING, kipsiFirst.getProperties().getTrend());
+        Assert.assertEquals(Trend.NO_CHANGE, kipsiSecond.getProperties().getTrend());
+
+        Assert.assertEquals(Confidence.MODERATE, kipsiFirst.getProperties().getConfidence());
+        Assert.assertEquals(Confidence.GOOD, kipsiSecond.getProperties().getConfidence());
+
+        Assert.assertEquals(LightStatus.OFF, kipsiFirst.getProperties().getLightStatus());
+        Assert.assertEquals(LightStatus.ON_D, kipsiSecond.getProperties().getLightStatus());
+
+        Assert.assertEquals(119L, kipsiFirst.getProperties().getWindWaveDir().longValue());
+        Assert.assertEquals(200L, kipsiSecond.getProperties().getWindWaveDir().longValue());
+
+        Assert.assertEquals(7.5, kipsiFirst.getProperties().getHeelAngle().doubleValue(), 0.1);
+        Assert.assertEquals(17.5, kipsiSecond.getProperties().getHeelAngle().doubleValue(), 0.1);
+
+        Assert.assertEquals(21.22558, kipsiFirst.getGeometry().getCoordinates().get(0), 0.0001);
+        Assert.assertEquals(21.32558, kipsiSecond.getGeometry().getCoordinates().get(0), 0.0001);
+
+        Assert.assertEquals(59.44507, kipsiFirst.getGeometry().getCoordinates().get(1), 0.0001);
+        Assert.assertEquals(59.54507, kipsiSecond.getGeometry().getCoordinates().get(1), 0.0001);
+    }
+
+    private void saveNewTlscReports(final String file) throws IOException {
+        final String postJson = readFile("sse/" + file);
         final TlscSseReports postObject = objectMapper.readerFor(TlscSseReports.class).readValue(postJson);
-
-        verifyConverterTimes(0, SSEReport.class,   SseReport.class);
-        verifyConverterTimes(0, Site.class,        SseSite.class);
-        verifyConverterTimes(0, SSEFields.class,   SseFields.class);
-        verifyConverterTimes(0, ExtraFields.class, SseExtraFields.class);
-
-        Mockito.verify(sseTlscReportRepository, Mockito.times(0))
-            .save(any(SseTlscReport.class));
-
-        Mockito.verify(conversionService, Mockito.times(0))
-            .convert(any(Site.class), eq(SseSite.class));
-
-        Mockito.verify(conversionService, Mockito.times(0))
-            .convert(any(SSEFields.class), eq(SseFields.class));
-
-        Mockito.verify(conversionService, Mockito.times(0))
-            .convert(any(ExtraFields.class), eq(SseExtraFields.class));
-
-        final int saved = sseService.saveTlscSseReports(postObject);
-
-        verifyConverterTimes(2, SSEReport.class,   SseReport.class);
-        verifyConverterTimes(2, Site.class,        SseSite.class);
-        verifyConverterTimes(2, SSEFields.class,   SseFields.class);
-        verifyConverterTimes(2, ExtraFields.class, SseExtraFields.class);
-
-        Mockito.verify(sseTlscReportRepository, Mockito.times(2))
-            .save(any(SseTlscReport.class));
-
-        Assert.assertEquals(2, saved);
+        sseService.saveTlscSseReports(postObject);
     }
 
     private void verifyConverterTimes(final int times, Class<?> sourceType, Class<?> targetType) {

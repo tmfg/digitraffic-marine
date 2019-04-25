@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.model.sse;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class SseProperties {
     /* Extra fields / metadata */
 
     @ApiModelProperty(value = "Heel angle of the buoy in degrees (°), 0 is upright and it´s unsigned", allowableValues = "range[0, 90]")
-    private Double heelAngle;
+    private BigDecimal heelAngle;
 
     @ApiModelProperty(value = "Status of the flashlight. Normally ON at nighttime and OFF at daytime. " +
                               "ON_D means that light characteristics are alternated (ie. intensity and frequency) " +
@@ -47,10 +48,8 @@ public class SseProperties {
                               "show higher readings than the actual air temperature")
     private Integer temperature;
 
-    private final Map<String, Object> additionalProperties = new HashMap<>();
-
-    public SseProperties(String siteName, ZonedDateTime lastUpdate, SeaState seaState, Trend trend, Integer windWaveDir,
-                         Confidence confidence, Double heelAngle, LightStatus lightStatus, Integer temperature) {
+    public SseProperties(final String siteName, final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
+                         final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature) {
         this.siteName = siteName;
         this.lastUpdate = lastUpdate;
         this.seaState = seaState;
@@ -86,7 +85,7 @@ public class SseProperties {
         return confidence;
     }
 
-    public Double getHeelAngle() {
+    public BigDecimal getHeelAngle() {
         return heelAngle;
     }
 
@@ -96,19 +95,6 @@ public class SseProperties {
 
     public Integer getTemperature() {
         return temperature;
-    }
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
-    public void addAdditionalProperties(final Map<String, Object> additionalProperties) {
-        additionalProperties.entrySet().forEach(e -> setAdditionalProperty(e.getKey(), e.getValue()));
     }
 
     /*
