@@ -127,7 +127,7 @@ public class SseProperties {
         @JsonCreator
         public static Confidence fromValue(final String value) {
             if (value != null) {
-                Confidence.valueOf(value.toUpperCase());
+                return Confidence.valueOf(value.toUpperCase());
             }
             return null;
         }
@@ -154,7 +154,7 @@ public class SseProperties {
         @JsonCreator
         public static SeaState fromValue(final String value) {
             if (value != null) {
-                SeaState.valueOf(value.toUpperCase());
+                return SeaState.valueOf(value.toUpperCase());
             }
             return null;
         }
@@ -176,7 +176,7 @@ public class SseProperties {
         }
 
         @JsonCreator
-        public static Trend fromValue(String value) {
+        public static Trend fromValue(final String value) {
             if (value != null) {
                 return Trend.valueOf(value.toUpperCase());
             }
@@ -200,9 +200,9 @@ public class SseProperties {
         }
 
         @JsonCreator
-        public static LightStatus fromValue(String value) {
+        public static LightStatus fromValue(final String value) {
             if (value != null) {
-                LightStatus.valueOf(value.toUpperCase());
+                return LightStatus.valueOf(value.toUpperCase());
             }
             return null;
         }
