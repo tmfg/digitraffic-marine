@@ -164,7 +164,7 @@ public class SseProperties {
         }
 
         @JsonCreator
-        public static Trend fromValue(String value) {
+        public static Trend fromValue(final String value) {
             if (value != null) {
                 return Trend.valueOf(value.toUpperCase());
             }
@@ -188,7 +188,7 @@ public class SseProperties {
         }
 
         @JsonCreator
-        public static LightStatus fromValue(String value) {
+        public static LightStatus fromValue(final String value) {
             if (value != null) {
                 return LightStatus.valueOf(value.toUpperCase());
             }
