@@ -36,7 +36,7 @@ public class BetaController {
     }
 
     @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON for given site")
-    @GetMapping(path = LATEST_PATH + "/{siteNumber}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/sse" + LATEST_PATH + "/{siteNumber}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public SseFeatureCollection findLatest(
         @ApiParam(value = "SSE site number", required = true)
