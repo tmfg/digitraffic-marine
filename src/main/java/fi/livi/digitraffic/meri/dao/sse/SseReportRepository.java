@@ -16,6 +16,8 @@ public interface SseReportRepository extends JpaRepository<SseReport, Long> {
 
     List<SseReport> findByLatestIsTrueOrderBySiteNumber();
 
+    SseReport findByLatestIsTrueAndSiteNumber(int siteNumber);
+
     @Modifying
     @Query(value = "UPDATE SSE_REPORT SET latest = FALSE WHERE site_number = :siteNumber AND latest = TRUE", nativeQuery = true)
     int markSiteLatestReportAsNotLatest(@Param(value = "siteNumber") final Integer siteNumber);

@@ -2,10 +2,7 @@ package fi.livi.digitraffic.meri.model.sse;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import io.swagger.annotations.ApiModel;

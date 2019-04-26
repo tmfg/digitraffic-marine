@@ -8,12 +8,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @JsonPropertyOrder({
-        "locode",
+        "siteNumber",
         "type",
         "geometry",
         "properties"
 })
 @ApiModel(description = "GeoJSON Feature object of SSE data")
+
 public class SseFeature extends Feature<Point, SseProperties> {
 
     @ApiModelProperty(value = "Identifier of the site")

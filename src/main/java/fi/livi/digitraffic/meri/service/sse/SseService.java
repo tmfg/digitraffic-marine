@@ -4,6 +4,7 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,7 @@ import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
+import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
 @Service
@@ -106,35 +108,42 @@ public class SseService {
 
     @Transactional(readOnly = true)
     public SseFeatureCollection findLatest() {
-        final List<fi.livi.digitraffic.meri.domain.sse.SseReport> latest = sseReportRepository.findByLatestIsTrueOrderBySiteNumber();
 
-        final List<SseFeature> features = sseReportRepository.findByLatestIsTrueOrderBySiteNumber().stream().map(r -> {
-
-            final SseProperties sseProperties = new SseProperties(
-                r.getSiteName(),
-                r.getLastUpdate(),
-                r.getSeaState(),
-                r.getTrend(),
-                r.getWindWaveDir(),
-                r.getConfidence(),
-                r.getHeelAngle(),
-                r.getLightStatus(),
-                r.getTemperature());
-
-            try {
-                if (r.getLongitude() == null || r.getLatitude() == null) {
-                    return new SseFeature(new Point(), sseProperties, r.getSiteNumber());
-                }
-                return new SseFeature(new Point(r.getLongitude().doubleValue(), r.getLatitude().doubleValue()),
-                                      sseProperties, r.getSiteNumber());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }).collect(Collectors.toList());
+        final List<SseFeature> features = sseReportRepository.findByLatestIsTrueOrderBySiteNumber()
+            .stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
 
         final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
 
         return new SseFeatureCollection(updated, features);
+    }
+
+    public SseFeatureCollection findLatest(final int siteNumber) {
+        fi.livi.digitraffic.meri.domain.sse.SseReport report = sseReportRepository.findByLatestIsTrueAndSiteNumber(siteNumber);
+        if (report == null) {
+            throw new ObjectNotFoundException("Sse site", siteNumber);
+        }
+
+        final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
+
+        return new SseFeatureCollection(updated, Collections.singletonList(createSseFeatureFrom(report)));
+    }
+
+    private SseFeature createSseFeatureFrom(final fi.livi.digitraffic.meri.domain.sse.SseReport sseReport) {
+        final SseProperties sseProperties = new SseProperties(
+            sseReport.getSiteName(),
+            sseReport.getLastUpdate(),
+            sseReport.getSeaState(),
+            sseReport.getTrend(),
+            sseReport.getWindWaveDir(),
+            sseReport.getConfidence(),
+            sseReport.getHeelAngle(),
+            sseReport.getLightStatus(),
+            sseReport.getTemperature());
+
+        if (sseReport.getLongitude() == null || sseReport.getLatitude() == null) {
+            return new SseFeature(new Point(), sseProperties, sseReport.getSiteNumber());
+        }
+        return new SseFeature(new Point(sseReport.getLongitude().doubleValue(), sseReport.getLatitude().doubleValue()),
+                              sseProperties, sseReport.getSiteNumber());
     }
 }
