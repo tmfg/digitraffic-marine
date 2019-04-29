@@ -112,9 +112,7 @@ public class SseService {
         final List<SseFeature> features = sseReportRepository.findByLatestIsTrueOrderBySiteNumber()
             .stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
 
-        final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
-
-        return new SseFeatureCollection(updated, features);
+        return createSseFeatureCollectionFrom(features);
     }
 
     public SseFeatureCollection findLatest(final int siteNumber) {
@@ -122,10 +120,13 @@ public class SseService {
         if (report == null) {
             throw new ObjectNotFoundException("Sse site", siteNumber);
         }
+        return createSseFeatureCollectionFrom(Collections.singletonList(createSseFeatureFrom(report)));
+    }
 
+    private SseFeatureCollection createSseFeatureCollectionFrom(List<SseFeature> features) {
         final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
 
-        return new SseFeatureCollection(updated, Collections.singletonList(createSseFeatureFrom(report)));
+        return new SseFeatureCollection(updated, features);
     }
 
     private SseFeature createSseFeatureFrom(final fi.livi.digitraffic.meri.domain.sse.SseReport sseReport) {
