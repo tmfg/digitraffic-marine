@@ -41,7 +41,7 @@ import fi.livi.digitraffic.meri.quartz.WinterNavigationShipUpdateJob;
 
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
-@ConditionalOnNotWebApplication
+//@ConditionalOnNotWebApplication
 public class QuartzSchedulerConfig {
     private static final Logger log = LoggerFactory.getLogger(QuartzSchedulerConfig.class);
 
