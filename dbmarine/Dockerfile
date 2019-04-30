@@ -1,4 +1,10 @@
 # this is used just for waiting postgresql to initialize
-FROM postgres:9.6.11
+FROM postgres:9.6.12
 
-COPY files/wait-for-postgres.sh /
+RUN \
+apt-get update && \
+apt-get -y install \
+  maven && \
+rm -rf /var/lib/apt/lists/*
+
+COPY files/flyway.conf files/pom.xml files/wait-for-postgres.sh files/init-db.sh /

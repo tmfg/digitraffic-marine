@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.support.ConversionServiceFactoryBean;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
@@ -22,10 +24,10 @@ public class MarineApplicationConfiguration {
     public static final String API_LOCATIONS_PATH = "/locations";
     public static final String API_PORT_CALLS_PATH = "/port-calls";
     public static final String API_WINTER_NAVIGATION_PATH = "/winter-navigation";
+    public static final String API_SSE_PATH = "/sse";
 
     /**
      * Enables bean validation for controller parameters
-     * @return
      */
     @Bean
     public MethodValidationPostProcessor methodValidationPostProcessor() {
@@ -66,5 +68,13 @@ public class MarineApplicationConfiguration {
         exporter.setExcludedBeans("dataSource", "quartzDataSource");
 
         return exporter;
+    }
+
+    @Bean("conversionService")
+    public org.springframework.core.convert.ConversionService getConversionService() {
+        ConversionServiceFactoryBean bean = new ConversionServiceFactoryBean();
+        bean.afterPropertiesSet();
+        ConversionService object = bean.getObject();
+        return object;
     }
 }
