@@ -18,13 +18,13 @@ public class SseProperties {
     @ApiModelProperty(value = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
     private ZonedDateTime lastUpdate;
 
-    @ApiModelProperty(value = "Sea state", required = true)
+    @ApiModelProperty(value = "Sea state. If seaState is CALM, the windWaveDir is not reliable!", required = true)
     private SeaState seaState;
 
     @ApiModelProperty(value = "Trend of condition change", required = true)
     private Trend trend;
 
-    @ApiModelProperty(value = "Wind and wave direction in degrees from north", allowableValues = "range[0, 359]", required = true)
+    @ApiModelProperty(value = "Wind and wave direction in degrees from north. If seaState is CALM, the windWaveDir is not reliable!", allowableValues = "range[0, 359]", required = true)
     private Integer windWaveDir;
 
     @ApiModelProperty(value = "Reliability of the SSE data", required = true)
