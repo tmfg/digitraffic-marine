@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.sse;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
+import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
@@ -42,6 +45,12 @@ public class SseService {
     private final SseTlscReportRepository sseTlscReportRepository;
     private final SseReportRepository sseReportRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
+
+    private static final ZonedDateTime MIN_ZONED_DATE_TIME = Instant.ofEpochMilli(0).atZone(ZoneOffset.UTC);
+    // 1.1.2942
+    private static final ZonedDateTime MAX_ZONED_DATE_TIME = Instant.ofEpochMilli(30673382400000L).atZone(ZoneOffset.UTC);
+
+    private static final int MAX_QUERY_RESULT_SIZE = 1000;
 
     @Autowired
     public SseService(final ConversionService conversionService,
@@ -124,14 +133,31 @@ public class SseService {
 
     public SseFeatureCollection findHistory(final ZonedDateTime from, final ZonedDateTime to) {
         final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
-            sseReportRepository.findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(from, to);
+            sseReportRepository.findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(from != null ? from : MIN_ZONED_DATE_TIME,
+                                                                                         to != null ? to : MAX_ZONED_DATE_TIME,
+                                                                                         PageRequest.of(0, MAX_QUERY_RESULT_SIZE+1));
+
+        checkMaxResultSize(history);
+
         return createSseFeatureCollectionFrom(history);
     }
 
     public SseFeatureCollection findHistory(final int siteNumber, final ZonedDateTime from, final ZonedDateTime to) {
         final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
-            sseReportRepository.findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(from, to, siteNumber);
+            sseReportRepository.findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(from != null ? from : MIN_ZONED_DATE_TIME,
+                                                                                                      to != null ? to : MAX_ZONED_DATE_TIME,
+                                                                                                      siteNumber,
+                                                                                                      PageRequest.of(0, MAX_QUERY_RESULT_SIZE+1));
+
+        checkMaxResultSize(history);
+
         return createSseFeatureCollectionFrom(history);
+    }
+
+    private void checkMaxResultSize(final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history) {
+        if (history.size() > MAX_QUERY_RESULT_SIZE) {
+            throw new BadRequestException("The search result is too big (over 1000 items), try to narrow down your search criteria.");
+        }
     }
 
     private SseFeatureCollection createSseFeatureCollectionFrom(List<fi.livi.digitraffic.meri.domain.sse.SseReport> sseReports) {

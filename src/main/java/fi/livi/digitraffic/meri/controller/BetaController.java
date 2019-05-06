@@ -56,7 +56,7 @@ public class BetaController {
         @ApiParam(value = "SSE site number", required = true)
         @PathVariable("siteNumber")
         final int siteNumber) {
-        log.info("TEST");
+
         return sseService.findLatest(siteNumber);
     }
 
@@ -65,16 +65,16 @@ public class BetaController {
     @ResponseBody
     public SseFeatureCollection findHistory(
 
-        @ApiParam(value = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, required = true, example = ISO_DATE_TIME_FROM_VALUE)
+        @ApiParam(value = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        @RequestParam(value = "from")
+        @RequestParam(value = "from", required = false)
         final ZonedDateTime from,
 
-        @ApiParam(value = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, required = true, example = ISO_DATE_TIME_TO_VALUE)
+        @ApiParam(value = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        @RequestParam(value = "to")
+        @RequestParam(value = "to", required = false)
         final ZonedDateTime to) {
-        log.info("TEST");
+
         return sseService.findHistory(from, to);
     }
 
@@ -87,14 +87,14 @@ public class BetaController {
 
         @ApiParam(value = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, required = true, example = ISO_DATE_TIME_FROM_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        @RequestParam(value = "from")
+        @RequestParam(value = "from", required = false)
         final ZonedDateTime from,
 
         @ApiParam(value = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, required = true, example = ISO_DATE_TIME_TO_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        @RequestParam(value = "to")
+        @RequestParam(value = "to", required = false)
         final ZonedDateTime to) {
-        log.info("TEST");
+
         return sseService.findHistory(siteNumber, from, to);
     }
 }

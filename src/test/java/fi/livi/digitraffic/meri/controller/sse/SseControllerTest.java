@@ -24,7 +24,7 @@ import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.controller.BetaController;
 import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
-import fi.livi.digitraffic.meri.service.sse.SseReportBuilder;
+import fi.livi.digitraffic.meri.service.sse.SseFeatureCollectionBuilder;
 import fi.livi.digitraffic.meri.service.sse.SseService;
 
 public class SseControllerTest extends AbstractTestBase {
@@ -60,28 +60,28 @@ public class SseControllerTest extends AbstractTestBase {
 
     }
 
-//    @Test
+    @Test
     public void sseLatest() throws Exception {
-        final String lastUpdate = "2019-01-11T10:00:00+03:00";
-        when(sseReportRepository.findByLatestIsTrueOrderBySiteNumber())
-            .thenReturn(new SseReportBuilder(ZonedDateTime.parse(lastUpdate)).build());
+        final String lastUpdate = "2019-01-11T10:00:01+03:00";
+        when(sseService.findLatest())
+            .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(lastUpdate)).build());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
                             MarineApplicationConfiguration.API_SSE_PATH + BetaController.LATEST_PATH))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(1)))
+            .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate",
-                                Matchers.is(ZonedDateTime.parse(lastUpdate).toInstant().atZone(UTC))))
+                                Matchers.is(ZonedDateTime.parse(lastUpdate).toInstant().atZone(UTC).toString())))
         ;
     }
 
-//    @Test
+    @Test
     public void sseHistory() throws Exception {
-        final String start = "2019-01-10T10:00:00+03:00";
-        final String end = "2019-01-11T10:00:00+03:00";
-        when(sseReportRepository.findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(ZonedDateTime.parse(start), ZonedDateTime.parse(end)))
-            .thenReturn(new SseReportBuilder(ZonedDateTime.parse(end)).build());
+        final String start = "2019-01-10T10:00:01+03:00";
+        final String end = "2019-01-11T10:00:01+03:00";
+        when(sseService.findHistory(ZonedDateTime.parse(start), ZonedDateTime.parse(end)))
+            .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end)).build());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
                             MarineApplicationConfiguration.API_SSE_PATH + BetaController.HISTORY_PATH)
@@ -89,8 +89,8 @@ public class SseControllerTest extends AbstractTestBase {
                 .param("to", end))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(1)))
-            .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC))))
+            .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
+            .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
         ;
     }
 

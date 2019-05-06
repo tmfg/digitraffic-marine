@@ -14,7 +14,7 @@ public class SseProperties {
     @ApiModelProperty(value = "Site name of the buoy", required = true)
     public final String siteName;
 
-    @ApiModelProperty(value = "Type of the site. If site is FIXED it is standing on the ground.", required = true)
+    @ApiModelProperty(value = "Type of the site. FLOATING is floating in the water and FIXED it is standing on the ground.", required = true)
     private SiteType siteType;
 
     /* SSE fields */
