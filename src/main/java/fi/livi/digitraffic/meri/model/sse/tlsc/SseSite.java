@@ -7,6 +7,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 
+import fi.livi.digitraffic.meri.model.sse.SseProperties.SiteType;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
 public class SseSite {
@@ -14,18 +15,20 @@ public class SseSite {
     private String siteName;
     private Integer siteNumber;
     private Map<String, Object> additionalProperties = new HashMap<>();
+    private SiteType siteType;
 
     public SseSite() {
     }
 
-    public SseSite(final String siteName, final Integer siteNumber, final Map<String, Object> additionalProperties) {
-        this(siteName, siteNumber);
+    public SseSite(final String siteName, final Integer siteNumber, final SiteType siteType, final Map<String, Object> additionalProperties) {
+        this(siteName, siteNumber, siteType);
         this.additionalProperties = additionalProperties;
     }
 
-    public SseSite(final String siteName, final Integer siteNumber) {
+    public SseSite(final String siteName, final Integer siteNumber, SiteType siteType) {
         this.siteName = siteName;
         this.siteNumber = siteNumber;
+        this.siteType = siteType;
     }
 
     public String getSiteName() {
@@ -54,5 +57,9 @@ public class SseSite {
     @Override
     public String toString() {
         return StringUtil.toJsonString(this);
+    }
+
+    public SiteType getSiteType() {
+        return siteType;
     }
 }

@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.dao.sse;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,9 @@ public interface SseReportRepository extends JpaRepository<SseReport, Long> {
 
 
     List<SseReport> findByLatestIsTrueOrderBySiteNumber();
+
+    List<SseReport> findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(final ZonedDateTime from, final ZonedDateTime to);
+    List<SseReport> findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(final ZonedDateTime from, final ZonedDateTime to, final Integer siteNumber);
 
     SseReport findByLatestIsTrueAndSiteNumber(int siteNumber);
 

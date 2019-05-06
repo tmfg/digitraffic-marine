@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.sse;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
 
 import java.math.BigDecimal;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -90,6 +91,7 @@ public class SseService {
                 true,
                 site.getSiteNumber(),
                 site.getSiteName(),
+                site.getSiteType(),
                 sseFields.getLastUpdate(),
                 sseFields.getSeaState(),
                 sseFields.getTrend(),
@@ -109,10 +111,7 @@ public class SseService {
     @Transactional(readOnly = true)
     public SseFeatureCollection findLatest() {
 
-        final List<SseFeature> features = sseReportRepository.findByLatestIsTrueOrderBySiteNumber()
-            .stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
-
-        return createSseFeatureCollectionFrom(features);
+        return createSseFeatureCollectionFrom(sseReportRepository.findByLatestIsTrueOrderBySiteNumber());
     }
 
     public SseFeatureCollection findLatest(final int siteNumber) {
@@ -120,11 +119,25 @@ public class SseService {
         if (report == null) {
             throw new ObjectNotFoundException("Sse site", siteNumber);
         }
-        return createSseFeatureCollectionFrom(Collections.singletonList(createSseFeatureFrom(report)));
+        return createSseFeatureCollectionFrom(Collections.singletonList(report));
     }
 
-    private SseFeatureCollection createSseFeatureCollectionFrom(List<SseFeature> features) {
+    public SseFeatureCollection findHistory(final ZonedDateTime from, final ZonedDateTime to) {
+        final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
+            sseReportRepository.findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(from, to);
+        return createSseFeatureCollectionFrom(history);
+    }
+
+    public SseFeatureCollection findHistory(final int siteNumber, final ZonedDateTime from, final ZonedDateTime to) {
+        final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
+            sseReportRepository.findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(from, to, siteNumber);
+        return createSseFeatureCollectionFrom(history);
+    }
+
+    private SseFeatureCollection createSseFeatureCollectionFrom(List<fi.livi.digitraffic.meri.domain.sse.SseReport> sseReports) {
         final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
+
+        final List<SseFeature> features = sseReports.stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
 
         return new SseFeatureCollection(updated, features);
     }
@@ -132,7 +145,8 @@ public class SseService {
     private SseFeature createSseFeatureFrom(final fi.livi.digitraffic.meri.domain.sse.SseReport sseReport) {
         final SseProperties sseProperties = new SseProperties(
             sseReport.getSiteName(),
-            sseReport.getLastUpdate(),
+            sseReport.getSiteType(),
+            sseReport.getLastUpdate().withZoneSameInstant(ZoneOffset.UTC),
             sseReport.getSeaState(),
             sseReport.getTrend(),
             sseReport.getWindWaveDir(),

@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.config.converter.AutoRegisteredConverter;
+import fi.livi.digitraffic.meri.model.sse.SseProperties.SiteType;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
 
 @ConditionalOnWebApplication
@@ -20,6 +21,6 @@ public class TlscSseSiteToSiteConverter
         if (!src.getAdditionalProperties().isEmpty()) {
             log.warn("No mappings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
         }
-        return new SseSite(src.getSiteName(), src.getSiteNumber(), src.getAdditionalProperties());
+        return new SseSite(src.getSiteName(), src.getSiteNumber(), SiteType.fromValue(src.getSiteType()), src.getAdditionalProperties());
     }
 }

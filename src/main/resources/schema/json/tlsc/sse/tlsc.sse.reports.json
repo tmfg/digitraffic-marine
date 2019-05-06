@@ -29,7 +29,8 @@
                         "additionalProperties": true,
                         "required": [
                             "SiteName",
-                            "SiteNumber"
+                            "SiteNumber",
+                            "SiteType"
                         ],
                         "properties": {
                             "SiteName": {
@@ -47,6 +48,18 @@
                                 "title": "The Sitenumber Schema",
                                 "examples": [
                                     12345
+                                ]
+                            },
+                            "SiteType": {
+                                "$id": "#/properties/SSE_Reports/items/properties/Site/properties/SiteType",
+                                "type": "string",
+                                "enum": [
+                                    "FIXED",
+                                    "FLOATING"
+                                ],
+                                "title": "The SiteType Schema",
+                                "examples": [
+                                    "FIXED", "FLOATING"
                                 ]
                             }
                         }

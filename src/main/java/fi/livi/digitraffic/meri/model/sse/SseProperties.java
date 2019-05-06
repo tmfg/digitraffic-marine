@@ -14,6 +14,9 @@ public class SseProperties {
     @ApiModelProperty(value = "Site name of the buoy", required = true)
     public final String siteName;
 
+    @ApiModelProperty(value = "Type of the site. If site is FIXED it is standing on the ground.", required = true)
+    private SiteType siteType;
+
     /* SSE fields */
     @ApiModelProperty(value = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
     private ZonedDateTime lastUpdate;
@@ -45,9 +48,10 @@ public class SseProperties {
                               "show higher readings than the actual air temperature")
     private Integer temperature;
 
-    public SseProperties(final String siteName, final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
+    public SseProperties(final String siteName, final SiteType siteType, final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
                          final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature) {
         this.siteName = siteName;
+        this.siteType = siteType;
         this.lastUpdate = lastUpdate;
         this.seaState = seaState;
         this.trend = trend;
@@ -60,6 +64,10 @@ public class SseProperties {
 
     public String getSiteName() {
         return siteName;
+    }
+
+    public SiteType getSiteType() {
+        return siteType;
     }
 
     public ZonedDateTime getLastUpdate() {
@@ -119,7 +127,6 @@ public class SseProperties {
             }
             return null;
         }
-
     }
 
     @ApiModel
@@ -170,7 +177,6 @@ public class SseProperties {
             }
             return null;
         }
-
     }
 
     @ApiModel
@@ -194,6 +200,27 @@ public class SseProperties {
             }
             return null;
         }
+    }
 
+    @ApiModel
+    public enum SiteType {
+
+        FIXED,
+        FLOATING;
+
+        public static SiteType fromValue(final Enum siteType) {
+            if (siteType != null) {
+                return fromValue(siteType.name());
+            }
+            return null;
+        }
+
+        @JsonCreator
+        public static SiteType fromValue(final String value) {
+            if (value != null) {
+                return SiteType.valueOf(value.toUpperCase());
+            }
+            return null;
+        }
     }
 }

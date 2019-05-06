@@ -15,6 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import fi.livi.digitraffic.meri.model.sse.SseProperties;
+import fi.livi.digitraffic.meri.model.sse.SseProperties.SiteType;
 
 @Entity
 @DynamicInsert
@@ -31,6 +32,8 @@ public class SseReport {
     // SSE data
     private Integer siteNumber;
     private String siteName;
+    @Enumerated(EnumType.STRING)
+    private SiteType siteType;
     private ZonedDateTime lastUpdate;
     @Enumerated(EnumType.STRING)
     private SseProperties.SeaState seaState;
@@ -49,7 +52,7 @@ public class SseReport {
 
     public SseReport() {}
 
-    public SseReport(final ZonedDateTime created, final Boolean latest, final Integer siteNumber, final String siteName, final ZonedDateTime lastUpdate,
+    public SseReport(final ZonedDateTime created, final Boolean latest, final Integer siteNumber, final String siteName, final SiteType siteType, final ZonedDateTime lastUpdate,
                      final SseProperties.SeaState seaState, final SseProperties.Trend trend, final Integer windWaveDir,
                      final SseProperties.Confidence confidence, final BigDecimal heelAngle, final SseProperties.LightStatus lightStatus, final Integer temperature,
                      final BigDecimal longitude, final BigDecimal latitude) {
@@ -57,6 +60,7 @@ public class SseReport {
         this.latest = latest;
         this.siteNumber = siteNumber;
         this.siteName = siteName;
+        this.siteType = siteType;
         this.lastUpdate = lastUpdate;
         this.seaState = seaState;
         this.trend = trend;
@@ -108,6 +112,14 @@ public class SseReport {
 
     public void setSiteName(String siteName) {
         this.siteName = siteName;
+    }
+
+    public SiteType getSiteType() {
+        return siteType;
+    }
+
+    public void setSiteType(SiteType siteType) {
+        this.siteType = siteType;
     }
 
     public ZonedDateTime getLastUpdate() {

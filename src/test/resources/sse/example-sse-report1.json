@@ -3,7 +3,8 @@
         {
             "Site": {
                 "SiteName": "Kipsi",
-                "SiteNumber": 20243
+                "SiteNumber": 20243,
+                "SiteType" : "FLOATING"
             },
             "SSE_Fields": {
                 "Last_Update": "2019-04-11T12:30:00+03:00",
@@ -23,7 +24,8 @@
         {
             "Site": {
                 "SiteName": "Kipsi",
-                "SiteNumber": 20243
+                "SiteNumber": 20243,
+                "SiteType" : "FLOATING"
             },
             "SSE_Fields": {
                 "Last_Update": "2019-04-11T12:33:20+03:00",
@@ -43,7 +45,8 @@
         {
             "Site": {
                 "SiteName": "Hattukari",
-                "SiteNumber": 20169
+                "SiteNumber": 20169,
+                "SiteType" : "FLOATING"
             },
             "SSE_Fields": {
                 "Last_Update": "2019-02-11T12:40:00+03:00",
