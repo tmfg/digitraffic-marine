@@ -85,12 +85,12 @@ public class BetaController {
         @PathVariable(value = "siteNumber")
         final Integer siteNumber,
 
-        @ApiParam(value = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, required = true, example = ISO_DATE_TIME_FROM_VALUE)
+        @ApiParam(value = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @RequestParam(value = "from", required = false)
         final ZonedDateTime from,
 
-        @ApiParam(value = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, required = true, example = ISO_DATE_TIME_TO_VALUE)
+        @ApiParam(value = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @RequestParam(value = "to", required = false)
         final ZonedDateTime to) {
