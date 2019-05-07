@@ -11,6 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "GeoJSON properties of SseFeature")
 public class SseProperties {
 
+    // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
+    private static final String FIELD_ONLY_FOR_FLOATING_SITE = "This field is available only for FLOATING siteType";
+
     @ApiModelProperty(value = "Site name of the buoy", required = true)
     public final String siteName;
 
@@ -21,13 +24,13 @@ public class SseProperties {
     @ApiModelProperty(value = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
     private ZonedDateTime lastUpdate;
 
-    @ApiModelProperty(value = "Sea state. If seaState is CALM, the windWaveDir is not reliable!", required = true)
+    @ApiModelProperty(value = "Sea state. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE)
     private SeaState seaState;
 
-    @ApiModelProperty(value = "Trend of condition change", required = true)
+    @ApiModelProperty(value = "Trend of condition change. " + FIELD_ONLY_FOR_FLOATING_SITE)
     private Trend trend;
 
-    @ApiModelProperty(value = "Wind and wave direction in degrees from north. If seaState is CALM, the windWaveDir is not reliable!", allowableValues = "range[0, 359]", required = true)
+    @ApiModelProperty(value = "Wind and wave direction in degrees from north. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE, allowableValues = "range[0, 359]")
     private Integer windWaveDir;
 
     @ApiModelProperty(value = "Reliability of the SSE data", required = true)
@@ -35,7 +38,7 @@ public class SseProperties {
 
     /* Extra fields / metadata */
 
-    @ApiModelProperty(value = "Heel angle of the buoy in degrees (°), 0 is upright and it´s unsigned", allowableValues = "range[0, 90]")
+    @ApiModelProperty(value = "Heel angle of the buoy in degrees (°), 0 is upright and it´s unsigned. " + FIELD_ONLY_FOR_FLOATING_SITE, allowableValues = "range[0, 90]")
     private BigDecimal heelAngle;
 
     @ApiModelProperty(value = "Status of the flashlight. Normally ON at nighttime and OFF at daytime. " +
