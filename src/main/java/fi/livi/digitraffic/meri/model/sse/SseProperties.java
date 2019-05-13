@@ -33,7 +33,11 @@ public class SseProperties {
     @ApiModelProperty(value = "Wind and wave direction in degrees from north. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE, allowableValues = "range[0, 359]")
     private Integer windWaveDir;
 
-    @ApiModelProperty(value = "Reliability of the SSE data", required = true)
+    @ApiModelProperty(value =
+        "Provides information on estimated confidence of mainly the directional information based on the Horizontal Dilution of precision (HDOP) figure obtained from the GPS receiver:\n"+
+        "* POOR: More than 10\n" +
+        "* MODERATE: 2-10\n" +
+        "* GOOD: Less than 2", required = true)
     private Confidence confidence;
 
     /* Extra fields / metadata */
