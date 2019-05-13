@@ -124,14 +124,12 @@ public class SseService {
     }
 
     public SseFeatureCollection findLatest(final int siteNumber) {
+        checSiteNumberParameter(siteNumber);
         fi.livi.digitraffic.meri.domain.sse.SseReport report = sseReportRepository.findByLatestIsTrueAndSiteNumber(siteNumber);
-        if (report == null) {
-            throw new ObjectNotFoundException("Sse site", siteNumber);
-        }
         return createSseFeatureCollectionFrom(Collections.singletonList(report));
     }
 
-    public SseFeatureCollection findHistory(final ZonedDateTime from, final ZonedDateTime to) {
+    public SseFeatureCollection findHistory(final ZonedDateTime from, final ZonedDateTime to) throws BadRequestException {
         checkFromToParameters(from, to);
         final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
             sseReportRepository.findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(from != null ? from : MIN_ZONED_DATE_TIME,
@@ -143,7 +141,8 @@ public class SseService {
         return createSseFeatureCollectionFrom(history);
     }
 
-    public SseFeatureCollection findHistory(final int siteNumber, final ZonedDateTime from, final ZonedDateTime to) {
+    public SseFeatureCollection findHistory(final int siteNumber, final ZonedDateTime from, final ZonedDateTime to) throws BadRequestException {
+        checSiteNumberParameter(siteNumber);
         checkFromToParameters(from, to);
         final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
             sseReportRepository.findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(from != null ? from : MIN_ZONED_DATE_TIME,
@@ -154,6 +153,12 @@ public class SseService {
         checkMaxResultSize(history);
 
         return createSseFeatureCollectionFrom(history);
+    }
+
+    private void checSiteNumberParameter(final int siteNumber) {
+        if (!sseReportRepository.existsBySiteNumber(siteNumber)) {
+            throw new IllegalArgumentException(String.format("No SSE data exists with siteNumber %d", siteNumber));
+        }
     }
 
     private void checkFromToParameters(ZonedDateTime from, ZonedDateTime to) {

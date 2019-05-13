@@ -96,14 +96,15 @@ public class DefaultExceptionHandler {
                                     HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class, ResourceAccessException.class , PookiException.class })
+    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class, ResourceAccessException.class , PookiException.class, IllegalArgumentException.class })
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final Exception exception, final ServletWebRequest request) {
 
         HttpStatus status;
         if (exception instanceof ObjectNotFoundException) {
             status = HttpStatus.NOT_FOUND;
-        } else if (exception instanceof BadRequestException) {
+        } else if (exception instanceof BadRequestException ||
+                   exception instanceof IllegalArgumentException) {
             status = HttpStatus.BAD_REQUEST;
         } else if (exception instanceof PookiException) {
             status = HttpStatus.BAD_GATEWAY;
@@ -182,7 +183,6 @@ public class DefaultExceptionHandler {
 
     }
 
-    @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleException(final Exception exception, final ServletWebRequest request) {
         log.error(HttpStatus.INTERNAL_SERVER_ERROR.value() + " " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), exception);
