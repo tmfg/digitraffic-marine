@@ -203,6 +203,6 @@ public class SseReport {
     }
 
     public boolean isFloating() {
-        return !SiteType.FIXED.equals(getSiteType());
+        return SiteType.FLOATING.equals(getSiteType());
     }
 }
