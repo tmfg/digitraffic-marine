@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.controller.exception;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -125,10 +126,13 @@ public class DefaultExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMediaTypeNotAcceptable(final Exception exception, final ServletWebRequest request) {
         log.info(HttpStatus.NOT_ACCEPTABLE.value() + " " + HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(), exception);
 
+        final String[] requestedContentType = request.getHeaderValues("accept");
+
         return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                 HttpStatus.NOT_ACCEPTABLE.value(),
                 HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(),
-                "Media type not acceptable",
+                String.format("Could not find acceptable representation for requested content type %s",
+                              requestedContentType != null ? Arrays.asList(requestedContentType) : null),
                 request.getRequest().getRequestURI()),
                 HttpStatus.NOT_ACCEPTABLE);
     }
