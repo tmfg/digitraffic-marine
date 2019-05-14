@@ -25,6 +25,8 @@ import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(API_BETA_BASE_PATH)
@@ -32,25 +34,34 @@ import io.swagger.annotations.ApiParam;
 public class BetaController {
     private static final Logger log = LoggerFactory.getLogger(BetaController.class);
 
+    public static final String MEDIA_TYPE_APPLICATION_VND_GEO_JSON_VALUE = "application/vnd.geo+json";
+
+    public static final String CODE_400_SEARCH_RESULT_TOO_BIG = "The search result is too big (over 1000 items)";
+    public static final String CODE_400_NOT_EXISTS_WITH_IDENTIFIER = "Objects not exists with given identifier";
+    public static final String CODE_400_ILLEGAL_ARGUMENTS = "Illegal arguments";
+
     private final SseService sseService;
 
     public static final String LATEST_PATH = "/latest";
     public static final String HISTORY_PATH = "/history";
-
 
     public BetaController(final SseService sseService) {
         this.sseService = sseService;
     }
 
     @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON")
-    @GetMapping(path = API_SSE_PATH + LATEST_PATH , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = API_SSE_PATH + LATEST_PATH , produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MEDIA_TYPE_APPLICATION_VND_GEO_JSON_VALUE })
     @ResponseBody
     public SseFeatureCollection findLatest() {
         return sseService.findLatest();
     }
 
     @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON for given site")
-    @GetMapping(path = API_SSE_PATH + LATEST_PATH + "/{siteNumber}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(code = 400, message = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
+    })
+    @GetMapping(path = API_SSE_PATH + LATEST_PATH + "/{siteNumber}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE,
+                                                                                  MEDIA_TYPE_APPLICATION_VND_GEO_JSON_VALUE })
     @ResponseBody
     public SseFeatureCollection findLatest(
         @ApiParam(value = "SSE site number", required = true)
@@ -60,8 +71,12 @@ public class BetaController {
         return sseService.findLatest(siteNumber);
     }
 
-    @ApiOperation("Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time")
-    @GetMapping(path = API_SSE_PATH + HISTORY_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation("Return SSE history data (Sea State Estimation) data as GeoJSON for given time")
+    @ApiResponses(value = {
+        @ApiResponse(code = 400, message = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+                                           CODE_400_ILLEGAL_ARGUMENTS)
+    })
+    @GetMapping(path = API_SSE_PATH + HISTORY_PATH, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MEDIA_TYPE_APPLICATION_VND_GEO_JSON_VALUE })
     @ResponseBody
     public SseFeatureCollection findHistory(
 
@@ -78,7 +93,14 @@ public class BetaController {
         return sseService.findHistory(from, to);
     }
 
-    @GetMapping(path = API_SSE_PATH + HISTORY_PATH + "/{siteNumber}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation("Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time")
+    @ApiResponses(value = {
+        @ApiResponse(code = 400, message = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+                                           CODE_400_NOT_EXISTS_WITH_IDENTIFIER + " or " +
+                                           CODE_400_ILLEGAL_ARGUMENTS)
+    })
+    @GetMapping(path = API_SSE_PATH + HISTORY_PATH + "/{siteNumber}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE,
+                                                                                   MEDIA_TYPE_APPLICATION_VND_GEO_JSON_VALUE })
     @ResponseBody
     public SseFeatureCollection findHistoryBySite(
         @ApiParam(value = "SSE site number", required = true)

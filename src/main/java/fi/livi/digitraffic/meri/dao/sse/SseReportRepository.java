@@ -19,6 +19,8 @@ import fi.livi.digitraffic.meri.domain.sse.SseReport;
 public interface SseReportRepository extends PagingAndSortingRepository<SseReport, Long> {
 
 
+    boolean existsBySiteNumber(final int siteNumber);
+
     List<SseReport> findByLatestIsTrueOrderBySiteNumber();
 
     @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })

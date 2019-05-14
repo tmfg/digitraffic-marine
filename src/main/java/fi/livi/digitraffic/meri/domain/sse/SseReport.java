@@ -201,4 +201,8 @@ public class SseReport {
     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
+
+    public boolean isFloating() {
+        return SiteType.FLOATING.equals(getSiteType());
+    }
 }
