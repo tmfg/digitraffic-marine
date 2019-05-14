@@ -124,15 +124,16 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleMediaTypeNotAcceptable(final Exception exception, final ServletWebRequest request) {
-        log.info(HttpStatus.NOT_ACCEPTABLE.value() + " " + HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(), exception);
+        final String[] requestedContentTypes = request.getHeaderValues("accept");
+        final String requestedContentType = requestedContentTypes != null ? Arrays.asList(requestedContentTypes).toString() : null;
 
-        final String[] requestedContentType = request.getHeaderValues("accept");
+        log.info(String.format("%s %s for requested type %s", HttpStatus.NOT_ACCEPTABLE.value(), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(), requestedContentType), exception);
 
         return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                 HttpStatus.NOT_ACCEPTABLE.value(),
                 HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(),
                 String.format("Could not find acceptable representation for requested content type %s",
-                              requestedContentType != null ? Arrays.asList(requestedContentType) : null),
+                              requestedContentType),
                 request.getRequest().getRequestURI()),
                 HttpStatus.NOT_ACCEPTABLE);
     }
