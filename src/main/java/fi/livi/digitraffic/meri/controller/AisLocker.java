@@ -20,8 +20,7 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
  */
 
 @Service
-@ConditionalOnExpression("'${config.test}' != 'true'")
-@ConditionalOnProperty("ais.reader.enabled")
+@ConditionalOnExpression("'${config.test}' != 'true' and ('${ais.reader.enabled}' == 'true' or '${sse.mqtt.enabled}' == 'true')")
 public class AisLocker {
     private final LockingService lockingService;
 

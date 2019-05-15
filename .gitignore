@@ -56,6 +56,7 @@ crashlytics-build.properties
 buildNumber.properties
 *.log.gz
 application-localhost.properties
+application-localhost-daemon.properties
 
 # SchemaSpyn generoimat schemat ja kirjastot
 /dbmarine/schemaspy/schema
