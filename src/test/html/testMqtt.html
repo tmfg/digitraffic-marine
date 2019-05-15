@@ -12,7 +12,7 @@
         function connect() {
             console.log('trying to connect marine mqtt...');
 
-            client = new Paho.MQTT.Client("meri.digitraffic.fi", 61619, 'testclient_' + Date.now());
+            client = new Paho.MQTT.Client("meri-test.digitraffic.fi", 61619, 'testclient_' + Date.now());
 
             client.onConnectionLost = function (response) {
                 console.info(Date.now() + ' Connection lost:' + response.errorMessage);
@@ -48,9 +48,15 @@
             console.info(Date.now() + ' Connection open');
 
             client.subscribe("vessels/#");
-
-            //client.subscribe("vessels/+/locations");
             //client.subscribe("vessels/status");
+            //client.subscribe("vessels/+/locations");
+            //client.subscribe("vessels/+/metadata");
+            // client.subscribe("vessels/230939100/locations");
+
+            // client.subscribe("sse/#");
+            // client.subscribe("sse/status");
+            // client.subscribe("sse/site/+");
+            // client.subscribe("sse/site/11639");
         }
 
         function addMessage(message) {

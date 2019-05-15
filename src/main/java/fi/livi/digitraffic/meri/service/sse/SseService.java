@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
 import fi.livi.digitraffic.meri.dao.sse.SseTlscReportRepository;
+import fi.livi.digitraffic.meri.domain.sse.SseReport;
 import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
-import fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.sse.SseFeature;
@@ -30,10 +30,8 @@ import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.model.sse.SseProperties;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseReport;
 import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
 import fi.livi.digitraffic.meri.service.BadRequestException;
-import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
 @Service
@@ -46,28 +44,33 @@ public class SseService {
     private final SseReportRepository sseReportRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
+    @Lazy // SseDataListener bean is awailable only for daemon process
+    private final SseDataListener sseDataListener;
+
     private static final ZonedDateTime MIN_ZONED_DATE_TIME = Instant.ofEpochMilli(0).atZone(ZoneOffset.UTC);
     // 1.1.2942
     private static final ZonedDateTime MAX_ZONED_DATE_TIME = Instant.ofEpochMilli(30673382400000L).atZone(ZoneOffset.UTC);
 
     private static final int MAX_QUERY_RESULT_SIZE = 1000;
 
-    @Autowired
     public SseService(final ConversionService conversionService,
                       final SseTlscReportRepository sseTlscReportRepository,
                       final SseReportRepository sseReportRepository,
-                      final UpdatedTimestampRepository updatedTimestampRepository) {
+                      final UpdatedTimestampRepository updatedTimestampRepository,
+                      @Lazy final SseDataListener sseDataListener) {
         this.conversionService = conversionService;
         this.sseTlscReportRepository = sseTlscReportRepository;
         this.sseReportRepository = sseReportRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
+        this.sseDataListener = sseDataListener;
     }
 
     @Transactional
     public int saveTlscSseReports(TlscSseReports tlscSseReports) {
         int count = 0;
-        for (final SSEReport report : tlscSseReports.getSSEReports()) {
-            final SseReport result = conversionService.convert(report, SseReport.class);
+        for (final fi.livi.digitraffic.meri.external.tlsc.sse.SSEReport report : tlscSseReports.getSSEReports()) {
+            final fi.livi.digitraffic.meri.model.sse.tlsc.SseReport result =
+                conversionService.convert(report, fi.livi.digitraffic.meri.model.sse.tlsc.SseReport.class);
             SseTlscReport saved = sseTlscReportRepository.save(new SseTlscReport(result));
             count++;
             log.info("method=saveTlscSseReports report=\n{}", StringUtil.toJsonString(saved));
@@ -77,25 +80,42 @@ public class SseService {
         return count;
     }
 
+    /**
+     * This is called by daemon process and sseDataListener bean is awailable only for it.
+     * @param maxCountToHandle
+     * @return
+     */
     @Transactional
     public int handleUnhandledSseReports(final Integer maxCountToHandle) {
         final List<SseTlscReport> unhandledReports = sseTlscReportRepository.findUnhandeldOldestFirst(maxCountToHandle);
-        unhandledReports.forEach(report -> saveUnhandledSseReportToDomainAndMarkAsHandled(report));
+        int success = 0;
+        int failed = 0;
+        for (SseTlscReport report : unhandledReports) {
+            try {
+                final SseReport saved = saveUnhandledSseReportToDomainAndMarkAsHandled(report);
+                final SseFeature feature = createSseFeatureFrom(saved);
+                sseDataListener.receiveMessage(feature);
+                success++;
+            } catch (Exception e) {
+                log.error(String.format("Error while handling SseTlscReport: %s", report.toString()), e);
+                failed++;
+            }
+        }
         if (!unhandledReports.isEmpty()) {
-            log.info("method=handleUnhandledSseReports handledCount={}", unhandledReports.size());
+            log.info("method=handleUnhandledSseReports handledCount={} failedCount={}", success, failed);
         }
         return unhandledReports.size();
     }
 
-    private void saveUnhandledSseReportToDomainAndMarkAsHandled(final SseTlscReport report) {
+    private SseReport saveUnhandledSseReportToDomainAndMarkAsHandled(final SseTlscReport report) {
 
-        final SseReport toHandle = report.getReport();
+        final fi.livi.digitraffic.meri.model.sse.tlsc.SseReport toHandle = report.getReport();
         final SseSite site = toHandle.getSseSite();
         final SseFields sseFields = toHandle.getSseFields();
         final SseExtraFields extraFields = toHandle.getSseExtraFields();
 
-        final fi.livi.digitraffic.meri.domain.sse.SseReport toSave =
-            new fi.livi.digitraffic.meri.domain.sse.SseReport(
+        final SseReport toSave =
+            new SseReport(
                 ZonedDateTime.now(),
                 true,
                 site.getSiteNumber(),
@@ -115,6 +135,7 @@ public class SseService {
         sseReportRepository.markSiteLatestReportAsNotLatest(toSave.getSiteNumber());
         sseReportRepository.save(toSave);
         sseTlscReportRepository.markHandled(report.getId());
+        return toSave;
     }
 
     @Transactional(readOnly = true)
@@ -123,15 +144,17 @@ public class SseService {
         return createSseFeatureCollectionFrom(sseReportRepository.findByLatestIsTrueOrderBySiteNumber());
     }
 
+    @Transactional(readOnly = true)
     public SseFeatureCollection findLatest(final int siteNumber) {
         checSiteNumberParameter(siteNumber);
-        fi.livi.digitraffic.meri.domain.sse.SseReport report = sseReportRepository.findByLatestIsTrueAndSiteNumber(siteNumber);
+        SseReport report = sseReportRepository.findByLatestIsTrueAndSiteNumber(siteNumber);
         return createSseFeatureCollectionFrom(Collections.singletonList(report));
     }
 
+    @Transactional(readOnly = true)
     public SseFeatureCollection findHistory(final ZonedDateTime from, final ZonedDateTime to) throws BadRequestException {
         checkFromToParameters(from, to);
-        final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
+        final List<SseReport> history =
             sseReportRepository.findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(from != null ? from : MIN_ZONED_DATE_TIME,
                                                                                          to != null ? to : MAX_ZONED_DATE_TIME,
                                                                                          PageRequest.of(0, MAX_QUERY_RESULT_SIZE+1));
@@ -141,10 +164,11 @@ public class SseService {
         return createSseFeatureCollectionFrom(history);
     }
 
+    @Transactional(readOnly = true)
     public SseFeatureCollection findHistory(final int siteNumber, final ZonedDateTime from, final ZonedDateTime to) throws BadRequestException {
         checSiteNumberParameter(siteNumber);
         checkFromToParameters(from, to);
-        final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history =
+        final List<SseReport> history =
             sseReportRepository.findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(from != null ? from : MIN_ZONED_DATE_TIME,
                                                                                                       to != null ? to : MAX_ZONED_DATE_TIME,
                                                                                                       siteNumber,
@@ -167,13 +191,13 @@ public class SseService {
         }
     }
 
-    private void checkMaxResultSize(final List<fi.livi.digitraffic.meri.domain.sse.SseReport> history) {
+    private void checkMaxResultSize(final List<SseReport> history) {
         if (history.size() > MAX_QUERY_RESULT_SIZE) {
             throw new BadRequestException("The search result is too big (over 1000 items), try to narrow down your search criteria.");
         }
     }
 
-    private SseFeatureCollection createSseFeatureCollectionFrom(List<fi.livi.digitraffic.meri.domain.sse.SseReport> sseReports) {
+    private SseFeatureCollection createSseFeatureCollectionFrom(List<SseReport> sseReports) {
         final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
 
         final List<SseFeature> features = sseReports.stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
@@ -181,7 +205,7 @@ public class SseService {
         return new SseFeatureCollection(updated, features);
     }
 
-    private SseFeature createSseFeatureFrom(final fi.livi.digitraffic.meri.domain.sse.SseReport sseReport) {
+    private SseFeature createSseFeatureFrom(final SseReport sseReport) {
         // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
         final boolean floating = sseReport.isFloating();
         final SseProperties sseProperties = new SseProperties(
