@@ -23,6 +23,6 @@ RUN dnf -y install mosquitto-1.4.14-4.fc27 && \
 
 VOLUME ["/mqtt/config", "/mqtt/data", "/mqtt/log"]
 
-EXPOSE 1883 9001
+EXPOSE 1883 9002
 
 ENTRYPOINT ["/usr/sbin/mosquitto", "-c", "/mqtt/config/mosquitto.conf"]
