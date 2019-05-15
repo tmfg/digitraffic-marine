@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.test.annotation.Rollback;
@@ -44,6 +45,9 @@ public class SseServiceTest extends AbstractTestBase {
     @SpyBean
     @Qualifier("conversionService")
     private ConversionService conversionService;
+
+    @MockBean // Lazy in service and not initialized in tests
+    private SseDataListener sseDataListener;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -111,6 +115,38 @@ public class SseServiceTest extends AbstractTestBase {
     private static String SITE_20243_1 = "2019-04-11T12:30:00+03:00";
     private static String SITE_20243_2 = "2019-04-11T12:33:20+03:00";
     private static String SITE_20243_3 = "2019-04-11T13:00:00+03:00";
+
+    @Transactional
+    @Rollback
+    @Test
+    public void findLatestBySiteNumber() throws IOException {
+        // Some data
+        saveNewTlscReports("example-sse-report1.json");
+        saveNewTlscReports("example-sse-report2.json");
+        sseService.handleUnhandledSseReports(500);
+
+        // Should include all of site 20243 and none of site 20169
+        final List<SseFeature> latest =
+            sseService.findLatest(20243).getFeatures();
+
+        Assert.assertEquals(1, latest.size());
+        assertSiteNumber(20243, 0, latest);
+        assertLastUpdate(SITE_20243_3, 0, latest);
+    }
+
+    @Transactional
+    @Rollback
+    @Test(expected = IllegalArgumentException.class)
+    public void findLatestByNotExistingSiteNumber() throws IOException {
+        // Some data
+        saveNewTlscReports("example-sse-report1.json");
+        saveNewTlscReports("example-sse-report2.json");
+        sseService.handleUnhandledSseReports(500);
+
+        // Should throw IllegalArgumentException as site 12345 not exists
+        sseService.findLatest(12345);
+        Assert.fail("IllegalArgumentException should have been thrown");
+    }
 
     @Transactional
     @Rollback
@@ -194,6 +230,39 @@ public class SseServiceTest extends AbstractTestBase {
         assertLastUpdate(SITE_20169_2, 0, history);
     }
 
+    @Transactional
+    @Rollback
+    @Test
+    public void findHistoryBySiteNumber() throws IOException {
+        // Some data
+        saveNewTlscReports("example-sse-report1.json");
+        saveNewTlscReports("example-sse-report2.json");
+        sseService.handleUnhandledSseReports(500);
+
+        // Should include second of site 20169
+        final List<SseFeature> history =
+            sseService.findHistory(20169, null, null).getFeatures();
+        Assert.assertEquals(2, history.size());
+
+        assertSiteNumber(20169, 0, history);
+        assertSiteNumber(20169, 1, history);
+        assertLastUpdate(SITE_20169_1, 0, history);
+        assertLastUpdate(SITE_20169_2, 1, history);
+    }
+
+    @Transactional
+    @Rollback
+    @Test(expected = IllegalArgumentException.class)
+    public void findHistoryByTimeAndNotExistingSiteNumber() throws IOException {
+        // Some data
+        saveNewTlscReports("example-sse-report1.json");
+        saveNewTlscReports("example-sse-report2.json");
+        sseService.handleUnhandledSseReports(500);
+
+        // Should throw IllegalArgumentException as site 12345 not exists
+        sseService.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1), ZonedDateTime.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
+        Assert.fail("IllegalArgumentException should have been thrown");
+    }
     private void assertSiteNumber(final int expected, final int historyIndex, final List<SseFeature> history) {
         Assert.assertEquals(expected, history.get(historyIndex).getSiteNumber());
     }

@@ -94,4 +94,22 @@ public class SseControllerTest extends AbstractTestBase {
         ;
     }
 
+    @Test
+    public void sseHistoryWithSiteNumber() throws Exception {
+        final int siteNumber = 1234;
+        final String start = "2019-01-10T10:00:01+03:00";
+        final String end = "2019-01-11T10:00:01+03:00";
+        when(sseService.findHistory(siteNumber, ZonedDateTime.parse(start), ZonedDateTime.parse(end)))
+            .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end)).build());
+
+        mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
+            MarineApplicationConfiguration.API_SSE_PATH + BetaController.HISTORY_PATH + "/" + siteNumber)
+            .param("from", start)
+            .param("to", end))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
+            .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
+        ;
+    }
 }
