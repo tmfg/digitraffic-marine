@@ -43,6 +43,9 @@ public class SseServiceTest extends AbstractTestBase {
     private SseService sseService;
 
     @SpyBean
+    private SseUpdateService sseUpdateService;
+
+    @SpyBean
     @Qualifier("conversionService")
     private ConversionService conversionService;
 
@@ -59,7 +62,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // First update
         saveNewTlscReports("example-sse-report1.json");
-        final int handledFirst = sseService.handleUnhandledSseReports(10);
+        final int handledFirst = sseUpdateService.handleUnhandledSseReports(10);
         SseFeatureCollection latestFirst = sseService.findLatest();
         log.info("{}", latestFirst);
 
@@ -68,8 +71,11 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Second update
         saveNewTlscReports("example-sse-report2.json");
-        final int handledSecond = sseService.handleUnhandledSseReports(10);
+        final int handledSecond = sseUpdateService.handleUnhandledSseReports(10);
         SseFeatureCollection latestSecond = sseService.findLatest();
+
+        Assert.assertEquals(3, handledFirst);
+        Assert.assertEquals(2, handledSecond);
 
         Assert.assertEquals(2, latestSecond.getFeatures().size());
         Assert.assertEquals("Hattukari", latestSecond.getFeatures().get(0).getProperties().getSiteName());
@@ -123,7 +129,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include all of site 20243 and none of site 20169
         final List<SseFeature> latest =
@@ -141,7 +147,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should throw IllegalArgumentException as site 12345 not exists
         sseService.findLatest(12345);
@@ -155,7 +161,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include all of site 20243 and none of site 20169
         final List<SseFeature> history =
@@ -177,7 +183,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include second of site 20169 and first of 20243
         final List<SseFeature> history =
@@ -197,7 +203,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Time span should include all but query filtered with site 20243 -> all of it's
         final List<SseFeature> history =
@@ -219,7 +225,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include second of site 20169
         final List<SseFeature> history =
@@ -237,7 +243,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include second of site 20169
         final List<SseFeature> history =
@@ -257,7 +263,7 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseService.handleUnhandledSseReports(500);
+        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should throw IllegalArgumentException as site 12345 not exists
         sseService.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1), ZonedDateTime.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
@@ -275,10 +281,5 @@ public class SseServiceTest extends AbstractTestBase {
         final String postJson = readFile("sse/" + file);
         final TlscSseReports postObject = objectMapper.readerFor(TlscSseReports.class).readValue(postJson);
         sseService.saveTlscSseReports(postObject);
-    }
-
-    private void verifyConverterTimes(final int times, Class<?> sourceType, Class<?> targetType) {
-        Mockito.verify(conversionService, Mockito.times(times))
-            .convert(any(sourceType), eq(targetType));
     }
 }
