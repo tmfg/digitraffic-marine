@@ -50,10 +50,15 @@ public class SseConversionService {
             sseReport.getLightStatus(),
             sseReport.getTemperature());
 
+        final Point point = createPointFrom(sseReport);
+
+        return new SseFeature(point, sseProperties, sseReport.getSiteNumber());
+    }
+
+    private Point createPointFrom(SseReport sseReport) {
         if (sseReport.getLongitude() == null || sseReport.getLatitude() == null) {
-            return new SseFeature(new Point(), sseProperties, sseReport.getSiteNumber());
+            return new Point();
         }
-        return new SseFeature(new Point(sseReport.getLongitude().doubleValue(), sseReport.getLatitude().doubleValue()),
-                              sseProperties, sseReport.getSiteNumber());
+        return new Point(sseReport.getLongitude().doubleValue(), sseReport.getLatitude().doubleValue());
     }
 }
