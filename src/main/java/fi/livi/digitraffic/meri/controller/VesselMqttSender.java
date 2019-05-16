@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.config.MqttConfig;
+import fi.livi.digitraffic.meri.config.MqttConfig.SynchronizedMqttGateway;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 
@@ -19,7 +19,7 @@ public class VesselMqttSender {
     private static final Logger LOG = LoggerFactory.getLogger(VesselMqttSender.class);
 
     @Lazy // this will not be available if mqtt is not enabled
-    private final MqttConfig.VesselGateway vesselGateway;
+    private final SynchronizedMqttGateway mqttGateway;
     private final ObjectMapper objectMapper;
 
     private static final String VESSELS_METADATA_TOPIC = "vessels/%d/metadata";
@@ -27,8 +27,8 @@ public class VesselMqttSender {
     private static final String VESSEL_STATUS_TOPIC  ="vessels/status";
 
     @Autowired
-    public VesselMqttSender(final MqttConfig.VesselGateway vesselGateway, final ObjectMapper objectMapper) {
-        this.vesselGateway = vesselGateway;
+    public VesselMqttSender(final SynchronizedMqttGateway synchronizedMqttGateway, final ObjectMapper objectMapper) {
+        this.mqttGateway = synchronizedMqttGateway;
         this.objectMapper = objectMapper;
     }
 
@@ -36,7 +36,7 @@ public class VesselMqttSender {
         try {
             final String metadataAsString = objectMapper.writeValueAsString(vesselMetadata);
 
-            sendMessage(metadataAsString, String.format(VESSELS_METADATA_TOPIC, vesselMetadata.getMmsi()));
+            mqttGateway.sendToMqtt(metadataAsString, String.format(VESSELS_METADATA_TOPIC, vesselMetadata.getMmsi()));
 
             return true;
         } catch (final Exception e) {
@@ -50,7 +50,7 @@ public class VesselMqttSender {
         try {
             final String locationAsString = objectMapper.writeValueAsString(vesselLocation);
 
-            sendMessage(locationAsString, String.format(VESSELS_LOCATIONS_TOPIC, vesselLocation.mmsi));
+            mqttGateway.sendToMqtt(locationAsString, String.format(VESSELS_LOCATIONS_TOPIC, vesselLocation.mmsi));
 
             return true;
         } catch (final Exception e) {
@@ -64,7 +64,7 @@ public class VesselMqttSender {
         try {
             final String statusAsString = objectMapper.writeValueAsString(status);
 
-            sendMessage(statusAsString, VESSEL_STATUS_TOPIC);
+            mqttGateway.sendToMqtt(statusAsString, VESSEL_STATUS_TOPIC);
 
             return true;
         } catch (final Exception e) {
@@ -72,10 +72,5 @@ public class VesselMqttSender {
         }
 
         return false;
-    }
-
-    // This must be synchronized, because Paho does not support concurrency!
-    private synchronized void sendMessage(final String payLoad, final String topic) {
-        vesselGateway.sendToMqtt(topic, payLoad);
     }
 }

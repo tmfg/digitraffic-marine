@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.livi.digitraffic.meri.config.MqttConfig;
+import fi.livi.digitraffic.meri.config.MqttConfig.SynchronizedMqttGateway;
 import fi.livi.digitraffic.meri.model.sse.SseFeature;
 
 @ConditionalOnProperty("sse.mqtt.enabled")
@@ -16,16 +16,16 @@ import fi.livi.digitraffic.meri.model.sse.SseFeature;
 public class SseMqttSender {
     private static final Logger LOG = LoggerFactory.getLogger(SseMqttSender.class);
 
-    private final MqttConfig.SseGateway sseGateway;
+    private final SynchronizedMqttGateway mqttGateway;
     private final ObjectMapper objectMapper;
 
     private static final String SSE_DATA_TOPIC = "sse/site/%d";
     private static final String SSE_STATUS_TOPIC  ="sse/status";
 
     @Autowired
-    public SseMqttSender(final MqttConfig.SseGateway sseGateway,
+    public SseMqttSender(final SynchronizedMqttGateway mqttGateway,
                          final ObjectMapper objectMapper) {
-        this.sseGateway = sseGateway;
+        this.mqttGateway = mqttGateway;
         this.objectMapper = objectMapper;
     }
 
@@ -33,7 +33,7 @@ public class SseMqttSender {
         try {
             final String sseAsString = objectMapper.writeValueAsString(sseData);
 
-            sendMessage(sseAsString, String.format(SSE_DATA_TOPIC, sseData.getSiteNumber()));
+            mqttGateway.sendToMqtt(sseAsString, String.format(SSE_DATA_TOPIC, sseData.getSiteNumber()));
 
             return true;
         } catch (final Exception e) {
@@ -47,7 +47,7 @@ public class SseMqttSender {
         try {
             final String statusAsString = objectMapper.writeValueAsString(status);
 
-            sendMessage(statusAsString, SSE_STATUS_TOPIC);
+            mqttGateway.sendToMqtt(statusAsString, SSE_STATUS_TOPIC);
 
             return true;
         } catch (final Exception e) {
@@ -55,10 +55,5 @@ public class SseMqttSender {
         }
 
         return false;
-    }
-
-    // This must be synchronized, because Paho does not support concurrency!
-    private synchronized void sendMessage(final String payLoad, final String topic) {
-        sseGateway.sendToMqtt(topic, payLoad);
     }
 }
