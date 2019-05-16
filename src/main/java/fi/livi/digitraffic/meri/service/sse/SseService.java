@@ -2,17 +2,15 @@ package fi.livi.digitraffic.meri.service.sse;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,16 +22,11 @@ import fi.livi.digitraffic.meri.dao.sse.SseTlscReportRepository;
 import fi.livi.digitraffic.meri.domain.sse.SseReport;
 import fi.livi.digitraffic.meri.domain.sse.tlsc.SseTlscReport;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
-import fi.livi.digitraffic.meri.model.geojson.Point;
-import fi.livi.digitraffic.meri.model.sse.SseFeature;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
-import fi.livi.digitraffic.meri.model.sse.SseProperties;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseExtraFields;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseFields;
-import fi.livi.digitraffic.meri.model.sse.tlsc.SseSite;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
+@ConditionalOnWebApplication
 @Service
 public class SseService {
 
@@ -43,9 +36,7 @@ public class SseService {
     private final SseTlscReportRepository sseTlscReportRepository;
     private final SseReportRepository sseReportRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
-
-    @Lazy // SseDataListener bean is awailable only for daemon process
-    private final SseDataListener sseDataListener;
+    private final SseConversionService sseConversionService;
 
     private static final ZonedDateTime MIN_ZONED_DATE_TIME = Instant.ofEpochMilli(0).atZone(ZoneOffset.UTC);
     // 1.1.2942
@@ -57,12 +48,12 @@ public class SseService {
                       final SseTlscReportRepository sseTlscReportRepository,
                       final SseReportRepository sseReportRepository,
                       final UpdatedTimestampRepository updatedTimestampRepository,
-                      @Lazy final SseDataListener sseDataListener) {
+                      final SseConversionService sseConversionService) {
         this.conversionService = conversionService;
         this.sseTlscReportRepository = sseTlscReportRepository;
         this.sseReportRepository = sseReportRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
-        this.sseDataListener = sseDataListener;
+        this.sseConversionService = sseConversionService;
     }
 
     @Transactional
@@ -80,75 +71,16 @@ public class SseService {
         return count;
     }
 
-    /**
-     * This is called by daemon process and sseDataListener bean is awailable only for it.
-     * @param maxCountToHandle
-     * @return
-     */
-    @Transactional
-    public int handleUnhandledSseReports(final Integer maxCountToHandle) {
-        final List<SseTlscReport> unhandledReports = sseTlscReportRepository.findUnhandeldOldestFirst(maxCountToHandle);
-        int success = 0;
-        int failed = 0;
-        for (SseTlscReport report : unhandledReports) {
-            try {
-                final SseReport saved = saveUnhandledSseReportToDomainAndMarkAsHandled(report);
-                final SseFeature feature = createSseFeatureFrom(saved);
-                sseDataListener.receiveMessage(feature);
-                success++;
-            } catch (Exception e) {
-                log.error(String.format("Error while handling SseTlscReport: %s", report.toString()), e);
-                failed++;
-            }
-        }
-        if (!unhandledReports.isEmpty()) {
-            log.info("method=handleUnhandledSseReports handledCount={} failedCount={}", success, failed);
-        }
-        return unhandledReports.size();
-    }
-
-    private SseReport saveUnhandledSseReportToDomainAndMarkAsHandled(final SseTlscReport report) {
-
-        final fi.livi.digitraffic.meri.model.sse.tlsc.SseReport toHandle = report.getReport();
-        final SseSite site = toHandle.getSseSite();
-        final SseFields sseFields = toHandle.getSseFields();
-        final SseExtraFields extraFields = toHandle.getSseExtraFields();
-
-        final SseReport toSave =
-            new SseReport(
-                ZonedDateTime.now(),
-                true,
-                site.getSiteNumber(),
-                site.getSiteName(),
-                site.getSiteType(),
-                sseFields.getLastUpdate(),
-                sseFields.getSeaState(),
-                sseFields.getTrend(),
-                sseFields.getWindWaveDir(),
-                sseFields.getConfidence(),
-                BigDecimal.valueOf(extraFields.getHeelAngle()),
-                extraFields.getLightStatus(),
-                extraFields.getTemperature(),
-                BigDecimal.valueOf(extraFields.getCoordLongitude()),
-                BigDecimal.valueOf(extraFields.getCoordLatitude()));
-
-        sseReportRepository.markSiteLatestReportAsNotLatest(toSave.getSiteNumber());
-        sseReportRepository.save(toSave);
-        sseTlscReportRepository.markHandled(report.getId());
-        return toSave;
-    }
-
     @Transactional(readOnly = true)
     public SseFeatureCollection findLatest() {
-
-        return createSseFeatureCollectionFrom(sseReportRepository.findByLatestIsTrueOrderBySiteNumber());
+        return sseConversionService.createSseFeatureCollectionFrom(sseReportRepository.findByLatestIsTrueOrderBySiteNumber());
     }
 
     @Transactional(readOnly = true)
     public SseFeatureCollection findLatest(final int siteNumber) {
         checSiteNumberParameter(siteNumber);
         SseReport report = sseReportRepository.findByLatestIsTrueAndSiteNumber(siteNumber);
-        return createSseFeatureCollectionFrom(Collections.singletonList(report));
+        return sseConversionService.createSseFeatureCollectionFrom(Collections.singletonList(report));
     }
 
     @Transactional(readOnly = true)
@@ -161,7 +93,7 @@ public class SseService {
 
         checkMaxResultSize(history);
 
-        return createSseFeatureCollectionFrom(history);
+        return sseConversionService.createSseFeatureCollectionFrom(history);
     }
 
     @Transactional(readOnly = true)
@@ -176,7 +108,7 @@ public class SseService {
 
         checkMaxResultSize(history);
 
-        return createSseFeatureCollectionFrom(history);
+        return sseConversionService.createSseFeatureCollectionFrom(history);
     }
 
     private void checSiteNumberParameter(final int siteNumber) {
@@ -195,35 +127,5 @@ public class SseService {
         if (history.size() > MAX_QUERY_RESULT_SIZE) {
             throw new BadRequestException("The search result is too big (over 1000 items), try to narrow down your search criteria.");
         }
-    }
-
-    private SseFeatureCollection createSseFeatureCollectionFrom(List<SseReport> sseReports) {
-        final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
-
-        final List<SseFeature> features = sseReports.stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
-
-        return new SseFeatureCollection(updated, features);
-    }
-
-    private SseFeature createSseFeatureFrom(final SseReport sseReport) {
-        // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
-        final boolean floating = sseReport.isFloating();
-        final SseProperties sseProperties = new SseProperties(
-            sseReport.getSiteName(),
-            sseReport.getSiteType(),
-            sseReport.getLastUpdate().withZoneSameInstant(ZoneOffset.UTC),
-            floating ? sseReport.getSeaState() : null,
-            floating ? sseReport.getTrend() : null,
-            floating ? sseReport.getWindWaveDir() : null,
-            sseReport.getConfidence(),
-            floating ? sseReport.getHeelAngle() : null,
-            sseReport.getLightStatus(),
-            sseReport.getTemperature());
-
-        if (sseReport.getLongitude() == null || sseReport.getLatitude() == null) {
-            return new SseFeature(new Point(), sseProperties, sseReport.getSiteNumber());
-        }
-        return new SseFeature(new Point(sseReport.getLongitude().doubleValue(), sseReport.getLatitude().doubleValue()),
-                              sseProperties, sseReport.getSiteNumber());
     }
 }
