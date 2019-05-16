@@ -18,7 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.controller.AisLocker;
+import fi.livi.digitraffic.meri.controller.CachedLocker;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -30,12 +30,12 @@ public class SseLoggingListener {
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-    private final AisLocker aisLocker;
+    private final CachedLocker sseCachedLocker;
     private final SseMqttSender sseMqttSender;
 
-    public SseLoggingListener(final AisLocker aisLocker,
+    public SseLoggingListener(final CachedLocker sseCachedLocker,
                               final SseMqttSender sseMqttSender) {
-        this.aisLocker = aisLocker;
+        this.sseCachedLocker = sseCachedLocker;
         this.sseMqttSender = sseMqttSender;
 
         executor.scheduleAtFixedRate(this::sendStatusAndLogSentStatistics, 30, 60, TimeUnit.SECONDS);
@@ -90,7 +90,7 @@ public class SseLoggingListener {
     }
 
     private void sendStatus() {
-        if (aisLocker.hasLockForAis()) {
+        if (sseCachedLocker.hasLock()) {
 
             int sendCount = 0;
             int errorCount = 0;

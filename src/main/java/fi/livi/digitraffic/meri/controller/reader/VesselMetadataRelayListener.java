@@ -1,13 +1,13 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import fi.livi.digitraffic.meri.controller.AisMessageConverter;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.controller.AisLocker;
+import fi.livi.digitraffic.meri.controller.AisMessageConverter;
+import fi.livi.digitraffic.meri.controller.CachedLocker;
 import fi.livi.digitraffic.meri.controller.VesselMqttSender;
+import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 
@@ -16,16 +16,17 @@ import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 @ConditionalOnProperty("ais.reader.enabled")
 public class VesselMetadataRelayListener implements AisMessageListener {
     private final VesselMqttSender vesselSender;
-    private final AisLocker aisLocker;
+    private final CachedLocker aisCachedLocker;
 
-    public VesselMetadataRelayListener(final VesselMqttSender vesselSender, final AisLocker aisLocker) {
+    public VesselMetadataRelayListener(final VesselMqttSender vesselSender,
+                                       final CachedLocker aisCachedLocker) {
         this.vesselSender = vesselSender;
-        this.aisLocker = aisLocker;
+        this.aisCachedLocker = aisCachedLocker;
     }
 
     @Override
     public void receiveMessage(final AisRadioMsg message) {
-        if (message.isMmsiAllowed() && aisLocker.hasLockForAis()) {
+        if (message.isMmsiAllowed() && aisCachedLocker.hasLock()) {
             final VesselMessage vm = AisMessageConverter.convertMetadata(message);
 
             if (vm.validate()) {
