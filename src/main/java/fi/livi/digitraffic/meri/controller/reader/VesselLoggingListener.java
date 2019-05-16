@@ -10,15 +10,15 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
-import fi.livi.digitraffic.meri.controller.AisLocker;
-import fi.livi.digitraffic.meri.controller.VesselMqttSender;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import fi.livi.digitraffic.meri.controller.CachedLocker;
+import fi.livi.digitraffic.meri.controller.VesselMqttSender;
+import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -31,14 +31,14 @@ public class VesselLoggingListener implements AisMessageListener {
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-    private final AisLocker aisLocker;
+    private final CachedLocker aisCachedLocker;
     private final VesselMqttSender vesselSender;
     private final AisMessageReader messageReader;
 
-    public VesselLoggingListener(final AisLocker aisLocker,
+    public VesselLoggingListener(final CachedLocker aisCachedLocker,
                                  final VesselMqttSender vesselSender,
                                  final AisMessageReader messageReader) {
-        this.aisLocker = aisLocker;
+        this.aisCachedLocker = aisCachedLocker;
         this.vesselSender = vesselSender;
         this.messageReader = messageReader;
 
@@ -163,7 +163,7 @@ public class VesselLoggingListener implements AisMessageListener {
     }
 
     private synchronized void readStatus() {
-        if (aisLocker.hasLockForAis()) {
+        if (aisCachedLocker.hasLock()) {
             ConnectionStatistics cs = (ConnectionStatistics)readStatisticsMap.get(AISLoggingType.CONNECTION);
 
             int errorsCount = 0;

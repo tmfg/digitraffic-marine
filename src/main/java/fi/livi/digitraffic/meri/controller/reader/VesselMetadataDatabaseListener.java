@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fi.livi.digitraffic.meri.controller.AisMessageConverter;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.controller.AisLocker;
+import fi.livi.digitraffic.meri.controller.AisMessageConverter;
+import fi.livi.digitraffic.meri.controller.CachedLocker;
+import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
@@ -21,20 +21,21 @@ import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 @ConditionalOnProperty("ais.reader.enabled")
 public class VesselMetadataDatabaseListener implements AisMessageListener {
     private final VesselMetadataService vesselMetadataService;
-    private final AisLocker aisLocker;
+    private final CachedLocker aisCachedLocker;
 
     private final Map<Integer, VesselMessage> messageMap = new HashMap<>();
 
-    public VesselMetadataDatabaseListener(final VesselMetadataService vesselMetadataService, final AisLocker aisLocker) {
+    public VesselMetadataDatabaseListener(final VesselMetadataService vesselMetadataService,
+                                          final CachedLocker aisCachedLocker) {
         this.vesselMetadataService = vesselMetadataService;
-        this.aisLocker = aisLocker;
+        this.aisCachedLocker = aisCachedLocker;
     }
 
     @Scheduled(fixedRate = 1000)
     private void persistQueue() {
         final List<VesselMessage> messages = removeAllMessages();
 
-        if (aisLocker.hasLockForAis()) {
+        if (aisCachedLocker.hasLock()) {
             vesselMetadataService.saveVessels(messages);
         }
     }
