@@ -15,8 +15,10 @@
             const local = true;
 
             if (local) {
+                console.info('Connect to local');
                 client = new Paho.MQTT.Client("127.0.0.1", 9002, 'testclient_' + Date.now());
             } else {
+                console.info('Connect to meri-test');
                 client = new Paho.MQTT.Client("meri-test.digitraffic.fi", 61619, 'testclient_' + Date.now());
             }
 
@@ -62,9 +64,9 @@
             console.info(Date.now() + ' Connection open');
 
             // client.subscribe("vessels/#");
-            // client.subscribe("vessels/status");
-            //client.subscribe("vessels/+/locations");
-            //client.subscribe("vessels/+/metadata");
+            client.subscribe("vessels/status");
+            // client.subscribe("vessels/+/locations");
+            // client.subscribe("vessels/+/metadata");
             // client.subscribe("vessels/230939100/locations");
 
             client.subscribe("sse/#");
