@@ -36,7 +36,7 @@ public class VesselMqttSender {
         try {
             final String metadataAsString = objectMapper.writeValueAsString(vesselMetadata);
 
-            mqttGateway.sendToMqtt(metadataAsString, String.format(VESSELS_METADATA_TOPIC, vesselMetadata.getMmsi()));
+            mqttGateway.sendToMqtt(String.format(VESSELS_METADATA_TOPIC, vesselMetadata.getMmsi()), metadataAsString);
 
             return true;
         } catch (final Exception e) {
@@ -50,7 +50,7 @@ public class VesselMqttSender {
         try {
             final String locationAsString = objectMapper.writeValueAsString(vesselLocation);
 
-            mqttGateway.sendToMqtt(locationAsString, String.format(VESSELS_LOCATIONS_TOPIC, vesselLocation.mmsi));
+            mqttGateway.sendToMqtt(String.format(VESSELS_LOCATIONS_TOPIC, vesselLocation.mmsi), locationAsString);
 
             return true;
         } catch (final Exception e) {
@@ -64,7 +64,7 @@ public class VesselMqttSender {
         try {
             final String statusAsString = objectMapper.writeValueAsString(status);
 
-            mqttGateway.sendToMqtt(statusAsString, VESSEL_STATUS_TOPIC);
+            mqttGateway.sendToMqtt(VESSEL_STATUS_TOPIC, statusAsString);
 
             return true;
         } catch (final Exception e) {
