@@ -55,6 +55,8 @@ public class MqttConfig {
         return new DirectChannel();
     }
 
+    // For this, @ConditionalOnExpression at class level won't work
+    @ConditionalOnExpression("'${ais.mqtt.enabled}' == 'true' or '${sse.mqtt.enabled}' == 'true'")
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel", defaultRequestTimeout = "2000", defaultReplyTimeout = "2000")
     private interface MqttGateway {
         // Paho does not support concurrency, all calls to this must be synchronized!
