@@ -39,7 +39,7 @@ public class CachedLocker {
     }
 
     @Scheduled(fixedRate = 1000)
-    protected void acquireLockForAis() {
+    protected void acquireLock() {
         hasLock.set(lockingService.acquireLock(lockName, 2));
     }
 
