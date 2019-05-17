@@ -33,7 +33,7 @@ public class SseMqttSender {
         try {
             final String sseAsString = objectMapper.writeValueAsString(sseData);
 
-            mqttGateway.sendToMqtt(sseAsString, String.format(SSE_DATA_TOPIC, sseData.getSiteNumber()));
+            mqttGateway.sendToMqtt(String.format(SSE_DATA_TOPIC, sseData.getSiteNumber()), sseAsString);
 
             return true;
         } catch (final Exception e) {
@@ -47,7 +47,7 @@ public class SseMqttSender {
         try {
             final String statusAsString = objectMapper.writeValueAsString(status);
 
-            mqttGateway.sendToMqtt(statusAsString, SSE_STATUS_TOPIC);
+            mqttGateway.sendToMqtt(SSE_STATUS_TOPIC, statusAsString);
 
             return true;
         } catch (final Exception e) {
