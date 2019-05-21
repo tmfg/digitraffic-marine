@@ -282,7 +282,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>5.0.0-M2</version>
+                <version>5.0.0-M3</version>
             </plugin>
 
             <plugin>
@@ -330,7 +330,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <compilerArgs>
                         <arg>-parameters</arg>
@@ -341,7 +341,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>3.1.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -431,7 +431,7 @@
             <plugin>
                 <groupId>org.jsonschema2pojo</groupId>
                 <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
 
                 <configuration>
                     <sourceDirectory>${basedir}/src/main/resources/schema/json/</sourceDirectory>
