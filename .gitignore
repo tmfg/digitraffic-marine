@@ -66,3 +66,4 @@ application-localhost-daemon.properties
 /src/test/resources/sse/post-sse-report-meri-test.sh
 # no_commit tekstin sisältävät tiedostot
 **/*no_commit*
+**/*.tmp
