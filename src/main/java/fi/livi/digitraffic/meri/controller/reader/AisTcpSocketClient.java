@@ -133,7 +133,8 @@ public class AisTcpSocketClient implements AutoCloseable {
 
             if (line == null) {
                 isConnected.set(false); // trigger reconnect
-                log.error("Unable to read from socket. Possible invalid credentials?");
+                log.error("Unable to read from socket. Possible invalid credentials? " +
+                          "(OR Application startup? This can happen few times on startup!)");
             }
 
             //log.debug("lineFromAisServer: {}", line);
