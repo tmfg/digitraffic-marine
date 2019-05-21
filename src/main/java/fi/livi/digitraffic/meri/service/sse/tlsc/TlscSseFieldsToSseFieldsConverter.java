@@ -25,10 +25,10 @@ public class TlscSseFieldsToSseFieldsConverter
             log.warn("No mappings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
         }
         return new SseFields(src.getLastUpdate(),
-            SeaState.fromValue(src.getSeaState()),
-            Trend.fromValue(src.getTrend()),
-            src.getWindWaveDir(),
-            Confidence.fromValue(src.getConfidence()),
-            src.getAdditionalProperties());
+                             SeaState.fromValue(src.getSeaState()),
+                             Trend.fromValue(src.getTrend()),
+                             src.getWindWaveDir(),
+                             Confidence.fromValue(src.getConfidence()),
+                             src.getAdditionalProperties());
     }
 }

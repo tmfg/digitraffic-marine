@@ -3,30 +3,32 @@
         {
             "Site": {
                 "SiteName": "Kipsi",
-                "SiteNumber": 20243
+                "SiteNumber": 20243,
+                "SiteType" : "FLOATING"
             },
             "SSE_Fields": {
-                "Last_Update": "2019-04-11T12:33:20+03:00",
-                "SeaState": "CALM",
-                "Trend": "DESCENDING",
-                "WindWaveDir": 119,
-                "Confidence": "MODERATE"
+                "Last_Update": "2019-04-11T13:00:00+03:00",
+                "SeaState": "STORM",
+                "Trend": "NO_CHANGE",
+                "WindWaveDir": 200,
+                "Confidence": "GOOD"
             },
             "Extra_Fields": {
-                "Temperature": 2,
-                "Heel_Angle": 2.5,
+                "Temperature": 1,
+                "Heel_Angle": 17.5,
                 "Light_Status": "ON_D",
-                "Coord_Latitude":  59.44507,
-                "Coord_Longitude": 21.22558
+                "Coord_Latitude":  59.54507,
+                "Coord_Longitude": 21.32558
             }
         },
         {
             "Site": {
                 "SiteName": "Hattukari",
-                "SiteNumber": 20169
+                "SiteNumber": 20169,
+                "SiteType" : "FLOATING"
             },
             "SSE_Fields": {
-                "Last_Update": "2019-02-12T14:40:00+03:00",
+                "Last_Update": "2019-02-11T13:05:00+03:00",
                 "SeaState": "CALM",
                 "Trend": "ASCENDING",
                 "WindWaveDir": 110,

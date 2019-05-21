@@ -2,16 +2,20 @@ package fi.livi.digitraffic.meri.model.geojson;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description = "GeoJSON MultiPoint Geometry object", parent = Geometry.class, subTypes = {LineString.class})
-@JsonSubTypes({ @JsonSubTypes.Type(LineString.class)})
 public class MultiPoint extends Geometry<List<List<Double>>> {
 
     public MultiPoint() {
-        setType("MultiPoint");
+        super(GeometryType.MultiPoint);
+    }
+
+    @ApiModelProperty(required = true, allowableValues = "MultiPoint", example = "MultiPoint")
+    @Override
+    public GeometryType getType() {
+        return super.getType();
     }
 
     public void setCoordinates(List<List<Double>> coordinates) {

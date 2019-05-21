@@ -91,7 +91,7 @@ public class WinterNavigationPortUpdater {
         log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
                  data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS.name(),
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS,
                                               data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
 

@@ -19,10 +19,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.service.sse.SseService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import springfox.documentation.annotations.ApiIgnore;
 
+@Api(description = "Sea State Estimation Controller")
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_SSE_PATH)
 @ConditionalOnWebApplication

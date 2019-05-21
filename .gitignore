@@ -56,9 +56,13 @@ crashlytics-build.properties
 buildNumber.properties
 *.log.gz
 application-localhost.properties
+application-localhost-daemon.properties
 
 # SchemaSpyn generoimat schemat ja kirjastot
 /dbmarine/schemaspy/schema
 /dbmarine/schemaspy/lib
 
 /javamelody
+/src/test/resources/sse/post-sse-report-meri-test.sh
+# no_commit tekstin sisältävät tiedostot
+**/*no_commit*

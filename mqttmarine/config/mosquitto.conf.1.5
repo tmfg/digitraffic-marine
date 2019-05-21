@@ -19,8 +19,8 @@ password_file /mqtt/config/mosquitto.passwd
 acl_file /mqtt/config/mosquitto.acl.updater
 allow_anonymous true
 
-# websocket for outside users
-listener 9001
+# websocket for outside users (clients)
+listener 9002
 protocol websockets
 password_file /mqtt/config/mosquitto.passwd
 acl_file /mqtt/config/mosquitto.acl.updater

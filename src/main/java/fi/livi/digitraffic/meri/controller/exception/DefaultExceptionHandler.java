@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.controller.exception;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -96,14 +97,15 @@ public class DefaultExceptionHandler {
                                     HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class, ResourceAccessException.class , PookiException.class })
+    @ExceptionHandler({ ObjectNotFoundException.class, BadRequestException.class, ResourceAccessException.class , PookiException.class, IllegalArgumentException.class })
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final Exception exception, final ServletWebRequest request) {
 
         HttpStatus status;
         if (exception instanceof ObjectNotFoundException) {
             status = HttpStatus.NOT_FOUND;
-        } else if (exception instanceof BadRequestException) {
+        } else if (exception instanceof BadRequestException ||
+                   exception instanceof IllegalArgumentException) {
             status = HttpStatus.BAD_REQUEST;
         } else if (exception instanceof PookiException) {
             status = HttpStatus.BAD_GATEWAY;
@@ -122,12 +124,16 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleMediaTypeNotAcceptable(final Exception exception, final ServletWebRequest request) {
-        log.info(HttpStatus.NOT_ACCEPTABLE.value() + " " + HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(), exception);
+        final String[] requestedContentTypes = request.getHeaderValues("accept");
+        final String requestedContentType = requestedContentTypes != null ? Arrays.asList(requestedContentTypes).toString() : null;
+
+        log.info(String.format("%s %s for requested type %s", HttpStatus.NOT_ACCEPTABLE.value(), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(), requestedContentType), exception);
 
         return createResponseEntity(new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()),
                 HttpStatus.NOT_ACCEPTABLE.value(),
                 HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(),
-                "Media type not acceptable",
+                String.format("Could not find acceptable representation for requested content type %s",
+                              requestedContentType),
                 request.getRequest().getRequestURI()),
                 HttpStatus.NOT_ACCEPTABLE);
     }
@@ -182,7 +188,6 @@ public class DefaultExceptionHandler {
 
     }
 
-    @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleException(final Exception exception, final ServletWebRequest request) {
         log.error(HttpStatus.INTERNAL_SERVER_ERROR.value() + " " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), exception);

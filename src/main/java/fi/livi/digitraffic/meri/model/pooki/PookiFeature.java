@@ -3,14 +3,11 @@ package fi.livi.digitraffic.meri.model.pooki;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.model.geojson.GeoJsonObject;
+import fi.livi.digitraffic.meri.model.geojson.Feature;
 import fi.livi.digitraffic.meri.model.geojson.Geometry;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 @JsonPropertyOrder({
     "type",
@@ -18,30 +15,13 @@ import io.swagger.annotations.ApiModelProperty;
     "properties"
 })
 @ApiModel(description = "GeoJSON Feature object")
-public class PookiFeature extends GeoJsonObject {
+public class PookiFeature extends Feature<Geometry, PookiProperties> {
 
-    @ApiModelProperty("GeoJSON Properties object")
-    @JsonProperty("properties")
-    @JsonInclude(JsonInclude.Include.ALWAYS)
-    private PookiProperties properties;
-
-    @ApiModelProperty("GeoJSON Geometry object")
-    @JsonProperty("geometry")
-    @JsonInclude(JsonInclude.Include.ALWAYS)
-    private Geometry geometry;
-
-    public void setProperties(PookiProperties properties) {
-        this.properties = properties;
+    public PookiFeature() {
     }
 
-    public void setGeometry(Geometry geometry) {
-        this.geometry = geometry;
-    }
-
-    @ApiModelProperty(allowableValues = "Feature", required = true)
-    @Override
-    public String getType() {
-        return super.getType();
+    public PookiFeature(PookiProperties properties) {
+        super(properties);
     }
 
     @Override

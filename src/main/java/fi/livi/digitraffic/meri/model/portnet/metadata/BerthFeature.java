@@ -2,6 +2,8 @@ package fi.livi.digitraffic.meri.model.portnet.metadata;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.model.geojson.Feature;
+import fi.livi.digitraffic.meri.model.geojson.Point;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,7 +14,8 @@ import io.swagger.annotations.ApiModelProperty;
         "properties"
 })
 @ApiModel(description = "GeoJSON Feature object")
-public class BerthFeature {
+public class BerthFeature extends Feature<Point, BerthProperties> {
+
     @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)
     public final String locode;
 
@@ -22,16 +25,10 @@ public class BerthFeature {
     @ApiModelProperty(value = "Berth code", required = true)
     public final String berthCode;
 
-    @ApiModelProperty(value = "GeoJSON Properties object", required = true)
-    public final BerthProperties properties;
-
-    @ApiModelProperty(allowableValues = "Feature", required = true)
-    public final String type = "Feature";
-
     public BerthFeature(final String locode, final String portAreaCode, final String berthCode, final BerthProperties properties) {
+        super(null, properties);
         this.locode = locode;
         this.portAreaCode = portAreaCode;
         this.berthCode = berthCode;
-        this.properties = properties;
     }
 }

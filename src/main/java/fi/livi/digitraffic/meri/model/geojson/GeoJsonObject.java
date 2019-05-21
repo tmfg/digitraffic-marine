@@ -10,29 +10,15 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.swagger.annotations.ApiModelProperty;
-
-@JsonPropertyOrder({ "type", "id"})
 public abstract class GeoJsonObject implements Serializable {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    @ApiModelProperty(required = true, value = "Type of GeoJSON object")
-    @JsonProperty(value = "type", required = true)
-    private String type;
 
     private Map<String, Object> additionalProperties = new HashMap<>();
 
-    public void setType(String type) {
-        this.type = type;
+    public GeoJsonObject() {
     }
 
-    public String getType() {
-        return type;
-    }
+    abstract Object getType();
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {

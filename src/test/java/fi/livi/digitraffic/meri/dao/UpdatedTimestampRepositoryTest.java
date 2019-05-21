@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.dao;
 
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
+
 import java.time.ZonedDateTime;
 
 import org.junit.Test;
@@ -17,9 +19,9 @@ public class UpdatedTimestampRepositoryTest extends AbstractTestBase {
     public void testUpdate() {
         final ZonedDateTime aika = ZonedDateTime.now();
 
-        updatedTimestampRepository.setUpdated("test", aika, "testi");
+        updatedTimestampRepository.setUpdated(SSE_DATA, aika, "testi");
 
-        final ZonedDateTime response = updatedTimestampRepository.findLastUpdated("test");
+        final ZonedDateTime response = updatedTimestampRepository.findLastUpdated(SSE_DATA);
 
         assertTimesEqual(aika, response);
     }

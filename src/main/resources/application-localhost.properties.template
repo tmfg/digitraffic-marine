@@ -28,6 +28,7 @@ vesselDetailsUpdateJob.frequency = 1800000
 winterNavigationShipUpdateJob.frequency = 300000
 winterNavigationPortUpdateJob.frequency = 300000
 winterNavigationDirwayUpdateJob.frequency = 900000
+sseReportUpdateJobUpdateJob.frequency = 30000
 
 # AIS-tcp gateway
 ais.connector.address =
@@ -54,6 +55,7 @@ ais.reader.enabled=false
 
 # if set to false no messages are sent to mqtt.  Should be true for daemon process
 ais.mqtt.enabled=false
+sse.mqtt.enabled=false
 
 # Is metadata updates on. Should be true only for daemon processes.
 quartz.enabled=false

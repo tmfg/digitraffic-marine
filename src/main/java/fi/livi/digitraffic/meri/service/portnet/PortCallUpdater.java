@@ -70,7 +70,7 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS.name());
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS);
         final ZonedDateTime now = ZonedDateTime.now().minusMinutes(1); // be sure not to go into future
         final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus(overlapTimeFrame, MILLIS);
         final ZonedDateTime to = TimeUtil.millisBetween(now, from) > maxTimeFrameToFetch ? from.plus(maxTimeFrameToFetch, MILLIS) : now;
@@ -106,7 +106,7 @@ public class PortCallUpdater {
 
         // set portcalls updated if timestamps were ok or tried second time
         if(timeStampsOk || setUpdatedOnFail) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS.name(), to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS, to, getClass().getSimpleName());
         }
 
         return timeStampsOk;

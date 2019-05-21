@@ -52,7 +52,7 @@ public class PortnetMetadataService {
     @Transactional(readOnly = true)
     public CodeDescriptions listCodeDescriptions() {
         return new CodeDescriptions(
-                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                                 codeDescriptionRepository.listAllCargoTypes(),
                                 codeDescriptionRepository.listAllVesselTypes(),
                                 codeDescriptionRepository.listAllAgentTypes()
@@ -62,7 +62,7 @@ public class PortnetMetadataService {
     @Transactional(readOnly = true)
     public FeatureCollectionList listaAllMetadata() {
         return SsnLocationConverter.convert(
-                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                 ssnLocationRepository.streamAllBy(),
                 portAreaRepository.streamAllBy(),
                 berthRepository.streamAllBy()
@@ -78,7 +78,7 @@ public class PortnetMetadataService {
         }
 
         return SsnLocationConverter.convert(
-                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                 Stream.of(location),
                 portAreaRepository.streamByPortAreaKeyLocode(locode),
                 berthRepository.streamByBerthKeyLocode(locode)
@@ -91,7 +91,7 @@ public class PortnetMetadataService {
         final boolean isFinland = StringUtils.equals(country, "Finland");
 
         return SsnLocationConverter.convert(
-                updatedTimestampRepository.findLastUpdated(PORT_METADATA.name()),
+                updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                 ssnLocationRepository.streamByCountryIgnoreCase(country),
                 isFinland ? portAreaRepository.streamAllBy() : Stream.empty(),
                 isFinland ? berthRepository.streamAllBy() : Stream.empty());

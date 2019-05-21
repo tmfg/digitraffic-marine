@@ -1,10 +1,8 @@
 package fi.livi.digitraffic.meri.config;
 
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.IntegrationComponentScan;
@@ -21,7 +19,7 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
-@ConditionalOnProperty("ais.mqtt.enabled")
+@ConditionalOnExpression("'${ais.mqtt.enabled}' == 'true' or '${sse.mqtt.enabled}' == 'true'")
 @Configuration
 @EnableIntegration
 @IntegrationComponentScan
@@ -45,7 +43,6 @@ public class MqttConfig {
     }
 
     @Bean
-    @ConditionalOnProperty("ais.mqtt.enabled")
     @ServiceActivator(inputChannel = "mqttOutboundChannel", async = "true")
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
         final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
@@ -58,10 +55,27 @@ public class MqttConfig {
         return new DirectChannel();
     }
 
-    @ConditionalOnProperty("ais.mqtt.enabled")
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel", defaultRequestTimeout = "2000", defaultReplyTimeout = "2000")
-    public interface VesselGateway {
+    private interface MqttGateway {
         // Paho does not support concurrency, all calls to this must be synchronized!
         void sendToMqtt(@Header(MqttHeaders.TOPIC) final String topic, @Payload final String data);
+    }
+
+    @Bean
+    public SynchronizedMqttGateway synchronizedMqttGateway(final MqttGateway mqttGateway) {
+        return new SynchronizedMqttGateway(mqttGateway);
+    }
+
+    public class SynchronizedMqttGateway {
+
+        private final MqttConfig.MqttGateway mqttGateway;
+
+        public SynchronizedMqttGateway(final MqttConfig.MqttGateway mqttGateway) {
+            this.mqttGateway = mqttGateway;
+        }
+
+        public synchronized void sendToMqtt(final String topic, final String data) {
+            mqttGateway.sendToMqtt(topic, data);
+        }
     }
 }

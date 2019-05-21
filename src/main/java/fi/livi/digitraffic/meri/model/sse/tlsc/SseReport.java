@@ -6,17 +6,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.util.StringUtil;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-                       "sseSite",
-                       "sseFields",
-                       "sseExtraFields"
-                   })
 public class SseReport {
 
     private SseSite sseSite;

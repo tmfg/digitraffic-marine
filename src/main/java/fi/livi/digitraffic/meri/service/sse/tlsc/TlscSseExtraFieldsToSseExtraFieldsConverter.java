@@ -23,7 +23,7 @@ public class TlscSseExtraFieldsToSseExtraFieldsConverter
             log.warn("No mappings at {} for additionalProperties={}", src.getClass(), src.getAdditionalProperties());
         }
         return new SseExtraFields(src.getCoordLatitude(), src.getCoordLongitude(), src.getHeelAngle(),
-            LightStatus.fromValue(src.getLightStatus()),
-            src.getTemperature(), src.getAdditionalProperties());
+                                  LightStatus.fromValue(src.getLightStatus()),
+                                  src.getTemperature(), src.getAdditionalProperties());
     }
 }
