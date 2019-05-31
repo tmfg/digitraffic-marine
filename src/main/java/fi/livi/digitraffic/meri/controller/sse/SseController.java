@@ -69,9 +69,9 @@ public class SseController {
     /* GET requests */
 
     @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON")
-    @GetMapping(path = API_SSE_PATH + LATEST_PATH , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
-                                                                 MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
-                                                                 MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
+    @GetMapping(path = LATEST_PATH , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                  MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                  MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public SseFeatureCollection findLatest() {
         return sseService.findLatest();
@@ -81,9 +81,9 @@ public class SseController {
     @ApiResponses(value = {
         @ApiResponse(code = 400, message = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
     })
-    @GetMapping(path = API_SSE_PATH + LATEST_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
-                                                                                  MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
-                                                                                  MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
+    @GetMapping(path = LATEST_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                                   MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public SseFeatureCollection findLatest(
         @ApiParam(value = "SSE site number", required = true)
@@ -98,9 +98,9 @@ public class SseController {
         @ApiResponse(code = 400, message = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })
-    @GetMapping(path = API_SSE_PATH + HISTORY_PATH, produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
-                                                                 MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
-                                                                 MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
+    @GetMapping(path = HISTORY_PATH, produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                  MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                  MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public SseFeatureCollection findHistory(
 
@@ -123,9 +123,9 @@ public class SseController {
             CODE_400_NOT_EXISTS_WITH_IDENTIFIER + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })
-    @GetMapping(path = API_SSE_PATH + HISTORY_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
-                                                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
-                                                                                   MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
+    @GetMapping(path = HISTORY_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public SseFeatureCollection findHistoryBySite(
         @ApiParam(value = "SSE site number", required = true)
