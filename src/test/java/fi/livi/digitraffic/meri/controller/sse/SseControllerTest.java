@@ -67,7 +67,7 @@ public class SseControllerTest extends AbstractTestBase {
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(lastUpdate)).build());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
-                            MarineApplicationConfiguration.API_SSE_PATH + BetaController.LATEST_PATH))
+                            MarineApplicationConfiguration.API_SSE_PATH + SseController.LATEST_PATH))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
@@ -84,7 +84,7 @@ public class SseControllerTest extends AbstractTestBase {
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end)).build());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
-                            MarineApplicationConfiguration.API_SSE_PATH + BetaController.HISTORY_PATH)
+                            MarineApplicationConfiguration.API_SSE_PATH + SseController.HISTORY_PATH)
                 .param("from", start)
                 .param("to", end))
             .andExpect(status().isOk())
@@ -103,7 +103,7 @@ public class SseControllerTest extends AbstractTestBase {
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end)).build());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
-            MarineApplicationConfiguration.API_SSE_PATH + BetaController.HISTORY_PATH + "/" + siteNumber)
+            MarineApplicationConfiguration.API_SSE_PATH + SseController.HISTORY_PATH + "/" + siteNumber)
             .param("from", start)
             .param("to", end))
             .andExpect(status().isOk())
