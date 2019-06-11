@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
-import fi.livi.digitraffic.meri.controller.BetaController;
 import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.service.sse.SseFeatureCollectionBuilder;
@@ -66,8 +65,8 @@ public class SseControllerTest extends AbstractTestBase {
         when(sseService.findLatest())
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(lastUpdate)).build());
 
-        mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
-                            MarineApplicationConfiguration.API_SSE_PATH + BetaController.LATEST_PATH))
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                            MarineApplicationConfiguration.API_SSE_PATH + SseController.LATEST_PATH))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
@@ -83,8 +82,8 @@ public class SseControllerTest extends AbstractTestBase {
         when(sseService.findHistory(ZonedDateTime.parse(start), ZonedDateTime.parse(end)))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end)).build());
 
-        mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
-                            MarineApplicationConfiguration.API_SSE_PATH + BetaController.HISTORY_PATH)
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+                            MarineApplicationConfiguration.API_SSE_PATH + SseController.HISTORY_PATH)
                 .param("from", start)
                 .param("to", end))
             .andExpect(status().isOk())
@@ -102,8 +101,8 @@ public class SseControllerTest extends AbstractTestBase {
         when(sseService.findHistory(siteNumber, ZonedDateTime.parse(start), ZonedDateTime.parse(end)))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end)).build());
 
-        mockMvc.perform(get(MarineApplicationConfiguration.API_BETA_BASE_PATH +
-            MarineApplicationConfiguration.API_SSE_PATH + BetaController.HISTORY_PATH + "/" + siteNumber)
+        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
+            MarineApplicationConfiguration.API_SSE_PATH + SseController.HISTORY_PATH + "/" + siteNumber)
             .param("from", start)
             .param("to", end))
             .andExpect(status().isOk())
