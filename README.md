@@ -13,7 +13,7 @@ You can run postgresql and mqtt in docker.  See dbmarine/README.md and mqttmarin
 
 ### Clone project to your computer
 
-	$ git clone https://github.com/finnishtransportagency/digitraffic-ais.git
+	$ git clone https://github.com/tmfg/digitraffic-marine.git
 	# Clones a repository to your computer
 
 ### Configure project
