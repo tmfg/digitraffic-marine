@@ -17,7 +17,7 @@ ais.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetail
 
 winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/services/IBNet_Baltice_Service/
 
-metadata.csv.baseUrl = https://raw.githubusercontent.com/finnishtransportagency/metadata/master/csv/
+metadata.csv.baseUrl = https://raw.githubusercontent.com/tmfg/metadata/master/csv/
 
 portCallUpdateJob.frequency = 60000
 portCallUpdateJob.maxTimeFrameToFetch = 3600000
