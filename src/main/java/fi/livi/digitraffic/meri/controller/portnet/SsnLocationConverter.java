@@ -1,7 +1,6 @@
 package fi.livi.digitraffic.meri.controller.portnet;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
