@@ -2,6 +2,9 @@ package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_LOCATIONS_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
 
 import java.time.ZonedDateTime;
 
@@ -10,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +41,9 @@ public class VesselLocationController {
     }
 
     @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
-    @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                             MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                             MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsByMssiAndTimestamp(
             @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
@@ -58,7 +62,9 @@ public class VesselLocationController {
     }
 
     @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
-    @GetMapping(path = LATEST_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = LATEST_PATH, produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                 MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                 MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsByTimestamp(
             @ApiParam("From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
@@ -76,7 +82,9 @@ public class VesselLocationController {
     @ApiOperation("Find vessel locations within a circle surrounding a point. " +
                   "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
                   "boats without the AIS system, vessels outside of the AIS range and so on.)")
-    @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                                                                             MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                                                                             MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromPoint(
             @ApiParam(value = "Radius of search circle in kilometers (km) using haversine formula.", required = true)
@@ -100,7 +108,9 @@ public class VesselLocationController {
     @ApiOperation("Find vessel locations within a circle surrounding a vessel. " +
                   "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
                   "boats without the AIS system, vessels outside of the AIS range and so on.)")
-    @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                                               MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromMMSI(
             @ApiParam(value = "Radius of search circle in kilometers (km) using haversine formula.", required = true)

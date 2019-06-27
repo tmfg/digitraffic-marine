@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +64,9 @@ public class NauticalWarningController {
 
     @ApiOperation("Return nautical warnings of given status.")
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
-                    produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                                 MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                 MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "published,archived" )
                                               @PathVariable final String status) throws PookiException {
