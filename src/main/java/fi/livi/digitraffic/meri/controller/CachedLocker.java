@@ -40,7 +40,11 @@ public class CachedLocker {
 
     @Scheduled(fixedRate = 1000)
     protected void acquireLock() {
-        hasLock.set(lockingService.acquireLock(lockName, 2));
+        try {
+            hasLock.set(lockingService.acquireLock(lockName, 2));
+        } catch(final Exception e) {
+            log.error("acquire failed", e);
+        }
     }
 
     @Override
