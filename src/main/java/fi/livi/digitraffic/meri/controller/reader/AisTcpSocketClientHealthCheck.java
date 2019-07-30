@@ -69,7 +69,7 @@ public class AisTcpSocketClientHealthCheck {
         }
     }
 
-    private void connectionStatus(AisTcpSocketClient.ConnectionStatus connectionStatus) {
+    private void connectionStatus(final AisTcpSocketClient.ConnectionStatus connectionStatus) {
         VesselLoggingListener.readAisConnectionStatus(connectionStatus);
     }
 }

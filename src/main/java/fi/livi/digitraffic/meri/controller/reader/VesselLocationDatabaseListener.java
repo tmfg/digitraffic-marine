@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,18 +27,24 @@ public class VesselLocationDatabaseListener implements AisMessageListener {
 
     private final Map<Integer, AISMessage> messageMap = new HashMap<>();
 
+    private static final Logger log = LoggerFactory.getLogger(VesselLocationDatabaseListener.class);
+
     public VesselLocationDatabaseListener(final VesselLocationService vesselLocationService,
-                                          final CachedLocker aisCachedLocker) {
+        final CachedLocker aisCachedLocker) {
         this.vesselLocationService = vesselLocationService;
         this.aisCachedLocker = aisCachedLocker;
     }
 
     @Scheduled(fixedRate = 1000)
     private void persistQueue() {
-        final List<AISMessage> messages = removeAllMessages();
+        try {
+            final List<AISMessage> messages = removeAllMessages();
 
-        if (aisCachedLocker.hasLock()) {
-            vesselLocationService.saveLocations(messages);
+            if (aisCachedLocker.hasLock()) {
+                vesselLocationService.saveLocations(messages);
+            }
+        } catch(final Exception e) {
+            log.error("persist failed", e);
         }
     }
 

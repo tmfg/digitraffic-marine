@@ -24,7 +24,7 @@ public class PookiProperties implements Serializable {
     private Integer id;
 
     // Merialueet suomeksi
-    @ApiModelProperty(name="areastest", value = "Area in Finnish")
+    @ApiModelProperty(value = "Area in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String areasFi;
 
