@@ -8,6 +8,7 @@ reindex table sse_report;
 reindex table ssn_location;
 reindex table updated_timestamp;
 reindex table ship_activity;
+reindex table imo_information;
 
 -- reindex qrtz_tables
 reindex table qrtz_fired_triggers;
