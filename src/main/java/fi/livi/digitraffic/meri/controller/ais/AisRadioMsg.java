@@ -21,6 +21,7 @@
 package fi.livi.digitraffic.meri.controller.ais;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -137,7 +138,7 @@ public class AisRadioMsg {
     }
 
     private BigDecimal getDecimal(int intVal, long divisor, int scale) {
-        return BigDecimal.valueOf(intVal).divide(BigDecimal.valueOf(divisor), scale, BigDecimal.ROUND_HALF_UP);
+        return BigDecimal.valueOf(intVal).divide(BigDecimal.valueOf(divisor), scale, RoundingMode.HALF_UP);
     }
 
     protected String getStringValue(int size) {
