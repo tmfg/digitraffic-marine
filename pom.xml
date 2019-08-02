@@ -36,9 +36,9 @@
             <url>http://repo.spring.io/milestone</url>
         </repository>
         <repository>
-            <!-- See: local-m2/README.md -->
-            <id>marine-local</id>
-            <url>file://${project.basedir}/local-m2</url>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
         </repository>
     </repositories>
 
@@ -134,10 +134,10 @@
         </dependency>
 
         <dependency>
-            <!-- See: local-m2/README.md -->
+            <!-- From jcenter-snapshots repository -->
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>3.0.0-SNAPSHOT-e1297c3</version>
+            <version>3.0.0-20190527.223435-24</version>
         </dependency>
 
         <!-- https://github.com/springfox/springfox/issues/2265 -->
