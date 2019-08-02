@@ -61,7 +61,7 @@ Or without Maven
 
 ### Update Springfox Swagger UI
 
-Read instuctions from [lib/README.md](lib/Readme.md)
+Read instuctions from [local-m2/README.md](local-m2/Readme.md)
 
 ### Misc commands
 
