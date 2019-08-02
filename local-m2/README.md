@@ -1,23 +1,25 @@
-# Building Spring fox Swagger UI
+# Building Springfox Swagger UI and adding to project local m2 repository
 
 clone https://github.com/springfox/springfox -project
 
-Build
+## Build Springfox project
 
-        cd springfox/springfox-swagger-ui
+Go to springfox -project directory
         
-Add proper java home for Java 8 in gradle.properties
+Add proper java home for Java 8 in gradle.properties ie.
 
         org.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
         
 Run build
 
-        ./gradlew clean build -x test
-        
-Install library to project local maven repository. Add the short git commit revision identifier as version suffix.
+        ./gradlew clean build
+ 
+       
+## Install library to project local maven repository.
 
-        cd ..
-        cd digitraffic-marine
+Add the short git commit revision identifier as version suffix {GIT_REV}.
+
+        # in digitraffic-marine -project
         mvn install:install-file \
             -Dfile=../springfox/springfox-swagger-ui/build/libs/springfox-swagger-ui-3.0.0-SNAPSHOT.jar \
             -DgroupId=io.springfox -DartifactId=springfox-swagger-ui \
@@ -26,7 +28,7 @@ Install library to project local maven repository. Add the short git commit revi
             -DlocalRepositoryPath=local-m2 \
             -Dversion=3.0.0-SNAPSHOT-{GIT_REV}
         
-Change version to root project pom.xml
+Update version to root project pom.xml
 
             <dependency>
                 <groupId>io.springfox</groupId>
