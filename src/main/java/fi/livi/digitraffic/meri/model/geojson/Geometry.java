@@ -13,8 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
     "type",
     "coordinates"
 })
-@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class,
-          subTypes = { LineString.class, MultiLineString.class, MultiPoint.class, MultiPolygon.class, Point.class, Polygon.class})
+@ApiModel(description = "GeoJSON Geometry object")
 public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     private GeometryType type;

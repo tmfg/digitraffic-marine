@@ -7,14 +7,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Feature;
 import fi.livi.digitraffic.meri.model.geojson.Geometry;
-import io.swagger.annotations.ApiModel;
 
 @JsonPropertyOrder({
     "type",
     "geometry",
     "properties"
 })
-@ApiModel(description = "GeoJSON Feature object")
 public class PookiFeature extends Feature<Geometry, PookiProperties> {
 
     public PookiFeature() {

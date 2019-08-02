@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Feature;
 import fi.livi.digitraffic.meri.model.geojson.Point;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @JsonPropertyOrder({
@@ -13,7 +12,6 @@ import io.swagger.annotations.ApiModelProperty;
         "geometry",
         "properties"
 })
-@ApiModel(description = "GeoJSON SafeSeaNet Location Feature object")
 public class SsnLocationFeature extends Feature<Point, SsnLocationProperties> {
 
     @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)

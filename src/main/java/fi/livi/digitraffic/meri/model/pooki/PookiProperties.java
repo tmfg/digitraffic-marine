@@ -11,10 +11,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
 import fi.livi.digitraffic.meri.model.pooki.converter.JsonDateTimeDeserializerToZonedDateTime;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(parent = Properties.class)
 @JsonPropertyOrder({"type", "id"})
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class PookiProperties extends Properties {

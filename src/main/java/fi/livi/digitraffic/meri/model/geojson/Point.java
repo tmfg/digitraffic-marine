@@ -6,7 +6,7 @@ import java.util.List;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON Point Geometry object", parent = Geometry.class)
+@ApiModel(description = "GeoJSON Point Geometry object")
 public class Point extends Geometry<List<Double>> {
 
     public Point() {

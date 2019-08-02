@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON object", subTypes = { Geometry.class, Feature.class, FeatureCollection.class},
-          discriminator = "type")
+@ApiModel(description = "GeoJSON object", discriminator = "type")
 public abstract class GeoJsonObject implements Serializable {
 
     private Map<String, Object> additionalProperties = new HashMap<>();

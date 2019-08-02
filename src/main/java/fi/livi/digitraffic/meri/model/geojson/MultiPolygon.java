@@ -5,7 +5,7 @@ import java.util.List;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON MultiPolygon Geometry object", parent = Geometry.class)
+@ApiModel(description = "GeoJSON MultiPolygon Geometry object")
 public class MultiPolygon extends Geometry<List<List<List<List<Double>>>>> {
 
     public MultiPolygon() {

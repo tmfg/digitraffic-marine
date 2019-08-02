@@ -2,11 +2,10 @@ package fi.livi.digitraffic.meri.model.geojson;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON Feature object", parent = GeoJsonObject.class, subTypes = { VesselLocationFeature.class })
+@ApiModel(description = "GeoJSON Feature object")
 public abstract class Feature<G extends Geometry, P extends Properties>  extends GeoJsonObject {
 
     @ApiModelProperty(value = "Type of GeoJSON object", allowableValues = "Feature", required = true, example = "Feature")

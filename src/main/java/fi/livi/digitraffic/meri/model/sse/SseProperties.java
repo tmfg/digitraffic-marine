@@ -9,7 +9,6 @@ import fi.livi.digitraffic.meri.model.geojson.Properties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON properties of SseFeature")
 public class SseProperties extends Properties {
 
     // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
