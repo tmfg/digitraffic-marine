@@ -20,22 +20,24 @@
  */
 package fi.livi.digitraffic.meri.controller.ais;
 
+import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.MESSAGE_ID;
+import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.REPEAT_INDICATOR;
+import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.USER_ID;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.*;
 
 public class AisRadioMsg {
     public enum MessageType {POSITION, METADATA}
     public enum MessageClass {CLASS_A, CLASS_B}
 
     // maintains insertion order NOTE! Is this order important???
-    private Map<String, Object> parameters = new LinkedHashMap<>();
-    private List<String> rawDataParts;
-    private String binaryMsg;
+    private final Map<String, Object> parameters = new LinkedHashMap<>();
+    private final String binaryMsg;
     private int readOffset = 0;
 
     private final long time;
@@ -43,8 +45,8 @@ public class AisRadioMsg {
     private final MessageClass messageClass;
     private boolean mmsiAllowed = false;
 
-    public AisRadioMsg(String binaryMsg, List<String> rawDataParts, MessageType messageType, MessageClass messageClass) {
-        this.rawDataParts = rawDataParts;
+    public AisRadioMsg(final String binaryMsg, final List<String> rawDataParts, final MessageType messageType,
+        final MessageClass messageClass) {
         this.binaryMsg = binaryMsg;
 
         this.time = Instant.now().toEpochMilli();
@@ -81,12 +83,12 @@ public class AisRadioMsg {
     }
 
     public double getDoubleParam(String name) {
-        Object param = parameters.get(name);
+        final Object param = parameters.get(name);
 
         if (param instanceof BigDecimal) {
             return ((BigDecimal)param).doubleValue();
         } else if (param instanceof Integer) {
-            return (double)(1.0 * (Integer)param);
+            return 1.0 * (Integer)param;
         }
 
         throw new NumberFormatException("Failed to convert double value: " + param);
@@ -137,7 +139,7 @@ public class AisRadioMsg {
     }
 
     private BigDecimal getDecimal(int intVal, long divisor, int scale) {
-        return BigDecimal.valueOf(intVal).divide(BigDecimal.valueOf(divisor), scale, BigDecimal.ROUND_HALF_UP);
+        return BigDecimal.valueOf(intVal).divide(BigDecimal.valueOf(divisor), scale, RoundingMode.HALF_UP);
     }
 
     protected String getStringValue(int size) {
