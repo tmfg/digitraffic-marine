@@ -47,7 +47,7 @@ cache.allowedMmsis = #{60*1000}
 # daemon or web
 app.type=web
 
-# Web application type.  Should be none for daemon process
+# Web application type. Should be none for daemon process and servlet for webapp
 spring.main.web-application-type=servlet
 
 # if set to false tcp reading(ais vessel locations and metadata) are not activated. Should be true for daemon processes.

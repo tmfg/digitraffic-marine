@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 })
 @ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class,
           subTypes = { LineString.class, MultiLineString.class, MultiPoint.class, MultiPolygon.class, Point.class, Polygon.class})
-public abstract class Geometry<T extends List<?>> extends GeoJsonObject {
+public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     private GeometryType type;
 
