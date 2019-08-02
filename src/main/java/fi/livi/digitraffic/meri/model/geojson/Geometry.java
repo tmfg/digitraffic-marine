@@ -13,8 +13,9 @@ import io.swagger.annotations.ApiModelProperty;
     "type",
     "coordinates"
 })
-@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class, subTypes = { LineString.class, MultiLineString.class, MultiPoint.class, MultiPolygon.class, Point.class, Polygon.class})
-public class Geometry<T extends List<?>> extends GeoJsonObject {
+@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class,
+          subTypes = { LineString.class, MultiLineString.class, MultiPoint.class, MultiPolygon.class, Point.class, Polygon.class})
+public abstract class Geometry<T extends List<?>> extends GeoJsonObject {
 
     private GeometryType type;
 
@@ -44,12 +45,8 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     @ApiModelProperty( value = "Type of GeoJSON Geometry object", allowableValues = "Point,MultiPoint,LineString,MultiLineString,Polygon,MultiPolygon", required = true)
     @Override
-    public GeometryType getType() {
-        return type;
-    }
-
-    public void setType(GeometryType type) {
-        this.type = type;
+    public String getType() {
+        return type.name();
     }
 
     @Override

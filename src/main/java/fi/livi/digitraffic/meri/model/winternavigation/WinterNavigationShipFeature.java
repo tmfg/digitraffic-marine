@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.model.winternavigation;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Feature;
-import fi.livi.digitraffic.meri.model.geojson.Geometry;
 import fi.livi.digitraffic.meri.model.geojson.Point;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

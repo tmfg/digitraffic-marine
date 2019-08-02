@@ -25,7 +25,7 @@ public class Point extends Geometry<List<Double>> {
 
     @ApiModelProperty(required = true, allowableValues = "Point", example = "Point")
     @Override
-    public GeometryType getType() {
+    public String getType() {
         return super.getType();
     }
 }

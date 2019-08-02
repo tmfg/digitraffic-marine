@@ -4,10 +4,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.model.geojson.Properties;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @JsonPropertyOrder({ "name", "nationality", "seaArea", "portRestrictions" })
-public class WinterNavigationPortProperties {
+@ApiModel(parent = Properties.class)
+public class WinterNavigationPortProperties extends Properties {
 
     @ApiModelProperty(value = "Name", required = true)
     public final String name;

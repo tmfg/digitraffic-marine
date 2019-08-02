@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
         "geometry",
         "properties"
 })
-@ApiModel(description = "GeoJSON Feature object")
+@ApiModel(description = "GeoJSON Feature object", parent = Feature.class)
 public class VesselLocationFeature extends Feature<Point, VesselLocationProperties> {
 
     @ApiModelProperty(value = "Maritime Mobile Service Identity (nine digit identifier)", required = true)

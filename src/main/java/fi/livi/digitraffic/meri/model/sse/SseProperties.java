@@ -5,11 +5,12 @@ import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import fi.livi.digitraffic.meri.model.geojson.Properties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description = "GeoJSON properties of SseFeature")
-public class SseProperties {
+public class SseProperties extends Properties {
 
     // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
     private static final String FIELD_ONLY_FOR_FLOATING_SITE = "This field is available only for FLOATING siteType";

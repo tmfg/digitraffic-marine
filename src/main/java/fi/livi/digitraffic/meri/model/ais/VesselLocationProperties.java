@@ -1,12 +1,11 @@
 package fi.livi.digitraffic.meri.model.ais;
 
-import java.io.Serializable;
-
+import fi.livi.digitraffic.meri.model.geojson.Properties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON Properties object")
-public class VesselLocationProperties implements Serializable {
+@ApiModel(description = "VesselLocation GeoJSON Properties object", parent = Properties.class)
+public class VesselLocationProperties extends Properties {
     @ApiModelProperty(value = "Speed over ground in 1/10 knot steps, 1023 = not available, 1022 = 102.2 knots or higher ", allowableValues = "range[0,1023]", required = true)
     public final double sog;
 

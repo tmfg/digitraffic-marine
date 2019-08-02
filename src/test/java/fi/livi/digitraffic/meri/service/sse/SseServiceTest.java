@@ -4,8 +4,6 @@ import static fi.livi.digitraffic.meri.model.sse.SseProperties.Confidence;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.LightStatus;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.Trend;
 import static java.time.ZoneOffset.UTC;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -15,7 +13,6 @@ import javax.transaction.Transactional;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

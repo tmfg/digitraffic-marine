@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "GeoJSON object", subTypes = { Geometry.class, Feature.class, FeatureCollection.class},
+          discriminator = "type")
 public abstract class GeoJsonObject implements Serializable {
 
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -18,7 +21,8 @@ public abstract class GeoJsonObject implements Serializable {
     public GeoJsonObject() {
     }
 
-    abstract Object getType();
+    @ApiModelProperty(value = "GeoJSON object type")
+    public abstract String getType();
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {

@@ -2,9 +2,12 @@ package fi.livi.digitraffic.meri.model.winternavigation;
 
 import java.util.List;
 
+import fi.livi.digitraffic.meri.model.geojson.Properties;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-public class WinterNavigationShipProperties {
+@ApiModel(parent = Properties.class)
+public class WinterNavigationShipProperties extends Properties {
 
     @ApiModelProperty(value = "Data source identifier")
     public final String vesselSource;

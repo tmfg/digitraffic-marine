@@ -4,10 +4,13 @@ import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.model.geojson.Properties;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @JsonPropertyOrder({ "issueTime", "issuerCode", "issuerName", "validUntil" })
-public class WinterNavigationDirwayProperties {
+@ApiModel(parent = Properties.class)
+public class WinterNavigationDirwayProperties extends Properties {
 
     @ApiModelProperty(value = "Time when the dirway was issued")
     public final ZonedDateTime issueTime;

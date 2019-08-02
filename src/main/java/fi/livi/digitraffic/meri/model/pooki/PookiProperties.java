@@ -1,6 +1,5 @@
 package fi.livi.digitraffic.meri.model.pooki;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,14 +9,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import fi.livi.digitraffic.meri.model.geojson.Properties;
 import fi.livi.digitraffic.meri.model.pooki.converter.JsonDateTimeDeserializerToZonedDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON Properties object")
+@ApiModel(parent = Properties.class)
 @JsonPropertyOrder({"type", "id"})
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class PookiProperties implements Serializable {
+public class PookiProperties extends Properties {
 
     @ApiModelProperty(required = true)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

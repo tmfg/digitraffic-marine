@@ -5,7 +5,7 @@ import java.util.List;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON MultiPoint Geometry object", parent = Geometry.class, subTypes = {LineString.class})
+@ApiModel(description = "GeoJSON MultiLineString Geometry object", parent = Geometry.class)
 public class MultiLineString extends Geometry<List<List<List<Double>>>> {
 
     public MultiLineString() {
@@ -14,7 +14,7 @@ public class MultiLineString extends Geometry<List<List<List<Double>>>> {
 
     @ApiModelProperty(required = true, allowableValues = "MultiLineString", example = "MultiLineString")
     @Override
-    public GeometryType getType() {
+    public String getType() {
         return super.getType();
     }
 

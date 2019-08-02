@@ -14,7 +14,7 @@ public class Polygon extends Geometry<List<List<List<Double>>>> {
 
     @ApiModelProperty(required = true, allowableValues = "Polygon", example = "Polygon")
     @Override
-    public GeometryType getType() {
+    public String getType() {
         return super.getType();
     }
 
