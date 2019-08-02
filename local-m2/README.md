@@ -24,7 +24,15 @@ Install library to project local maven repository. Add the short git commit revi
             -Dversion=3.0.0-SNAPSHOT-{GIT_REV} \
             -Dpackaging=jar \
             -DgeneratePom=true \
-            -DlocalRepositoryPath=lib/
+            -DlocalRepositoryPath=local-m2
+            
+        mvn install:install-file \
+                    -Dfile=../springfox/springfox-swagger-ui/build/libs/springfox-swagger-ui-3.0.0-SNAPSHOT.jar \
+                    -DgroupId=io.springfox -DartifactId=springfox-swagger-ui \
+                    -Dversion=3.0.0-SNAPSHOT-e1297c3 \
+                    -Dpackaging=jar \
+                    -DgeneratePom=true \
+                    -DlocalRepositoryPath=local-m2
         
 Change version to pom.xml
 

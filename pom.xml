@@ -38,7 +38,7 @@
         <repository>
             <!-- See file://${project.basedir}/lib/README.md -->
             <id>marine-local</id>
-            <url>file://${project.basedir}/lib</url>
+            <url>file://${project.basedir}/local-m2</url>
         </repository>
     </repositories>
 
@@ -134,7 +134,7 @@
         </dependency>
 
         <dependency>
-            <!-- mvn install:install-file -Dfile=../springfox/springfox-swagger-ui/build/libs/springfox-swagger-ui-3.0.0-SNAPSHOT.jar -DgroupId=io.springfox -DartifactId=springfox-swagger-ui -Dversion=3.0.0-SNAPSHOT-e1297c3 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=lib/ -->
+            <!-- mvn install:install-file -Dfile=../springfox/springfox-swagger-ui/build/libs/springfox-swagger-ui-3.0.0-SNAPSHOT.jar -DgroupId=io.springfox -DartifactId=springfox-swagger-ui -Dversion=3.0.0-SNAPSHOT-e1297c3 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=local-m2/ -->
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>3.0.0-SNAPSHOT-e1297c3</version>
@@ -292,19 +292,19 @@
     <build>
         <plugins>
             <!-- Install files in marine-local repo -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>3.0.0-M1</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-install-plugin</artifactId>-->
+<!--                <version>3.0.0-M1</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>install</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>install-file</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.openclover</groupId>
                 <artifactId>clover-maven-plugin</artifactId>
