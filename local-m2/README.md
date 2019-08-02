@@ -26,7 +26,13 @@ Install library to project local maven repository. Add the short git commit revi
             -DlocalRepositoryPath=local-m2 \
             -Dversion=3.0.0-SNAPSHOT-{GIT_REV}
         
-Change version to pom.xml
+Change version to root project pom.xml
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>3.0.0-SNAPSHOT-{GIT_REV}</version>
+            </dependency>
 
 Build marine project and test Swagger UI
 
