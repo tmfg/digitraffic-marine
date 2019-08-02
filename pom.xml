@@ -35,6 +35,11 @@
             <name>Spring Milestone Repository</name>
             <url>http://repo.spring.io/milestone</url>
         </repository>
+        <repository>
+            <!-- See file://${project.basedir}/lib/README.md -->
+            <id>marine-local</id>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -129,9 +134,10 @@
         </dependency>
 
         <dependency>
+            <!-- mvn install:install-file -Dfile=../springfox/springfox-swagger-ui/build/libs/springfox-swagger-ui-3.0.0-SNAPSHOT.jar -DgroupId=io.springfox -DartifactId=springfox-swagger-ui -Dversion=3.0.0-SNAPSHOT-e1297c3 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=lib/ -->
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
+            <version>3.0.0-SNAPSHOT-e1297c3</version>
         </dependency>
 
         <!-- https://github.com/springfox/springfox/issues/2265 -->

@@ -59,6 +59,10 @@ Or without Maven
     $ cd dbmarine/schemaspy
     $ get-deps-and-run-schemaspy.sh [-o=/tmp/schema]
 
+### Update Springfox Swagger UI
+
+Read instuctions from [lib/README.md](lib/Readme.md)
+
 ### Misc commands
 
 Check for Maven dependency updates
