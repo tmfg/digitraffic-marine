@@ -14,11 +14,17 @@ Run build
 
         ./gradlew clean build -x test
         
-Install library to project local maven  repository. Add the short git commit revision identifier as version suffix.
+Install library to project local maven repository. Add the short git commit revision identifier as version suffix.
 
         cd ..
         cd digitraffic-marine
-        mvn install:install-file -Dfile=../springfox/springfox-swagger-ui/build/libs/springfox-swagger-ui-3.0.0-SNAPSHOT.jar -DgroupId=io.springfox -DartifactId=springfox-swagger-ui -Dversion=3.0.0-SNAPSHOT-{GIT_REV} -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=lib/
+        mvn install:install-file \
+            -Dfile=../springfox/springfox-swagger-ui/build/libs/springfox-swagger-ui-3.0.0-SNAPSHOT.jar \
+            -DgroupId=io.springfox -DartifactId=springfox-swagger-ui \
+            -Dversion=3.0.0-SNAPSHOT-{GIT_REV} \
+            -Dpackaging=jar \
+            -DgeneratePom=true \
+            -DlocalRepositoryPath=lib/
         
 Change version to pom.xml
 
