@@ -14,11 +14,12 @@ public class VesselLocationProperties extends Properties {
         "Value range between 0 - 15. \n" +
         "0 = under way using engine, \n1 = at anchor, \n2 = not under command, \n3 = restricted maneuverability, \n4 = constrained by her draught, \n" +
         "5 = moored, \n6 = aground, \n7 = engaged in fishing, \n8 = under way sailing, \n" +
-        "9 = reserved for future amendment of navigational status for ships carrying DG, HS, or MP, or IMO hazard or pollutant category C, high speed craft (HSC); \n" +
-        "10 = reserved for future amendment of navigational status for ships carrying dangerous goods (DG), harmful substances (HS) or marine pollutants (MP), or IMO hazard or pollutant category A, wing in ground (WIG); \n" +
-        "11 = power-driven vessel towing astern (regional use); 12 = power-driven vessel pushing ahead or towing alongside (regional use); \n" +
+        "9 = reserved for future amendment of navigational status for ships carrying DG, HS, or MP, or IMO hazard or pollutant category C, high speed craft (HSC), \n" +
+        "10 = reserved for future amendment of navigational status for ships carrying dangerous goods (DG), harmful substances (HS) or marine pollutants (MP), or IMO hazard or pollutant category A, wing in ground (WIG), \n" +
+        "11 = power-driven vessel towing astern (regional use),\n" +
+        "12 = power-driven vessel pushing ahead or towing alongside (regional use), \n" +
         "13 = reserved for future use, \n" +
-        "14 = AIS-SART (active), MOB-AIS, EPIRB-AIS; \n" +
+        "14 = AIS-SART (active), MOB-AIS, EPIRB-AIS, \n" +
         "15 = default",
         allowableValues = "range[0,15]", required = true)
     public final int navStat;
