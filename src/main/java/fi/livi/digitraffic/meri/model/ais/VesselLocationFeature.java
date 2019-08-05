@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 })
 public class VesselLocationFeature extends Feature<Point, VesselLocationProperties> {
 
-    @ApiModelProperty(value = "Maritime Mobile Service Identity (nine digit identifier)", required = true)
+    @ApiModelProperty(value = "Maritime Mobile Service Identity (nine digit identifier)", required = true, position = 1)
     public final int mmsi;
 
     @ApiModelProperty(allowableValues = "Feature", required = true)

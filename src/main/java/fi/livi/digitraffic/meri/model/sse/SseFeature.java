@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 })
 public class SseFeature extends Feature<Point, SseProperties> {
 
-    @ApiModelProperty(value = "Identifier of the site")
+    @ApiModelProperty(value = "Identifier of the site", position = 1)
     private final int siteNumber;
 
     public SseFeature(final Point geometry, final SseProperties properties, final int siteNumber) {

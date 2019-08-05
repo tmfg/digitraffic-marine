@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 })
 public class SsnLocationFeature extends Feature<Point, SsnLocationProperties> {
 
-    @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true)
+    @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true, position = 1)
     public final String locode;
 
     public SsnLocationFeature(final String locode, final SsnLocationProperties properties, final Point geometry) {

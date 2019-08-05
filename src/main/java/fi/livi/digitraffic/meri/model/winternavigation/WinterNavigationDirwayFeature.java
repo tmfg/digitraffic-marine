@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
                      "properties" })
 public class WinterNavigationDirwayFeature extends Feature<Geometry, WinterNavigationDirwayProperties> {
 
-    @ApiModelProperty(value = "Name of the dirway", required = true)
+    @ApiModelProperty(value = "Name of the dirway", required = true, position = 1)
     public final String name;
 
     public WinterNavigationDirwayFeature(final String name,

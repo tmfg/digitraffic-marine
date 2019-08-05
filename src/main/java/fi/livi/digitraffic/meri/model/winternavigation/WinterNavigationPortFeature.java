@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 })
 public class WinterNavigationPortFeature extends Feature<Point, WinterNavigationPortProperties> {
 
-    @ApiModelProperty(value = "Port SafeSeaNet location code", required = true)
+    @ApiModelProperty(value = "Port SafeSeaNet location code", required = true, position = 1)
     public final String locode;
 
     public WinterNavigationPortFeature(final String locode, final WinterNavigationPortProperties properties, final Point geometry) {

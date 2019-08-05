@@ -8,14 +8,14 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "GeoJSON Feature object")
 public abstract class Feature<G extends Geometry, P extends Properties>  extends GeoJsonObject {
 
-    @ApiModelProperty(value = "Type of GeoJSON object", allowableValues = "Feature", required = true, example = "Feature")
+    @ApiModelProperty(value = "Type of GeoJSON object", allowableValues = "Feature", required = true, example = "Feature", position = 2)
     private final String type = "Feature";
 
-    @ApiModelProperty(value = "GeoJSON Geometry object", required = true)
+    @ApiModelProperty(value = "GeoJSON Geometry object", required = true, position = 3)
     @JsonProperty("geometry")
     private G geometry;
 
-    @ApiModelProperty(value = "GeoJSON Properties object", required = true)
+    @ApiModelProperty(value = "GeoJSON Properties object", required = true, position = 4)
     private P properties;
 
     public Feature() {
