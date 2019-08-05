@@ -29,7 +29,7 @@ public class Point extends Geometry<List<Double>> {
         return super.getType();
     }
 
-    @ApiModelProperty(required = true, position = 2, example = "[26.976774926733796, 65.34673850731987]",
+    @ApiModelProperty(required = true, position = 2, example = "[26.97677492, 65.34673850]",
                       value = "An array of coordinates. " + COORD_FORMAT_WGS84_LONG_INC_ALT)
     @Override
     public List<Double> getCoordinates() {
