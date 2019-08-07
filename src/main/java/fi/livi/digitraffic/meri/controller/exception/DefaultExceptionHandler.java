@@ -83,8 +83,9 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(final ConstraintViolationException exception, final ServletWebRequest request) {
-
-        String message = exception.getConstraintViolations().stream().map(v -> getViolationMessage(v)).collect(Collectors.joining(", "));
+        final String message = exception.getConstraintViolations().stream()
+            .map(DefaultExceptionHandler::getViolationMessage)
+            .collect(Collectors.joining(","));
 
         log.info("Constraint violation. uri={} queryString={} violations={}",
                  request.getRequest().getRequestURI(), request.getRequest().getQueryString(), message);

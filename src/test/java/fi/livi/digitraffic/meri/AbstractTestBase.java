@@ -29,7 +29,7 @@ import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationUpdater;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-                properties = { "quartz.enabled=false", "javamelody.enabled=false", "cache.allowedMmsis = 200" })
+                properties = { "quartz.enabled=false", "cache.allowedMmsis = 200" })
 @AutoConfigureMockMvc
 public abstract class AbstractTestBase {
 
@@ -38,7 +38,7 @@ public abstract class AbstractTestBase {
 
     @Autowired
     protected MockMvc mockMvc;
-    
+
     protected String readFile(final String filename) throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();
         final File file = new File(classLoader.getResource(filename).getFile());
