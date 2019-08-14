@@ -26,7 +26,7 @@ public class PortCallClient {
     private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
     @Autowired
-    public PortCallClient(@Value("${ais.portnet.portcall.url}") final String portCallUrl,
+    public PortCallClient(@Value("${dt.portnet.portcall.url}") final String portCallUrl,
                           final Jax2bRestTemplate restTemplate) {
         this.portCallUrl = portCallUrl;
         this.restTemplate = restTemplate;
