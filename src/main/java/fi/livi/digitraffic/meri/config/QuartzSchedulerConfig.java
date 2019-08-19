@@ -51,7 +51,7 @@ public class QuartzSchedulerConfig {
 
     private static final Logger log = LoggerFactory.getLogger(QuartzSchedulerConfig.class);
 
-    private final static String JOB_SCHEDLULE_STRING_FORMAT = "dt.job.%s.schedule";
+    private final static String JOB_SCHEDULE_STRING_FORMAT = "dt.job.%s.schedule";
 
     private final Environment environment;
 
@@ -213,7 +213,7 @@ public class QuartzSchedulerConfig {
 
     private FactoryBean<? extends Trigger> createTrigger(final JobDetail jobDetail) {
 
-        final String jobScheduleProperty = String.format(JOB_SCHEDLULE_STRING_FORMAT, jobDetail.getJobClass().getSimpleName());
+        final String jobScheduleProperty = String.format(JOB_SCHEDULE_STRING_FORMAT, jobDetail.getJobClass().getSimpleName());
         log.info("jobScheduleProperty={}", jobScheduleProperty);
         final String jobScheduleExpression = environment.getProperty(jobScheduleProperty);
         if (jobScheduleExpression == null) {

@@ -26,20 +26,20 @@ metadata.csv.baseUrl = https://raw.githubusercontent.com/tmfg/metadata/master/cs
 # Only one of Day-of-Month and Day-of-Week can be set at the time (?=no value set)
 
 # Every 30 seconds
-dt.job.SseReportUpdateJobUpdateJob.frequency =     0/30 * * * * ?
+dt.job.SseReportUpdateJobUpdateJob.schedule =     0/30 * * * * ?
 
 # Every 1 minute
-dt.job.PortCallUpdateJob.frequency =               0 * * * * ?
-dt.job.WinterNavigationDirwayUpdateJob.frequency = 0 * * * * ?
-dt.job.WinterNavigationShipUpdateJob.frequency =   0 * * * * ?
-dt.job.WinterNavigationPortUpdateJob.frequency =   0 * * * * ?
+dt.job.PortCallUpdateJob.schedule =               0 * * * * ?
+dt.job.WinterNavigationDirwayUpdateJob.schedule = 0 * * * * ?
+dt.job.WinterNavigationShipUpdateJob.schedule =   0 * * * * ?
+dt.job.WinterNavigationPortUpdateJob.schedule =   0 * * * * ?
 
 # Every 30 minutes
-dt.job.VesselDetailsUpdateJob.frequency =          0 0/30 * * * ?
+dt.job.VesselDetailsUpdateJob.schedule =          0 0/30 * * * ?
 
 # Every 12 hours
-dt.job.BerthUpdateJob.frequency =                  0 0 0/12 * * ?
-dt.job.SsnLocationUpdateJob.frequency =            0 0 0/12 * * ?
+dt.job.BerthUpdateJob.schedule =                  0 0 0/12 * * ?
+dt.job.SsnLocationUpdateJob.schedule =            0 0 0/12 * * ?
 
 # Other scheduling related properties
 portCallUpdateJob.maxTimeFrameToFetch = 360000
