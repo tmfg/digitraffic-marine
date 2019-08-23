@@ -58,9 +58,9 @@ public class SseServiceTestWithMocks extends AbstractTestBase {
 
         final TlscSseReports postObject = objectMapper.readerFor(TlscSseReports.class).readValue(postJson);
 
-        verifyConverterTimes(0, SSEReport.class,   SseReport.class);
-        verifyConverterTimes(0, Site.class,        SseSite.class);
-        verifyConverterTimes(0, SSEFields.class,   SseFields.class);
+        verifyConverterTimes(0, SSEReport.class, SseReport.class);
+        verifyConverterTimes(0, Site.class, SseSite.class);
+        verifyConverterTimes(0, SSEFields.class, SseFields.class);
         verifyConverterTimes(0, ExtraFields.class, SseExtraFields.class);
 
         Mockito.verify(sseTlscReportRepository, Mockito.times(0))
@@ -77,15 +77,15 @@ public class SseServiceTestWithMocks extends AbstractTestBase {
 
         final int saved = sseService.saveTlscSseReports(postObject);
 
-        verifyConverterTimes(2, SSEReport.class,   SseReport.class);
-        verifyConverterTimes(2, Site.class,        SseSite.class);
-        verifyConverterTimes(2, SSEFields.class,   SseFields.class);
-        verifyConverterTimes(2, ExtraFields.class, SseExtraFields.class);
+        verifyConverterTimes(3, SSEReport.class, SseReport.class);
+        verifyConverterTimes(3, Site.class, SseSite.class);
+        verifyConverterTimes(3, SSEFields.class, SseFields.class);
+        verifyConverterTimes(3, ExtraFields.class, SseExtraFields.class);
 
-        Mockito.verify(sseTlscReportRepository, Mockito.times(2))
+        Mockito.verify(sseTlscReportRepository, Mockito.times(3))
             .save(any(SseTlscReport.class));
 
-        Assert.assertEquals(2, saved);
+        Assert.assertEquals(3, saved);
     }
 
     private void verifyConverterTimes(final int times, Class<?> sourceType, Class<?> targetType) {
