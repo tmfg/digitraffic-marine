@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +49,6 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
     }
 
     @Test
-//    @Ignore("FIXME! Does not work when dockerized")
     public void testAllNauticalWarnings() throws Exception {
         // Mock Pooki API identifier for this test
         final String key = new Object() {
@@ -186,7 +184,8 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
                 pookiDummyController.getResponseQueue(key).size(), equalTo(1));
     }
 
-    @Test public void testPooki500WithWrongCompressionHeadersWillNotBreakErrorHandlerDPO_90() {
+    @Test
+    public void testPooki500WithWrongCompressionHeadersWillNotBreakErrorHandlerDPO_90() {
         // Key for PookiMock to assign the responses for this test case
         final String key = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -200,9 +199,9 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
         pookiDummyController.setResponseQueue(key, new LinkedList<>(Arrays.asList(R1, R2)));
         nauticalWarningController.setPookiUrl(pookiBaseUrl + "published/" + key);
 
-        final ResponseEntity<String> response = template
-                .getForEntity(String.format("%s/%s/published", localUrl, API), String.class);
+        final ResponseEntity<String> response = template.getForEntity(String.format("%s/%s/published", localUrl, API), String.class);
         final String body = response.getBody();
+
         assertThat(body, containsString(String.format("\"status\":%s", HttpStatus.BAD_GATEWAY.value())));
         assertThat(body, containsString(String.format("\"error\":\"%s\"", HttpStatus.BAD_GATEWAY.getReasonPhrase())));
         assertThat(body, containsString("\"message\":\"Bad Gateway. Pooki responded twice with error response.\""));

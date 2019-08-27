@@ -26,6 +26,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.controller.VesselLocationController;
+import fi.livi.digitraffic.meri.controller.exception.PookiException;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
@@ -73,7 +74,7 @@ public class DefaultExceptionHandlerTest extends AbstractTestBase {
     }
 
     private <T extends Throwable> void testException(final T throwable, final int statuscode, final LogMode logMode) throws Exception {
-        when(vesselLocationService.findAllowedLocations(anyInt(), nullable(Long.class), nullable(Long.class))).thenThrow(throwable);
+        when(vesselLocationService.findAllowedLocations(anyInt(), nullable(Long.class), nullable(Long.class))).thenAnswer(i -> { throw throwable; } );
 
         performQuery()
             .andExpect(status().is(statuscode));
@@ -131,5 +132,10 @@ public class DefaultExceptionHandlerTest extends AbstractTestBase {
     @Test
     public void methodArgumentTypeMismatchException() throws Exception {
         testException(MethodArgumentTypeMismatchException.class, 400, LogMode.INFO);
+    }
+
+    @Test
+    public void pookiException() throws Exception {
+        testException(PookiException.class, 502, LogMode.INFO);
     }
 }
