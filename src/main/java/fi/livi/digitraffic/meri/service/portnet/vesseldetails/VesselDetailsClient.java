@@ -25,9 +25,9 @@ public class VesselDetailsClient {
     private static final Logger log = LoggerFactory.getLogger(VesselDetailsClient.class);
 
     public VesselDetailsClient(@Value("${dt.portnet.vesselDetails.url}") final String vesselDetailsUrl,
-                               final RestTemplate jax2bRestTemplate) {
+                               final RestTemplate authenticatedRestTemplate) {
         this.vesselDetailsUrl = vesselDetailsUrl;
-        this.restTemplate = jax2bRestTemplate;
+        this.restTemplate = authenticatedRestTemplate;
     }
 
     public VesselList getVesselList(final ZonedDateTime from) {
