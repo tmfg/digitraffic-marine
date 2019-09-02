@@ -178,7 +178,8 @@ public class DefaultExceptionHandler {
         return getErrorResponseEntity(httpStatus, errorMsg, request);
     }
 
-    private ResponseEntity getErrorResponseEntity(final HttpStatus httpStatus, final String errorMsg, final ServletWebRequest request) {
+    private ResponseEntity<ErrorResponse> getErrorResponseEntity(final HttpStatus httpStatus, final String errorMsg,
+        final ServletWebRequest request) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 

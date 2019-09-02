@@ -20,12 +20,12 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 public class VesselDetailsUpdaterTest extends AbstractTestBase {
 
@@ -42,7 +42,7 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
     private UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
-    private Jax2bRestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     private MockRestServiceServer server;
 

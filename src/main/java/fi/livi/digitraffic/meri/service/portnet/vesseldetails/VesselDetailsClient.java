@@ -10,25 +10,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
-import fi.livi.digitraffic.meri.service.portnet.PortCallClient;
-import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 @Service
 @ConditionalOnNotWebApplication
 public class VesselDetailsClient {
     private final String vesselDetailsUrl;
-    private final Jax2bRestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     private static final Logger log = LoggerFactory.getLogger(VesselDetailsClient.class);
 
     public VesselDetailsClient(@Value("${dt.portnet.vesselDetails.url}") final String vesselDetailsUrl,
-                               final Jax2bRestTemplate restTemplate) {
+                               final RestTemplate jax2bRestTemplate) {
         this.vesselDetailsUrl = vesselDetailsUrl;
-        this.restTemplate = restTemplate;
+        this.restTemplate = jax2bRestTemplate;
     }
 
     public VesselList getVesselList(final ZonedDateTime from) {
