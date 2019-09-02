@@ -17,6 +17,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -46,7 +47,14 @@ public class RestTemplateConfiguration {
         return jax2bRestTemplate;
     }
 
+    @Bean("authenticatedRestTemplate")
+    @ConditionalOnExpression("'${config.test}' == 'true'")
+    public RestTemplate restTemplateForTest() {
+        return new RestTemplate(clientHttpRequestFactory(HttpClients.createSystem()));
+    }
+
     @Bean
+    @ConditionalOnExpression("'${config.test}' != 'true'")
     public RestTemplate authenticatedRestTemplate() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException, InvalidKeySpecException {
         final KeyStore clientKeyStore = openKeyStore(PORTNET_PRIVATE_KEY_STORE_FILENAME);
         final KeyStore serverKeyStore = generateKeyStore(PORTNET_PUBLIC_KEY_FILENAME);
