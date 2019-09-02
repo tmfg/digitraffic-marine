@@ -28,6 +28,7 @@ import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 public class VesselDetailsUpdaterTest extends AbstractTestBase {
     private VesselDetailsClient vesselDetailsClient;
     private VesselDetailsUpdater vesselDetailsUpdater;
+    private MockRestServiceServer server;
 
     @Autowired
     private VesselDetailsRepository vesselDetailsRepository;
@@ -35,15 +36,14 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
 
-    private MockRestServiceServer server;
+    @Autowired
+    private RestTemplate authenticatedRestTemplate;
 
     @Before
     public void before() {
-        final RestTemplate restTemplate = new RestTemplate();
-
-        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", restTemplate);
+        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", authenticatedRestTemplate);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);
-        server = MockRestServiceServer.createServer(restTemplate);
+        server = MockRestServiceServer.createServer(authenticatedRestTemplate);
     }
 
     @Test

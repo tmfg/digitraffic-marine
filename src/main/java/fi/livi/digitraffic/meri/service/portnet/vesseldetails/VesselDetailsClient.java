@@ -34,13 +34,11 @@ public class VesselDetailsClient {
         final String url = buildUrl(from);
         final VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
 
-//        logInfo(vesselList);
-
         return vesselList;
     }
 
     private static void logInfo(final VesselList vesselList) {
-        log.info("Number of received vessel details: " + vesselList.getVesselDetails().size());
+        log.info("VesselDetailsCount={}", vesselList.getVesselDetails().size());
 
         final ObjectMapper mapper = new ObjectMapper();
         try {

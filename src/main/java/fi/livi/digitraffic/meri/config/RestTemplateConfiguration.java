@@ -50,7 +50,7 @@ public class RestTemplateConfiguration {
     @Bean("authenticatedRestTemplate")
     @ConditionalOnExpression("'${config.test}' == 'true'")
     public RestTemplate restTemplateForTest() {
-        return new RestTemplate(clientHttpRequestFactory(HttpClients.createSystem()));
+        return jax2bRestTemplate();
     }
 
     @Bean
