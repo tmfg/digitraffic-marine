@@ -1,4 +1,4 @@
-# digitraffic-ais
+# digitraffic-marine
 
 ## Development
 
