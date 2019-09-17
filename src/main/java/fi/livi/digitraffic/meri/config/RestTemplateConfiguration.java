@@ -1,14 +1,12 @@
 package fi.livi.digitraffic.meri.config;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
 
@@ -27,8 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfiguration {
-    private static final String PORTNET_PRIVATE_KEY_STORE_FILENAME = "portnet.p12";
-    private static final String PORTNET_PUBLIC_KEY_FILENAME = "portnet-cert.cer";
+    private static final String PORTNET_PRIVATE_KEY_STORE_FILENAME = "classpath:portnet.p12";
 
     private static final char[] EMPTY_PASSWORD = "".toCharArray();
 
@@ -56,8 +53,7 @@ public class RestTemplateConfiguration {
     @Bean
     @ConditionalOnExpression("'${config.test}' != 'true'")
     public RestTemplate authenticatedRestTemplate() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException, InvalidKeySpecException {
-        final KeyStore clientKeyStore = openKeyStore(PORTNET_PRIVATE_KEY_STORE_FILENAME);
-        final KeyStore serverKeyStore = generateKeyStore(PORTNET_PUBLIC_KEY_FILENAME);
+        final KeyStore clientKeyStore = openKeyStore();
 
         final SSLContextBuilder sslContextBuilder = new SSLContextBuilder()
             .setProtocol("TLS")
@@ -73,23 +69,10 @@ public class RestTemplateConfiguration {
         return new RestTemplate(clientHttpRequestFactory(httpClient));
     }
 
-    private KeyStore openKeyStore(final String filename) throws KeyStoreException, CertificateException, NoSuchAlgorithmException,
+    private KeyStore openKeyStore() throws KeyStoreException, CertificateException, NoSuchAlgorithmException,
         IOException {
         final KeyStore ks = KeyStore.getInstance("PKCS12");
-        //ks.load(ClassLoader.getSystemResourceAsStream(filename), EMPTY_PASSWORD);
-        ks.load(this.getClass().getClassLoader().getResourceAsStream(filename), EMPTY_PASSWORD);
-        return ks;
-    }
-
-    private KeyStore generateKeyStore(final String filename) throws CertificateException, KeyStoreException,
-        IOException, NoSuchAlgorithmException {
-        final CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        //final InputStream is = ClassLoader.getSystemResourceAsStream(filename);
-        final InputStream is = this.getClass().getClassLoader().getResourceAsStream(filename);
-        final KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-        ks.load(null);
-        ks.setCertificateEntry("alias", cf.generateCertificate(is));
-
+        ks.load(this.getClass().getClassLoader().getResourceAsStream(PORTNET_PRIVATE_KEY_STORE_FILENAME), EMPTY_PASSWORD);
         return ks;
     }
 
