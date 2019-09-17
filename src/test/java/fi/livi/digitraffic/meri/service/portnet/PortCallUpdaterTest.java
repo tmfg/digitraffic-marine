@@ -49,7 +49,7 @@ public class PortCallUpdaterTest extends AbstractTestBase {
 
     @Before
     public void before() {
-        portCallClient = Mockito.spy(new PortCallClient("portCallUrl/", jax2bRestTemplate));
+        portCallClient = Mockito.spy(new PortCallClient("portCallUrl", jax2bRestTemplate));
         portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, 42, 42);
         server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
@@ -60,13 +60,13 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     public void updatePortCallsSucceeds() throws IOException {
         String response = readFile("portcalls/portCallResponse1.xml");
 
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl?startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
         response = readFile("portcalls/portCallResponse2.xml");
 
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl?startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
@@ -108,11 +108,11 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     public void timestampCheck() throws IOException {
         String response = readFile("portcalls/portCallResponse_timestamp.xml");
 
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl?startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
             .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
             .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
+        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl?startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
             .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
             .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
