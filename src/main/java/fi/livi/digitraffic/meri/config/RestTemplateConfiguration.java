@@ -76,16 +76,16 @@ public class RestTemplateConfiguration {
     private KeyStore openKeyStore(final String filename) throws KeyStoreException, CertificateException, NoSuchAlgorithmException,
         IOException {
         final KeyStore ks = KeyStore.getInstance("PKCS12");
-        ks.load(ClassLoader.getSystemResourceAsStream(filename), EMPTY_PASSWORD);
-
+        //ks.load(ClassLoader.getSystemResourceAsStream(filename), EMPTY_PASSWORD);
+        ks.load(this.getClass().getClassLoader().getResourceAsStream(filename), EMPTY_PASSWORD);
         return ks;
     }
 
     private KeyStore generateKeyStore(final String filename) throws CertificateException, KeyStoreException,
         IOException, NoSuchAlgorithmException {
         final CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        final InputStream is = ClassLoader.getSystemResourceAsStream(filename);
-
+        //final InputStream is = ClassLoader.getSystemResourceAsStream(filename);
+        final InputStream is = this.getClass().getClassLoader().getResourceAsStream(filename);
         final KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
         ks.load(null);
         ks.setCertificateEntry("alias", cf.generateCertificate(is));
