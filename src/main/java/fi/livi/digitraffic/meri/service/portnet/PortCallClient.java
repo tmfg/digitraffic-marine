@@ -60,6 +60,6 @@ public class PortCallClient {
         final String timeEndParameter = timeToString("endTme", end);
 
         // order is important, must be startDte,endDte,startTme,endTme, otherwise 404
-        return String.format("%s%s&%s&%s&%s", portCallUrl, dateStartParameter, dateEndParameter, timeStartParameter, timeEndParameter);
+        return String.format("%s?%s&%s&%s&%s", portCallUrl, dateStartParameter, dateEndParameter, timeStartParameter, timeEndParameter);
     }
 }
