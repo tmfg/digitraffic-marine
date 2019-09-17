@@ -25,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfiguration {
-    private static final String PORTNET_PRIVATE_KEY_STORE_FILENAME = "classpath:portnet.p12";
+    private static final String PORTNET_PRIVATE_KEY_STORE_FILENAME = "portnet.p12";
 
     private static final char[] EMPTY_PASSWORD = "".toCharArray();
 
