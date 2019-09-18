@@ -5,12 +5,14 @@ import static fi.livi.digitraffic.meri.util.TimeUtil.dateToString;
 import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +32,7 @@ public class PortCallClient {
                           final RestTemplate authenticatedRestTemplate) {
         this.portCallUrl = portCallUrl;
         this.restTemplate = authenticatedRestTemplate;
+        this.restTemplate.setMessageConverters(Collections.singletonList(new Jaxb2RootElementHttpMessageConverter()));
     }
 
     @Retryable
