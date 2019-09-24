@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
@@ -20,20 +18,17 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 public class VesselDetailsUpdaterTest extends AbstractTestBase {
-
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
     private VesselDetailsClient vesselDetailsClient;
-
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
     private VesselDetailsUpdater vesselDetailsUpdater;
+    private MockRestServiceServer server;
 
     @Autowired
     private VesselDetailsRepository vesselDetailsRepository;
@@ -42,57 +37,56 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
     private UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
-    private Jax2bRestTemplate restTemplate;
-
-    private MockRestServiceServer server;
+    private RestTemplate authenticatedRestTemplate;
 
     @Before
     public void before() {
-        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", restTemplate);
+        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", authenticatedRestTemplate);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);
-        server = MockRestServiceServer.createServer(restTemplate);
+        server = MockRestServiceServer.createServer(authenticatedRestTemplate);
     }
 
     @Test
     @Transactional
     @Rollback
     public void updateVesselDetailsSucceeds() throws IOException {
-
-        String response = readFile("vesselDetailsResponse1.xml");
-
-        server.expect(MockRestRequestMatchers.requestTo("/vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
-                .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-                .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
-
-        response = readFile("vesselDetailsResponse2.xml");
+        final String response1 = readFile("vesselDetails/vesselDetailsResponse1.xml");
+        final String response2 = readFile("vesselDetails/vesselDetailsResponse2.xml");
 
         server.expect(MockRestRequestMatchers.requestTo("/vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-                .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
+                .andRespond(MockRestResponseCreators.withSuccess(response1, MediaType.APPLICATION_XML));
+
+        server.expect(MockRestRequestMatchers.requestTo("/vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
+            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
+            .andRespond(MockRestResponseCreators.withSuccess(response2, MediaType.APPLICATION_XML));
 
         final ZonedDateTime from = ZonedDateTime.of(2016, 1, 29, 6, 30, 59, 0, ZoneOffset.UTC);
 
         vesselDetailsUpdater.updateVesselDetails(from);
 
-        List<VesselDetails> vessels = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L, 99995524L, 99995388L));
+        final List<VesselDetails> vessels1 = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L,
+            99995524L,
+            99995388L));
 
-        assertEquals(4, vessels.size());
-        assertEquals(358L, vessels.get(0).getVesselId().longValue());
-        assertEquals("Oulu", vessels.get(0).getVesselRegistration().getPortOfRegistry());
-        assertEquals(93, vessels.get(0).getVesselConstruction().getVesselTypeCode().intValue());
-        assertEquals("CUST", vessels.get(0).getVesselSystem().getShipVerifier());
-        assertEquals(1042, vessels.get(0).getVesselDimensions().getGrossTonnage().intValue());
+        assertEquals(4, vessels1.size());
+        assertEquals(358L, vessels1.get(0).getVesselId().longValue());
+        assertEquals("Oulu", vessels1.get(0).getVesselRegistration().getPortOfRegistry());
+        assertEquals(93, vessels1.get(0).getVesselConstruction().getVesselTypeCode().intValue());
+        assertEquals("CUST", vessels1.get(0).getVesselSystem().getShipVerifier());
+        assertEquals(1042, vessels1.get(0).getVesselDimensions().getGrossTonnage().intValue());
 
         vesselDetailsUpdater.updateVesselDetails(from);
         server.verify();
 
-        vessels = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L, 99995524L, 99995388L));
+        final List<VesselDetails> vessels2 = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L,
+            99995524L, 99995388L));
 
-        assertEquals(4, vessels.size());
-        assertEquals(358L, vessels.get(0).getVesselId().longValue());
-        assertEquals("Turku", vessels.get(0).getVesselRegistration().getPortOfRegistry());
-        assertEquals(95, vessels.get(0).getVesselConstruction().getVesselTypeCode().intValue());
-        assertEquals("CUST", vessels.get(0).getVesselSystem().getShipVerifier());
-        assertEquals(666, vessels.get(0).getVesselDimensions().getGrossTonnage().intValue());
+        assertEquals(4, vessels2.size());
+        assertEquals(358L, vessels2.get(0).getVesselId().longValue());
+        assertEquals("Turku", vessels2.get(0).getVesselRegistration().getPortOfRegistry());
+        assertEquals(95, vessels2.get(0).getVesselConstruction().getVesselTypeCode().intValue());
+        assertEquals("CUST", vessels2.get(0).getVesselSystem().getShipVerifier());
+        assertEquals(666, vessels2.get(0).getVesselDimensions().getGrossTonnage().intValue());
     }
 }

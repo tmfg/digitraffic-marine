@@ -4,13 +4,11 @@ import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -19,11 +17,8 @@ import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
@@ -31,12 +26,12 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
-import fi.livi.digitraffic.meri.util.web.Jax2bRestTemplate;
 
 public class PortCallUpdaterTest extends AbstractTestBase {
     @Autowired
@@ -46,7 +41,7 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     private PortCallRepository portCallRepository;
 
     @Autowired
-    private Jax2bRestTemplate jax2bRestTemplate;
+    private RestTemplate jax2bRestTemplate;
 
     private PortCallClient portCallClient;
     private PortCallUpdater portCallUpdater;
@@ -66,14 +61,14 @@ public class PortCallUpdaterTest extends AbstractTestBase {
         String response = readFile("portcalls/portCallResponse1.xml");
 
         server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
-                .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-                .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
+            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
+            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
         response = readFile("portcalls/portCallResponse2.xml");
 
         server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
-                .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-                .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
+            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
+            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
 
         final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, FINLAND_ZONE);
         final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, FINLAND_ZONE);
@@ -81,19 +76,19 @@ public class PortCallUpdaterTest extends AbstractTestBase {
         portCallUpdater.updatePortCalls(from, to);
 
         List<PortCallJson> portCalls = portCallRepository.findByPortCallIdIn(Arrays.asList(1975743L, 1975010L)).stream()
-                .sorted(Comparator.comparing(PortCallJson::getPortCallId))
-                .collect(Collectors.toList());
+            .sorted(Comparator.comparing(PortCallJson::getPortCallId))
+            .collect(Collectors.toList());
 
         assertTrue(portCalls.size() >= 2);
 
         PortCallJson portCall1 = portCalls.stream().filter(portCall ->
-                portCall.getPortCallId().equals(1975743L) &&
+            portCall.getPortCallId().equals(1975743L) &&
                 portCall.getPortCallTimestamp().equals(new Timestamp(1479904755000L))).collect(Collectors.toList()).get(0);
         assertEquals("FIVAA", portCall1.getPortToVisit());
         assertEquals("Wasa Express", portCall1.getVesselName());
 
         PortCallJson portCall2 = portCalls.stream().filter(portCall ->
-                portCall.getPortCallId().equals(1975010L) &&
+            portCall.getPortCallId().equals(1975010L) &&
                 portCall.getPortCallTimestamp().equals(new Timestamp(1479904750000L))).collect(Collectors.toList()).get(0);
         assertEquals("FIRAU", portCall2.getPortToVisit());
         assertEquals("Mons", portCall2.getVesselName());
