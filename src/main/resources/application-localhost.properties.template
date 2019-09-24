@@ -12,8 +12,8 @@ marine.datasource.url=jdbc:postgresql://localhost:54321/marine?reWriteBatchedIns
 marine.datasource.username=marine
 marine.datasource.password=marine
 
-dt.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
-dt.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetails/List/
+dt.portnet.portcall.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/satamakaynti/v1.0
+dt.portnet.vesselDetails.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/alustiedot/v1.0
 
 winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/services/IBNet_Baltice_Service/
 
