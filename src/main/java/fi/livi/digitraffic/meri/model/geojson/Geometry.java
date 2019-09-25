@@ -13,12 +13,16 @@ import io.swagger.annotations.ApiModelProperty;
     "type",
     "coordinates"
 })
-@ApiModel(description = "GeoJSON Geometry object", parent = GeoJsonObject.class, subTypes = { LineString.class, MultiLineString.class, MultiPoint.class, MultiPolygon.class, Point.class, Polygon.class})
+@ApiModel(description = "GeoJSON Geometry object")
 public class Geometry<T extends List<?>> extends GeoJsonObject {
+
+    public static final String COORD_FORMAT_WGS84 = "Coordinates are in WGS84 format in decimal degrees.";
+    public static final String COORD_FORMAT_WGS84_LONG = "Coordinates are in WGS84 format in decimal degrees: [LONGITUDE, LATITUDE, {ALTITUDE}].";
+    public static final String COORD_FORMAT_WGS84_LONG_INC_ALT = COORD_FORMAT_WGS84_LONG + " Altitude is optional and measured in meters.";
 
     private GeometryType type;
 
-    @ApiModelProperty(value = "WGS84 coordinates in decimal degrees. [LONGITUDE, LATITUDE, {ALTITUDE}]. Altitude is optional.", required = true)
+    @ApiModelProperty(value = COORD_FORMAT_WGS84_LONG_INC_ALT, required = true)
     @JsonProperty(required = true)
     private T coordinates;
 
@@ -44,12 +48,8 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     @ApiModelProperty( value = "Type of GeoJSON Geometry object", allowableValues = "Point,MultiPoint,LineString,MultiLineString,Polygon,MultiPolygon", required = true)
     @Override
-    public GeometryType getType() {
-        return type;
-    }
-
-    public void setType(GeometryType type) {
-        this.type = type;
+    public String getType() {
+        return type.name();
     }
 
     @Override

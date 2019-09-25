@@ -4,17 +4,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Feature;
 import fi.livi.digitraffic.meri.model.geojson.Geometry;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @JsonPropertyOrder({ "name",
                      "type",
                      "geometry",
                      "properties" })
-@ApiModel(description = "GeoJSON Feature object")
 public class WinterNavigationDirwayFeature extends Feature<Geometry, WinterNavigationDirwayProperties> {
 
-    @ApiModelProperty(value = "Name of the dirway", required = true)
+    @ApiModelProperty(value = "Name of the dirway", required = true, position = 1)
     public final String name;
 
     public WinterNavigationDirwayFeature(final String name,

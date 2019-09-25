@@ -12,23 +12,38 @@ marine.datasource.url=jdbc:postgresql://localhost:54321/marine?reWriteBatchedIns
 marine.datasource.username=marine
 marine.datasource.password=marine
 
-ais.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
-ais.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetails/List/
+dt.portnet.portcall.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/satamakaynti/v1.0
+dt.portnet.vesselDetails.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/alustiedot/v1.0
 
 winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/services/IBNet_Baltice_Service/
 
 metadata.csv.baseUrl = https://raw.githubusercontent.com/tmfg/metadata/master/csv/
 
-portCallUpdateJob.frequency = 60000
-portCallUpdateJob.maxTimeFrameToFetch = 3600000
+# Job schedules in ms or by cron in UTC
+# Cron: http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html
+# To disable job, just comment it out.
+# Fields: Seconds Minutes Hours Day-of-Month Month Day-of-Week Year (optional field)
+# Only one of Day-of-Month and Day-of-Week can be set at the time (?=no value set)
+
+# Every 30 seconds
+dt.job.SseReportUpdateJobUpdateJob.schedule =     0/30 * * * * ?
+
+# Every 1 minute
+dt.job.PortCallUpdateJob.schedule =               0 * * * * ?
+dt.job.WinterNavigationDirwayUpdateJob.schedule = 0 * * * * ?
+dt.job.WinterNavigationShipUpdateJob.schedule =   0 * * * * ?
+dt.job.WinterNavigationPortUpdateJob.schedule =   0 * * * * ?
+
+# Every 30 minutes
+dt.job.VesselDetailsUpdateJob.schedule =          0 0/30 * * * ?
+
+# Every 12 hours
+dt.job.BerthUpdateJob.schedule =                  0 0 0/12 * * ?
+dt.job.SsnLocationUpdateJob.schedule =            0 0 0/12 * * ?
+
+# Other scheduling related properties
+portCallUpdateJob.maxTimeFrameToFetch = 360000
 portCallUpdateJob.overlapTimeFrame = 2000
-berthUpdateJob.frequency = 43200000
-ssnLocationUpdateJob.frequency = 43200000
-vesselDetailsUpdateJob.frequency = 1800000
-winterNavigationShipUpdateJob.frequency = 300000
-winterNavigationPortUpdateJob.frequency = 300000
-winterNavigationDirwayUpdateJob.frequency = 900000
-sseReportUpdateJobUpdateJob.frequency = 30000
 
 # AIS-tcp gateway
 ais.connector.address =
@@ -47,7 +62,7 @@ cache.allowedMmsis = #{60*1000}
 # daemon or web
 app.type=web
 
-# Web application type.  Should be none for daemon process
+# Web application type. Should be none for daemon process and servlet for webapp
 spring.main.web-application-type=servlet
 
 # if set to false tcp reading(ais vessel locations and metadata) are not activated. Should be true for daemon processes.

@@ -1,33 +1,31 @@
 package fi.livi.digitraffic.meri.model.geojson;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "GeoJSON Feature object", parent = GeoJsonObject.class)
-public abstract class Feature<T extends Geometry, PropertiesType>  extends GeoJsonObject {
+@ApiModel(description = "GeoJSON Feature object")
+public abstract class Feature<G extends Geometry, P extends Properties>  extends GeoJsonObject {
 
-    @ApiModelProperty(value = "Type of GeoJSON object", allowableValues = "Feature", required = true)
+    @ApiModelProperty(value = "Type of GeoJSON object", allowableValues = "Feature", required = true, example = "Feature", position = 2)
     private final String type = "Feature";
 
-    @ApiModelProperty(value = "GeoJSON Geometry object", required = true)
+    @ApiModelProperty(value = "GeoJSON Geometry object", required = true, position = 3)
     @JsonProperty("geometry")
-    @JsonInclude(JsonInclude.Include.ALWAYS)
-    private T geometry;
+    private G geometry;
 
-    @ApiModelProperty(value = "GeoJSON Properties object", required = true)
-    private PropertiesType properties;
+    @ApiModelProperty(value = "GeoJSON Properties object", required = true, position = 4)
+    private P properties;
 
     public Feature() {
     }
 
-    public Feature(final PropertiesType properties) {
+    public Feature(final P properties) {
         this.properties = properties;
     }
 
-    public Feature(final T geometry, final PropertiesType properties) {
+    public Feature(final G geometry, final P properties) {
         this.geometry = geometry;
         this.properties = properties;
     }
@@ -37,21 +35,19 @@ public abstract class Feature<T extends Geometry, PropertiesType>  extends GeoJs
         return type;
     }
 
-    public T getGeometry() {
+    public G getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(final T geometry) {
+    public void setGeometry(final G geometry) {
         this.geometry = geometry;
     }
 
-    public PropertiesType getProperties() {
+    public P getProperties() {
         return properties;
     }
 
-    public void setProperties(PropertiesType properties) {
+    public void setProperties(final P properties) {
         this.properties = properties;
     }
-
-
 }

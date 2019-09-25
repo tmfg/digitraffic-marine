@@ -27,6 +27,9 @@ as ***application-localhost.properties*** and configure it according to your env
 
 ### Running the application
 
+Before building application with tests enabled, start dbmarine instance.
+See [dbmarine/README.md](dbmarine/README.md).
+
     # tunnel ie. port 18080 to server that has access to pooki
     $ ssh user@server -L18080:remote.server.ip:80
 

@@ -57,7 +57,7 @@ public class NauticalWarningController {
     }
 
     @Autowired
-    public NauticalWarningController(@Value("${ais.pooki.url}") final String pookiUrl) {
+    public NauticalWarningController(@Value("${dt.pooki.url}") final String pookiUrl) {
         this.pookiUrl = pookiUrl;
         final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =
                 new HttpComponentsClientHttpRequestFactory(HttpClientBuilder.create().build());

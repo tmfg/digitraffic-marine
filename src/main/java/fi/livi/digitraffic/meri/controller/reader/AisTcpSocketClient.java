@@ -81,8 +81,6 @@ public class AisTcpSocketClient implements AutoCloseable {
 
     public boolean connect() throws IOException {
         if (isConnecting.compareAndSet(false, true)) {
-            //log.info("Connecting to {}:{}", aisAddress, aisPort);
-
             try {
                 socket = createSocket();
                 aisReader = createAisReader();
@@ -179,20 +177,29 @@ public class AisTcpSocketClient implements AutoCloseable {
 
     public boolean reconnect() throws Exception {
         log.info("Reconnect to {}:{}", aisAddress, aisPort);
-        close();
+
+        try {
+            close();
+        } catch (Exception e) {
+            log.warn("Failed to close connection", e);
+        }
+
         return connect();
     }
 
     @Override
     public void close() throws Exception {
-        //log.info("Disconnecting from {}:{}", aisAddress, aisPort);
-        logoff();
+        try {
+            logoff();
+        } catch (Exception e) {
+            log.warn("Connection already lost", e);
+        }
+
         socket.close();
         log.info("Disconnected from {}:{}", aisAddress, aisPort);
     }
 
     private void logoff() throws IOException {
-        //log.info("Logging off from {}:{}", aisAddress, aisPort);
         send(logoffMessage);
         log.info("Logged off from {}:{}", aisAddress, aisPort);
     }

@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.sql.DataSource;
 
+import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
@@ -14,6 +16,7 @@ import org.quartz.impl.triggers.SimpleTriggerImpl;
 import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
@@ -21,7 +24,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
@@ -43,7 +48,16 @@ import fi.livi.digitraffic.meri.quartz.WinterNavigationShipUpdateJob;
 @ConditionalOnProperty(name = "quartz.enabled")
 @ConditionalOnNotWebApplication
 public class QuartzSchedulerConfig {
+
     private static final Logger log = LoggerFactory.getLogger(QuartzSchedulerConfig.class);
+
+    private final static String JOB_SCHEDULE_STRING_FORMAT = "dt.job.%s.schedule";
+
+    private final Environment environment;
+
+    public QuartzSchedulerConfig(final Environment environment) {
+        this.environment = environment;
+    }
 
     @Bean
     public JobFactory jobFactory(final ApplicationContext applicationContext)     {
@@ -150,51 +164,43 @@ public class QuartzSchedulerConfig {
     }
 
     @Bean
-    public SimpleTriggerFactoryBean portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail,
-                                                             @Value("${portCallUpdateJob.frequency}") final long frequency) {
-        return createTrigger(portCallUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail) {
+        return createTrigger(portCallUpdateJobDetail);
     }
 
     @Bean
-    public SimpleTriggerFactoryBean berthUpdateJobTrigger(final JobDetail berthUpdateJobDetail,
-                                                          @Value("${berthUpdateJob.frequency}") final long frequency) {
-        return createTrigger(berthUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> berthUpdateJobTrigger(final JobDetail berthUpdateJobDetail) {
+        return createTrigger(berthUpdateJobDetail);
     }
 
     @Bean
-    public SimpleTriggerFactoryBean ssnLocationUpdateJobTrigger(final JobDetail ssnLocationUpdateJobDetail,
-                                                                @Value("${ssnLocationUpdateJob.frequency}") final long frequency) {
-        return createTrigger(ssnLocationUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> ssnLocationUpdateJobTrigger(final JobDetail ssnLocationUpdateJobDetail) {
+        return createTrigger(ssnLocationUpdateJobDetail);
     }
 
     @Bean
-    public SimpleTriggerFactoryBean vesselDetailUpdateJobTrigger(final JobDetail vesselDetailsUpdateJobDetail,
-                                                                 @Value("${vesselDetailsUpdateJob.frequency}") final long frequency) {
-        return createTrigger(vesselDetailsUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> vesselDetailUpdateJobTrigger(final JobDetail vesselDetailsUpdateJobDetail) {
+        return createTrigger(vesselDetailsUpdateJobDetail);
     }
 
     @Bean
-    public SimpleTriggerFactoryBean winterNavigationShipUpdateJobTrigger(final JobDetail winterNavigationShipUpdateJobDetail,
-                                                                         @Value("${winterNavigationShipUpdateJob.frequency}") final long frequency) {
-        return createTrigger(winterNavigationShipUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> winterNavigationShipUpdateJobTrigger(final JobDetail winterNavigationShipUpdateJobDetail) {
+        return createTrigger(winterNavigationShipUpdateJobDetail);
     }
 
     @Bean
-    public SimpleTriggerFactoryBean winterNavigationPortUpdateJobTrigger(final JobDetail winterNavigationPortUpdateJobDetail,
-                                                                         @Value("${winterNavigationPortUpdateJob.frequency}") final long frequency) {
-        return createTrigger(winterNavigationPortUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> winterNavigationPortUpdateJobTrigger(final JobDetail winterNavigationPortUpdateJobDetail) {
+        return createTrigger(winterNavigationPortUpdateJobDetail);
     }
 
     @Bean
-    public SimpleTriggerFactoryBean winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail,
-                                                                           @Value("${winterNavigationDirwayUpdateJob.frequency}") final long frequency) {
-        return createTrigger(winterNavigationDirwayUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail) {
+        return createTrigger(winterNavigationDirwayUpdateJobDetail);
     }
 
     @Bean
-    public SimpleTriggerFactoryBean sseReportUpdateJobUpdateJobDetailTrigger(final JobDetail sseReportUpdateJobUpdateJobDetail,
-                                                                            @Value("${sseReportUpdateJobUpdateJob.frequency}") final long frequency) {
-        return createTrigger(sseReportUpdateJobUpdateJobDetail, frequency);
+    public FactoryBean<? extends Trigger> sseReportUpdateJobUpdateJobDetailTrigger(final JobDetail sseReportUpdateJobUpdateJobDetail) {
+        return createTrigger(sseReportUpdateJobUpdateJobDetail);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {
@@ -205,16 +211,64 @@ public class QuartzSchedulerConfig {
         return factoryBean;
     }
 
-    private static SimpleTriggerFactoryBean createTrigger(final JobDetail jobDetail, final long pollFrequencyMs) {
+    private FactoryBean<? extends Trigger> createTrigger(final JobDetail jobDetail) {
+
+        final String jobScheduleProperty = String.format(JOB_SCHEDULE_STRING_FORMAT, jobDetail.getJobClass().getSimpleName());
+        log.info("jobScheduleProperty={}", jobScheduleProperty);
+        final String jobScheduleExpression = environment.getProperty(jobScheduleProperty);
+        if (jobScheduleExpression == null) {
+            log.warn("Not creating trigger for job {} as jobScheduleProperty={} is missing", jobDetail.getJobClass().getSimpleName(), jobScheduleProperty);
+            return null;
+        }
+        try {
+            // Try first to create interval trigger and fallback to cron
+            long intervalMs = Long.parseLong(jobScheduleExpression);
+            return  createRepeatingTrigger(jobDetail, intervalMs);
+        } catch (NumberFormatException nfe) { // cron expression
+            return createCronTrigger(jobDetail, jobScheduleExpression);
+        }
+    }
+
+    /**
+     * @param jobDetail
+     * @param repeatIntervalMs how often is job repeated in ms. If time <= 0 it's triggered only once.
+     * @return
+     */
+    private static SimpleTriggerFactoryBean createRepeatingTrigger(final JobDetail jobDetail, final long repeatIntervalMs) {
+
+        final String jobName = getJobName(jobDetail);
+
         final SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(jobDetail);
-        // Delay first execution 5 seconds
-        factoryBean.setStartDelay(5000L);
-        factoryBean.setRepeatInterval(pollFrequencyMs);
+        factoryBean.setRepeatInterval(repeatIntervalMs);
         factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         // In case of misfire: The first misfired execution is run immediately, remaining are discarded.
         // Next execution happens after desired interval. Effectively the first execution time is moved to current time.
         factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT);
+
+        log.info("Created SimpleTrigger for jobName={} with repeatIntervalMs={}", jobName, repeatIntervalMs);
         return factoryBean;
+    }
+
+    /**
+     * @param jobDetail
+     * @param cronExpression Cron expression for trigger schedule.
+     * @return
+     */
+    private static CronTriggerFactoryBean createCronTrigger(final JobDetail jobDetail, final String cronExpression) {
+
+        final String jobName = getJobName(jobDetail);
+
+        final CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
+        factoryBean.setJobDetail(jobDetail);
+        factoryBean.setCronExpression(cronExpression);
+        factoryBean.setTimeZone(TimeZone.getTimeZone("UTC"));
+        factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW);
+        log.info("Created CronTrigger for jobName={} with cron expression={}", jobName, cronExpression);
+        return factoryBean;
+    }
+
+    private static String getJobName(JobDetail jobDetail) {
+        return jobDetail.getJobClass().getSimpleName();
     }
 }

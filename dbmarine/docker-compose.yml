@@ -1,20 +1,31 @@
 version: '2.0' # docker-compose version
 
-services:
+networks:
+    db_network:
+        external:
+            name: dnet1
 
+services:
   db:
-    image: postgres:9.6.12-alpine
+    image: postgres:9.6.15-alpine
     restart: always
     environment:
       POSTGRES_USER: marine
       POSTGRES_PASSWORD: marine
       POSTGRES_DB: marine
+    networks:
+      - db_network
     ports:
       - 54321:5432
     command: -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.max=10000 -c track_activity_query_size=2048 -c pg_stat_statements.track=all
+    build:
+        context: ./postgis
+        dockerfile: Dockerfile_postgis
 
   db-init:
     build: .
+    networks:
+        - db_network
     volumes:
       - "./sql:/sql"
       - "~/.m2:/root/.m2"
@@ -25,6 +36,8 @@ services:
   pghero:
     image: ankane/pghero
     restart: always
+    networks:
+        - db_network
     environment:
         DATABASE_URL: postgres://marine:marine@db:5432/marine
     links:
