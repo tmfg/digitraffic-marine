@@ -15,7 +15,7 @@ public class SseProperties extends Properties {
     private static final String FIELD_ONLY_FOR_FLOATING_SITE = "This field is available only for FLOATING siteType";
 
     @ApiModelProperty(value = "Identifier of the site", position = 1)
-    private final int siteNumber;
+    public final int siteNumber;
 
     @ApiModelProperty(value = "Site name of the buoy", required = true)
     public final String siteName;
