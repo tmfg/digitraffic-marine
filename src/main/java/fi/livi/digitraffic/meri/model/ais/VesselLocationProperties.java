@@ -53,8 +53,11 @@ public class VesselLocationProperties extends Properties {
     @ApiModelProperty(value = "Location record timestamp in milliseconds from Unix epoch.", required = true)
     public final long timestampExternal;
 
+    @ApiModelProperty(value = "Maritime Mobile Service Identity (nine digit identifier)", required = true, position = 1)
+    public final int mmsi;
+
     public VesselLocationProperties(double sog, double cog, int navStat, int rot, boolean posAcc, boolean raim, Integer heading, long timestamp,
-                                    long timestampExternal) {
+                                    long timestampExternal, int mmsi) {
         this.sog = sog;
         this.cog = cog;
         this.navStat = navStat;
@@ -64,5 +67,6 @@ public class VesselLocationProperties extends Properties {
         this.heading = heading;
         this.timestamp = timestamp;
         this.timestampExternal = timestampExternal;
+        this.mmsi = mmsi;
     }
 }

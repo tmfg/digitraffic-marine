@@ -10,6 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 @JsonPropertyOrder({ "name", "nationality", "seaArea", "portRestrictions" })
 public class WinterNavigationPortProperties extends Properties {
 
+    @ApiModelProperty(value = "Port SafeSeaNet location code", required = true, position = 1)
+    public final String locode;
+
     @ApiModelProperty(value = "Name", required = true)
     public final String name;
 
@@ -22,8 +25,9 @@ public class WinterNavigationPortProperties extends Properties {
     @ApiModelProperty(value = "Currently effective or announced traffic restrictions at the port")
     public final List<PortRestrictionProperty> portRestrictions;
 
-    public WinterNavigationPortProperties(final String name, final String nationality, final String seaArea,
+    public WinterNavigationPortProperties(final String locode, final String name, final String nationality, final String seaArea,
                                           final List<PortRestrictionProperty> portRestrictions) {
+        this.locode = locode;
         this.name = name;
         this.nationality = nationality;
         this.seaArea = seaArea;

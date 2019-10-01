@@ -14,6 +14,9 @@ public class SseProperties extends Properties {
     // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
     private static final String FIELD_ONLY_FOR_FLOATING_SITE = "This field is available only for FLOATING siteType";
 
+    @ApiModelProperty(value = "Identifier of the site", position = 1)
+    private final int siteNumber;
+
     @ApiModelProperty(value = "Site name of the buoy", required = true)
     public final String siteName;
 
@@ -55,8 +58,9 @@ public class SseProperties extends Properties {
                               "show higher readings than the actual air temperature")
     private Integer temperature;
 
-    public SseProperties(final String siteName, final SiteType siteType, final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
+    public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
                          final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature) {
+        this.siteNumber = siteNumber;
         this.siteName = siteName;
         this.siteType = siteType;
         this.lastUpdate = lastUpdate;
@@ -67,6 +71,10 @@ public class SseProperties extends Properties {
         this.heelAngle = heelAngle;
         this.lightStatus = lightStatus;
         this.temperature = temperature;
+    }
+
+    public int getSiteNumber() {
+        return siteNumber;
     }
 
     public String getSiteName() {

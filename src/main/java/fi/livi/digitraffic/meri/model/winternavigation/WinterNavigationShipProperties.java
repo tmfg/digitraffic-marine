@@ -7,6 +7,10 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class WinterNavigationShipProperties extends Properties {
 
+    @ApiModelProperty(value = "Vessel identification code. Equals IMO-{IMO-code} when vessel IMO is present. " +
+        "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true, position = 1)
+    public final String vesselId;
+
     @ApiModelProperty(value = "Data source identifier")
     public final String vesselSource;
 
@@ -79,11 +83,12 @@ public class WinterNavigationShipProperties extends Properties {
                               "like bunkering or crew change.")
     public final List<ShipPlannedActivityProperty> shipPlannedActivities;
 
-    public WinterNavigationShipProperties(String vesselSource, String mmsi, String name, String callSign, String imo, Double dwt, Double length,
+    public WinterNavigationShipProperties(String vesselId, String vesselSource, String mmsi, String name, String callSign, String imo, Double dwt, Double length,
                                           Double width, Double aisLength, Double aisWidth, String dimensions, Double nominalDraught,
                                           String iceClass, String natCode, String nationality, String shipType, Integer aisShipType,
                                           ShipStateProperty shipState, ShipVoyageProperty shipVoyage, List<ShipActivityProperty> shipActivities,
                                           List<ShipPlannedActivityProperty> shipPlannedActivities) {
+        this.vesselId = vesselId;
         this.vesselSource = vesselSource;
         this.mmsi = mmsi;
         this.name = name;
