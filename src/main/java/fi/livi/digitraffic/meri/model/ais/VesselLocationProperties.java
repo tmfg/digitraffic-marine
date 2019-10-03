@@ -4,6 +4,9 @@ import fi.livi.digitraffic.meri.model.geojson.Properties;
 import io.swagger.annotations.ApiModelProperty;
 
 public class VesselLocationProperties extends Properties {
+    @ApiModelProperty(value = "Maritime Mobile Service Identity (nine digit identifier)", required = true, position = 1)
+    public final int mmsi;
+
     @ApiModelProperty(value = "Speed over ground in 1/10 knot steps, 1023 = not available, 1022 = 102.2 knots or higher ", allowableValues = "range[0,1023]", required = true)
     public final double sog;
 
@@ -53,8 +56,18 @@ public class VesselLocationProperties extends Properties {
     @ApiModelProperty(value = "Location record timestamp in milliseconds from Unix epoch.", required = true)
     public final long timestampExternal;
 
-    public VesselLocationProperties(double sog, double cog, int navStat, int rot, boolean posAcc, boolean raim, Integer heading, long timestamp,
-                                    long timestampExternal) {
+    public VesselLocationProperties(
+        final int mmsi,
+        final double sog,
+        final double cog,
+        final int navStat,
+        final int rot,
+        final boolean posAcc,
+        final boolean raim,
+        final Integer heading,
+        final long timestamp,
+        final long timestampExternal) {
+        this.mmsi = mmsi;
         this.sog = sog;
         this.cog = cog;
         this.navStat = navStat;
