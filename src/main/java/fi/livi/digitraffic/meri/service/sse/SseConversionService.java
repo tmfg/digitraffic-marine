@@ -39,6 +39,7 @@ public class SseConversionService {
         // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
         final boolean floating = sseReport.isFloating();
         final SseProperties sseProperties = new SseProperties(
+            sseReport.getSiteNumber(),
             sseReport.getSiteName(),
             sseReport.getSiteType(),
             sseReport.getLastUpdate().withZoneSameInstant(ZoneOffset.UTC),

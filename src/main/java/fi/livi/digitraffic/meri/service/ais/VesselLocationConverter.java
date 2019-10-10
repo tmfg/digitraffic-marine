@@ -22,7 +22,7 @@ public final class VesselLocationConverter {
     }
 
     public static VesselLocationFeature convert(final VesselLocation l) {
-        final VesselLocationProperties properties = new VesselLocationProperties(l.getSog(), l.getCog(), l.getNavStat(),
+        final VesselLocationProperties properties = new VesselLocationProperties(l.getMmsi(), l.getSog(), l.getCog(), l.getNavStat(),
                 l.getRot(), l.isPosAcc(), l.isRaim(), l.getHeading(), l.getTimestamp(), l.getTimestampExternal());
         final Point p = new Point(l.getX(), l.getY());
 
@@ -31,7 +31,7 @@ public final class VesselLocationConverter {
 
     public static VesselLocationFeature convert(final AISMessage ais) {
         final AISMessage.AISAttributes a = ais.attributes;
-        final VesselLocationProperties properties = new VesselLocationProperties(a.sog, a.cog, a.navStat,
+        final VesselLocationProperties properties = new VesselLocationProperties(a.mmsi, a.sog, a.cog, a.navStat,
                 a.rot, a.posAcc == 1, a.raim == 1, a.heading, a.timestamp, a.timestampExternal);
         final Point p = new Point(ais.geometry.x, ais.geometry.y);
 

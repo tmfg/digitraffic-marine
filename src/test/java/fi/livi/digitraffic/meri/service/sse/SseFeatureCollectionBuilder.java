@@ -25,7 +25,7 @@ public class SseFeatureCollectionBuilder {
         final List<SseFeature> features = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             features.add(new SseFeature(new Point(20.0, 60.0),
-                         new SseProperties("siteName" + i, SseProperties.SiteType.FLOATING, lastUpdate, SseProperties.SeaState.STORM,
+                         new SseProperties(i, "siteName" + i, SseProperties.SiteType.FLOATING, lastUpdate, SseProperties.SeaState.STORM,
                                            SseProperties.Trend.ASCENDING, 90, SseProperties.Confidence.GOOD, BigDecimal.valueOf(45.0),
                                            SseProperties.LightStatus.ON, 10), i) {
             });

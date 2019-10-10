@@ -35,7 +35,7 @@ public final class SsnLocationConverter {
     }
 
     private static BerthFeature convertBerth(final Berth b) {
-        final BerthProperties p = new BerthProperties(b.getBerthName());
+        final BerthProperties p = new BerthProperties(b.getBerthKey().getLocode(), b.getBerthName());
 
         return new BerthFeature(b.getBerthKey().getLocode(), b.getBerthKey().getPortAreaCode(), b.getBerthKey().getBerthCode(), p);
     }
@@ -45,7 +45,7 @@ public final class SsnLocationConverter {
     }
 
     private static PortAreaFeature convertPortArea(final PortArea pa) {
-        final PortAreaProperties p = new PortAreaProperties(pa.getPortAreaName());
+        final PortAreaProperties p = new PortAreaProperties(pa.getPortAreaKey().getLocode(), pa.getPortAreaName());
         final Point g = geometry(pa.getWgs84Long(), pa.getWgs84Lat());
         return new PortAreaFeature(pa.getPortAreaKey().getLocode(), pa.getPortAreaKey().getPortAreaCode(), p, g);
     }
@@ -55,7 +55,7 @@ public final class SsnLocationConverter {
     }
 
     private static SsnLocationFeature convertLocation(final SsnLocation l) {
-        final SsnLocationProperties p = new SsnLocationProperties(l.getLocationName(), l.getCountry());
+        final SsnLocationProperties p = new SsnLocationProperties(l.getLocode(), l.getLocationName(), l.getCountry());
         final Point g = geometry(l.getWgs84Long(), l.getWgs84Lat());
         return new SsnLocationFeature(l.getLocode(), p, g);
     }
