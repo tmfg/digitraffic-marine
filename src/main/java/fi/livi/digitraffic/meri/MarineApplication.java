@@ -4,8 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditEventsEndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.beans.BeansEndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.cache.CachesEndpointAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.cassandra.CassandraHealthIndicatorAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.cassandra.CassandraReactiveHealthIndicatorAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.metrics.export.appoptics.AppOpticsMetricsExportAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.metrics.export.atlas.AtlasMetricsExportAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.metrics.export.wavefront.WavefrontMetricsExportAutoConfiguration;
@@ -39,9 +37,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     CachesEndpointAutoConfiguration.class,
     CassandraAutoConfiguration.class,
     CassandraDataAutoConfiguration.class,
-    CassandraHealthIndicatorAutoConfiguration.class,
     CassandraReactiveDataAutoConfiguration.class,
-    CassandraReactiveHealthIndicatorAutoConfiguration.class,
     CassandraReactiveRepositoriesAutoConfiguration.class,
     CassandraRepositoriesAutoConfiguration.class,
     XADataSourceAutoConfiguration.class,
