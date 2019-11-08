@@ -27,7 +27,7 @@
         <java.version>11</java.version>
         <maven.compiler.release>11</maven.compiler.release>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
-        <jackson.dataformat.version>2.10.0</jackson.dataformat.version>
+        <jackson.dataformat.version>2.9.10</jackson.dataformat.version>
     </properties>
 
     <repositories>
