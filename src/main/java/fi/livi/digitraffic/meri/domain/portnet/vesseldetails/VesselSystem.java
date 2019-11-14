@@ -4,6 +4,9 @@ import java.math.BigInteger;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -23,6 +26,12 @@ public class VesselSystem {
     @JsonIgnore
     @Id
     private Long vesselId;
+
+    @JsonIgnore
+    @OneToOne(targetEntity = fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails.class)
+    @JoinColumn(name = "vesselId", nullable = false)
+    @MapsId
+    private fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails;
 
     @ApiModelProperty(value = "Ship owner name")
     private String shipOwner;
@@ -80,5 +89,9 @@ public class VesselSystem {
 
     public String getShipVerifier() {
         return shipVerifier;
+    }
+
+    public void setVesselDetails(final fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails) {
+        this.vesselDetails = vesselDetails;
     }
 }

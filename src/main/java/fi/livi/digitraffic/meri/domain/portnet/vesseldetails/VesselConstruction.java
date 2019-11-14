@@ -2,16 +2,18 @@ package fi.livi.digitraffic.meri.domain.portnet.vesseldetails;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 import fi.livi.digitraffic.meri.util.TypeUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +28,12 @@ public class VesselConstruction {
     @JsonIgnore
     @Id
     private Long vesselId;
+
+    @JsonIgnore
+    @OneToOne(targetEntity = fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails.class)
+    @JoinColumn(name = "vesselId", nullable = false)
+    @MapsId
+    private fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails;
 
     @ApiModelProperty(value = "Ship Vessel Type Code")
     private Integer vesselTypeCode;
@@ -114,5 +122,9 @@ public class VesselConstruction {
 
     public Boolean getBallastTank() {
         return ballastTank;
+    }
+
+    public void setVesselDetails(final fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails) {
+        this.vesselDetails = vesselDetails;
     }
 }

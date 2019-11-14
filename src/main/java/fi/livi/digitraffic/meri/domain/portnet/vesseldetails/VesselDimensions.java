@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -27,6 +30,12 @@ public class VesselDimensions {
     @JsonIgnore
     @Id
     private Long vesselId;
+
+    @JsonIgnore
+    @OneToOne(targetEntity = fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails.class)
+    @JoinColumn(name = "vesselId", nullable = false)
+    @MapsId
+    private fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails;
 
     @ApiModelProperty(value = "Tonnage certificate issuer")
     private String tonnageCertificateIssuer;
@@ -166,5 +175,9 @@ public class VesselDimensions {
 
     public Timestamp getKeelDate() {
         return keelDate;
+    }
+
+    public void setVesselDetails(final fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails) {
+        this.vesselDetails = vesselDetails;
     }
 }

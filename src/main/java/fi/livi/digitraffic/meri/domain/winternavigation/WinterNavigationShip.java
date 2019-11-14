@@ -1,11 +1,7 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,11 +52,11 @@ public class WinterNavigationShip {
 
     private Integer aisShipType;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "winterNavigationShip")
     @JoinColumn(name = "vessel_pk", nullable = false)
     private ShipState shipState;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "winterNavigationShip")
     @JoinColumn(name = "vessel_pk", nullable = false)
     private ShipVoyage shipVoyage;
 

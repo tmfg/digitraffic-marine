@@ -51,22 +51,22 @@ public class VesselDetails {
     private String dataSource;
 
     @ApiModelProperty(value = "Vessel construction information")
-    @OneToOne(targetEntity = VesselConstruction.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(targetEntity = VesselConstruction.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselConstruction vesselConstruction;
 
     @ApiModelProperty(value = "Vessel dimension information")
-    @OneToOne(targetEntity = VesselDimensions.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(targetEntity = VesselDimensions.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselDimensions vesselDimensions;
 
     @ApiModelProperty(value = "Vessel registration information")
-    @OneToOne(targetEntity = VesselRegistration.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(targetEntity = VesselRegistration.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselRegistration vesselRegistration;
 
     @ApiModelProperty(value = "Vessel system information")
-    @OneToOne(targetEntity = VesselSystem.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(targetEntity = VesselSystem.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselSystem vesselSystem;
 
@@ -83,18 +83,22 @@ public class VesselDetails {
         this.dataSource = idData.getDataSource();
         if (this.vesselConstruction == null) {
             this.vesselConstruction = new VesselConstruction();
+            vesselConstruction.setVesselDetails(this);
         }
         this.vesselConstruction.setAll(idData.getVesselId(), vd.getConstructionData());
         if (this.vesselDimensions == null) {
             this.vesselDimensions = new VesselDimensions();
+            vesselDimensions.setVesselDetails(this);
         }
         this.vesselDimensions.setAll(idData.getVesselId(), vd.getDimensions());
         if (this.vesselRegistration == null) {
             this.vesselRegistration = new VesselRegistration();
+            vesselRegistration.setVesselDetails(this);
         }
         this.vesselRegistration.setAll(idData.getVesselId(), vd.getRegistrationData());
         if (this.vesselSystem == null) {
             this.vesselSystem = new VesselSystem();
+            vesselSystem.setVesselDetails(this);
         }
         this.vesselSystem.setAll(idData.getVesselId(), vd.getSystem());
     }
