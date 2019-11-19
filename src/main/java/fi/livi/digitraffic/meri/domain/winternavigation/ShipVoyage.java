@@ -5,6 +5,9 @@ import java.time.ZonedDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 
 @Entity
 public class ShipVoyage {
@@ -12,6 +15,11 @@ public class ShipVoyage {
     @Id
     @Column(name = "vessel_pk", nullable = false)
     private String vesselPK;
+
+    @OneToOne
+    @JoinColumn(name = "vessel_pk", nullable = false)
+    @MapsId
+    private WinterNavigationShip winterNavigationShip;
 
     private String fromLocode;
 
@@ -32,14 +40,6 @@ public class ShipVoyage {
     private String destName;
 
     private ZonedDateTime destEta;
-
-    public String getVesselPK() {
-        return vesselPK;
-    }
-
-    public void setVesselPK(String vesselPK) {
-        this.vesselPK = vesselPK;
-    }
 
     public String getFromLocode() {
         return fromLocode;
@@ -119,5 +119,10 @@ public class ShipVoyage {
 
     public void setDestEta(ZonedDateTime destEta) {
         this.destEta = destEta;
+    }
+
+    public void setWinterNavigationShip(final WinterNavigationShip winterNavigationShip) {
+        this.winterNavigationShip = winterNavigationShip;
+        this.vesselPK = winterNavigationShip.getVesselPK();
     }
 }

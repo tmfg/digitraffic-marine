@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -164,7 +165,7 @@ public class VesselLoggingListener implements AisMessageListener {
 
     private synchronized void readStatus() {
         if (aisCachedLocker.hasLock()) {
-            ConnectionStatistics cs = (ConnectionStatistics)readStatisticsMap.get(AISLoggingType.CONNECTION);
+            final ConnectionStatistics cs = (ConnectionStatistics)readStatisticsMap.get(AISLoggingType.CONNECTION);
 
             int errorsCount = 0;
 
@@ -182,6 +183,8 @@ public class VesselLoggingListener implements AisMessageListener {
                 errorsCount
             );
 
+            final StopWatch sw = StopWatch.createStarted();
+
             try {
                 final boolean sendStatus = vesselSender.sendStatusMessage(statusMessage);
 
@@ -189,6 +192,8 @@ public class VesselLoggingListener implements AisMessageListener {
             } catch (final Exception e) {
                 log.error("Json parse error", e);
             }
+
+            log.info("sendStatus tookMs={}", sw.getTime());
         }
     }
 

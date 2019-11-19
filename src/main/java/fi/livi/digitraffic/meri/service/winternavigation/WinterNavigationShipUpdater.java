@@ -136,10 +136,9 @@ public class WinterNavigationShipUpdater {
     }
 
     private static void updateShipState(final WinterNavigationShip s, final WinterShip ship) {
-
-
         final ShipState shipState = s.getShipState() != null ? s.getShipState() : new ShipState();
-        shipState.setVesselPK(ship.getVesselPk());
+        shipState.setWinterNavigationShip(s);
+
         if (ship.getShipState() != null) {
             shipState.setTimestamp(ship.getShipState().getTimestamp().toGregorianCalendar().toZonedDateTime());
             shipState.setLongitude(ship.getShipState().getLon().doubleValue());
@@ -163,9 +162,9 @@ public class WinterNavigationShipUpdater {
     }
 
     private static void updateShipVoyage(final WinterNavigationShip s, final WinterShip ship) {
-
         final ShipVoyage shipVoyage = s.getShipVoyage() != null ? s.getShipVoyage() : new ShipVoyage();
-        shipVoyage.setVesselPK(ship.getVesselPk());
+        shipVoyage.setWinterNavigationShip(s);
+
         if (ship.getShipVoyage() != null) {
             shipVoyage.setInLocode(ship.getShipVoyage().getInLocode());
             shipVoyage.setInName(ship.getShipVoyage().getInName());

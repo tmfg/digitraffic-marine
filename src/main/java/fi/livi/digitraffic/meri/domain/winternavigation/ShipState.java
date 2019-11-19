@@ -1,10 +1,12 @@
 package fi.livi.digitraffic.meri.domain.winternavigation;
 
 import java.time.ZonedDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionAccuracy;
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionSource;
@@ -15,6 +17,11 @@ public class ShipState {
     @Id
     @Column(name = "vessel_pk", nullable = false)
     private String vesselPK;
+
+    @OneToOne
+    @JoinColumn(name = "vessel_pk", nullable = false)
+    @MapsId
+    private WinterNavigationShip winterNavigationShip;
 
     private ZonedDateTime timestamp;
 
@@ -49,14 +56,6 @@ public class ShipState {
     private ZonedDateTime stoppedSince;
 
     private ZonedDateTime inactiveSince;
-
-    public String getVesselPK() {
-        return vesselPK;
-    }
-
-    public void setVesselPK(String vesselPK) {
-        this.vesselPK = vesselPK;
-    }
 
     public ZonedDateTime getTimestamp() {
         return timestamp;
@@ -192,5 +191,10 @@ public class ShipState {
 
     public void setInactiveSince(ZonedDateTime inactiveSince) {
         this.inactiveSince = inactiveSince;
+    }
+
+    public void setWinterNavigationShip(final WinterNavigationShip winterNavigationShip) {
+        this.winterNavigationShip = winterNavigationShip;
+        this.vesselPK = winterNavigationShip.getVesselPK();
     }
 }
