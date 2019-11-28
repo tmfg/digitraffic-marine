@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.model;
+package fi.livi.digitraffic.meri.model.v2;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,5 +8,7 @@ public interface CodeDescriptionJson {
     @ApiModelProperty(value = "Code", required = true)
     String getCode();
     @ApiModelProperty(value = "Description of the code(Finnish)", required = true)
-    String getDescription();
+    String getDescriptionFi();
+    @ApiModelProperty(value = "Description of the code(English", required = true)
+    String getDescriptionEn();
 }
