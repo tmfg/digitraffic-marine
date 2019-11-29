@@ -20,7 +20,7 @@ import fi.livi.digitraffic.meri.dao.v2.V2CodeDescriptionRepository;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
-import fi.livi.digitraffic.meri.model.v2.portnet.metadata.CodeDescriptions;
+import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsService;
 
@@ -50,8 +50,8 @@ public class V2PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public CodeDescriptions listCodeDescriptions() {
-        return new CodeDescriptions(
+    public V2CodeDescriptions listCodeDescriptions() {
+        return new V2CodeDescriptions(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                                 v2CodeDescriptionRepository.listAllCargoTypes(),
                                 v2CodeDescriptionRepository.listAllVesselTypes(),

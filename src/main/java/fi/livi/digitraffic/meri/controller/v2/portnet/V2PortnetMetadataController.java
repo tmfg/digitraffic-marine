@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
-import fi.livi.digitraffic.meri.model.v2.portnet.metadata.CodeDescriptions;
+import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
 import fi.livi.digitraffic.meri.service.v2.portnet.V2PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,7 +45,7 @@ public class V2PortnetMetadataController {
     @ApiOperation("Return all code descriptions.")
     @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CodeDescriptions listCodeDescriptions() {
+    public V2CodeDescriptions listCodeDescriptions() {
         return v2PortnetMetadataService.listCodeDescriptions();
     }
 
