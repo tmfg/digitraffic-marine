@@ -11,7 +11,7 @@ import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthFeature;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthFeatureCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthProperties;
-import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaFeature;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaFeatureCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaProperties;
@@ -22,9 +22,9 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationProperties;
 public final class SsnLocationConverter {
     private SsnLocationConverter() {}
 
-    public static FeatureCollectionList convert(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
+    public static LocationFeatureCollections convert(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
         final Stream<PortArea> portAreas, final Stream<Berth> berths) {
-        return new FeatureCollectionList(timestamp,
+        return new LocationFeatureCollections(timestamp,
                 convertSsnLocations(locations),
                 convertPortAreas(portAreas),
                 convertBerths(berths));

@@ -1,7 +1,7 @@
-package fi.livi.digitraffic.meri.controller.portnet;
+package fi.livi.digitraffic.meri.controller.v2.portnet;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_METADATA_PART_PATH;
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V2_BASE_PATH;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 import java.time.ZonedDateTime;
@@ -19,62 +19,62 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
 import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
-import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
+import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
+import fi.livi.digitraffic.meri.service.v2.portnet.V2PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
+@RequestMapping(API_V2_BASE_PATH + API_METADATA_PART_PATH)
 @ConditionalOnWebApplication
-public class PortnetMetadataController {
+public class V2PortnetMetadataController {
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";
     public static final String SSN_LOCATIONS_PATH =  "/locations";
     public static final String SSN_LOCATIONS_BY_COUNTRY_PATH =  "/locations-by-country";
     public static final String VESSEL_DETAILS_PATH = "/vessel-details";
 
-    private final PortnetMetadataService portnetMetadataService;
+    private final V2PortnetMetadataService v2PortnetMetadataService;
 
-    public PortnetMetadataController(final PortnetMetadataService portnetMetadataService) {
-        this.portnetMetadataService = portnetMetadataService;
+    public V2PortnetMetadataController(final V2PortnetMetadataService v2PortnetMetadataService) {
+        this.v2PortnetMetadataService = v2PortnetMetadataService;
     }
 
     @ApiOperation("Return all code descriptions.")
-    @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CodeDescriptions listCodeDescriptions() {
-        return portnetMetadataService.listCodeDescriptions();
+    public V2CodeDescriptions listCodeDescriptions() {
+        return v2PortnetMetadataService.listCodeDescriptions();
     }
 
     @ApiOperation("Return list of all berths, port areas and locations.")
-    @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public LocationFeatureCollections listAllMetadata() {
-        return portnetMetadataService.listaAllMetadata();
+        return v2PortnetMetadataService.listaAllMetadata();
     }
 
     @ApiOperation("Return one location's berths, port areas and location by SafeSeaNet location code.")
-    @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of ssn location"),
                     @ApiResponse(code = 404, message = "Ssn location not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public LocationFeatureCollections findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
-        return portnetMetadataService.findSsnLocationByLocode(locode);
+        return v2PortnetMetadataService.findSsnLocationByLocode(locode);
     }
 
     @ApiOperation("Return list of SafeSeaNet locations by country name")
-    @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public LocationFeatureCollections findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
-        return portnetMetadataService.findSsnLocationsByCountry(country);
+        return v2PortnetMetadataService.findSsnLocationsByCountry(country);
     }
 
     @ApiOperation("Return list of vessels details")
-    @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel details"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -103,6 +103,6 @@ public class PortnetMetadataController {
             from = ZonedDateTime.now().minusDays(1L);
         }
 
-        return portnetMetadataService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        return v2PortnetMetadataService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }
