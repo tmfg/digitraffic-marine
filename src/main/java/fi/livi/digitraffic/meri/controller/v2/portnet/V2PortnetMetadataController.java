@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
 import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
 import fi.livi.digitraffic.meri.service.v2.portnet.V2PortnetMetadataService;
 import io.swagger.annotations.ApiOperation;
@@ -52,7 +52,7 @@ public class V2PortnetMetadataController {
     @ApiOperation("Return list of all berths, port areas and locations.")
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public FeatureCollectionList listAllMetadata() {
+    public LocationFeatureCollections listAllMetadata() {
         return v2PortnetMetadataService.listaAllMetadata();
     }
 
@@ -62,14 +62,14 @@ public class V2PortnetMetadataController {
                     @ApiResponse(code = 404, message = "Ssn location not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
-    public FeatureCollectionList findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
+    public LocationFeatureCollections findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
         return v2PortnetMetadataService.findSsnLocationByLocode(locode);
     }
 
     @ApiOperation("Return list of SafeSeaNet locations by country name")
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public FeatureCollectionList findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
+    public LocationFeatureCollections findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
         return v2PortnetMetadataService.findSsnLocationsByCountry(country);
     }
 

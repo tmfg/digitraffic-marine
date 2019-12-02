@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
-import fi.livi.digitraffic.meri.model.CodeDescriptionJson;
+import fi.livi.digitraffic.meri.model.CodeDescription;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,15 +16,15 @@ public final class CodeDescriptions {
     public final ZonedDateTime lastUpdated;
 
     @ApiModelProperty(value = "All cargo type descriptions", required = true)
-    public final List<CodeDescriptionJson> cargoTypes;
+    public final List<CodeDescription> cargoTypes;
     @ApiModelProperty(value = "All vessel type descriptions", required = true)
-    public final List<CodeDescriptionJson> vesselTypes;
+    public final List<CodeDescription> vesselTypes;
     @ApiModelProperty(value = "All agent type descriptions", required = true)
-    public final List<CodeDescriptionJson> agentTypes;
+    public final List<CodeDescription> agentTypes;
 
     public CodeDescriptions(final ZonedDateTime lastUpdated,
-                            final List<CodeDescriptionJson> cargoTypes, final List<CodeDescriptionJson> vesselTypes,
-                            final List<CodeDescriptionJson> agentTypes) {
+                            final List<CodeDescription> cargoTypes, final List<CodeDescription> vesselTypes,
+                            final List<CodeDescription> agentTypes) {
         this.lastUpdated = lastUpdated;
         this.cargoTypes = ImmutableList.copyOf(cargoTypes);
         this.vesselTypes = ImmutableList.copyOf(vesselTypes);

@@ -20,7 +20,7 @@ import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
-import fi.livi.digitraffic.meri.model.portnet.metadata.FeatureCollectionList;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsService;
 
@@ -60,7 +60,7 @@ public class PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public FeatureCollectionList listaAllMetadata() {
+    public LocationFeatureCollections listaAllMetadata() {
         return SsnLocationConverter.convert(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                 ssnLocationRepository.streamAllBy(),
@@ -70,7 +70,7 @@ public class PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public FeatureCollectionList findSsnLocationByLocode(final String locode) {
+    public LocationFeatureCollections findSsnLocationByLocode(final String locode) {
         final SsnLocation location = ssnLocationRepository.findByLocode(locode);
 
         if(location == null) {
@@ -86,7 +86,7 @@ public class PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public FeatureCollectionList findSsnLocationsByCountry(final String country) {
+    public LocationFeatureCollections findSsnLocationsByCountry(final String country) {
         // Only Finland has port areas and berths defined
         final boolean isFinland = StringUtils.equals(country, "Finland");
 
