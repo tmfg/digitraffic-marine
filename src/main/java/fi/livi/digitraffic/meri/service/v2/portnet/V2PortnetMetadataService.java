@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.service.portnet;
+package fi.livi.digitraffic.meri.service.v2.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
 
@@ -12,50 +12,50 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.controller.portnet.SsnLocationConverter;
-import fi.livi.digitraffic.meri.dao.CodeDescriptionRepository;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
+import fi.livi.digitraffic.meri.dao.v2.V2CodeDescriptionRepository;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
 import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
+import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsService;
 
 @Service
 @ConditionalOnWebApplication
-public class PortnetMetadataService {
+public class V2PortnetMetadataService {
     private final BerthRepository berthRepository;
     private final PortAreaRepository portAreaRepository;
     private final SsnLocationRepository ssnLocationRepository;
 
-    private final CodeDescriptionRepository codeDescriptionRepository;
+    private final V2CodeDescriptionRepository v2CodeDescriptionRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
     private final VesselDetailsService vesselDetailsService;
 
-    public PortnetMetadataService(final BerthRepository berthRepository,
+    public V2PortnetMetadataService(final BerthRepository berthRepository,
                                   final PortAreaRepository portAreaRepository,
                                   final SsnLocationRepository ssnLocationRepository,
-                                  final CodeDescriptionRepository codeDescriptionRepository,
+                                  final V2CodeDescriptionRepository v2CodeDescriptionRepository,
                                   final UpdatedTimestampRepository updatedTimestampRepository,
                                   final VesselDetailsService vesselDetailsService) {
         this.berthRepository = berthRepository;
         this.portAreaRepository = portAreaRepository;
         this.ssnLocationRepository = ssnLocationRepository;
-        this.codeDescriptionRepository = codeDescriptionRepository;
+        this.v2CodeDescriptionRepository = v2CodeDescriptionRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.vesselDetailsService = vesselDetailsService;
     }
 
     @Transactional(readOnly = true)
-    public CodeDescriptions listCodeDescriptions() {
-        return new CodeDescriptions(
+    public V2CodeDescriptions listCodeDescriptions() {
+        return new V2CodeDescriptions(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA),
-                                codeDescriptionRepository.listAllCargoTypes(),
-                                codeDescriptionRepository.listAllVesselTypes(),
-                                codeDescriptionRepository.listAllAgentTypes()
+                                v2CodeDescriptionRepository.listAllCargoTypes(),
+                                v2CodeDescriptionRepository.listAllVesselTypes(),
+                                v2CodeDescriptionRepository.listAllAgentTypes()
                         );
     }
 

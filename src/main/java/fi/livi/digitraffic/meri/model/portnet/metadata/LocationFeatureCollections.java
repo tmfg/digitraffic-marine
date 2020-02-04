@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
         "portAreaFeatureCollection",
         "berthFeature",
 })
-public class FeatureCollectionList {
+public class LocationFeatureCollections {
     @ApiModelProperty(value = "Data last updated", required = true)
     public final ZonedDateTime dataUpdatedTime;
 
@@ -25,7 +25,7 @@ public class FeatureCollectionList {
     @ApiModelProperty(value = "Berths in Feature Collection", required = false)
     public final BerthFeatureCollection berthFeatureCollection;
 
-    public FeatureCollectionList(final ZonedDateTime dataUpdatedTime,
+    public LocationFeatureCollections(final ZonedDateTime dataUpdatedTime,
                                  final SsnLocationFeatureCollection ssnLocationFeatureCollection,
                                  final PortAreaFeatureCollection portAreaFeatureCollection,
                                  final BerthFeatureCollection berthFeatureCollection) {
