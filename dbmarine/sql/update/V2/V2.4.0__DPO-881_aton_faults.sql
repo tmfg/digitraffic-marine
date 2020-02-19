@@ -4,7 +4,7 @@ create table aton_fault (
 	fixed_timestamp timestamp(0) with time zone,
 	domain text not null,
 	state text not null,
-	type text not null, 
+	type text not null,
 	fixed boolean not null,
 	aton_id int not null,
 	aton_name_fi text not null,
@@ -19,3 +19,6 @@ create table aton_fault (
 	area_description_se text not null,
 	geometry geometry not null
 );
+
+insert into data_updated(id, data_type, updated, version)
+values(nextval('seq_data_updated'), 'ATON_FAULTS', current_date, null);
