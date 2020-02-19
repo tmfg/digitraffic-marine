@@ -20,5 +20,5 @@ create table aton_fault (
 	geometry geometry not null
 );
 
-insert into data_updated(id, data_type, updated, version)
-values(nextval('seq_data_updated'), 'ATON_FAULTS', current_date, null);
+insert into updated_timestamp(updated_name, updated_time, updated_by)
+values('ATON_FAULTS', current_date, 'Updater');
