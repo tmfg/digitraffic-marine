@@ -2,7 +2,7 @@ CREATE TABLE area (
 	area_number integer PRIMARY KEY,
 	description_fi text NOT NULL,
 	description_se text NOT NULL,
-	description_en text NOT NULL,
+	description_en text NOT NULL
 );
 
 alter table aton_fault add constraint ATON_FAULT_AREA_FKEY foreign key(area_number) references area(area_number);
