@@ -12,7 +12,7 @@ alter table aton_fault drop column area_description_fi;
 alter table aton_fault drop column area_description_se;
 
 insert into area(area_number, description_fi, description_en, description_se) values
-(0,'Tuntematon', 'Unknown', 'Okänd')
+(0,'Tuntematon', 'Unknown', 'Okänd'),
 (1,'Perämeri','Bay of Bothnia','Bottenviken'),
 (2,'Selkämeri','Bothnian Sea','Bottenhavet'),
 (3,'Ahvenanmeri','Aland Sea','Ålands hav'),
