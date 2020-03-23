@@ -90,7 +90,7 @@ public class NauticalWarningController {
                 return getObjectFromUrl(url);
             } catch(final Exception e2) {
                 log.info("Exception from pooki server for pookiUrl=" + url, e2);
-                throw new PookiException("Bad Gateway. Pooki responded twice with error response");
+                throw new PookiException("Bad Gateway. Pooki responded twice with error response.");
             }
         }
     }
