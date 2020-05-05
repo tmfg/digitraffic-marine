@@ -7,7 +7,7 @@ networks:
 
 services:
   db:
-    image: postgres:9.6.12-alpine
+    image: postgres:10.12-alpine
     restart: always
     environment:
       POSTGRES_USER: marine
@@ -43,4 +43,4 @@ services:
     links:
     - "db:database" # postgres is reachable for pghero from web at the hostnames db and database
     ports:
-    - 8082:8080
+    - 8081:8080

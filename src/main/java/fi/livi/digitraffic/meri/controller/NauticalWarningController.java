@@ -80,25 +80,29 @@ public class NauticalWarningController {
         final Status s = Status.valueOf(status.toUpperCase());
 
         // Call Pooki and parse response to GeoJSON
+        final String url = getUrlFor(s);
         try {
-            return getObjectFromUrl(s);
+            return getObjectFromUrl(url);
         } catch (final Exception e1) {
-            log.info("exception2 from server", e1);
+            log.info("Exception-1 from pooki server for pookiUrl=" + url, e1);
             // Retry once, because Pooki sometimes responds first time with error.
             try {
-                return getObjectFromUrl(s);
+                return getObjectFromUrl(url);
             } catch(final Exception e2) {
-                log.info("exception2 from server", e2);
+                log.info("Exception-2 from pooki server for pookiUrl=" + url, e2);
                 throw new PookiException("Bad Gateway. Pooki responded twice with error response.");
             }
         }
     }
 
-    private PookiFeatureCollection getObjectFromUrl(final Status status) {
-        final String url = String.format("%s?crs=EPSG:4326&layer=%s", pookiUrl, status.layer);
+    private PookiFeatureCollection getObjectFromUrl(final String url) {
         final PookiFeatureCollection collection = restTemplate.getForObject(url, PookiFeatureCollection.class);
 
         return collection;
+    }
+
+    private String getUrlFor(final Status status) {
+        return String.format("%s?crs=EPSG:4326&layer=%s", pookiUrl, status.layer);
     }
 
     public void setPookiUrl(final String pookiUrl) {
