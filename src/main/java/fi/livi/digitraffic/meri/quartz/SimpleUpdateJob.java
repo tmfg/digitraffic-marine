@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.quartz;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
@@ -10,7 +11,7 @@ public abstract class SimpleUpdateJob extends AbstractUpdateJob {
 
     @Override
     public final void execute(final JobExecutionContext context) {
-        final String jobName = context.getJobDetail().getKey().getName();
+        final String jobName = StringUtils.capitalize(context.getJobDetail().getKey().getName().replace("Detail", ""));
 
         log.info("jobType=Quartz jobName={} start", jobName);
 
