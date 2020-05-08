@@ -36,7 +36,7 @@ public class VesselLocationDatabaseListener implements AisMessageListener {
     }
 
     @Scheduled(fixedRate = 1000)
-    private void persistQueue() {
+    public void persistQueue() {
         try {
             final List<AISMessage> messages = removeAllMessages();
 
