@@ -1,5 +1,6 @@
 # Copy this file as application-localhost.properties and configure
 # datasource etc. according to your environment.
+spring.main.banner-mode=off
 
 # http-server port
 server.port = 9001

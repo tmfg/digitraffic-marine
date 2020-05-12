@@ -68,3 +68,4 @@ buildNumber.properties
 # no_commit tekstin sisältävät tiedostot
 **/*no_commit*
 **/*.tmp
+/pom.xml.versionsBackup

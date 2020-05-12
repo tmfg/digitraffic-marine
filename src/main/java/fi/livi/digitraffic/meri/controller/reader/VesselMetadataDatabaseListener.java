@@ -36,7 +36,7 @@ public class VesselMetadataDatabaseListener implements AisMessageListener {
     }
 
     @Scheduled(fixedRate = 1000)
-    private void persistQueue() {
+    public void persistQueue() {
         try {
             final List<VesselMessage> messages = removeAllMessages();
 
