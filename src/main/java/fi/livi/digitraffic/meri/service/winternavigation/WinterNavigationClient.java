@@ -9,7 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
+import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.client.support.interceptor.ClientInterceptorAdapter;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import ibnet_baltice_ports.Ports;
@@ -36,6 +40,15 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setDefaultUri(winterNavigationUrl);
         setMarshaller(marshaller);
         setUnmarshaller(marshaller);
+        setInterceptors(new ClientInterceptor[] {new ClientInterceptorAdapter() {
+            @Override
+            public boolean handleFault(final MessageContext messageContext) throws WebServiceClientException {
+                log.error("fetching failed, response=", messageContext.getResponse());
+
+                return true;
+            }
+        }});
+
 
         final HttpComponentsMessageSender sender = new HttpComponentsMessageSender();
         sender.setConnectionTimeout(30000);
