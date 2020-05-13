@@ -44,7 +44,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setInterceptors(new ClientInterceptor[] {new ClientInterceptorAdapter() {
             @Override
             public boolean handleResponse(final MessageContext messageContext) throws WebServiceClientException {
-                log.error("response=", messageContext.getResponse());
+                log.error("response=", messageContext.getResponse().getPayloadResult());
 
                 return true;
             }
