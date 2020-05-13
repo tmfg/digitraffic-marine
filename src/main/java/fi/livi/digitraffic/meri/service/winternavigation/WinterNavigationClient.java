@@ -9,11 +9,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
+import org.springframework.ws.client.core.FaultMessageResolver;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptorAdapter;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import ibnet_baltice_ports.Ports;
@@ -26,6 +31,8 @@ import ibnet_baltice_schema.WinterShipsRequestType;
 import ibnet_baltice_schema.WinterShipsResponseType;
 import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
+
+import java.io.IOException;
 
 @Service
 @ConditionalOnNotWebApplication
@@ -40,15 +47,13 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setDefaultUri(winterNavigationUrl);
         setMarshaller(marshaller);
         setUnmarshaller(marshaller);
-        setInterceptors(new ClientInterceptor[] {new ClientInterceptorAdapter() {
-            @Override
-            public boolean handleFault(final MessageContext messageContext) throws WebServiceClientException {
-                log.error("fetching failed, response=", messageContext.getResponse());
+        getWebServiceTemplate().setFaultMessageResolver(message -> {
+            final SoapMessage soapMessage = (SoapMessage) message;
 
-                return true;
-            }
-        }});
+            log.error("error in fetch, errorResult={}", message.getPayloadResult());
 
+            throw new SoapFaultClientException(soapMessage);
+        });
 
         final HttpComponentsMessageSender sender = new HttpComponentsMessageSender();
         sender.setConnectionTimeout(30000);
