@@ -52,7 +52,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
                 try {
                     messageContext.getResponse().writeTo(baos);
 
-                    log.error("response={}", baos.toString());
+                    log.error("response={}", baos.toString().substring(0, Math.max(1000, baos.toString().length())));
                 } catch (final IOException e) {
                     log.error("error in handleResponse", e);
                 }
