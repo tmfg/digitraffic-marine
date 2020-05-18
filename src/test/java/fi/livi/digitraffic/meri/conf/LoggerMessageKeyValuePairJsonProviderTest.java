@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -27,6 +29,7 @@ import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
 import fi.livi.digitraffic.meri.config.LoggerMessageKeyValuePairJsonProvider;
 
+@Import({ JacksonAutoConfiguration.class })
 @RunWith(SpringRunner.class)
 public class LoggerMessageKeyValuePairJsonProviderTest {
     private static final Logger log = LoggerFactory.getLogger(LoggerMessageKeyValuePairJsonProviderTest.class);
