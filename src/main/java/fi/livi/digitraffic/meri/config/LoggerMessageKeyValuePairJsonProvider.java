@@ -1,8 +1,13 @@
 package fi.livi.digitraffic.meri.config;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -43,13 +48,31 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
         kvPairs.forEach(e -> {
             if (!hasWrittenFieldNames.contains(e.getKey())) {
                 try {
-                    generator.writeObjectField(e.getKey(), e.getValue());
+                    final Object objectValue = getObjectValue(e.getValue());
+                    generator.writeObjectField(e.getKey(), objectValue);
                     hasWrittenFieldNames.add(e.getKey());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
+    }
+
+    private Object getObjectValue(final String value) {
+        if( "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) ) {
+            return Boolean.valueOf(value);
+        }
+        try {
+            // Iso date time value
+            return ZonedDateTime.parse(value).toInstant().toString();
+        } catch (DateTimeParseException e) {
+            // empty
+        }
+        try {
+            return DecimalFormat.getInstance(Locale.ROOT).parse(value);
+        } catch (ParseException e) {
+            return value;
+        }
     }
 
     private static List<Pair<String, String>> parseKeyValuePairs(final String formattedMessage) {
