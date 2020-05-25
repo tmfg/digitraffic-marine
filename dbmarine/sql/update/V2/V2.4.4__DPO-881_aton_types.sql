@@ -15,7 +15,7 @@ insert into aton_type(name_fi, name_se, name_en) values
 ('Tutkamerkki','Radarmärke', 'Ramark'),
 ('Poiju','Boj', 'Buoy'),
 ('Viitta','Remmare', 'Spar buoy'),
-('Tunnusmajakka', 'Båk', 'Beacon tower')
+('Tunnusmajakka', 'Båk', 'Beacon tower'),
 ('Kummeli','Kummel', 'Cairn'),
 ('Määräys- tai rajoitusmerkki','Påbud eller begränsningsmärke', 'Mandatory or warning sign'),
 ('Kaapeli- tai johtotaulu','Kabel- och ledningstavla', 'Cable and pipeline panel'),
