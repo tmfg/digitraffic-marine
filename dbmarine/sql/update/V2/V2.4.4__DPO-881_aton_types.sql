@@ -10,7 +10,7 @@ insert into aton_type(name_fi, name_se, name_en) values
 ('Linjamerkki','Linjemärke', 'Leading mark'),
 ('Suuntaloisto','Riktningsfyr', 'Direction light'),
 ('Apuloisto','Hjälpfyr', 'Minor light'),
-('Muu merkki', 'Andra märke', 'Other AtoN')
+('Muu merkki', 'Andra märke', 'Other AtoN'),
 ('Reunamerkki','Randmärke', 'Edge mark'),
 ('Tutkamerkki','Radarmärke', 'Ramark'),
 ('Poiju','Boj', 'Buoy'),
