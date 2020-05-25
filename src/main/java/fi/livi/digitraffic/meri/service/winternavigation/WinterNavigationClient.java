@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-import org.springframework.ws.client.support.interceptor.ClientInterceptorAdapter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
@@ -28,9 +26,6 @@ import ibnet_baltice_schema.WinterShipsResponseType;
 import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 @Service
 @ConditionalOnNotWebApplication
 public class WinterNavigationClient extends WebServiceGatewaySupport {
@@ -44,23 +39,6 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setDefaultUri(winterNavigationUrl);
         setMarshaller(marshaller);
         setUnmarshaller(marshaller);
-        setInterceptors(new ClientInterceptor[] {new ClientInterceptorAdapter() {
-            @Override
-            public boolean handleResponse(final MessageContext messageContext) throws WebServiceClientException {
-                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                try {
-                    messageContext.getResponse().writeTo(baos);
-
-                    log.error("response={}", baos.toString().substring(0, Math.max(1000, baos.toString().length())));
-                } catch (final IOException e) {
-                    log.error("error in handleResponse", e);
-                }
-
-                return true;
-            }
-        }});
-
 
         final HttpComponentsMessageSender sender = new HttpComponentsMessageSender();
         sender.setConnectionTimeout(30000);
