@@ -193,7 +193,7 @@ public class VesselLoggingListener implements AisMessageListener {
                 log.error("Json parse error", e);
             }
 
-            log.info("sendStatus tookMs={}", sw.getTime());
+            //log.info("sendStatus tookMs={}", sw.getTime());
         }
     }
 
