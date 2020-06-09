@@ -1,5 +1,14 @@
 # Digitraffic marine database
 
+
+## ;TL;TR
+
+````bash
+docker-compose rm db && docker-compose build && docker-compose up
+````
+
+## Running db instance
+
 ````bash
 docker-compose build && docker-compose up
 ````
