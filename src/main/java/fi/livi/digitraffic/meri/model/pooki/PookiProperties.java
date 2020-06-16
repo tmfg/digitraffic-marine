@@ -1,8 +1,11 @@
 package fi.livi.digitraffic.meri.model.pooki;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE;
+
 import java.time.ZonedDateTime;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -182,6 +185,6 @@ public class PookiProperties extends Properties {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return ToStringBuilder.reflectionToString(this, JSON_STYLE);
     }
 }

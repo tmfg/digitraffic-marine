@@ -112,9 +112,10 @@ public final class AisMessageConverter {
     }
 
     /**
+     * DPO-1028
      * Mask ship type with following rules:
-     * < 10 -> 0
-     * 10 - 19 -> 10
+     * 0 -> 0 (Default value or not in use)
+     * 1 - 19 -> keep original value
      * 20 - 29 -> 20
      * 30 - 39 -> keep original value
      * 40 - 49 -> 40
@@ -123,12 +124,16 @@ public final class AisMessageConverter {
      * 70 - 79 -> 70
      * 80 - 89 -> 80
      * 90 - 99 -> 90
-     * > 99 -> 0
+     * > 99 -> keep original value
      * @param shipType
      * @return
      */
     private static int getMaskedShipAndCargoType(int shipType) {
+        if (shipType < 20 || shipType > 99) {
+            return shipType;
+        }
+
         int tenth = shipType / 10;
-        return (tenth == 3 || tenth == 5) ? shipType : (tenth < 10 ? tenth * 10 : 0);
+        return (tenth == 3 || tenth == 5) ? shipType : tenth * 10;
     }
 }

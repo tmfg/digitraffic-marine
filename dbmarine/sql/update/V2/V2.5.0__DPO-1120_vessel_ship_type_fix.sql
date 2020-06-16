@@ -1,0 +1,1 @@
+ALTER TABLE vessel ALTER ship_type TYPE NUMERIC(3,0);
