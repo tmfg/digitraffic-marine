@@ -84,6 +84,8 @@ public class NauticalWarningController {
         try {
             return getObjectFromUrl(url);
         } catch (final Exception e1) {
+            // TODO DPO-1126 tässä parametrina e1 poikkeus, joka lokittaa kantaan = avain arvo pareja. Pitäisikö
+            // ottaa stack trace ja suodattaa se?
             log.info("Exception-1 from pooki server for pookiUrl=" + url, e1);
             // Retry once, because Pooki sometimes responds first time with error.
             try {
