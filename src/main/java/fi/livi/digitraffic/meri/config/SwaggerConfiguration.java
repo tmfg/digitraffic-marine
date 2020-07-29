@@ -1,35 +1,25 @@
 package fi.livi.digitraffic.meri.config;
 
-import static com.google.common.base.Predicates.or;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_BETA_BASE_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V2_BASE_PATH;
 import static springfox.documentation.builders.PathSelectors.regex;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.util.Assert;
 
-import com.fasterxml.classmate.TypeResolver;
-import com.google.common.base.Predicate;
-
-import fi.livi.digitraffic.meri.model.geojson.GeoJsonObject;
-import fi.livi.digitraffic.meri.model.geojson.Geometry;
-import fi.livi.digitraffic.meri.model.geojson.LineString;
-import fi.livi.digitraffic.meri.model.geojson.MultiLineString;
-import fi.livi.digitraffic.meri.model.geojson.MultiPoint;
-import fi.livi.digitraffic.meri.model.geojson.MultiPolygon;
-import fi.livi.digitraffic.meri.model.geojson.Point;
-import fi.livi.digitraffic.meri.model.geojson.Polygon;
 import fi.livi.digitraffic.meri.service.AisApiInfoService;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -44,8 +34,26 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration {
 
+    private final AisApiInfoService aisApiInfoService;
+
+    private final String host;
+    private final String scheme;
+
     @Autowired
-    AisApiInfoService aisApiInfoService;
+    public SwaggerConfiguration(final AisApiInfoService aisApiInfoService,
+                                final @Value("${dt.domain.url}") String domainUrl) throws URISyntaxException {
+        Assert.notNull(aisApiInfoService, "AisApiInfoService can't be null");
+        this.aisApiInfoService = aisApiInfoService;
+        URI uri = new URI(domainUrl);
+
+        final int port = uri.getPort();
+        if (port > -1) {
+            host = uri.getHost() + ":" + port;
+        } else {
+            host = uri.getHost();
+        }
+        scheme = uri.getScheme();
+    }
 
     @Bean
     public Docket metadataApi() {
@@ -68,24 +76,10 @@ public class SwaggerConfiguration {
     }
 
     private Docket getDocket(final String groupName, final Predicate<String> apiPaths) {
-        final TypeResolver typeResolver = new TypeResolver();
         return new Docket(DocumentationType.SWAGGER_2)
+            .host(host)
+            .protocols(Set.of(scheme))
             .groupName(groupName)
-            .directModelSubstitute(ZonedDateTime.class, String.class)
-            .directModelSubstitute(LocalDateTime.class, String.class)
-            .directModelSubstitute(LocalDate.class, String.class)
-            .directModelSubstitute(Date.class, String.class)
-            // Inheritance not working as expected
-            // https://github.com/springfox/springfox/issues/2407#issuecomment-462319647
-            .additionalModels(typeResolver.resolve(GeoJsonObject.class),
-                typeResolver.resolve(Geometry.class),
-                typeResolver.resolve(LineString.class),
-                typeResolver.resolve(MultiLineString.class),
-                typeResolver.resolve(MultiPoint.class),
-                typeResolver.resolve(MultiPolygon.class),
-                typeResolver.resolve(Point.class),
-                typeResolver.resolve(Polygon.class)
-            )
             .produces(new HashSet<>(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8_VALUE)))
             .apiInfo(aisApiInfoService.getApiInfo())
             .select()
@@ -99,9 +93,7 @@ public class SwaggerConfiguration {
      * @return api paths
      */
     private static Predicate<String> getMetadataApiPaths() {
-        return or(
-                regex(API_V1_BASE_PATH +"/*.*"),
-                regex(API_V2_BASE_PATH +"/*.*")
-        );
+        return regex(API_V1_BASE_PATH +"/*.*").or(
+               regex(API_V2_BASE_PATH +"/*.*"));
     }
 }

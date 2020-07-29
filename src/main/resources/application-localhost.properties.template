@@ -65,6 +65,9 @@ app.type=web
 # Web application type. Should be none for daemon process and servlet for webapp
 spring.main.web-application-type=servlet
 
+# Domain for the app ie. https://digitraffic.fi
+dt.domain.url=http://localhost:9001
+
 # if set to false tcp reading(ais vessel locations and metadata) are not activated. Should be true for daemon processes.
 ais.reader.enabled=false
 
