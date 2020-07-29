@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
 import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
@@ -43,21 +44,21 @@ public class PortnetMetadataController {
     }
 
     @ApiOperation("Return all code descriptions.")
-    @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptions listCodeDescriptions() {
         return portnetMetadataService.listCodeDescriptions();
     }
 
     @ApiOperation("Return list of all berths, port areas and locations.")
-    @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections listAllMetadata() {
         return portnetMetadataService.listaAllMetadata();
     }
 
     @ApiOperation("Return one location's berths, port areas and location by SafeSeaNet location code.")
-    @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of ssn location"),
                     @ApiResponse(code = 404, message = "Ssn location not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
@@ -67,14 +68,14 @@ public class PortnetMetadataController {
     }
 
     @ApiOperation("Return list of SafeSeaNet locations by country name")
-    @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
         return portnetMetadataService.findSsnLocationsByCountry(country);
     }
 
     @ApiOperation("Return list of vessels details")
-    @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel details"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody

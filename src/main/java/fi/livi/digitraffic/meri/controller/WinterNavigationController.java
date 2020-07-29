@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.controller;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_WINTER_NAVIGATION_PATH;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
-import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ports")
-    @GetMapping(path = "/ports", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = "/ports", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
                                               MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation ports"),
@@ -49,7 +49,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ships")
-    @GetMapping(path = "/ships", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = "/ships", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
                                               MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation ships"),
@@ -60,7 +60,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation dirways")
-    @GetMapping(path = "/dirways", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = "/dirways", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                 MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                 MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of winter navigation dirways"),
@@ -71,7 +71,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation ship")
-    @GetMapping(path = "/ships/{vesselId}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = "/ships/{vesselId}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                          MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                          MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation ship"),
@@ -85,7 +85,7 @@ public class WinterNavigationController {
     }
 
     @ApiOperation("Return winter navigation port")
-    @GetMapping(path = "/ports/{locode}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = "/ports/{locode}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                        MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                        MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of a winter navigation port"),

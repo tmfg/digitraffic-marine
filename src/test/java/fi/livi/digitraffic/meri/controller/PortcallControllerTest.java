@@ -21,7 +21,7 @@ public class PortcallControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_PORT_CALLS_PATH +
                 "?vesselName=test"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }
@@ -32,7 +32,7 @@ public class PortcallControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_PORT_CALLS_PATH +
                 "/FIHEL?vesselName=test"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }
@@ -42,7 +42,7 @@ public class PortcallControllerTest extends AbstractTestBase {
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                 MarineApplicationConfiguration.API_PORT_CALLS_PATH + "/FIHEL"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }

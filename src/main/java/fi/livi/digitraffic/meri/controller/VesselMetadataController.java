@@ -39,14 +39,14 @@ public class VesselMetadataController {
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel metadata"),
                     @ApiResponse(code = 404, message = "Vessel metadata not found"),
                     @ApiResponse(code = 500, message = "Internal server error") })
-    @GetMapping(path = VESSELS_PATH + "/{mmsi}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = VESSELS_PATH + "/{mmsi}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public VesselMetadataJson vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
     @ApiOperation("Return latest vessel metadata for all known vessels.")
-    @GetMapping(path = VESSELS_PATH, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = VESSELS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of vessel metadata"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody

@@ -51,10 +51,10 @@ public class SseControllerTest extends AbstractTestBase {
         mockMvc.perform(post(MarineApplicationConfiguration.API_V1_BASE_PATH +
                              MarineApplicationConfiguration.API_SSE_PATH +
                              SseController.ADD_PATH)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(postJson))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("{\"count\" : 2}"));
 
     }
@@ -68,7 +68,7 @@ public class SseControllerTest extends AbstractTestBase {
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                             MarineApplicationConfiguration.API_SSE_PATH + SseController.LATEST_PATH))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate",
                                 Matchers.is(ZonedDateTime.parse(lastUpdate).toInstant().atZone(UTC).toString())))
@@ -87,7 +87,7 @@ public class SseControllerTest extends AbstractTestBase {
                 .param("from", start)
                 .param("to", end))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
         ;
@@ -106,7 +106,7 @@ public class SseControllerTest extends AbstractTestBase {
             .param("from", start)
             .param("to", end))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
         ;

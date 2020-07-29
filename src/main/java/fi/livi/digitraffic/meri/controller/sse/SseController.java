@@ -69,7 +69,7 @@ public class SseController {
     /* GET requests */
 
     @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON")
-    @GetMapping(path = LATEST_PATH , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = LATEST_PATH , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -81,7 +81,7 @@ public class SseController {
     @ApiResponses(value = {
         @ApiResponse(code = 400, message = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
     })
-    @GetMapping(path = LATEST_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = LATEST_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -98,7 +98,7 @@ public class SseController {
         @ApiResponse(code = 400, message = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })
-    @GetMapping(path = HISTORY_PATH, produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = HISTORY_PATH, produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -123,7 +123,7 @@ public class SseController {
             CODE_400_NOT_EXISTS_WITH_IDENTIFIER + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })
-    @GetMapping(path = HISTORY_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = HISTORY_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                                     MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                     MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -149,7 +149,7 @@ public class SseController {
     /* POST requests */
 
     @ApiIgnore
-    @PostMapping(path = ADD_PATH, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(path = ADD_PATH, consumes = MediaTypes.MEDIA_TYPE_APPLICATION_JSON, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public AddInfo addSseData(@RequestBody TlscSseReports tlscSseReports) throws JsonProcessingException {
 

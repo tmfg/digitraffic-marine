@@ -36,7 +36,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.features").isEmpty())
         ;
     }
@@ -49,7 +49,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.type", is("FeatureCollection")))
                 .andExpect(jsonPath("$.features").isNotEmpty())
                 .andExpect(jsonPath("$.features[0].mmsi", is(MMSI)))
@@ -64,7 +64,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.type", is("FeatureCollection")))
                 .andExpect(jsonPath("$.features").isEmpty())
         ;
@@ -78,7 +78,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.type", is("FeatureCollection")))
                 .andExpect(jsonPath("$.features").isNotEmpty())
                 .andExpect(jsonPath("$.features[0].mmsi", is(MMSI)))
