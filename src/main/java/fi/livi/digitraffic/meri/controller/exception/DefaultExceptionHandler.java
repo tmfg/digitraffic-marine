@@ -33,6 +33,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.google.common.collect.Iterables;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
+import fi.livi.digitraffic.meri.util.StringUtil;
 
 @ControllerAdvice
 public class DefaultExceptionHandler {
@@ -166,8 +167,13 @@ public class DefaultExceptionHandler {
 
     private ResponseEntity<ErrorResponse> getErrorResponseEntityAndLogException(final ServletWebRequest request, final String errorMsg,
         final HttpStatus httpStatus, final Exception exception) {
-        final String logMessage = String.format("httpStatus=%s reasonPhrase=%s requestURI=%s errorMessage=%s", httpStatus.value(),
-            httpStatus.getReasonPhrase(), request.getRequest().getRequestURI(), errorMsg);
+
+        // Remove a=b from errorMessage as it can contain values like "1971"-H"accept:application/json;charset=UTF-8"
+        // and that will be indeksed with key "1971"-H"accept:application/json;charset and value UTF-8"
+        final String logMessage =
+            String.format("httpStatus=%s reasonPhrase=%s requestURI=%s errorMessage: %s",
+                          httpStatus.value(), httpStatus.getReasonPhrase(), request.getRequest().getRequestURI(),
+                          StringUtil.padKeyValuePairsEqualitySignWithSpaces(errorMsg));
 
         if (isErrorLoggableException(exception)) {
             logger.error(logMessage, exception);
