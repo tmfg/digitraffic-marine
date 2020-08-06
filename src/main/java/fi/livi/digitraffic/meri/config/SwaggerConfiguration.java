@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
 
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.service.AisApiInfoService;
@@ -42,7 +41,6 @@ public class SwaggerConfiguration {
     @Autowired
     public SwaggerConfiguration(final AisApiInfoService aisApiInfoService,
                                 final @Value("${dt.domain.url}") String domainUrl) throws URISyntaxException {
-        Assert.notNull(aisApiInfoService, "AisApiInfoService can't be null");
         this.aisApiInfoService = aisApiInfoService;
         URI uri = new URI(domainUrl);
 
