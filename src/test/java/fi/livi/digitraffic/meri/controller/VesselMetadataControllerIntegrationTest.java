@@ -42,7 +42,7 @@ public class VesselMetadataControllerIntegrationTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
         VesselMetadataController.VESSELS_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.mmsi", Matchers.is(MMSI)))
         ;
     }

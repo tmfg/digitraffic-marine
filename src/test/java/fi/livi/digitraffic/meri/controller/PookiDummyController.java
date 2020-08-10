@@ -61,7 +61,7 @@ public class PookiDummyController {
      * @return the next queued response, if available or DUMMY_DATA if queue is empty
      */
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}/{key}",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public ResponseEntity dummyPookiNauticalWarnings(@PathVariable final String status, @PathVariable("key") final String key) {
 

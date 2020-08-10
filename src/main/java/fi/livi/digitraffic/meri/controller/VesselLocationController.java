@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.controller;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_LOCATIONS_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
-import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
 
 import java.time.ZonedDateTime;
@@ -41,7 +41,7 @@ public class VesselLocationController {
     }
 
     @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
-    @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                              MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                              MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -62,7 +62,7 @@ public class VesselLocationController {
     }
 
     @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
-    @GetMapping(path = LATEST_PATH, produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = LATEST_PATH, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                  MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -82,7 +82,7 @@ public class VesselLocationController {
     @ApiOperation("Find vessel locations within a circle surrounding a point. " +
                   "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
                   "boats without the AIS system, vessels outside of the AIS range and so on.)")
-    @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                                                              MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                                                              MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -108,7 +108,7 @@ public class VesselLocationController {
     @ApiOperation("Find vessel locations within a circle surrounding a vessel. " +
                   "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
                   "boats without the AIS system, vessels outside of the AIS range and so on.)")
-    @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+    @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                                MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                                MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.portnet.PortCallService;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +42,7 @@ public class PortCallController {
     }
 
     @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -79,7 +80,7 @@ public class PortCallController {
     }
 
     @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
-    @GetMapping(path = "/{locode}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
@@ -114,7 +115,7 @@ public class PortCallController {
     }
 
     @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
-    @GetMapping(path = "/from/{from}/to/{to}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody

@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
-import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON_UTF8;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
 
 import org.apache.commons.lang3.StringUtils;
@@ -66,7 +66,7 @@ public class NauticalWarningController {
 
     @ApiOperation("Return nautical warnings of given status.")
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
-                    produces = { MEDIA_TYPE_APPLICATION_JSON_UTF8,
+                    produces = { MEDIA_TYPE_APPLICATION_JSON,
                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
                                  MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
@@ -84,6 +84,8 @@ public class NauticalWarningController {
         try {
             return getObjectFromUrl(url);
         } catch (final Exception e1) {
+            // TODO DPO-1126 tässä parametrina e1 poikkeus, joka lokittaa kantaan = avain arvo pareja. Pitäisikö
+            // ottaa stack trace ja suodattaa se?
             log.info("Exception-1 from pooki server for pookiUrl=" + url, e1);
             // Retry once, because Pooki sometimes responds first time with error.
             try {

@@ -33,7 +33,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
                 VesselMetadataController.VESSELS_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string("[]"))
         ;
     }
@@ -46,7 +46,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
                 VesselMetadataController.VESSELS_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
                 ;
     }
@@ -59,7 +59,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
                             MarineApplicationConfiguration.API_METADATA_PART_PATH +
                             VesselMetadataController.VESSELS_PATH + "?from=1"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
         ;
     }

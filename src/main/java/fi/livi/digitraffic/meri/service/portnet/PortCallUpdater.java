@@ -130,13 +130,14 @@ public class PortCallUpdater {
 
             try {
                 if(timestamp == null) {
-                    log.warn("method=checkTimestamps portCallId={} futureTimestamp=null, currentTimestamp={} portCallList={}",
-                        pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                    log.warn("method=checkTimestamps portCallId={} futureTimestamp=null currentTimestamp={} portCallList={}",
+                             pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
                 } else if(timestamp.after(now)) {
-                    log.warn("method=checkTimestamps portCallId={} futureTimestamp={}, currentTimestamp={} portCallList={}", pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
+                    log.warn("method=checkTimestamps portCallId={} futureTimestamp={} currentTimestamp={} portCallList={}",
+                             pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
                 } else if(timestamp.before(MIN_TIMESTAMP)) {
-                    log.warn("method=checkTimestamps portCallId={} pastTimestamp={}, portCallList={}", pcn.getPortCallId().longValue(),
-                        timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
+                    log.warn("method=checkTimestamps portCallId={} pastTimestamp={} portCallList={}",
+                             pcn.getPortCallId().longValue(), timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
                     return false;
                 }
             } catch (final JsonProcessingException e) {

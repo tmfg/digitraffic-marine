@@ -181,7 +181,7 @@ public class DefaultExceptionHandler {
     private ResponseEntity<ErrorResponse> getErrorResponseEntity(final HttpStatus httpStatus, final String errorMsg,
         final ServletWebRequest request) {
         final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         final ErrorResponse response = new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()), httpStatus.value(), httpStatus.getReasonPhrase(), errorMsg,
             request.getRequest().getRequestURI());
