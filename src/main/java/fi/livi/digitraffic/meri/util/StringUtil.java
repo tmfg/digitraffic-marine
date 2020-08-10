@@ -27,6 +27,18 @@ public class StringUtil {
         return o.toString();
     }
 
+    public static String toJsonStringLogSafe(final Object o) {
+        if (o == null) {
+            return null;
+        }
+        try {
+            return padKeyValuePairsEqualitySignWithSpaces(jsonObjectWriter.writeValueAsString(o));
+        } catch (JsonProcessingException e) {
+            log.error("Failed to convert object to JSON-string", e);
+            return padKeyValuePairsEqualitySignWithSpaces(o.toString());
+        }
+    }
+
     public static String padKeyValuePairsEqualitySignWithSpaces(final String value) {
         if (value != null) {
             return value.replace("=", " = ");

@@ -38,6 +38,7 @@ import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
 import fi.livi.digitraffic.meri.portnet.xsd.VesselDetails;
+import fi.livi.digitraffic.meri.util.StringUtil;
 import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
@@ -128,20 +129,16 @@ public class PortCallUpdater {
             final Timestamp now = new Timestamp(Instant.now().toEpochMilli());
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
-            try {
-                if(timestamp == null) {
-                    log.warn("method=checkTimestamps portCallId={} futureTimestamp=null currentTimestamp={} portCallList={}",
-                             pcn.getPortCallId().longValue(), now.getTime(), new ObjectMapper().writeValueAsString(list));
-                } else if(timestamp.after(now)) {
-                    log.warn("method=checkTimestamps portCallId={} futureTimestamp={} currentTimestamp={} portCallList={}",
-                             pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), new ObjectMapper().writeValueAsString(list));
-                } else if(timestamp.before(MIN_TIMESTAMP)) {
-                    log.warn("method=checkTimestamps portCallId={} pastTimestamp={} portCallList={}",
-                             pcn.getPortCallId().longValue(), timestamp.getTime(), new ObjectMapper().writeValueAsString(list));
-                    return false;
-                }
-            } catch (final JsonProcessingException e) {
-                log.error("method=checkTimestamps", e);
+            if(timestamp == null) {
+                log.warn("method=checkTimestamps portCallId={} futureTimestamp=null currentTimestamp={} portCallList={}",
+                         pcn.getPortCallId().longValue(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
+            } else if(timestamp.after(now)) {
+                log.warn("method=checkTimestamps portCallId={} futureTimestamp={} currentTimestamp={} portCallList={}",
+                         pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
+            } else if(timestamp.before(MIN_TIMESTAMP)) {
+                log.warn("method=checkTimestamps portCallId={} pastTimestamp={} portCallList={}",
+                         pcn.getPortCallId().longValue(), timestamp.getTime(), StringUtil.toJsonStringLogSafe(list));
+                return false;
             }
         }
 

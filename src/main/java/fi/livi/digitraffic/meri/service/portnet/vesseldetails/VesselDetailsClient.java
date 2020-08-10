@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
+import fi.livi.digitraffic.meri.util.StringUtil;
 
 @Service
 @ConditionalOnNotWebApplication
@@ -40,12 +41,7 @@ public class VesselDetailsClient {
     private static void logInfo(final VesselList vesselList) {
         log.info("VesselDetailsCount={}", vesselList.getVesselDetails().size());
 
-        final ObjectMapper mapper = new ObjectMapper();
-        try {
-            log.info(mapper.writeValueAsString(vesselList));
-        } catch (final JsonProcessingException e) {
-            log.error("Could not parse", e);
-        }
+        log.info(StringUtil.toJsonStringLogSafe(vesselList));
     }
 
     private String buildUrl(final ZonedDateTime from) {

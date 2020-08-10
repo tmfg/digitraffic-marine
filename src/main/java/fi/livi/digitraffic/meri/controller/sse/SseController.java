@@ -31,6 +31,7 @@ import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseService;
+import fi.livi.digitraffic.meri.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -154,7 +155,7 @@ public class SseController {
     public AddInfo addSseData(@RequestBody TlscSseReports tlscSseReports) throws JsonProcessingException {
 
         log.info("method=postSseData JSON=\n{}",
-                 objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tlscSseReports));
+                 StringUtil.toJsonStringLogSafe(tlscSseReports));
 
         final int savedCount = sseService.saveTlscSseReports(tlscSseReports);
         return new AddInfo(savedCount);
