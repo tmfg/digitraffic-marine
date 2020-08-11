@@ -17,6 +17,7 @@ import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
@@ -85,12 +86,12 @@ public class QuartzSchedulerConfig {
 
         // Auto commit must be true for Quartz
         config.setAutoCommit(true);
-
         return new HikariDataSource(config);
     }
 
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(final DataSource quartzDataSource,
+    public SchedulerFactoryBean schedulerFactoryBean(@Qualifier("quartzDataSource")
+                                                     final DataSource quartzDataSource,
                                                      final JobFactory jobFactory,
                                                      final Optional<List<Trigger>> triggerBeans) throws IOException {
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_GATEWAY)
 public class PookiException extends IOException {
 
-    public PookiException(String message) {
-        super(message);
+    public PookiException(final String message, final Exception e) {
+        super(message, e);
     }
 }

@@ -15,7 +15,7 @@ public class StringUtil {
     private static ObjectWriter jsonObjectWriter;
 
     public StringUtil(final ObjectMapper objectMapper) {
-        this.jsonObjectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+        jsonObjectWriter = objectMapper.writerWithDefaultPrettyPrinter();
     }
 
     public static String toJsonString(final Object o) {
@@ -25,5 +25,12 @@ public class StringUtil {
             log.error("Failed to convert object to JSON-string", e);
         }
         return o.toString();
+    }
+
+    public static String padKeyValuePairsEqualitySignWithSpaces(final String value) {
+        if (value != null) {
+            return value.replace("=", " = ");
+        }
+        return value;
     }
 }
