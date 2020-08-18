@@ -1,14 +1,13 @@
 CREATE TABLE portcall_estimate (
     id BIGINT PRIMARY KEY,
-    event_id TEXT NOT NULL,
     event_type TEXT NOT NULL,
     event_time TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     event_time_confidence_lower TEXT,
     event_time_confidence_upper TEXT,
     event_source TEXT NOT NULL,
     record_time TIMESTAMP(0) WITH TIME ZONE NOT NULL,
-    ship_mmsi NUMERIC(10,0),
-    ship_imo NUMERIC(7,0),
+    ship_id NUMERIC(10, 0) NOT NULL,
+    ship_id_type CHARACTER VARYING(4) NOT NULL,
     location_port TEXT,
     location_terminal TEXT,
     location_berth TEXT,
@@ -18,3 +17,9 @@ CREATE TABLE portcall_estimate (
 
 ALTER TABLE portcall_estimate
     ADD CONSTRAINT portcall_estimate_type CHECK (event_type in ('ETA', 'ATB', 'ETD'));
+
+ALTER TABLE portcall_estimate
+    ADD CONSTRAINT portcall_estimate_ship_id_type CHECK (ship_id_type in ('s', 'o')); -- imsi, imo
+
+CREATE UNIQUE INDEX portcall_estimate_evt_type_evt_time_evt_source_ship_id
+    ON portcall_estimate(event_type, event_time, event_source, ship_id);
