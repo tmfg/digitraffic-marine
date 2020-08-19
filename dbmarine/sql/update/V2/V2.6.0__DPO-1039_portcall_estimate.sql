@@ -10,7 +10,7 @@ CREATE TABLE portcall_estimate (
     ship_id_type CHARACTER VARYING(4) NOT NULL,
     secondary_ship_id NUMERIC(10, 0),
     secondary_ship_id_type CHARACTER VARYING(4),
-    location_port TEXT,
+    location_locode CHARACTER VARYING(5) NOT NULL,
     location_terminal TEXT,
     location_berth TEXT,
     location_berth_position TEXT,
