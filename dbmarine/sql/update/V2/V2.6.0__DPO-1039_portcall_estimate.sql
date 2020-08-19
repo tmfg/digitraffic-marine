@@ -23,5 +23,8 @@ ALTER TABLE portcall_estimate
 ALTER TABLE portcall_estimate
     ADD CONSTRAINT portcall_estimate_ship_id_type CHECK (ship_id_type in ('mmsi', 'imo'));
 
+ALTER TABLE portcall_estimate
+    ADD CONSTRAINT portcall_estimate_seconday_ship_id_type CHECK (secondary_ship_id_type in ('mmsi', 'imo'));
+
 CREATE UNIQUE INDEX portcall_estimate_evt_type_evt_time_evt_source_ship_id
     ON portcall_estimate(event_type, event_time, event_source, ship_id);
