@@ -30,5 +30,5 @@ CREATE INDEX portcall_estimate_locode
     ON portcall_estimate
     USING BTREE (location_locode);
 
-CREATE UNIQUE INDEX portcall_estimate_evt_type_evt_time_evt_source_ship_id
-    ON portcall_estimate(event_type, event_time, event_source, ship_id);
+CREATE UNIQUE INDEX portcall_estimate_shipid_evtsource_evttime
+    ON portcall_estimate(ship_id, event_source, event_time);
