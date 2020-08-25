@@ -1,3 +1,5 @@
+CREATE SEQUENCE seq_portcall_estimates;
+
 CREATE TABLE portcall_estimate (
     id BIGINT PRIMARY KEY,
     event_type TEXT NOT NULL,
@@ -20,17 +22,17 @@ CREATE TABLE portcall_estimate (
 );
 
 ALTER TABLE portcall_estimate
-    ADD CONSTRAINT portcall_estimate_type CHECK (event_type in ('ETA', 'ATB', 'ETD'));
+    ADD CONSTRAINT portcall_estimate_type_check CHECK (event_type in ('ETA', 'ATB', 'ETD'));
 
 ALTER TABLE portcall_estimate
-    ADD CONSTRAINT portcall_estimate_ship_id_type CHECK (ship_id_type in ('mmsi', 'imo'));
+    ADD CONSTRAINT portcall_estimate_ship_id_type_check CHECK (ship_id_type in ('mmsi', 'imo'));
 
 ALTER TABLE portcall_estimate
-    ADD CONSTRAINT portcall_estimate_seconday_ship_id_type CHECK (secondary_ship_id_type in ('mmsi', 'imo'));
+    ADD CONSTRAINT portcall_estimate_seconday_ship_id_type_check CHECK (secondary_ship_id_type in ('mmsi', 'imo'));
 
-CREATE INDEX portcall_estimate_locode
+CREATE INDEX portcall_estimate_locode_idx
     ON portcall_estimate
     USING BTREE (location_locode);
 
-CREATE UNIQUE INDEX portcall_estimate_shipid_evtsource_evttime
+CREATE UNIQUE INDEX portcall_estimate_ship_id_event_source_event_time_idx
     ON portcall_estimate(ship_id, event_source, event_time);
