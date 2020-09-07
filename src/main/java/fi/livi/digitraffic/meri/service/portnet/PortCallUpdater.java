@@ -118,7 +118,9 @@ public class PortCallUpdater {
         final List<PortCall> updated = new ArrayList<>();
 
         final StopWatch watch = StopWatch.createStarted();
-        list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
+        list.getPortCallNotification().forEach(pcn -> {
+            update(pcn, added, updated);
+        });
         portCallRepository.saveAll(added);
 
         log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
