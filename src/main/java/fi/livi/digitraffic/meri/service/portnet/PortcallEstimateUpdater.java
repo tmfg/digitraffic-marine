@@ -51,6 +51,19 @@ class PortcallEstimate {
         return new PortcallEstimate(pcn);
     }
 
+    @Override
+    public String toString() {
+        return "PortcallEstimate{" +
+            "eventType=" + eventType +
+            ", eventTime=" + eventTime +
+            ", recordTime=" + recordTime +
+            ", eventTimeConfidenceLower=" + eventTimeConfidenceLower +
+            ", eventTimeConfidenceUpper=" + eventTimeConfidenceUpper +
+            ", source='" + source + '\'' +
+            ", ship=" + ship +
+            ", location=" + location +
+            '}';
+    }
 }
 
 enum EventType {
@@ -114,6 +127,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
             final HttpPost post = new HttpPost(portcallEstimateUrl);
             post.setEntity(new StringEntity(om.writeValueAsString(pce), ContentType.APPLICATION_JSON));
             httpClient.execute(post);
+            log.info("Updated portcall estimate {}", pce);
         } catch (Exception e) {
             log.warn("Unable to update portcall estimates", e);
         }
