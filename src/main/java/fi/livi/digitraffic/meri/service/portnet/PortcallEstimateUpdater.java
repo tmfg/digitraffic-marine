@@ -5,6 +5,7 @@ import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -136,9 +137,9 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
             post.setHeader("X-Api-Key", portcallEstimateApiKey);
             final String json = om.writeValueAsString(pce);
             post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-            final HttpResponse response = httpClient.execute(post);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN) {
-                throw new RuntimeException("Failed to update portcall estimate, forbidden");
+            final StatusLine status = httpClient.execute(post).getStatusLine();
+            if (status.getStatusCode() != HttpStatus.SC_OK) {
+                throw new RuntimeException("Failed to update portcall estimate: " + status.getStatusCode() + ", " + status.getReasonPhrase());
             }
             log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
         } catch (Exception e) {
