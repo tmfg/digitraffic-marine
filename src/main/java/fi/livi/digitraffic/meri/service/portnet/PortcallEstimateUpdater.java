@@ -131,12 +131,13 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
             final PortcallEstimate pce = PortcallEstimate.fromPortcallNotification(pcn);
             final HttpPost post = new HttpPost(portcallEstimateUrl);
             post.setHeader("X-Api-Key", portcallEstimateApiKey);
-            post.setEntity(new StringEntity(om.writeValueAsString(pce), ContentType.APPLICATION_JSON));
+            final String json = om.writeValueAsString(pce);
+            post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             final HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN) {
                 throw new RuntimeException("Failed to update portcall estimate, forbidden");
             }
-            log.info("method=updatePortcallEstimate Updated portcall estimate {}", pce);
+            log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
         } catch (Exception e) {
             log.warn("method=updatePortcallEstimate unable to update portcall estimates", e);
         }

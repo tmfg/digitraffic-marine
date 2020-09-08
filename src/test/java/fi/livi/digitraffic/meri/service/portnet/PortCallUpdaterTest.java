@@ -1,20 +1,9 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -28,10 +17,20 @@ import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class PortCallUpdaterTest extends AbstractTestBase {
     @Autowired
