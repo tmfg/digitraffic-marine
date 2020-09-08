@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.portnet.xsd.BerthDetails;
 import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.PortCallDetails;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -18,12 +19,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
 
@@ -38,73 +38,25 @@ class PortcallEstimate {
     public final Ship ship;
     public final Location location;
 
-    private PortcallEstimate(final PortCallNotification pcn) {
-        PortAreaDetails details = pcn.getPortCallDetails().getPortAreaDetails().get(0); // seems to be always 1
-        this.eventType = setEventType(details.getBerthDetails());
-        this.eventTime = setEventTime(details.getBerthDetails());//ZonedDateTime.ofInstant(details.getBerthDetails().getEta().toGregorianCalendar().getTime().toInstant(), FINLAND_ZONE);
-        this.recordTime = setRecordTime(details.getBerthDetails());//ZonedDateTime.ofInstant(details.getBerthDetails().getEtaTimeStamp().toGregorianCalendar().getTime().toInstant(), FINLAND_ZONE);
+    public PortcallEstimate(
+        final EventType eventType,
+        final ZonedDateTime eventTime,
+        final ZonedDateTime recordTime,
+        final String source,
+        final PortCallDetails details) {
+        this.eventType = eventType;
+        this.eventTime = eventTime;
+        this.recordTime = recordTime;
         this.eventTimeConfidenceLower = null;
         this.eventTimeConfidenceUpper = null;
-        this.source = "DT-" + details.getBerthDetails().getEtaSource().name();
-        final BigInteger mmsi = pcn.getPortCallDetails().getVesselDetails().getIdentificationData().getMmsi();
-        final BigInteger imo = pcn.getPortCallDetails().getVesselDetails().getIdentificationData().getImoLloyds();
+        this.source = "DT-" + source;
+        final BigInteger mmsi = details.getVesselDetails().getIdentificationData().getMmsi();
+        final BigInteger imo = details.getVesselDetails().getIdentificationData().getImoLloyds();
         this.ship = new Ship(mmsi != null ? mmsi.intValue() : null,
             imo != null ? imo.intValue() : null);
-        this.location = new Location(pcn.getPortCallDetails().getNextPort());
+        this.location = new Location(details.getNextPort());
     }
 
-    public boolean isValid() {
-        return eventType != null && eventTime != null && recordTime != null;
-    }
-
-    public static PortcallEstimate fromPortcallNotification(final PortCallNotification pcn) {
-        return new PortcallEstimate(pcn);
-    }
-
-    private EventType setEventType(BerthDetails bd) {
-        if (isValidDate(bd.getEta())) {
-            return EventType.ETA;
-        } else if (isValidDate(bd.getAtd())) {
-            return EventType.ATD;
-        }
-        return null;
-    }
-
-    private ZonedDateTime setEventTime(BerthDetails bd) {
-        if (isValidDate(bd.getEta())) {
-            return ZonedDateTime.ofInstant(bd.getEta().toGregorianCalendar().toInstant(), FINLAND_ZONE);
-        } else if (isValidDate(bd.getAtd())) {
-            return ZonedDateTime.ofInstant(bd.getAtd().toGregorianCalendar().toInstant(), FINLAND_ZONE);
-        }
-        return null;
-    }
-
-    private ZonedDateTime setRecordTime(BerthDetails bd) {
-        if (bd.getEtaTimeStamp() != null) {
-            return ZonedDateTime.ofInstant(bd.getEtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE);
-        } else if (bd.getAtdTimeStamp() != null) {
-            return ZonedDateTime.ofInstant(bd.getAtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE);
-        }
-        return null;
-    }
-
-    private boolean isValidDate(XMLGregorianCalendar cal) {
-         return cal != null && cal.toGregorianCalendar().toInstant().isAfter(Instant.now());
-    }
-
-    @Override
-    public String toString() {
-        return "PortcallEstimate{" +
-            "eventType=" + eventType +
-            ", eventTime=" + eventTime +
-            ", recordTime=" + recordTime +
-            ", eventTimeConfidenceLower=" + eventTimeConfidenceLower +
-            ", eventTimeConfidenceUpper=" + eventTimeConfidenceUpper +
-            ", source='" + source + '\'' +
-            ", ship=" + ship +
-            ", location=" + location +
-            '}';
-    }
 }
 
 enum EventType {
@@ -168,22 +120,62 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     @Override
     public void updatePortcallEstimate(final PortCallNotification pcn) {
-        final PortcallEstimate pce = PortcallEstimate.fromPortcallNotification(pcn);
-        try {
-            if (!pce.isValid()) {
-                throw new IllegalArgumentException("Invalid portcall estimate: " + pce);
+        final List<PortcallEstimate> pces = estimatesFromPortcallNotification(pcn);
+        for (PortcallEstimate pce : pces) {
+            try {
+                final HttpPost post = new HttpPost(portcallEstimateUrl);
+                post.setHeader("X-Api-Key", portcallEstimateApiKey);
+                final String json = om.writeValueAsString(pce);
+                post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+                final StatusLine status = httpClient.execute(post).getStatusLine();
+                if (status.getStatusCode() != HttpStatus.SC_OK) {
+                    throw new RuntimeException("Failed to update portcall estimate: " + status.getStatusCode() + ", " + status.getReasonPhrase() + ", " + json);
+                }
+                log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
+            } catch (Exception e) {
+                log.warn("method=updatePortcallEstimate unable to update portcall estimates", e);
             }
-            final HttpPost post = new HttpPost(portcallEstimateUrl);
-            post.setHeader("X-Api-Key", portcallEstimateApiKey);
-            final String json = om.writeValueAsString(pce);
-            post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-            final StatusLine status = httpClient.execute(post).getStatusLine();
-            if (status.getStatusCode() != HttpStatus.SC_OK) {
-                throw new RuntimeException("Failed to update portcall estimate: " + status.getStatusCode() + ", " + status.getReasonPhrase() + ", " + json);
-            }
-            log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
-        } catch (Exception e) {
-            log.warn("method=updatePortcallEstimate unable to update portcall estimates", e);
         }
+    }
+
+    private List<PortcallEstimate> estimatesFromPortcallNotification(final PortCallNotification pcn) {
+        List<PortcallEstimate> estimates = new ArrayList<>();
+        final PortAreaDetails details = pcn.getPortCallDetails().getPortAreaDetails().get(0); // seems to be always 1
+
+        final PortcallEstimate etaEstimate = getEtaEstimate(details, pcn.getPortCallDetails());
+        if (etaEstimate != null) {
+            estimates.add(etaEstimate);
+        }
+
+        final PortcallEstimate atdEstimate = getAtdEstimate(details, pcn.getPortCallDetails());
+        if (atdEstimate != null) {
+            estimates.add(atdEstimate);
+        }
+
+        return estimates;
+    }
+
+    private PortcallEstimate getEtaEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
+        final BerthDetails bd = portAreaDetails.getBerthDetails();
+        if (bd.getEta() != null && bd.getEtaTimeStamp() != null) {
+            return new PortcallEstimate(EventType.ETA,
+                ZonedDateTime.ofInstant(bd.getEta().toGregorianCalendar().toInstant(), FINLAND_ZONE),
+                ZonedDateTime.ofInstant(bd.getEtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
+                bd.getEtaSource().name(),
+                portCallDetails);
+        }
+        return null;
+    }
+
+    private PortcallEstimate getAtdEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
+        final BerthDetails bd = portAreaDetails.getBerthDetails();
+        if (bd.getAtd() != null && bd.getAtdTimeStamp() != null) {
+            return new PortcallEstimate(EventType.ATD,
+                ZonedDateTime.ofInstant(bd.getAtd().toGregorianCalendar().toInstant(), FINLAND_ZONE),
+                ZonedDateTime.ofInstant(bd.getAtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
+                bd.getEtaSource().name(),
+                portCallDetails);
+        }
+        return null;
     }
 }
