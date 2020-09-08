@@ -123,7 +123,7 @@ public class PortCallUpdater {
         final StopWatch watch = StopWatch.createStarted();
         list.getPortCallNotification().forEach(pcn -> {
             update(pcn, added, updated);
-            portcallEstimateUpdater.update(pcn);
+            portcallEstimateUpdater.updatePortcallEstimate(pcn);
         });
         portCallRepository.saveAll(added);
 

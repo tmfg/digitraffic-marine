@@ -43,9 +43,6 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     @Autowired
     private RestTemplate jax2bRestTemplate;
 
-    @Autowired
-    private PortcallEstimateUpdater portcallEstimateUpdater;
-
     private PortCallClient portCallClient;
     private PortCallUpdater portCallUpdater;
     private MockRestServiceServer server;
@@ -53,7 +50,7 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     @Before
     public void before() {
         portCallClient = Mockito.spy(new PortCallClient("portCallUrl/", jax2bRestTemplate));
-        portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, portcallEstimateUpdater, 42, 42);
+        portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, new NoOpPortcallEstimateUpdater(), 42, 42);
         server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
 
