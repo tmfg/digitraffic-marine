@@ -3,6 +3,8 @@ package fi.livi.digitraffic.meri.service.portnet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -89,7 +91,7 @@ class Location {
 }
 
 interface PortcallEstimateUpdater {
-    void update(PortCallNotification pcn);
+    void updatePortcallEstimate(PortCallNotification pcn);
 }
 
 @ConditionalOnExpression("'${portcallestimate.url}' == 'null'")
@@ -97,7 +99,7 @@ interface PortcallEstimateUpdater {
 class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     @Override
-    public void update(PortCallNotification pcn) {}
+    public void updatePortcallEstimate(PortCallNotification pcn) {}
 }
 
 @ConditionalOnExpression("'${portcallestimate.url}' != 'null'")
@@ -106,6 +108,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     private final HttpClient httpClient = HttpClients.createDefault();
     private final String portcallEstimateUrl;
+    private final String portcallEstimateApiKey;
     private final ObjectMapper om;
 
     private static final Logger log = LoggerFactory.getLogger(HttpPortcallEstimateUpdater.class);
@@ -113,23 +116,29 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
     @Autowired
     public HttpPortcallEstimateUpdater(
         @Value("${portcallestimate.url}") final String portcallEstimateUrl,
+        @Value("${portcallestimate.apikey}") final String portcallEstimateApiKey,
         final ObjectMapper om
         )
     {
         this.portcallEstimateUrl = portcallEstimateUrl;
+        this.portcallEstimateApiKey = portcallEstimateApiKey;
         this.om = om;
     }
 
     @Override
-    public void update(final PortCallNotification pcn) {
+    public void updatePortcallEstimate(final PortCallNotification pcn) {
         try {
             final PortcallEstimate pce = PortcallEstimate.fromPortcallNotification(pcn);
             final HttpPost post = new HttpPost(portcallEstimateUrl);
+            post.setHeader("X-Api-Key", portcallEstimateApiKey);
             post.setEntity(new StringEntity(om.writeValueAsString(pce), ContentType.APPLICATION_JSON));
-            httpClient.execute(post);
-            log.info("Updated portcall estimate {}", pce);
+            final HttpResponse response = httpClient.execute(post);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN) {
+                throw new RuntimeException("Failed to update portcall estimate, forbidden");
+            }
+            log.info("method=updatePortcallEstimate Updated portcall estimate {}", pce);
         } catch (Exception e) {
-            log.warn("Unable to update portcall estimates", e);
+            log.warn("method=updatePortcallEstimate unable to update portcall estimates", e);
         }
     }
 }
