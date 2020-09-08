@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -94,6 +95,7 @@ interface PortcallEstimateUpdater {
     void updatePortcallEstimate(PortCallNotification pcn);
 }
 
+@ConditionalOnNotWebApplication
 @ConditionalOnExpression("'${portcallestimate.url}' == 'null'")
 @Component
 class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
@@ -102,6 +104,7 @@ class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
     public void updatePortcallEstimate(PortCallNotification pcn) {}
 }
 
+@ConditionalOnNotWebApplication
 @ConditionalOnExpression("'${portcallestimate.url}' != 'null'")
 @Component
 class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
