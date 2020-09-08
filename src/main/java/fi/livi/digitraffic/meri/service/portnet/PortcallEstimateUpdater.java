@@ -80,9 +80,9 @@ class PortcallEstimate {
     }
 
     private ZonedDateTime setRecordTime(BerthDetails bd) {
-        if (isValidDate(bd.getEtaTimeStamp())) {
+        if (bd.getEtaTimeStamp() != null) {
             return ZonedDateTime.ofInstant(bd.getEtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE);
-        } else if (isValidDate(bd.getAtdTimeStamp())) {
+        } else if (bd.getAtdTimeStamp() != null) {
             return ZonedDateTime.ofInstant(bd.getAtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE);
         }
         return null;
