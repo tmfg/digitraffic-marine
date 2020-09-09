@@ -60,7 +60,7 @@ class PortcallEstimate {
 }
 
 enum EventType {
-    ETA, ATD, ETD
+    ETA, ETD
 }
 
 class Ship {
@@ -147,9 +147,9 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
             estimates.add(etaEstimate);
         }
 
-        final PortcallEstimate atdEstimate = getAtdEstimate(details, pcn.getPortCallDetails());
-        if (atdEstimate != null) {
-            estimates.add(atdEstimate);
+        final PortcallEstimate etdEstimate = getEtdEstimate(details, pcn.getPortCallDetails());
+        if (etdEstimate != null) {
+            estimates.add(etdEstimate);
         }
 
         return estimates;
@@ -167,13 +167,13 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         return null;
     }
 
-    private PortcallEstimate getAtdEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
+    private PortcallEstimate getEtdEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
         final BerthDetails bd = portAreaDetails.getBerthDetails();
-        if (bd.getAtd() != null && bd.getAtdTimeStamp() != null) {
-            return new PortcallEstimate(EventType.ATD,
-                ZonedDateTime.ofInstant(bd.getAtd().toGregorianCalendar().toInstant(), FINLAND_ZONE),
-                ZonedDateTime.ofInstant(bd.getAtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
-                bd.getEtaSource().name(),
+        if (bd.getEtd() != null && bd.getEtdTimeStamp() != null) {
+            return new PortcallEstimate(EventType.ETD,
+                ZonedDateTime.ofInstant(bd.getEtd().toGregorianCalendar().toInstant(), FINLAND_ZONE),
+                ZonedDateTime.ofInstant(bd.getEtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
+                bd.getEtdSource().name(),
                 portCallDetails);
         }
         return null;
