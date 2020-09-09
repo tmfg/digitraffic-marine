@@ -139,7 +139,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
     }
 
     private List<PortcallEstimate> estimatesFromPortcallNotification(final PortCallNotification pcn) {
-        List<PortcallEstimate> estimates = new ArrayList<>();
+        final List<PortcallEstimate> estimates = new ArrayList<>();
         final PortAreaDetails details = pcn.getPortCallDetails().getPortAreaDetails().get(0); // seems to be always 1
 
         final PortcallEstimate etaEstimate = getEtaEstimate(details, pcn.getPortCallDetails());
