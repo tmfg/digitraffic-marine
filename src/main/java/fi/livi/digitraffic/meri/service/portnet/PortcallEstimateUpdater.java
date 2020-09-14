@@ -121,6 +121,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
     @Override
     public void updatePortcallEstimate(final PortCallNotification pcn) {
         final List<PortcallEstimate> pces = estimatesFromPortcallNotification(pcn);
+        log.info("method=updatePortcallEstimate created {} estimates from portcall notification", pces.size());
         for (PortcallEstimate pce : pces) {
             try {
                 final HttpPost post = new HttpPost(portcallEstimateUrl);
