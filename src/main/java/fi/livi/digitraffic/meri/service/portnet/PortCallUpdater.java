@@ -123,9 +123,7 @@ public class PortCallUpdater {
         final StopWatch watch = StopWatch.createStarted();
         list.getPortCallNotification().forEach(pcn -> {
             update(pcn, added, updated);
-            log.info("method=updatePortCalls start update estimates");
             portcallEstimateUpdater.updatePortcallEstimate(pcn);
-            log.info("method=updatePortCalls stop update estimates");
         });
         portCallRepository.saveAll(added);
 
