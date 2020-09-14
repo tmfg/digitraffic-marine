@@ -140,6 +140,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 } else {
                     log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
                 }
+                post.releaseConnection();
             } catch (Throwable t) {
                 log.warn("method=updatePortcallEstimate unexpected error", t);
             }
