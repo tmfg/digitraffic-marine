@@ -124,11 +124,17 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         log.info("method=updatePortcallEstimate created {} estimates from portcall notification", pces.size());
         for (PortcallEstimate pce : pces) {
             try {
+                log.info("method=updatePortcallEstimate pre-post");
                 final HttpPost post = new HttpPost(portcallEstimateUrl);
+                log.info("method=updatePortcallEstimate set header");
                 post.setHeader("X-Api-Key", portcallEstimateApiKey);
+                log.info("method=updatePortcallEstimate create json");
                 final String json = om.writeValueAsString(pce);
+                log.info("method=updatePortcallEstimate setentity");
                 post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+                log.info("method=updatePortcallEstimate execute");
                 final StatusLine status = httpClient.execute(post).getStatusLine();
+                log.info("method=updatePortcallEstimate get-status");
                 if (status.getStatusCode() != HttpStatus.SC_OK) {
                     log.warn("method=updatePortcallEstimate got status code {}, reason {}", status.getStatusCode(), status.getReasonPhrase());
                 } else {
@@ -138,6 +144,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 log.warn("method=updatePortcallEstimate unexpected error", t);
             }
         }
+        log.info("method=updatePortcallEstimate update done", pces.size());
     }
 
     private List<PortcallEstimate> estimatesFromPortcallNotification(final PortCallNotification pcn) {
