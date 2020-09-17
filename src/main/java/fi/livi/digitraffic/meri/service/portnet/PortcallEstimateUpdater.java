@@ -1,10 +1,7 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.livi.digitraffic.meri.portnet.xsd.BerthDetails;
-import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;
-import fi.livi.digitraffic.meri.portnet.xsd.PortCallDetails;
-import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
+import fi.livi.digitraffic.meri.portnet.xsd.*;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -43,18 +40,16 @@ class PortcallEstimate {
         final ZonedDateTime eventTime,
         final ZonedDateTime recordTime,
         final String source,
-        final PortCallDetails details) {
+        final Ship ship,
+        final String nextPort) {
         this.eventType = eventType;
         this.eventTime = eventTime;
         this.recordTime = recordTime;
         this.eventTimeConfidenceLower = null;
         this.eventTimeConfidenceUpper = null;
         this.source = "DT-" + source;
-        final BigInteger mmsi = details.getVesselDetails().getIdentificationData().getMmsi();
-        final BigInteger imo = details.getVesselDetails().getIdentificationData().getImoLloyds();
-        this.ship = new Ship(mmsi != null ? mmsi.intValue() : null,
-            imo != null ? imo.intValue() : null);
-        this.location = new Location(details.getNextPort());
+        this.ship = ship;
+        this.location = new Location(nextPort);
     }
 
 }
@@ -161,11 +156,16 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
     private PortcallEstimate getEtaEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
         final BerthDetails bd = portAreaDetails.getBerthDetails();
         if (bd.getEta() != null && bd.getEtaTimeStamp() != null) {
+            final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
+            if (ship == null) {
+                return null;
+            }
             return new PortcallEstimate(EventType.ETA,
                 ZonedDateTime.ofInstant(bd.getEta().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 ZonedDateTime.ofInstant(bd.getEtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 bd.getEtaSource().name(),
-                portCallDetails);
+                ship,
+                portCallDetails.getNextPort());
         }
         return null;
     }
@@ -173,12 +173,27 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
     private PortcallEstimate getEtdEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
         final BerthDetails bd = portAreaDetails.getBerthDetails();
         if (bd.getEtd() != null && bd.getEtdTimeStamp() != null) {
+            final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
+            if (ship == null) {
+                return null;
+            }
             return new PortcallEstimate(EventType.ETD,
                 ZonedDateTime.ofInstant(bd.getEtd().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 ZonedDateTime.ofInstant(bd.getEtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 bd.getEtdSource().name(),
-                portCallDetails);
+                ship,
+                portCallDetails.getNextPort());
         }
         return null;
+    }
+
+    private Ship getShipFromVesselDetails(final VesselDetails vesselDetails) {
+        if (vesselDetails.getIdentificationData() == null) {
+            return null;
+        }
+        if (vesselDetails.getIdentificationData().getMmsi() == null && vesselDetails.getIdentificationData().getImoLloyds() == null) {
+            return null;
+        }
+        return new Ship(vesselDetails.getIdentificationData().getMmsi().intValue(), vesselDetails.getIdentificationData().getImoLloyds().intValue());
     }
 }
