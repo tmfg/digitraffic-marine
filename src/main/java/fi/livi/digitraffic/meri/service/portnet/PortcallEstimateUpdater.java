@@ -122,7 +122,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 final HttpPost post = new HttpPost(portcallEstimateUrl);
                 post.setHeader("X-Api-Key", portcallEstimateApiKey);
                 final String json = om.writeValueAsString(pce);
-                log.info("method=updatePortcallEstimate about to send json {}", json);
+                log.info("method=updatePortcallEstimate about to send json {} to {}", json, portcallEstimateUrl);
                 post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
                 final StatusLine status = httpClient.execute(post).getStatusLine();
                 if (status.getStatusCode() != HttpStatus.SC_OK) {
