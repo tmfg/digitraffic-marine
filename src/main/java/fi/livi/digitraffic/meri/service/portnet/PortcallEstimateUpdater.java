@@ -195,6 +195,9 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         if (vesselDetails.getIdentificationData().getMmsi() == null && vesselDetails.getIdentificationData().getImoLloyds() == null) {
             return null;
         }
-        return new Ship(vesselDetails.getIdentificationData().getMmsi().intValue(), vesselDetails.getIdentificationData().getImoLloyds().intValue());
+        final BigInteger mmsi = vesselDetails.getIdentificationData().getMmsi();
+        final BigInteger imo = vesselDetails.getIdentificationData().getImoLloyds();
+
+        return new Ship(mmsi != null ? mmsi.intValue() : null, imo != null ? imo.intValue() : null);
     }
 }
