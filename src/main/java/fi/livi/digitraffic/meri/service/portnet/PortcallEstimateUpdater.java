@@ -47,7 +47,7 @@ class PortcallEstimate {
         this.recordTime = recordTime;
         this.eventTimeConfidenceLower = null;
         this.eventTimeConfidenceUpper = null;
-        this.source = "DT-" + source;
+        this.source = "Portnet" + (source != null ? "-" + source : ""); // source can be Port, Agent, Pilot or null
         this.ship = ship;
         this.location = new Location(portToVisit);
     }
@@ -198,6 +198,8 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         final BigInteger mmsi = vesselDetails.getIdentificationData().getMmsi();
         final BigInteger imo = vesselDetails.getIdentificationData().getImoLloyds();
 
-        return new Ship(mmsi != null ? mmsi.intValue() : null, imo != null ? imo.intValue() : null);
+        return new Ship(
+            mmsi != null ? mmsi.intValue() : null,
+            imo != null ? imo.intValue() : null);
     }
 }
