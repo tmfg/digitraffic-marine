@@ -52,6 +52,19 @@ class PortcallEstimate {
         this.location = new Location(portToVisit);
     }
 
+    @Override
+    public String toString() {
+        return "PortcallEstimate{" +
+            "eventType=" + eventType +
+            ", eventTime=" + eventTime +
+            ", recordTime=" + recordTime +
+            ", eventTimeConfidenceLower=" + eventTimeConfidenceLower +
+            ", eventTimeConfidenceUpper=" + eventTimeConfidenceUpper +
+            ", source='" + source + '\'' +
+            ", ship=" + ship +
+            ", location=" + location +
+            '}';
+    }
 }
 
 enum EventType {
@@ -119,6 +132,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         log.info("method=updatePortcallEstimate created {} estimates from portcall notification", pces.size());
         for (PortcallEstimate pce : pces) {
             try {
+                log.info("method=updatePortcallEstimate about to persist {}", pce);
                 final HttpPost post = new HttpPost(portcallEstimateUrl);
                 post.setHeader("X-Api-Key", portcallEstimateApiKey);
                 final String json = om.writeValueAsString(pce);
