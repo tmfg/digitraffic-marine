@@ -13,9 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
 import java.math.BigInteger;
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -81,16 +82,7 @@ interface PortcallEstimateUpdater {
 }
 
 @ConditionalOnNotWebApplication
-@ConditionalOnExpression("'${portcallestimate.url}' == 'null'")
-@Component
-class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
-
-    @Override
-    public void updatePortcallEstimate(PortCallNotification pcn) {}
-}
-
-@ConditionalOnNotWebApplication
-@ConditionalOnExpression("'${portcallestimate.url}' != 'null'")
+@ConditionalOnProperty({"portcallestimate.url", "portcallestimate.apikey"})
 @Component
 class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 

@@ -4,6 +4,7 @@ import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
+import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -23,6 +24,7 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
@@ -31,6 +33,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
+    @Override
+    public void updatePortcallEstimate(PortCallNotification pcn) {}
+}
 
 public class PortCallUpdaterTest extends AbstractTestBase {
     @Autowired
@@ -49,7 +56,13 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     @Before
     public void before() {
         portCallClient = Mockito.spy(new PortCallClient("portCallUrl/", jax2bRestTemplate));
-        portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, new NoOpPortcallEstimateUpdater(), 42, 42);
+        portCallUpdater = new PortCallUpdater(
+            portCallRepository,
+            updatedTimestampRepository,
+            portCallClient,
+            Optional.of(new NoOpPortcallEstimateUpdater()),
+            42,
+            42);
         server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
 
