@@ -2,7 +2,7 @@
 
 ## Development
 
-###Preconditions
+### Preconditions
 1. Java 1.8 JDK
 2. Maven
 3. Git client
