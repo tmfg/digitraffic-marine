@@ -1,17 +1,11 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
-import static java.time.temporal.ChronoUnit.MILLIS;
-
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
+import fi.livi.digitraffic.meri.domain.portnet.PortCall;
+import fi.livi.digitraffic.meri.portnet.xsd.*;
+import fi.livi.digitraffic.meri.util.StringUtil;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -21,25 +15,17 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
-import fi.livi.digitraffic.meri.domain.portnet.PortCall;
-import fi.livi.digitraffic.meri.portnet.xsd.AgentInfo;
-import fi.livi.digitraffic.meri.portnet.xsd.BerthDetails;
-import fi.livi.digitraffic.meri.portnet.xsd.CargoInfo;
-import fi.livi.digitraffic.meri.portnet.xsd.ImoInformation;
-import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;
-import fi.livi.digitraffic.meri.portnet.xsd.PortCallDetails;
-import fi.livi.digitraffic.meri.portnet.xsd.PortCallDirection;
-import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
-import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
-import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
-import fi.livi.digitraffic.meri.portnet.xsd.VesselDetails;
-import fi.livi.digitraffic.meri.util.StringUtil;
-import fi.livi.digitraffic.meri.util.TimeUtil;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Service
 @ConditionalOnNotWebApplication
@@ -48,6 +34,7 @@ public class PortCallUpdater {
     private final UpdatedTimestampRepository updatedTimestampRepository;
 
     private final PortCallClient portCallClient;
+    private final PortcallEstimateUpdater portcallEstimateUpdater;
 
     private static final Logger log = LoggerFactory.getLogger(PortCallUpdater.class);
 
@@ -60,11 +47,13 @@ public class PortCallUpdater {
     public PortCallUpdater(final PortCallRepository portCallRepository,
                            final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallClient portCallClient,
+                           final Optional<PortcallEstimateUpdater> portcallEstimateUpdater,
                            @Value("${portCallUpdateJob.maxTimeFrameToFetch:0}") final int maxTimeFrameToFetch,
                            @Value("${portCallUpdateJob.overlapTimeFrame:0}") final int overlapTimeFrame) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallClient = portCallClient;
+        this.portcallEstimateUpdater = portcallEstimateUpdater.orElse(null);
         this.maxTimeFrameToFetch = maxTimeFrameToFetch;
         this.overlapTimeFrame = overlapTimeFrame;
     }
@@ -118,7 +107,12 @@ public class PortCallUpdater {
         final List<PortCall> updated = new ArrayList<>();
 
         final StopWatch watch = StopWatch.createStarted();
-        list.getPortCallNotification().forEach(pcn -> update(pcn, added, updated));
+        list.getPortCallNotification().forEach(pcn -> {
+            update(pcn, added, updated);
+            if (portcallEstimateUpdater != null) {
+                portcallEstimateUpdater.updatePortcallEstimate(pcn);
+            }
+        });
         portCallRepository.saveAll(added);
 
         log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
