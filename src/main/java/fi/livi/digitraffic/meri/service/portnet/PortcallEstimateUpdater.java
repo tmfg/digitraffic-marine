@@ -35,6 +35,7 @@ class PortcallEstimate {
     public final String source;
     public final Ship ship;
     public final Location location;
+    public final BigInteger portcallId;
 
     public PortcallEstimate(
         final EventType eventType,
@@ -42,7 +43,8 @@ class PortcallEstimate {
         final ZonedDateTime recordTime,
         final String source,
         final Ship ship,
-        final String portToVisit) {
+        final String portToVisit,
+        final BigInteger portcallId) {
         this.eventType = eventType;
         this.eventTime = eventTime;
         this.recordTime = recordTime;
@@ -51,6 +53,7 @@ class PortcallEstimate {
         this.source = "Portnet" + (source != null ? "-" + source : ""); // source can be Port, Agent, Pilot or null
         this.ship = ship;
         this.location = new Location(portToVisit);
+        this.portcallId = portcallId;
     }
 
 }
@@ -133,12 +136,12 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         final List<PortcallEstimate> estimates = new ArrayList<>();
         final PortAreaDetails details = pcn.getPortCallDetails().getPortAreaDetails().get(0); // seems to be always 1
 
-        final PortcallEstimate etaEstimate = getEtaEstimate(details, pcn.getPortCallDetails());
+        final PortcallEstimate etaEstimate = getEtaEstimate(pcn.getPortCallId(), details, pcn.getPortCallDetails());
         if (etaEstimate != null) {
             estimates.add(etaEstimate);
         }
 
-        final PortcallEstimate etdEstimate = getEtdEstimate(details, pcn.getPortCallDetails());
+        final PortcallEstimate etdEstimate = getEtdEstimate(pcn.getPortCallId(), details, pcn.getPortCallDetails());
         if (etdEstimate != null) {
             estimates.add(etdEstimate);
         }
@@ -146,7 +149,11 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         return estimates;
     }
 
-    private PortcallEstimate getEtaEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
+    private PortcallEstimate getEtaEstimate(
+        final BigInteger portcallId,
+        final PortAreaDetails portAreaDetails,
+        final PortCallDetails portCallDetails) {
+
         final BerthDetails bd = portAreaDetails.getBerthDetails();
         if (bd.getEta() != null && bd.getEtaTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
@@ -158,12 +165,17 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ZonedDateTime.ofInstant(bd.getEtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 bd.getEtaSource().name(),
                 ship,
-                portCallDetails.getPortToVisit());
+                portCallDetails.getPortToVisit(),
+                portcallId);
         }
         return null;
     }
 
-    private PortcallEstimate getEtdEstimate(final PortAreaDetails portAreaDetails, PortCallDetails portCallDetails) {
+    private PortcallEstimate getEtdEstimate(
+        final BigInteger portcallId,
+        final PortAreaDetails portAreaDetails,
+        final PortCallDetails portCallDetails) {
+
         final BerthDetails bd = portAreaDetails.getBerthDetails();
         if (bd.getEtd() != null && bd.getEtdTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
@@ -175,7 +187,8 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ZonedDateTime.ofInstant(bd.getEtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 bd.getEtdSource().name(),
                 ship,
-                portCallDetails.getPortToVisit());
+                portCallDetails.getPortToVisit(),
+                portcallId);
         }
         return null;
     }
