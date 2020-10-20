@@ -41,7 +41,6 @@ class PortcallEstimate {
         final EventType eventType,
         final ZonedDateTime eventTime,
         final ZonedDateTime recordTime,
-        final String source,
         final Ship ship,
         final String portToVisit,
         final BigInteger portcallId) {
@@ -50,7 +49,7 @@ class PortcallEstimate {
         this.recordTime = recordTime;
         this.eventTimeConfidenceLower = null;
         this.eventTimeConfidenceUpper = null;
-        this.source = "Portnet" + (source != null ? "-" + source : ""); // source can be Port, Agent, Pilot or null
+        this.source = "Portnet";
         this.ship = ship;
         this.location = new Location(portToVisit);
         this.portcallId = portcallId;
@@ -163,7 +162,6 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
             return new PortcallEstimate(EventType.ETA,
                 ZonedDateTime.ofInstant(bd.getEta().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 ZonedDateTime.ofInstant(bd.getEtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
-                bd.getEtaSource().name(),
                 ship,
                 portCallDetails.getPortToVisit(),
                 portcallId);
@@ -185,7 +183,6 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
             return new PortcallEstimate(EventType.ETD,
                 ZonedDateTime.ofInstant(bd.getEtd().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 ZonedDateTime.ofInstant(bd.getEtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
-                bd.getEtdSource().name(),
                 ship,
                 portCallDetails.getPortToVisit(),
                 portcallId);
