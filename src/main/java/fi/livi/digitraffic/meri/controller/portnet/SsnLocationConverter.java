@@ -35,7 +35,7 @@ public final class SsnLocationConverter {
     }
 
     private static BerthFeature convertBerth(final Berth b) {
-        final BerthProperties p = new BerthProperties(b.getBerthKey().getLocode(), b.getBerthName());
+        final BerthProperties p = new BerthProperties(b.getBerthKey().getLocode(), b.getBerthKey().getPortAreaCode(), b.getBerthKey().getBerthCode(), b.getBerthName());
 
         return new BerthFeature(b.getBerthKey().getLocode(), b.getBerthKey().getPortAreaCode(), b.getBerthKey().getBerthCode(), p);
     }
