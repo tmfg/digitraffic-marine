@@ -54,6 +54,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class MarineApplication {
     public static void main(final String[] args) {
-        SpringApplication.run(MarineApplication.class, args);
+        final SpringApplication app = new SpringApplication(MarineApplication.class);
+        app.addListeners(new SecretsPropertiesListener());
+        app.run(args);
     }
 }

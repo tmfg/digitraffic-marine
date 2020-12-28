@@ -29,6 +29,7 @@
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
         <jackson.dataformat.version>2.11.3</jackson.dataformat.version>
         <io.springfox.version>3.0.0</io.springfox.version>
+        <aws.sdk.version>1.11.926</aws.sdk.version>
     </properties>
 
     <repositories>
@@ -69,11 +70,24 @@
                 <artifactId>logback-access</artifactId>
                 <version>${ch.qos.logback.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>${aws.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <!-- *** https://github.com/logstash/logstash-logback-encoder#including-it-in-your-project *** -->
 
     <dependencies>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-secretsmanager</artifactId>
+            <version>${aws.sdk.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-ri</artifactId>
@@ -167,12 +181,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-aws-secrets-manager-config</artifactId>
-            <version>2.2.5.RELEASE</version>
         </dependency>
 
         <dependency>
