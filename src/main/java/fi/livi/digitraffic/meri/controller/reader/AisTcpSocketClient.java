@@ -61,10 +61,10 @@ public class AisTcpSocketClient implements AutoCloseable {
     private final String logoffMessage = "$PSTT,FF\\r\\n";
 
     @Autowired
-    public AisTcpSocketClient(@Value("${aws.ais.connector.address}") final String aisAddress,
-                              @Value("${aws.ais.connector.port}") final Integer aisPort,
-                              @Value("${aws.ais.connector.user}") final String aisUser,
-                              @Value("${aws.ais.connector.password}") final String aisPassword,
+    public AisTcpSocketClient(@Value("${ais.connector.address}") final String aisAddress,
+                              @Value("${ais.connector.port}") final Integer aisPort,
+                              @Value("${ais.connector.user}") final String aisUser,
+                              @Value("${ais.connector.password}") final String aisPassword,
                               @Value("${ais.connector.socket.timeout}") final Integer socketTimeout,
                               @Value("${ais.connector.socket.keep-alive-timeout}") final Integer keepAliveTimeout) {
         this.aisAddress = aisAddress;
