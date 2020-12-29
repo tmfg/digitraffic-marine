@@ -1,5 +1,8 @@
 package fi.livi.digitraffic.meri;
 
+import com.amazonaws.auth.ContainerCredentialsProvider;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
@@ -24,15 +27,13 @@ public class SecretsPropertiesListener implements ApplicationListener<Applicatio
         final ConfigurableEnvironment env = applicationPreparedEvent.getApplicationContext().getEnvironment();
 
         final String secretName = env.getProperty("spring.aws.secretsmanager.secretName");
-        final String endpoint = env.getProperty("spring.aws.secretsmanager.endpoint");
-        final String region = env.getProperty("spring.aws.secretsmanager.region");
 
-        if (StringUtils.isBlank(secretName) || StringUtils.isBlank(endpoint) || StringUtils.isBlank(region)) {
+        if (StringUtils.isBlank(secretName)) {
             return;
         }
 
         try {
-            final String secretString = getSecret(secretName, endpoint, region);
+            final String secretString = getSecret(secretName);
 
             final ObjectMapper om = new ObjectMapper();
             final JavaType type = om.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
@@ -46,15 +47,16 @@ public class SecretsPropertiesListener implements ApplicationListener<Applicatio
 
             env.getPropertySources().addFirst(new PropertiesPropertySource("aws.secrets.manager", props));
         } catch (Exception e) {
-            throw new RuntimeException("Error deserializing or writing secret", e);
+            throw new RuntimeException("Error reading secret", e);
         }
     }
 
-    private String getSecret(final String secretName, final String endpoint, final String region) {
-        final AwsClientBuilder.EndpointConfiguration config = new AwsClientBuilder.EndpointConfiguration(endpoint, region);
-        final AWSSecretsManagerClientBuilder clientBuilder = AWSSecretsManagerClientBuilder.standard();
-        clientBuilder.setEndpointConfiguration(config);
-        final AWSSecretsManager client = clientBuilder.build();
+    private String getSecret(final String secretName) {
+        final AWSSecretsManager client =
+            AWSSecretsManagerClientBuilder
+                .standard()
+                .withCredentials(new DefaultAWSCredentialsProviderChain())
+                .build();
 
         final GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest()
             .withSecretId(secretName).withVersionStage("AWSCURRENT");
