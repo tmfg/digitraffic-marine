@@ -10,47 +10,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+@Component
 public class SecretsPropertiesListener implements ApplicationListener<ApplicationPreparedEvent> {
 
     private static final Logger log = LoggerFactory.getLogger(SecretsPropertiesListener.class);
 
+    @Value("${spring.aws.secretsmanager.secretName}")
+    private String secretName;
+
     @Override
     public void onApplicationEvent(final ApplicationPreparedEvent applicationPreparedEvent) {
-        final ConfigurableEnvironment env = applicationPreparedEvent.getApplicationContext().getEnvironment();
-
-        final String secretName = env.getProperty("spring.aws.secretsmanager.secretName");
-
         if (StringUtils.isBlank(secretName)) {
             return;
         }
 
+        final ConfigurableEnvironment env = applicationPreparedEvent.getApplicationContext().getEnvironment();
+
         try {
             final String secretString = getSecret(secretName);
-
-            final ObjectMapper om = new ObjectMapper();
-            final JavaType type = om.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
-            final HashMap<String, String> secretJson = om.readValue(secretString, type);
-
-            final Properties props = new Properties();
-
-            for (final Map.Entry<String, String> entry : secretJson.entrySet()) {
-                props.put(entry.getKey(), entry.getValue());
-            }
-
-            env.getPropertySources().addFirst(new PropertiesPropertySource("aws.secrets.manager", props));
+            final HashMap<String, String> secretJson = parseSecret(secretString);
+            env.getPropertySources().addFirst(new PropertiesPropertySource("aws.secrets.manager", secretsToProps(secretJson)));
 
             log.info("Successfully read secret from Secrets Manager");
         } catch (Exception e) {
-            throw new RuntimeException("Error reading secret", e);
+            throw new RuntimeException("Error reading secret from Secrets Manager", e);
         }
     }
 
@@ -62,7 +56,7 @@ public class SecretsPropertiesListener implements ApplicationListener<Applicatio
                 .build();
 
         final GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest()
-            .withSecretId(secretName).withVersionStage("AWSCURRENT");
+            .withSecretId(secretName).withVersionStage("AWSCURRENT"); // newest version of Secret
         try {
             final GetSecretValueResult getSecretValueResult = client.getSecretValue(getSecretValueRequest);
 
@@ -77,4 +71,19 @@ public class SecretsPropertiesListener implements ApplicationListener<Applicatio
         }
     }
 
+    private HashMap<String, String> parseSecret(final String secretString) throws Exception {
+        final ObjectMapper om = new ObjectMapper();
+        final JavaType type = om.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
+        return om.readValue(secretString, type);
+    }
+
+    private Properties secretsToProps(final HashMap<String, String> secretJson) {
+        final Properties props = new Properties();
+
+        for (final Map.Entry<String, String> entry : secretJson.entrySet()) {
+            props.put(entry.getKey(), entry.getValue());
+        }
+
+        return props;
+    }
 }
