@@ -12,7 +12,6 @@ import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +55,38 @@ public class PortCallController {
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime from,
 
+            @ApiParam("Return port calls whose ETA time is after the given time")
+            @RequestParam(value = "etaFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaFrom,
+
+            @ApiParam("Return port calls whose ETD time is after the given time")
+            @RequestParam(value = "etdFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdFrom,
+
+            @ApiParam("Return port calls whose ATA time is after the given time")
+            @RequestParam(value = "ataFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataFrom,
+
+            @ApiParam("Return port calls whose ATD time is after the given time")
+            @RequestParam(value = "atdFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdFrom,
+
+            @ApiParam("Return port calls whose ETA time is before the given time")
+            @RequestParam(value = "etaTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaTo,
+
+            @ApiParam("Return port calls whose ETD time is before the given time")
+            @RequestParam(value = "etdTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdTo,
+
+            @ApiParam("Return port calls whose ATA time is before the given time")
+            @RequestParam(value = "ataTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataTo,
+
+            @ApiParam("Return port calls whose ATD time is before the given time")
+            @RequestParam(value = "atdTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdTo,
+
             @ApiParam("Return port calls for given vessel name")
             @RequestParam(value = "vesselName", required = false) final String vesselName,
 
@@ -76,7 +107,23 @@ public class PortCallController {
             from = ZonedDateTime.now().minusDays(1);
         }
 
-        return portCallService.findPortCalls(date, from, null, null, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        return portCallService.findPortCalls(date,
+            from,
+            null,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
     }
 
     @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
@@ -96,6 +143,38 @@ public class PortCallController {
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
 
+            @ApiParam("Return port calls whose ETA time is after the given time")
+            @RequestParam(value = "etaFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaFrom,
+
+            @ApiParam("Return port calls whose ETD time is after the given time")
+            @RequestParam(value = "etdFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdFrom,
+
+            @ApiParam("Return port calls whose ATA time is after the given time")
+            @RequestParam(value = "ataFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataFrom,
+
+            @ApiParam("Return port calls whose ATD time is after the given time")
+            @RequestParam(value = "atdFrom", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdFrom,
+
+            @ApiParam("Return port calls whose ETA time is before the given time")
+            @RequestParam(value = "etaTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaTo,
+
+            @ApiParam("Return port calls whose ETD time is before the given time")
+            @RequestParam(value = "etdTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdTo,
+
+            @ApiParam("Return port calls whose ATA time is before the given time")
+            @RequestParam(value = "ataTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataTo,
+
+            @ApiParam("Return port calls whose ATD time is before the given time")
+            @RequestParam(value = "atdTo", required = false)
+            @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdTo,
+
             @ApiParam("Return port calls for given vessel name")
             @RequestParam(value = "vesselName", required = false) final String vesselName,
 
@@ -111,7 +190,23 @@ public class PortCallController {
             @ApiParam("Return port calls for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
-        return portCallService.findPortCalls(date, from, null, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        return portCallService.findPortCalls(date,
+            from,
+            null,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            locode,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
     }
 
     @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
@@ -145,6 +240,22 @@ public class PortCallController {
         @ApiParam("Return port calls for given vessel type code")
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
                                          ) {
-        return portCallService.findPortCalls(null, from, to, null, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        return portCallService.findPortCalls(null,
+            from,
+            to,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
     }
 }
