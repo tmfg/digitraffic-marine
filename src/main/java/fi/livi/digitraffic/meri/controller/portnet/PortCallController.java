@@ -33,24 +33,25 @@ import io.swagger.annotations.ApiResponses;
 public class PortCallController {
     private final PortCallService portCallService;
 
-    private static final String RESULT_SIZE_LIMIT_1000_NOTE = "If the search result size exceeds 1000 items, the operation will return an error. " +
-                                                               "In this case you should try to narrow down your search criteria.";
+    private static final String NOTE = "If the search result size exceeds 1000 items, the operation will return an error. " +
+                                       "In this case you should try to narrow down your search criteria.\n\n" +
+                                       "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
     public PortCallController(final PortCallService portCallService) {
         this.portCallService = portCallService;
     }
 
-    @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
+    @ApiOperation(value = "Find port calls", notes = NOTE)
     @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public PortCallsJson listAllPortCalls(
-            @ApiParam("Return port calls received on given date in ISO date format {yyyy-MM-dd} e.g. 2016-10-31.")
+            @ApiParam("Return port calls received on given date.")
             @RequestParam(value = "date", required = false)
             @DateTimeFormat(iso = DATE) final Date date,
 
-            @ApiParam("Return port calls received after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z. " +
+            @ApiParam("Return port calls received after given time. " +
                       "Default value is now minus 24 hours if all parameters are empty.")
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime from,
@@ -107,9 +108,8 @@ public class PortCallController {
             from = ZonedDateTime.now().minusDays(1);
         }
 
-        return portCallService.findPortCalls(date,
+        return portCallService.findPortCallsWithTimestamps(date,
             from,
-            null,
             etaFrom,
             etaTo,
             etdFrom,
@@ -118,7 +118,6 @@ public class PortCallController {
             ataTo,
             atdFrom,
             atdTo,
-            null,
             vesselName,
             mmsi,
             imo,
@@ -126,7 +125,7 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
+    @ApiOperation(value = "Find port calls", notes = NOTE)
     @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
@@ -135,11 +134,11 @@ public class PortCallController {
             @ApiParam(value = "Return port calls from given port", required = true)
             @PathVariable("locode") final String locode,
 
-            @ApiParam("Return port calls received on given date in ISO date format {yyyy-MM-dd} e.g. 2016-10-31.")
+            @ApiParam("Return port calls received on given date.")
             @RequestParam(value = "date", required = false)
             @DateTimeFormat(iso = DATE) final Date date,
 
-            @ApiParam("Return port calls received after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.")
+            @ApiParam("Return port calls received after given time.")
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
 
@@ -209,18 +208,18 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @ApiOperation(value = "Find port calls", notes = RESULT_SIZE_LIMIT_1000_NOTE)
+    @ApiOperation(value = "Find port calls", notes = NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
                     @ApiResponse(code = 500, message = "Internal server error") })
     @ResponseBody
     public PortCallsJson listAllPortCallsFromTo(
-        @ApiParam(value = "Return port calls received after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.",
+        @ApiParam(value = "Return port calls received after given time.",
                   required = true)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @PathVariable("from") final ZonedDateTime from,
 
-        @ApiParam(value = "Return port calls received before given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z.",
+        @ApiParam(value = "Return port calls received before given time.",
                   required = true)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @PathVariable("to") final ZonedDateTime to,
@@ -240,18 +239,8 @@ public class PortCallController {
         @ApiParam("Return port calls for given vessel type code")
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
                                          ) {
-        return portCallService.findPortCalls(null,
-            from,
+        return portCallService.findPortCallsWithoutTimestamps(from,
             to,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
             vesselName,
             mmsi,
             imo,

@@ -95,6 +95,70 @@ public class PortCallService {
         return new PortCallsJson(lastUpdated, portCallList);
     }
 
+    public PortCallsJson findPortCallsWithTimestamps(
+        final Date modifiedDate,
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime etaFrom,
+        final ZonedDateTime etaTo,
+        final ZonedDateTime etdFrom,
+        final ZonedDateTime etdTo,
+        final ZonedDateTime ataFrom,
+        final ZonedDateTime ataTo,
+        final ZonedDateTime atdFrom,
+        final ZonedDateTime atdTo,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
+        return findPortCalls(modifiedDate,
+            modifiedFrom,
+            null,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
+    public PortCallsJson findPortCallsWithoutTimestamps(
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime modifiedTo,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
+        return findPortCalls(null,
+            modifiedFrom,
+            modifiedTo,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
     private List<Long> getPortCallIds(
         final Date modifiedDate,
         final ZonedDateTime modifiedFrom,
