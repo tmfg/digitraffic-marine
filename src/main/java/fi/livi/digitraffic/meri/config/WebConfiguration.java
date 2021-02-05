@@ -1,13 +1,25 @@
 package fi.livi.digitraffic.meri.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import javax.servlet.Filter;
+
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
+
+    @Bean
+    @ConditionalOnProperty(value = "etags.enabled", havingValue = "true")
+    public Filter ShallowEtagHeaderFilter() {
+        final ShallowEtagHeaderFilter shallowEtagHeaderFilter = new ShallowEtagHeaderFilter();
+        shallowEtagHeaderFilter.setWriteWeakETag(true);
+        return shallowEtagHeaderFilter;
+    }
 
     @Override
     public void configurePathMatch(final PathMatchConfigurer matcher) {
