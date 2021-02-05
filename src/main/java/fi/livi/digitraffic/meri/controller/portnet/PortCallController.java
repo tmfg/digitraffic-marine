@@ -142,6 +142,10 @@ public class PortCallController {
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
 
+            @ApiParam("Return port calls received before given time.")
+            @RequestParam(value = "to", required = false)
+            @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime to,
+
             @ApiParam("Return port calls whose ETA time is after the given time")
             @RequestParam(value = "etaFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaFrom,
@@ -191,7 +195,7 @@ public class PortCallController {
     ) {
         return portCallService.findPortCalls(date,
             from,
-            null,
+            to,
             etaFrom,
             etaTo,
             etdFrom,
