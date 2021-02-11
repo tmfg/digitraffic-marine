@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.math.BigInteger;
 import java.time.Duration;
@@ -83,27 +84,44 @@ interface PortcallEstimateUpdater {
     void updatePortcallEstimate(PortCallNotification pcn);
 }
 
+class PortcallEstimateEndpoint {
+
+    final String url;
+    final String apiKey;
+
+    PortcallEstimateEndpoint(final String url, final String apiKey) {
+        this.url = url;
+        this.apiKey = apiKey;
+    }
+
+}
+
 @ConditionalOnNotWebApplication
-@ConditionalOnProperty({"portcallestimate.url", "portcallestimate.apikey"})
+@ConditionalOnProperty({"portcallestimate.urls", "portcallestimate.apikeys"})
 @Component
 class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     private final HttpClient httpClient = HttpClients.createDefault();
-    private final String portcallEstimateUrl;
-    private final String portcallEstimateApiKey;
+    private final List<PortcallEstimateEndpoint> portcallEstimateEndpoints = new ArrayList<>();
+
     private final ObjectMapper om;
 
     private static final Logger log = LoggerFactory.getLogger(HttpPortcallEstimateUpdater.class);
 
     @Autowired
     public HttpPortcallEstimateUpdater(
-        @Value("${portcallestimate.url}") final String portcallEstimateUrl,
-        @Value("${portcallestimate.apikey}") final String portcallEstimateApiKey,
+        @Value("${portcallestimate.urls}") final String portcallEstimateUrls,
+        @Value("${portcallestimate.apikeys}") final String portcallEstimateApiKeys,
         final ObjectMapper om
         )
     {
-        this.portcallEstimateUrl = portcallEstimateUrl;
-        this.portcallEstimateApiKey = portcallEstimateApiKey;
+        final String[] urls = portcallEstimateUrls.split(",");
+        final String[] apiKeys = portcallEstimateApiKeys.split(",");
+        Assert.isTrue(urls.length == apiKeys.length,
+            "Portcall estimate endpoint URL amount was not equal to API key amount");
+        for (int i = 0; i < urls.length; i++) {
+            portcallEstimateEndpoints.add(new PortcallEstimateEndpoint(urls[i], apiKeys[i]));
+        }
         this.om = om;
     }
 
@@ -111,12 +129,20 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
     public void updatePortcallEstimate(final PortCallNotification pcn) {
         final List<PortcallEstimate> pces = estimatesFromPortcallNotification(pcn);
         log.info("method=updatePortcallEstimate created {} estimates from portcall notification", pces.size());
+        for (final PortcallEstimateEndpoint endpoint : portcallEstimateEndpoints) {
+            updatePortcallEstimateToEndpoint(pces, endpoint);
+        }
+    }
+
+    private void updatePortcallEstimateToEndpoint(
+        final List<PortcallEstimate> pces,
+        final PortcallEstimateEndpoint endpoint) {
+
         for (PortcallEstimate pce : pces) {
             try {
-                final HttpPost post = new HttpPost(portcallEstimateUrl);
-                post.setHeader("X-Api-Key", portcallEstimateApiKey);
+                final HttpPost post = new HttpPost(endpoint.url);
+                post.setHeader("X-Api-Key", endpoint.url);
                 final String json = om.writeValueAsString(pce);
-                log.info("method=updatePortcallEstimate about to send json {}, original mmsi {}, original imo {}", json, pcn.getPortCallDetails().getVesselDetails().getIdentificationData().getMmsi(), pcn.getPortCallDetails().getVesselDetails().getIdentificationData().getImoLloyds());
                 post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
                 final StatusLine status = httpClient.execute(post).getStatusLine();
                 if (status.getStatusCode() != HttpStatus.SC_OK) {
