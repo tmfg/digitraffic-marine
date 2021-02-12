@@ -44,6 +44,7 @@ class PortcallEstimate {
         final ZonedDateTime recordTime,
         final Ship ship,
         final String portToVisit,
+        final String portArea,
         final BigInteger portcallId) {
         this.eventType = eventType;
         this.eventTime = eventTime;
@@ -52,7 +53,7 @@ class PortcallEstimate {
         this.eventTimeConfidenceUpper = null;
         this.source = "Portnet";
         this.ship = ship;
-        this.location = new Location(portToVisit);
+        this.location = new Location(portToVisit, portArea);
         this.portcallId = portcallId;
     }
 
@@ -74,9 +75,14 @@ class Ship {
 
 class Location {
     public final String port;
+    public final String portArea;
 
-    public Location(final String port) {
+    public Location(
+        final String port,
+        final String portArea) {
+
         this.port = port;
+        this.portArea = portArea;
     }
 }
 
@@ -195,6 +201,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ZonedDateTime.ofInstant(bd.getEtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 ship,
                 portCallDetails.getPortToVisit(),
+                portAreaDetails.getPortAreaCode(),
                 portcallId);
         }
         return null;
@@ -216,6 +223,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ZonedDateTime.ofInstant(bd.getEtdTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 ship,
                 portCallDetails.getPortToVisit(),
+                portAreaDetails.getPortAreaCode(),
                 portcallId);
         }
         return null;
@@ -237,6 +245,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ZonedDateTime.ofInstant(bd.getAtaTimeStamp().toGregorianCalendar().toInstant(), FINLAND_ZONE),
                 ship,
                 portCallDetails.getPortToVisit(),
+                portAreaDetails.getPortAreaCode(),
                 portcallId);
         }
         return null;
