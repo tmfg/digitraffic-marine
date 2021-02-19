@@ -44,7 +44,7 @@ public class AisApiInfo extends ApiInfo {
         return new Contact(
                 messageService.getMessage("apiInfo.contact.name"),
                 messageService.getMessage("apiInfo.contact.url"),
-                messageService.getMessage("apiInfo.contact.mail"));
+                "");
     }
 
     @Override
