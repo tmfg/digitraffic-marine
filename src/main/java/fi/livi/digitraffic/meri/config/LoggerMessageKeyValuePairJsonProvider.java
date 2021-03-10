@@ -28,8 +28,8 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
 
     private final static Splitter spaceSplitter = Splitter.on(' ').omitEmptyStrings().trimResults();
     private final static Pattern tagsPattern = Pattern.compile("[<][^>]*[>]");
-    // Must start with upper or lowwer case letter
-    // Must end with number or upper or lowwer case letter
+    // Must start with upper or lower case letter
+    // Must end with number or upper or lower case letter
     // Between can be numbers, letters, one at the time of "_", "-" or "." surrounded by numbers or letters
     private final static Pattern keyPattern = Pattern.compile("^[a-zA-Z]+([_\\.-]?[a-zA-Z0-9])*$");
 
@@ -54,9 +54,15 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
             if (!hasWrittenFieldNames.contains(e.getKey())) {
                 try {
                     final Object objectValue = getObjectValue(e.getValue());
-                    generator.writeObjectField(e.getKey(), objectValue);
+
+                    if(objectValue != null)  {
+                        generator.writeObjectField(e.getKey(), objectValue);
+                    } else {
+                        generator.writeNullField(e.getKey());
+                    }
+
                     hasWrittenFieldNames.add(e.getKey());
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
@@ -64,18 +70,22 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
     }
 
     private Object getObjectValue(final String value) {
-        if( "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) ) {
+        // check null, true and false
+        if("null".equalsIgnoreCase(value)) {
+            return null;
+        } else if( "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) ) {
             return Boolean.valueOf(value);
         }
+
         try {
             // Iso date time value
             return ZonedDateTime.parse(value).toInstant().toString();
-        } catch (DateTimeParseException e) {
+        } catch (final DateTimeParseException e) {
             // empty
         }
         try {
             return DecimalFormat.getInstance(Locale.ROOT).parse(value);
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             return value;
         }
     }
