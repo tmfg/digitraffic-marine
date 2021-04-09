@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import fi.livi.digitraffic.meri.config.LoggerMessageKeyValuePairJsonProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
