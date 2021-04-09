@@ -27,7 +27,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
-import fi.livi.digitraffic.meri.config.LoggerMessageKeyValuePairJsonProvider;
 
 @Import({ JacksonAutoConfiguration.class })
 @RunWith(SpringRunner.class)
@@ -99,7 +98,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
         "metadata-api?group",
         "a\\/b",
         "a/b",
-        };
+    };
 
     @Test
     public void allowedKeys() throws IOException {
@@ -222,6 +221,12 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
     public void emptyResultWhenSpaces2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo =bar hello= world");
         Assert.assertEquals("{}", result);
+    }
+
+    @Test
+    public void s3VersionId() throws IOException {
+        final String result = sendEventWithFormatedMessageAndReturnResultJson("s3VersionId=\"1_9XcT207HmV5yyEExF7GhsaSzUoeNFY\"");
+        Assert.assertEquals("{\"s3VersionId\":\"1_9XcT207HmV5yyEExF7GhsaSzUoeNFY\"}", result);
     }
 
     private String sendEventWithFormatedMessageAndReturnResultJson(final String formattedMessage) throws IOException {

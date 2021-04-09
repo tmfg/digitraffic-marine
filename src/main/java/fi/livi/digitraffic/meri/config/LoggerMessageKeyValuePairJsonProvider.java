@@ -54,25 +54,18 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
             if (!hasWrittenFieldNames.contains(e.getKey())) {
                 try {
                     final Object objectValue = getObjectValue(e.getValue());
-
-                    if(objectValue != null)  {
-                        generator.writeObjectField(e.getKey(), objectValue);
-                    } else {
-                        generator.writeNullField(e.getKey());
-                    }
-
+                    generator.writeObjectField(e.getKey(), objectValue);
                     hasWrittenFieldNames.add(e.getKey());
-                } catch (final IOException ex) {
+                } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
     }
 
-    private Object getObjectValue(final String value) {
-        // check null, true and false
-        if("null".equalsIgnoreCase(value)) {
-            return null;
+    private static Object getObjectValue(final String value) {
+        if(isQuoted(value)) {
+            return value.substring(1, value.length() - 1);
         } else if( "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) ) {
             return Boolean.valueOf(value);
         }
@@ -80,14 +73,18 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
         try {
             // Iso date time value
             return ZonedDateTime.parse(value).toInstant().toString();
-        } catch (final DateTimeParseException e) {
+        } catch (DateTimeParseException e) {
             // empty
         }
         try {
             return DecimalFormat.getInstance(Locale.ROOT).parse(value);
-        } catch (final ParseException e) {
+        } catch (ParseException e) {
             return value;
         }
+    }
+
+    private static boolean isQuoted(final String value) {
+        return value.length() > 2 && value.charAt(0) == '\"' && value.charAt(value.length() - 1) == '\"';
     }
 
     private static List<Pair<String, String>> parseKeyValuePairs(final String formattedMessage) {
@@ -97,8 +94,14 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
             .map(kv -> kv.split("=")) // split message chunks by =
             // Filter empty key or value pairs
             .filter(kv -> kv.length > 1 && StringUtils.isNotBlank(kv[0]) && StringUtils.isNotBlank(kv[1]) && keyPattern.matcher(kv[0]).matches())
-            .map(kv -> Pair.of(kv[0], kv[1]))
+            .map(kv -> Pair.of(kv[0], safeValue(kv[1])))
             .collect(Collectors.toList());
+    }
+
+    private static String safeValue(final String value) {
+        if(value.toUpperCase().equals("NULL")) return null;
+
+        return value;
     }
 
     private static String stripXmlTags(final String message) {
