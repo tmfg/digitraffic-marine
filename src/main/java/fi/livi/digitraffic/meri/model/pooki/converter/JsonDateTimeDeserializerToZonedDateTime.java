@@ -3,9 +3,15 @@ package fi.livi.digitraffic.meri.model.pooki.converter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,10 +35,19 @@ import fi.livi.digitraffic.meri.config.QuartzSchedulerConfig;
 public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<ZonedDateTime> {
     private static final Logger log = LoggerFactory.getLogger(JsonDateTimeDeserializerToZonedDateTime.class);
 
-    private final SimpleDateFormat[] DATE_FORMATS =
-            new SimpleDateFormat[] { new SimpleDateFormat("d.M.yyyy h:m:s"),
-                                     new SimpleDateFormat("d.M.yyyy h:m"),
-                                     new SimpleDateFormat("d.M.yyyy") };
+    private static DateTimeFormatter createFormatter(final String pattern) {
+        return new DateTimeFormatterBuilder()
+            .appendPattern(pattern)
+            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+            .toFormatter()
+            .withZone(ZoneId.of("Europe/Helsinki"));
+    }
+
+    private static final List<DateTimeFormatter> DATA_FORMATTERS = List.of(
+        createFormatter("d.M.yyyy H:m:s"),
+        createFormatter("d.M.yyyy H:m"),
+        createFormatter("d.M.yyyy")
+    );
 
     @Override
     public ZonedDateTime deserialize(final JsonParser jp, final DeserializationContext ctxt)
@@ -53,15 +68,15 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
         if (StringUtils.isBlank(dateTime)) {
             return null;
         }
-        for (final SimpleDateFormat dateFormat : DATE_FORMATS)  {
+
+        for(final DateTimeFormatter dateTimeFormatter : DATA_FORMATTERS) {
             try {
-                dateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Helsinki")));
-                final Date date = dateFormat.parse(dateTime);
-                return ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("Europe/Helsinki"));
-            } catch (final ParseException e) {
+                return ZonedDateTime.parse(dateTime, dateTimeFormatter);
+            } catch(final DateTimeException e) {
                 log.debug("Parse of " + dateTime + " failed", e);
             }
-        }
+        };
+
         log.warn("Could not parse dateTime={}", dateTime);
 
         return null;
