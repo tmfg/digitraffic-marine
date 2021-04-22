@@ -1,18 +1,13 @@
 package fi.livi.digitraffic.meri.model.pooki.converter;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,8 +19,6 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import fi.livi.digitraffic.meri.config.QuartzSchedulerConfig;
 
 @Component
 /**
@@ -43,7 +36,7 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
             .withZone(ZoneId.of("Europe/Helsinki"));
     }
 
-    private static final List<DateTimeFormatter> DATA_FORMATTERS = List.of(
+    private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
         createFormatter("d.M.yyyy H:m:s"),
         createFormatter("d.M.yyyy H:m"),
         createFormatter("d.M.yyyy")
@@ -69,7 +62,7 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
             return null;
         }
 
-        for(final DateTimeFormatter dateTimeFormatter : DATA_FORMATTERS) {
+        for(final DateTimeFormatter dateTimeFormatter : DATE_FORMATTERS) {
             try {
                 return ZonedDateTime.parse(dateTime, dateTimeFormatter);
             } catch(final DateTimeException e) {
