@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri;
 
 import static java.time.ZoneOffset.UTC;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,6 +70,6 @@ public abstract class AbstractTestBase {
         final ZonedDateTime tz1 = t1.withZoneSameInstant(UTC);
         final ZonedDateTime tz2 = t2.withZoneSameInstant(UTC);
 
-        Assert.assertEquals(tz1, tz2);
+        assertEquals(tz1, tz2);
     }
 }

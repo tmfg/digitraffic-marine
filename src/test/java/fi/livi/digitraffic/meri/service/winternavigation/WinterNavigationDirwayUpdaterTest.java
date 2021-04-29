@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,7 +47,7 @@ public class WinterNavigationDirwayUpdaterTest extends AbstractTestBase {
     @Autowired
     private Jaxb2Marshaller jaxb2Marshaller;
 
-    @Before
+    @BeforeEach
     public void before() {
         winterNavigationDirwayUpdater = new WinterNavigationDirwayUpdater(winterNavigationClient, winterNavigationDirwayRepository,
                                                                           winterNavigationDirwayPointRepository, updatedTimestampRepository);

@@ -1,8 +1,5 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -14,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationClient;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SsnLocationClientTest extends AbstractTestBase {
     @Autowired

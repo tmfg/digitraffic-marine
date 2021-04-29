@@ -1,7 +1,5 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -24,6 +22,8 @@ import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VesselDetailsUpdaterTest extends AbstractTestBase {
     private VesselDetailsClient vesselDetailsClient;

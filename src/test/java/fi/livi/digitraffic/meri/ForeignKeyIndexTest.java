@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class ForeignKeyIndexTest extends AbstractTestBase {
 
     @Autowired
@@ -72,8 +74,8 @@ public class ForeignKeyIndexTest extends AbstractTestBase {
             sb.append(stringObjectMap);
             sb.append("\n");
         }
-        Assert.assertTrue(
-            "Found foreign key(s) without index. Add to the ignore list or create indexes. Something like: \n\n" + sb.toString(),
-            foreignKeysWithoutIndex.isEmpty());
+
+        assertTrue(foreignKeysWithoutIndex.isEmpty(),
+            "Found foreign key(s) without index. Add to the ignore list or create indexes. Something like: \n\n" + sb.toString(),);
     }
 }

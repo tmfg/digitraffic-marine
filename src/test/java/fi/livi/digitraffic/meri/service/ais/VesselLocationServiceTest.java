@@ -1,8 +1,5 @@
 package fi.livi.digitraffic.meri.service.ais;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.time.ZonedDateTime;
 
 import org.junit.Before;
@@ -19,6 +16,9 @@ import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VesselLocationServiceTest extends AbstractTestBase {
 
@@ -78,13 +78,13 @@ public class VesselLocationServiceTest extends AbstractTestBase {
         VesselLocationFeatureCollection featureCollection =
                 vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius1, p2.y, p2.x, now);
 
-        assertFalse("Vessel should not be found withing radius " + radius1,
-                    featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+        assertFalse(featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
+            "Vessel should not be found withing radius " + radius1);
 
         featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius2, p2.y, p2.x, now);
 
-        assertTrue("Vessel should be found withing radius " + radius2,
-                   featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+        assertTrue(featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
+            "Vessel should be found withing radius " + radius2);
     }
 
     @Test
@@ -109,12 +109,12 @@ public class VesselLocationServiceTest extends AbstractTestBase {
 
         VesselLocationFeatureCollection featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius1, MMSI, now);
 
-        assertFalse("Vessel should not be found withing radius " + radius1,
-                    featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+        assertFalse(featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
+            "Vessel should not be found withing radius " + radius1);
 
         featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius2, MMSI, now);
 
-        assertTrue("Vessel should be found withing radius " + radius2,
-                   featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound));
+        assertTrue(featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
+            "Vessel should be found withing radius " + radius2);
     }
 }

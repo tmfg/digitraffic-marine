@@ -29,6 +29,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Import({ JacksonAutoConfiguration.class })
 @RunWith(SpringRunner.class)
 public class LoggerMessageKeyValuePairJsonProviderTest {
@@ -106,7 +108,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
         for (String allowedKey : ALLOWED_KEYS) {
             log.info("Test key {}", allowedKey);
             final String result = sendEventWithFormatedMessageAndReturnResultJson(allowedKey + "=bar");
-            Assert.assertEquals(String.format("{\"%s\":\"bar\"}", allowedKey), result);
+            assertEquals(String.format("{\"%s\":\"bar\"}", allowedKey), result);
         }
 
     }
@@ -116,7 +118,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
         for (String notAllowedKey : NOT_ALLOWED_KEYS) {
             log.info("Test key {}", notAllowedKey);
             final String result = sendEventWithFormatedMessageAndReturnResultJson(notAllowedKey + "=bar");
-            Assert.assertEquals("{}", result);
+            assertEquals("{}", result);
         }
 
     }
@@ -124,26 +126,26 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
     @Test
     public void simpleKeyValuePair() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=bar");
-        Assert.assertEquals("{\"foo\":\"bar\"}", result);
+        assertEquals("{\"foo\":\"bar\"}", result);
     }
 
     @Test
     public void simpleKeyValuePair3() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("healthCheckValue=<status>ok</status>");
-        Assert.assertEquals("{\"healthCheckValue\":\"<status>ok</status>\"}", result);
+        assertEquals("{\"healthCheckValue\":\"<status>ok</status>\"}", result);
     }
 
 
     @Test
     public void simpleKeyValuePair2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("  \n  \t    foo=bar     \n   ");
-        Assert.assertEquals("{\"foo\":\"bar\"}", result);
+        assertEquals("{\"foo\":\"bar\"}", result);
     }
 
     @Test
     public void intValue() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=1");
-        Assert.assertEquals("{\"foo\":1}", result);
+        assertEquals("{\"foo\":1}", result);
     }
 
     @Test
