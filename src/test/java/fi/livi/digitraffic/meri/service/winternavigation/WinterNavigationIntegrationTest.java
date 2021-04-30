@@ -14,8 +14,8 @@ import ibnet_baltice_winterships.WinterShips;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled("For manual integration testing")
 public class WinterNavigationIntegrationTest extends AbstractTestBase {
-
     @Autowired
     private WinterNavigationClient winterNavigationClient;
 
