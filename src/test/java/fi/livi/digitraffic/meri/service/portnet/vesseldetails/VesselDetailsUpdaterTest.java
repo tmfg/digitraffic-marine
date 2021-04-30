@@ -6,8 +6,8 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -39,7 +39,7 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
     @Autowired
     private RestTemplate authenticatedRestTemplate;
 
-    @Before
+    @BeforeEach
     public void before() {
         vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", authenticatedRestTemplate);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);

@@ -8,7 +8,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,6 @@ public class VesselMetadataServiceTest extends AbstractTestBase {
 
     @Test
     public void testAllowedMmsisCache() throws Exception {
-
         vesselMetadataRepository.save(createNewVesselMetadata(-1, 30));
         vesselMetadataRepository.save(createNewVesselMetadata(-2, 40));
 

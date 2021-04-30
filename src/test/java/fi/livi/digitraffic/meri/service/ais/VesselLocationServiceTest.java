@@ -2,8 +2,8 @@ package fi.livi.digitraffic.meri.service.ais;
 
 import java.time.ZonedDateTime;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +64,7 @@ public class VesselLocationServiceTest extends AbstractTestBase {
                                                         1, 2, 3, 4, 5, 6, 7,
                                                         now)));
 
-    @Before
+    @BeforeEach
     public void before() {
         vesselMetadataRepository.save(vesselToBeFoundMetadata);
         vesselLocationRepository.save(vesselToBeFound);

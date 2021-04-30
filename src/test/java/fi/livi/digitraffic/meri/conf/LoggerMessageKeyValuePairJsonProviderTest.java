@@ -7,9 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import fi.livi.digitraffic.meri.config.LoggerMessageKeyValuePairJsonProvider;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +42,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
 
     private JsonFactory factory;
 
-    @Before
+    @BeforeEach
     public void init() {
         factory = new JsonFactory();
         factory.setCodec(objectMapper);
@@ -151,85 +150,85 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
     @Test
     public void doubleValue() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=1.4");
-        Assert.assertEquals("{\"foo\":1.4}", result);
+        assertEquals("{\"foo\":1.4}", result);
     }
 
     @Test
     public void doubleValueWithComma() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=1,4");
-        Assert.assertEquals("{\"foo\":14}", result);
+        assertEquals("{\"foo\":14}", result);
     }
 
     @Test
     public void isoDateTimeOffset() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=2020-05-01T12:00+02:00");
-        Assert.assertEquals("{\"foo\":\"2020-05-01T10:00:00Z\"}", result);
+        assertEquals("{\"foo\":\"2020-05-01T10:00:00Z\"}", result);
     }
 
     @Test
     public void isoDateTimeZ() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=2020-05-01T12:00:00Z");
-        Assert.assertEquals("{\"foo\":\"2020-05-01T12:00:00Z\"}", result);
+        assertEquals("{\"foo\":\"2020-05-01T12:00:00Z\"}", result);
     }
 
     @Test
     public void isoDateTimeZMillis() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=2020-05-01T12:00:00.123Z");
-        Assert.assertEquals("{\"foo\":\"2020-05-01T12:00:00.123Z\"}", result);
+        assertEquals("{\"foo\":\"2020-05-01T12:00:00.123Z\"}", result);
     }
 
     @Test
     public void keyValueChainTakesFirstPair() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=bar=hello=world and=this");
-        Assert.assertEquals("{\"foo\":\"bar\",\"and\":\"this\"}", result);
+        assertEquals("{\"foo\":\"bar\",\"and\":\"this\"}", result);
     }
 
     @Test
     public void xmlTagsAreStripped() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("a=b " + LONG_XML);
-        Assert.assertEquals("{\"a\":\"b\"}", result);
+        assertEquals("{\"a\":\"b\"}", result);
     }
 
     @Test
     public void xmlTagsAreStripped2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("a=b " + LONG_XML2);
-        Assert.assertEquals("{\"a\":\"b\"}", result);
+        assertEquals("{\"a\":\"b\"}", result);
     }
 
     @Test
     public void nullMessage() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson(null);
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyMessage() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyMessage2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("    ");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyResultWhenSpaces() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson(" a = b ");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyResultWhenSpaces2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo =bar hello= world");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void s3VersionId() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("s3VersionId=\"1_9XcT207HmV5yyEExF7GhsaSzUoeNFY\"");
-        Assert.assertEquals("{\"s3VersionId\":\"1_9XcT207HmV5yyEExF7GhsaSzUoeNFY\"}", result);
+        assertEquals("{\"s3VersionId\":\"1_9XcT207HmV5yyEExF7GhsaSzUoeNFY\"}", result);
     }
 
     private String sendEventWithFormatedMessageAndReturnResultJson(final String formattedMessage) throws IOException {

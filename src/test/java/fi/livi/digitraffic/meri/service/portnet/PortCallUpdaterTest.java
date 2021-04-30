@@ -5,8 +5,8 @@ import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -53,7 +53,7 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     private PortCallUpdater portCallUpdater;
     private MockRestServiceServer server;
 
-    @Before
+    @BeforeEach
     public void before() {
         portCallClient = Mockito.spy(new PortCallClient("portCallUrl/", jax2bRestTemplate));
         portCallUpdater = new PortCallUpdater(
