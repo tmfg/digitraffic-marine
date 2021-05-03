@@ -27,7 +27,7 @@
         <java.version>11</java.version>
         <maven.compiler.release>11</maven.compiler.release>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
-        <jackson.dataformat.version>2.12.3</jackson.dataformat.version>
+        <jackson.dataformat.version>2.11.3</jackson.dataformat.version>
         <io.springfox.version>3.0.0</io.springfox.version>
     </properties>
 
