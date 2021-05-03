@@ -1,14 +1,15 @@
 package fi.livi.digitraffic.meri.service.ais;
 
 import static fi.livi.digitraffic.meri.model.ais.VesselMessage.VesselAttributes;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,15 +34,14 @@ public class VesselMetadataServiceTest extends AbstractTestBase {
 
     @Test
     public void testAllowedMmsisCache() throws Exception {
-
         vesselMetadataRepository.save(createNewVesselMetadata(-1, 30));
         vesselMetadataRepository.save(createNewVesselMetadata(-2, 40));
 
         Mockito.verify(vesselMetadataService, Mockito.times(0)).findAllowedMmsis();
         Collection<Integer> initial = vesselMetadataService.findAllowedMmsis();
         Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
-        Assert.assertFalse(initial.contains(-1));
-        Assert.assertTrue(initial.contains(-2));
+        assertFalse(initial.contains(-1));
+        assertTrue(initial.contains(-2));
 
         vesselMetadataRepository.save(createNewVesselMetadata(-3, 30));
         vesselMetadataRepository.save(createNewVesselMetadata(-4, 40));
@@ -51,10 +51,10 @@ public class VesselMetadataServiceTest extends AbstractTestBase {
         // from cache
         Collection<Integer> cache = vesselMetadataService.findAllowedMmsis();
         Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
-        Assert.assertFalse(cache.contains(-1));
-        Assert.assertTrue(cache.contains(-2));
-        Assert.assertFalse(cache.contains(-3));
-        Assert.assertFalse(cache.contains(-4));
+        assertFalse(cache.contains(-1));
+        assertTrue(cache.contains(-2));
+        assertFalse(cache.contains(-3));
+        assertFalse(cache.contains(-4));
 
         log.info("Wait for cache to expire");
         Thread.sleep(400);
@@ -62,10 +62,10 @@ public class VesselMetadataServiceTest extends AbstractTestBase {
         // from cache
         Collection<Integer> cache2 = vesselMetadataService.findAllowedMmsis();
         Mockito.verify(vesselMetadataService, Mockito.times(2)).findAllowedMmsis();
-        Assert.assertFalse(cache2.contains(-1));
-        Assert.assertTrue(cache2.contains(-2));
-        Assert.assertFalse(cache2.contains(-3));
-        Assert.assertTrue(cache2.contains(-4));
+        assertFalse(cache2.contains(-1));
+        assertTrue(cache2.contains(-2));
+        assertFalse(cache2.contains(-3));
+        assertTrue(cache2.contains(-4));
     }
 
     private static VesselMetadata createNewVesselMetadata(final int mmsi, int type) {

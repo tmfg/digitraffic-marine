@@ -1,21 +1,21 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.time.ZonedDateTime;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
 
-public class WinterNavigationIntegrationTest extends AbstractTestBase {
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled("For manual integration testing")
+public class WinterNavigationIntegrationTest extends AbstractTestBase {
     @Autowired
     private WinterNavigationClient winterNavigationClient;
 
@@ -32,12 +32,12 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
     private WinterNavigationService winterNavigationService;
 
     @Test
-    @Ignore("For manual integration testing")
+    @Disabled("For manual integration testing")
     public void getWinterNavigationPortsSucceeds() throws IOException {
         final ZonedDateTime start = ZonedDateTime.now().minusSeconds(1);
 
         int count = winterNavigationPortUpdater.updateWinterNavigationPorts();
-        assertTrue("Total count of added or updated ports is greater than 100", count > 100);
+        assertTrue(count > 100, "Total count of added or updated ports is greater than 100");
 
         final ZonedDateTime dataUpdatedTime = winterNavigationService.getWinterNavigationPorts().getDataUpdatedTime();
 
@@ -46,7 +46,7 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
     }
 
     @Test
-    @Ignore("For manual integration testing")
+    @Disabled("For manual integration testing")
     public void getWinterNavigationShipsSucceeds() throws IOException {
         final ZonedDateTime start = ZonedDateTime.now().minusSeconds(1);
 
@@ -56,7 +56,7 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
         assertTrue(ships.getWinterShip().size() > 100);
 
         int count = winterNavigationShipUpdater.updateWinterNavigationShips();
-        assertTrue("Total count of added or updated ships is greater than 100", count > 100);
+        assertTrue(count > 100, "Total count of added or updated ships is greater than 100");
 
         final ZonedDateTime dataUpdatedTime = winterNavigationService.getWinterNavigationShips().getDataUpdatedTime();
 
@@ -65,7 +65,7 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
     }
 
     @Test
-    @Ignore("For manual integration testing")
+    @Disabled("For manual integration testing")
     public void getWinterNavigationWaypointsSucceeds() {
         final ZonedDateTime start = ZonedDateTime.now().minusSeconds(1);
 
@@ -75,7 +75,7 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
         assertTrue(dirways.getDirWay().size() > 0);
 
         int count = winterNavigationDirwayUpdater.updateWinterNavigationDirways();
-        assertTrue("Total count of added or updated dirways is greater than 0", count > 0);
+        assertTrue(count > 0, "Total count of added or updated dirways is greater than 0");
 
         ZonedDateTime dataUpdatedTime = winterNavigationService.getWinterNavigationDirways().getDataUpdatedTime();
 

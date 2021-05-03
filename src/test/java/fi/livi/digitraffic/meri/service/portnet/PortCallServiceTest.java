@@ -5,8 +5,8 @@ import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
@@ -16,7 +16,8 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @Transactional
 public class PortCallServiceTest extends AbstractTestBase {
@@ -27,7 +28,7 @@ public class PortCallServiceTest extends AbstractTestBase {
     @Autowired
     private PortCallRepository portCallRepository;
 
-    @After
+    @AfterEach
     public void after() {
         portCallRepository.deleteAll();
     }

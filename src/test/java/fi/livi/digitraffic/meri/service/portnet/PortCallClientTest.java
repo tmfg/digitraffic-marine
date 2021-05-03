@@ -1,24 +1,24 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import javax.net.ssl.HttpsURLConnection;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Ignore("Needs vpn")
+import javax.net.ssl.HttpsURLConnection;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@Disabled("Needs vpn")
 public class PortCallClientTest extends AbstractTestBase {
     @Autowired
     private PortCallClient portCallClient;
 
-    @Before
+    @BeforeEach
     public void disableSslCheck() {
         HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
     }
@@ -27,6 +27,6 @@ public class PortCallClientTest extends AbstractTestBase {
     public void testGetList() {
         final PortCallList list = portCallClient.getList(ZonedDateTime.now().minus(1, ChronoUnit.HOURS), ZonedDateTime.now());
 
-        Assert.assertNotNull(list);
+        assertNotNull(list);
     }
 }
