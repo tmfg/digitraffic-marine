@@ -33,9 +33,7 @@ public class SecretsPropertiesListener implements ApplicationListener<Applicatio
 
     @Override
     public void onApplicationEvent(final ApplicationPreparedEvent applicationPreparedEvent) {
-        if (StringUtils.isBlank(secretName)) {
-            return;
-        }
+        log.info("About to read secrets from Secrets Manager");
 
         final ConfigurableEnvironment env = applicationPreparedEvent.getApplicationContext().getEnvironment();
 
