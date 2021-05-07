@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Component
+@ConditionalOnProperty("spring.aws.secretsmanager.secretName")
 public class SecretsPropertiesListener implements ApplicationListener<ApplicationPreparedEvent> {
 
     private static final Logger log = LoggerFactory.getLogger(SecretsPropertiesListener.class);
