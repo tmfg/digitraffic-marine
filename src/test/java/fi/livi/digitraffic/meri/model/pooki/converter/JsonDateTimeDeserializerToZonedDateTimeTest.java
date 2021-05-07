@@ -1,16 +1,11 @@
 package fi.livi.digitraffic.meri.model.pooki.converter;
 
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import fi.livi.digitraffic.meri.AbstractTestBase;
+import org.junit.jupiter.api.Test;
+
+import java.time.ZonedDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBase {
     private final JsonDateTimeDeserializerToZonedDateTime deserializer = new JsonDateTimeDeserializerToZonedDateTime();
@@ -19,8 +14,7 @@ public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBas
         final ZonedDateTime expected = expectedString == null ? null : ZonedDateTime.parse(expectedString);
         final ZonedDateTime actual = deserializer.parseDateQuietly(input);
 
-        Assert.assertEquals(expected, actual);
-
+        assertEquals(expected, actual);
     }
 
     @Test
