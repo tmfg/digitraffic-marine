@@ -1,6 +1,8 @@
 package fi.livi.digitraffic.meri.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -8,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 import java.util.Collections;
 
 import org.apache.http.client.HttpClient;
@@ -15,6 +18,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +29,6 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfiguration {
-    private static final String PORTNET_PRIVATE_KEY_STORE_FILENAME = "portnet.p12";
-
     private static final char[] EMPTY_PASSWORD = "".toCharArray();
 
     @Bean
@@ -52,8 +54,8 @@ public class RestTemplateConfiguration {
 
     @Bean
     @ConditionalOnExpression("'${config.test}' != 'true'")
-    public RestTemplate authenticatedRestTemplate() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException, InvalidKeySpecException {
-        final KeyStore clientKeyStore = openKeyStore();
+    public RestTemplate authenticatedRestTemplate(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException, InvalidKeySpecException {
+        final KeyStore clientKeyStore = openKeyStore(portnetPrivateKeyBase64);
 
         final SSLContextBuilder sslContextBuilder = new SSLContextBuilder()
             .setProtocol("TLS")
@@ -69,10 +71,11 @@ public class RestTemplateConfiguration {
         return new RestTemplate(clientHttpRequestFactory(httpClient));
     }
 
-    private KeyStore openKeyStore() throws KeyStoreException, CertificateException, NoSuchAlgorithmException,
+    private KeyStore openKeyStore(final String portnetPrivateKeyBase64) throws KeyStoreException, CertificateException, NoSuchAlgorithmException,
         IOException {
+        final byte[] portnetPrivateKeyDecoded = Base64.getDecoder().decode(portnetPrivateKeyBase64);
         final KeyStore ks = KeyStore.getInstance("PKCS12");
-        ks.load(this.getClass().getClassLoader().getResourceAsStream(PORTNET_PRIVATE_KEY_STORE_FILENAME), EMPTY_PASSWORD);
+        ks.load(new ByteArrayInputStream(portnetPrivateKeyDecoded), EMPTY_PASSWORD);
         return ks;
     }
 
