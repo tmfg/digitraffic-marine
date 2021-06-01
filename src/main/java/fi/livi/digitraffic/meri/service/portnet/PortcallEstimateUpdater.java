@@ -45,6 +45,7 @@ class PortcallEstimate {
         final Ship ship,
         final String portToVisit,
         final String portArea,
+        final String from,
         final BigInteger portcallId) {
         this.eventType = eventType;
         this.eventTime = eventTime;
@@ -53,7 +54,7 @@ class PortcallEstimate {
         this.eventTimeConfidenceUpper = null;
         this.source = "Portnet";
         this.ship = ship;
-        this.location = new Location(portToVisit, portArea);
+        this.location = new Location(portToVisit, portArea, from);
         this.portcallId = portcallId;
     }
 
@@ -76,13 +77,16 @@ class Ship {
 class Location {
     public final String port;
     public final String portArea;
+    public final String from;
 
     public Location(
         final String port,
-        final String portArea) {
+        final String portArea,
+        final String from) {
 
         this.port = port;
         this.portArea = portArea;
+        this.from = from;
     }
 }
 
@@ -202,6 +206,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ship,
                 portCallDetails.getPortToVisit(),
                 portAreaDetails.getPortAreaCode(),
+                portCallDetails.getPrevPort(),
                 portcallId);
         }
         return null;
@@ -224,6 +229,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ship,
                 portCallDetails.getPortToVisit(),
                 portAreaDetails.getPortAreaCode(),
+                portCallDetails.getPrevPort(),
                 portcallId);
         }
         return null;
@@ -246,6 +252,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 ship,
                 portCallDetails.getPortToVisit(),
                 portAreaDetails.getPortAreaCode(),
+                portCallDetails.getPrevPort(),
                 portcallId);
         }
         return null;
