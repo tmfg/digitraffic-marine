@@ -40,6 +40,9 @@ public class LockingDao {
             "  AND LT.INSTANCE_ID = :instanceId\n" +
             "  AND LT.LOCK_EXPIRES > clock_timestamp()";
 
+    private static final String PARAMETER_LOCKNAME = "lockName";
+    private static final String PARAMETER_INSTANCE_ID = "instanceId";
+
     @Autowired
     public LockingDao(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -47,8 +50,8 @@ public class LockingDao {
 
     @Transactional
     public boolean acquireLock(final String lockName, final String callerInstanceId, final int expirationSeconds) {
-        final MapSqlParameterSource params = new MapSqlParameterSource("lockName", lockName)
-            .addValue("instanceId", callerInstanceId)
+        final MapSqlParameterSource params = new MapSqlParameterSource(PARAMETER_LOCKNAME, lockName)
+            .addValue(PARAMETER_INSTANCE_ID, callerInstanceId)
             .addValue("expirationSeconds", expirationSeconds);
 
         jdbcTemplate.update(MERGE, params);
@@ -58,8 +61,8 @@ public class LockingDao {
 
     @Transactional
     public boolean hasLock(final String lockName, final String callerInstanceId) {
-        final MapSqlParameterSource params = new MapSqlParameterSource("lockName", lockName)
-            .addValue("instanceId", callerInstanceId);
+        final MapSqlParameterSource params = new MapSqlParameterSource(PARAMETER_LOCKNAME, lockName)
+            .addValue(PARAMETER_INSTANCE_ID, callerInstanceId);
 
         return hasLock(params);
     }
@@ -70,8 +73,8 @@ public class LockingDao {
     }
 
     public void releaseLock(final String lockName, final String callerInstanceId) {
-        final MapSqlParameterSource params = new MapSqlParameterSource("lockName", lockName)
-            .addValue("instanceId", callerInstanceId);
+        final MapSqlParameterSource params = new MapSqlParameterSource(PARAMETER_LOCKNAME, lockName)
+            .addValue(PARAMETER_INSTANCE_ID, callerInstanceId);
 
         jdbcTemplate.update(RELEASE, params);
     }
