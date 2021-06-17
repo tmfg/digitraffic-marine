@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,6 +27,7 @@ public class SsnLocationClient {
         this.ssnLocationReader = new SsnLocationReader();
     }
 
+    @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public List<SsnLocation> getSsnLocations() {
         final String res = restTemplate.getForObject(FILENAME, String.class);
 
