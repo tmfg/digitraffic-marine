@@ -96,4 +96,32 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
         assertThat(vesselDetails, Matchers.empty());
     }
 
+    @Test
+    public void vesseltypeFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, null, 30);
+
+        assertThat(vesselDetails, Matchers.hasSize(1));
+    }
+
+    @Test
+    public void vessetypeNotFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, null, -1);
+
+        assertThat(vesselDetails, Matchers.empty());
+    }
+
+    @Test
+    public void nationalityFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, List.of("FI"), null);
+
+        assertThat(vesselDetails, Matchers.hasSize(1));
+    }
+
+    @Test
+    public void nationalityNotFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, List.of("XZ"), null);
+
+        assertThat(vesselDetails, Matchers.empty());
+    }
+
 }

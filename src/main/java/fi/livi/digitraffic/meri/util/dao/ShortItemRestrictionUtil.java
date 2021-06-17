@@ -13,7 +13,7 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 public final class ShortItemRestrictionUtil {
     private ShortItemRestrictionUtil() {}
 
-    public static void addItemRestrictions(final QueryBuilder<Long, PortCall> qb, final Path<Object> p, final List<String> items) {
+    public static void addItemRestrictions(final QueryBuilder<?, ?> qb, final Path<Object> p, final List<String> items) {
         final List<String> notInList = items.stream().filter(n -> StringUtils.startsWith(n, "!")).map(z -> z.substring(1)).collect(
             Collectors.toList());
         final List<String> inList = items.stream().filter(n -> !StringUtils.startsWith(n, "!")).collect(Collectors.toList());
