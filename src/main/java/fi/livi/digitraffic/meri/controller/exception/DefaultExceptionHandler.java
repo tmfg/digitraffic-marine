@@ -40,10 +40,10 @@ public class DefaultExceptionHandler {
     private final Logger logger;
 
     // log these exceptions with error
-    private static final Set<Class> errorLoggableExceptions = Set.of(ConstraintViolationException.class, ResourceAccessException.class);
+    private static final Set<Class<? extends Exception>> errorLoggableExceptions = Set.of(ConstraintViolationException.class, ResourceAccessException.class);
 
     // no need to log these exceptions at all
-    private static final Set<Class> nonLoggableExceptions = Set.of(ObjectNotFoundException.class);
+    private static final Set<Class<? extends Exception>> nonLoggableExceptions = Set.of(ObjectNotFoundException.class);
 
     public DefaultExceptionHandler(final Logger exceptionHandlerLogger) {
         this.logger = exceptionHandlerLogger;
@@ -53,8 +53,8 @@ public class DefaultExceptionHandler {
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleTypeMismatchException(final TypeMismatchException exception, final ServletWebRequest request) {
         final String parameterName = getExceptionPropertyName(exception);
-        final String parameterValue = exception.getValue().toString();
-        final String requiredType = exception.getRequiredType().getSimpleName();
+        final String parameterValue = exception.getValue() != null ? exception.getValue().toString() : null;
+        final Class<?> requiredType = exception.getRequiredType();
 
         return getErrorResponseEntityAndLogException(request, String.format("Query parameter type mismatch: queryString=%s, parameterName=%s parameterValue=%s, expectedType=%s",
                 request.getRequest().getQueryString(), parameterName, parameterValue, requiredType), HttpStatus.BAD_REQUEST, exception);
@@ -127,7 +127,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(HttpMessageNotWritableException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleHttpMessageNotWritableException(final Exception exception, final ServletWebRequest request) {
-        if (exception.getCause() != null && exception.getCause() instanceof MarshalException) {
+        if (exception.getCause() instanceof MarshalException) {
             final MarshalException cause = (MarshalException) exception.getCause();
 
             if (isClientAbortException(cause.getLinkedException())) {
