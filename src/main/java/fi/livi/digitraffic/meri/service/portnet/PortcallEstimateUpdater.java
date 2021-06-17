@@ -148,7 +148,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         final List<PortcallEstimate> pces,
         final PortcallEstimateEndpoint endpoint) {
 
-        for (PortcallEstimate pce : pces) {
+        for (final PortcallEstimate pce : pces) {
             try {
                 final HttpPost post = new HttpPost(endpoint.url);
                 post.setHeader("X-Api-Key", endpoint.apiKey);
@@ -161,8 +161,8 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                     log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
                 }
                 post.releaseConnection();
-            } catch (Throwable t) {
-                log.warn("method=updatePortcallEstimate unexpected error", t);
+            } catch (final Exception e) {
+                log.warn("method=updatePortcallEstimate exception", e);
             }
         }
     }

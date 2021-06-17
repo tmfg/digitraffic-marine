@@ -34,11 +34,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
-    @Override
-    public void updatePortcallEstimate(PortCallNotification pcn) {}
-}
-
 public class PortCallUpdaterTest extends AbstractTestBase {
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
@@ -135,4 +130,10 @@ public class PortCallUpdaterTest extends AbstractTestBase {
 
         verify(portCallClient, times(2)).getList(any(), any());
     }
+
+    private static class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
+        @Override
+        public void updatePortcallEstimate(PortCallNotification pcn) {}
+    }
+
 }
