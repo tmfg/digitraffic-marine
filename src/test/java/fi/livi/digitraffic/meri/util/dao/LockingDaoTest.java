@@ -39,4 +39,18 @@ public class LockingDaoTest extends AbstractTestBase {
         assertFalse(lockingDao.hasLock(LOCKNAME1, ID2));
         assertFalse(lockingDao.hasLock(LOCKNAME2, ID1));
     }
+
+    @Test
+    public void releaseLock() {
+        assertTrue(lockingDao.acquireLock(LOCKNAME1, ID1, 10));
+        assertTrue(lockingDao.hasLock(LOCKNAME1, ID1));
+
+        // wrong id, won't release
+        lockingDao.releaseLock(LOCKNAME1, ID2);
+        assertTrue(lockingDao.hasLock(LOCKNAME1, ID1));
+
+        // correct id
+        lockingDao.releaseLock(LOCKNAME1, ID1);
+        assertFalse(lockingDao.hasLock(LOCKNAME1, ID1));
+    }
 }
