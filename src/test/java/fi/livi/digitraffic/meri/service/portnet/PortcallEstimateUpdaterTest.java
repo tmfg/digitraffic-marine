@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.service.portnet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.matching.ContentPattern;
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.portnet.xsd.*;
 import org.apache.http.entity.ContentType;
@@ -25,6 +25,9 @@ public class PortcallEstimateUpdaterTest extends AbstractTestBase {
     private static final String ETA_TIME = "2021-10-10T10:45:00+03:00";
     private static final String ETD_TIME = "2021-10-10T11:45:00+03:00";
     private static final String ATA_TIME = "2021-10-10T12:45:00+03:00";
+
+    private static final Integer PORTCALL_ID = 123;
+    private static final String PORT_TO_VISIT = "FITST";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -58,8 +61,11 @@ public class PortcallEstimateUpdaterTest extends AbstractTestBase {
         final VesselDetails.IdentificationData id = new VesselDetails.IdentificationData();
 
         pcn.setPortCallDetails(pcd);
+        pcn.setPortCallId(BigInteger.valueOf(PORTCALL_ID));
+
         pcd.getPortAreaDetails().add(pad);
         pcd.setVesselDetails(vd);
+        pcd.setPortToVisit(PORT_TO_VISIT);
 
         vd.setIdentificationData(id);
         id.setMmsi(BigInteger.ONE);
@@ -79,8 +85,20 @@ public class PortcallEstimateUpdaterTest extends AbstractTestBase {
         return pcn;
     }
 
+    private RequestPatternBuilder createPattern() {
+        return postRequestedFor(urlEqualTo("/"))
+            .withHeader("X-Api-Key", equalTo(TEST_API_KEY))
+            .withHeader("Content-Type", equalTo(ContentType.APPLICATION_JSON.toString()))
+            .withRequestBody(matchingJsonPath("$.source", equalTo("Portnet")))
+            .withRequestBody(matchingJsonPath("$.ship.mmsi", equalTo("1")))
+            .withRequestBody(matchingJsonPath("$.ship.imo", equalTo("1")))
+            .withRequestBody(matchingJsonPath("$.portcallId", equalTo(PORTCALL_ID.toString())))
+            .withRequestBody(matchingJsonPath("$.location.port", equalTo(PORT_TO_VISIT)))
+        ;
+    }
+
     @Test
-    public void call() throws DatatypeConfigurationException {
+    public void updatePortcallEstimate() throws DatatypeConfigurationException {
         final WireMockServer server = mockServer();
 
         try {
@@ -90,25 +108,19 @@ public class PortcallEstimateUpdaterTest extends AbstractTestBase {
             updater.updatePortcallEstimate(createNotification());
 
             // verify that all 3 timestamps are included
-            server.verify(
-                postRequestedFor(urlEqualTo("/"))
-                .withHeader("X-Api-Key", equalTo(TEST_API_KEY))
-                .withHeader("Content-Type", equalTo(ContentType.APPLICATION_JSON.toString()))
-                .withRequestBody(containing(ATA_TIME))
+            server.verify(createPattern()
+                .withRequestBody(matchingJsonPath("$.eventType", equalTo("ATA")))
+                .withRequestBody(matchingJsonPath("$.eventTime", equalTo(ATA_TIME)))
             );
 
-            server.verify(
-                postRequestedFor(urlEqualTo("/"))
-                    .withHeader("X-Api-Key", equalTo(TEST_API_KEY))
-                    .withHeader("Content-Type", equalTo(ContentType.APPLICATION_JSON.toString()))
-                    .withRequestBody(containing(ETA_TIME))
+            server.verify(createPattern()
+                .withRequestBody(matchingJsonPath("$.eventType", equalTo("ETA")))
+                .withRequestBody(matchingJsonPath("$.eventTime", equalTo(ETA_TIME)))
             );
 
-            server.verify(
-                postRequestedFor(urlEqualTo("/"))
-                    .withHeader("X-Api-Key", equalTo(TEST_API_KEY))
-                    .withHeader("Content-Type", equalTo(ContentType.APPLICATION_JSON.toString()))
-                    .withRequestBody(containing(ETD_TIME))
+            server.verify(createPattern()
+                .withRequestBody(matchingJsonPath("$.eventType", equalTo("ETD")))
+                .withRequestBody(matchingJsonPath("$.eventTime", equalTo(ETD_TIME)))
             );
         } finally {
             server.stop();

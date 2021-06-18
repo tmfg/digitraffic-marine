@@ -27,7 +27,6 @@ import java.util.List;
 import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
 
 class PortcallEstimate {
-
     public final EventType eventType;
     public final ZonedDateTime eventTime;
     public final ZonedDateTime recordTime;
@@ -83,7 +82,6 @@ class Location {
         final String port,
         final String portArea,
         final String from) {
-
         this.port = port;
         this.portArea = portArea;
         this.from = from;
@@ -91,7 +89,7 @@ class Location {
 }
 
 interface PortcallEstimateUpdater {
-    void updatePortcallEstimate(PortCallNotification pcn);
+    void updatePortcallEstimate(final PortCallNotification pcn);
 }
 
 class PortcallEstimateEndpoint {
