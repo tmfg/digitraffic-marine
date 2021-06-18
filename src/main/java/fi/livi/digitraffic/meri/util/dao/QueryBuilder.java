@@ -14,7 +14,7 @@ public class QueryBuilder<T, K> {
     private final CriteriaBuilder cb;
     private final CriteriaQuery<T> query;
     private final Root<K> root;
-    private final List<Predicate> predicateList = new ArrayList();
+    private final List<Predicate> predicateList = new ArrayList<>();
 
     public QueryBuilder(final EntityManager entityManager, final Class<T> tclazz, final Class<K> kclazz) {
         this.entityManager = entityManager;
@@ -31,7 +31,7 @@ public class QueryBuilder<T, K> {
         predicateList.add(equalPredicate(e, o));
     }
 
-    public Predicate equalPredicate(final Expression e, final Object o) {
+    public Predicate equalPredicate(final Expression<?> e, final Object o) {
         return cb.equal(e, o);
     }
 

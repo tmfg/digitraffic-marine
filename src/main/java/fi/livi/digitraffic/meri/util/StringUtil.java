@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 @Service
 public class StringUtil {
+    private static final Logger log = LoggerFactory.getLogger(StringUtil.class);
 
-    private final static Logger log = LoggerFactory.getLogger(StringUtil.class);
     private static ObjectWriter jsonObjectWriter;
 
     public StringUtil(final ObjectMapper objectMapper) {
@@ -33,7 +33,7 @@ public class StringUtil {
         }
         try {
             return padKeyValuePairsEqualitySignWithSpaces(jsonObjectWriter.writeValueAsString(o));
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             log.error("Failed to convert object to JSON-string", e);
             return padKeyValuePairsEqualitySignWithSpaces(o.toString());
         }
