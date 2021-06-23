@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.controller.exception;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
@@ -53,8 +54,8 @@ public class DefaultExceptionHandler {
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleTypeMismatchException(final TypeMismatchException exception, final ServletWebRequest request) {
         final String parameterName = getExceptionPropertyName(exception);
-        final String parameterValue = exception.getValue() != null ? exception.getValue().toString() : null;
-        final Class<?> requiredType = exception.getRequiredType();
+        final String parameterValue = Objects.requireNonNullElse(exception.getValue(), "undefined").toString();
+        final String requiredType = exception.getRequiredType() != null ? exception.getRequiredType().getSimpleName() : "undefined";
 
         return getErrorResponseEntityAndLogException(request, String.format("Query parameter type mismatch: queryString=%s, parameterName=%s parameterValue=%s, expectedType=%s",
                 request.getRequest().getQueryString(), parameterName, parameterValue, requiredType), HttpStatus.BAD_REQUEST, exception);
