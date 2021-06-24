@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -58,7 +59,7 @@ public final class LocationParser {
         final int i3 = val.indexOf('\''); // '
         final int i4 = val.indexOf("\'\'"); // ''
 
-        if (i2 == -1 || i3 == -1 || i4 == -1) {
+        if (i2 == -1 || i3 == -1 || i4 == -1 || i3 == i4) {
             return null;
         }
 
@@ -86,10 +87,7 @@ public final class LocationParser {
     private static boolean isValidLength(final String val) {
         // Length of (N)0°0'0'' is 10 chars
         // Length of (N)999°999'999'' is 16 chars
-        if (StringUtils.isEmpty(val) || val.length() < 10 || val.length() > 16) {
-            return false;
-        }
-        return true;
+        return ObjectUtils.isNotEmpty(val) && val.length() >= 10 && val.length() <= 16;
     }
 
     private static Sign parseHemisphere(final String val, final LocationType type) {
