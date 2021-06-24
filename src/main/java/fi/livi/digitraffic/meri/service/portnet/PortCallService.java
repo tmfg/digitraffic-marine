@@ -62,6 +62,110 @@ public class PortCallService {
         final List<String> nationality,
         final Integer vesselTypeCode) {
 
+        return doFindPortCalls(modifiedDate,
+            modifiedFrom,
+            modifiedTo,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            locode,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
+    @Transactional(readOnly = true)
+    public PortCallsJson findPortCallsWithTimestamps(
+        final Date modifiedDate,
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime etaFrom,
+        final ZonedDateTime etaTo,
+        final ZonedDateTime etdFrom,
+        final ZonedDateTime etdTo,
+        final ZonedDateTime ataFrom,
+        final ZonedDateTime ataTo,
+        final ZonedDateTime atdFrom,
+        final ZonedDateTime atdTo,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
+        return doFindPortCalls(modifiedDate,
+            modifiedFrom,
+            null,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
+    @Transactional(readOnly = true)
+    public PortCallsJson findPortCallsWithoutTimestamps(
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime modifiedTo,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
+        return doFindPortCalls(null,
+            modifiedFrom,
+            modifiedTo,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
+    private PortCallsJson doFindPortCalls(
+        final Date modifiedDate,
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime modifiedTo,
+        final ZonedDateTime etaFrom,
+        final ZonedDateTime etaTo,
+        final ZonedDateTime etdFrom,
+        final ZonedDateTime etdTo,
+        final ZonedDateTime ataFrom,
+        final ZonedDateTime ataTo,
+        final ZonedDateTime atdFrom,
+        final ZonedDateTime atdTo,
+        final String locode,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
         final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS);
 
         final List<Long> portCallIds = getPortCallIds(modifiedDate,
@@ -93,70 +197,6 @@ public class PortCallService {
         final List<PortCallJson> portCallList = portCallRepository.findByPortCallIdIn(portCallIds);
 
         return new PortCallsJson(lastUpdated, portCallList);
-    }
-
-    public PortCallsJson findPortCallsWithTimestamps(
-        final Date modifiedDate,
-        final ZonedDateTime modifiedFrom,
-        final ZonedDateTime etaFrom,
-        final ZonedDateTime etaTo,
-        final ZonedDateTime etdFrom,
-        final ZonedDateTime etdTo,
-        final ZonedDateTime ataFrom,
-        final ZonedDateTime ataTo,
-        final ZonedDateTime atdFrom,
-        final ZonedDateTime atdTo,
-        final String vesselName,
-        final Integer mmsi,
-        final Integer imo,
-        final List<String> nationality,
-        final Integer vesselTypeCode) {
-
-        return findPortCalls(modifiedDate,
-            modifiedFrom,
-            null,
-            etaFrom,
-            etaTo,
-            etdFrom,
-            etdTo,
-            ataFrom,
-            ataTo,
-            atdFrom,
-            atdTo,
-            null,
-            vesselName,
-            mmsi,
-            imo,
-            nationality,
-            vesselTypeCode);
-    }
-
-    public PortCallsJson findPortCallsWithoutTimestamps(
-        final ZonedDateTime modifiedFrom,
-        final ZonedDateTime modifiedTo,
-        final String vesselName,
-        final Integer mmsi,
-        final Integer imo,
-        final List<String> nationality,
-        final Integer vesselTypeCode) {
-
-        return findPortCalls(null,
-            modifiedFrom,
-            modifiedTo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            vesselName,
-            mmsi,
-            imo,
-            nationality,
-            vesselTypeCode);
     }
 
     private List<Long> getPortCallIds(
