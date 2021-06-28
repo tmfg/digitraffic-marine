@@ -19,7 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 public class SimpleErrorController implements ErrorController {
     private final ErrorAttributes errorAttributes;
 
-    private final static boolean includeStackTrace = false;
+    private final static boolean INCLUDE_STACK_TRACE = false;
 
     @Autowired
     public SimpleErrorController(final ErrorAttributes errorAttributes) {
@@ -40,6 +40,6 @@ public class SimpleErrorController implements ErrorController {
     private Map<String, Object> getErrorAttributes(final HttpServletRequest request) {
         final WebRequest webRequest = new ServletWebRequest(request);
 
-        return errorAttributes.getErrorAttributes(webRequest, includeStackTrace);
+        return errorAttributes.getErrorAttributes(webRequest, INCLUDE_STACK_TRACE);
     }
 }
