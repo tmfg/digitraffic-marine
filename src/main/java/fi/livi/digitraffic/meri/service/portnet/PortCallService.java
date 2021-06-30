@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.Path;
 
+import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
@@ -41,11 +43,148 @@ public class PortCallService {
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson findPortCalls(final Date date, final ZonedDateTime from, final ZonedDateTime to, final String locode, final String vesselName,
-                                       final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
+    public PortCallsJson findPortCalls(
+        final Date modifiedDate,
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime modifiedTo,
+        final ZonedDateTime etaFrom,
+        final ZonedDateTime etaTo,
+        final ZonedDateTime etdFrom,
+        final ZonedDateTime etdTo,
+        final ZonedDateTime ataFrom,
+        final ZonedDateTime ataTo,
+        final ZonedDateTime atdFrom,
+        final ZonedDateTime atdTo,
+        final String locode,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
+        return doFindPortCalls(modifiedDate,
+            modifiedFrom,
+            modifiedTo,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            locode,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
+    @Transactional(readOnly = true)
+    public PortCallsJson findPortCallsWithTimestamps(
+        final Date modifiedDate,
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime etaFrom,
+        final ZonedDateTime etaTo,
+        final ZonedDateTime etdFrom,
+        final ZonedDateTime etdTo,
+        final ZonedDateTime ataFrom,
+        final ZonedDateTime ataTo,
+        final ZonedDateTime atdFrom,
+        final ZonedDateTime atdTo,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
+        return doFindPortCalls(modifiedDate,
+            modifiedFrom,
+            null,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
+    @Transactional(readOnly = true)
+    public PortCallsJson findPortCallsWithoutTimestamps(
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime modifiedTo,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
+        return doFindPortCalls(null,
+            modifiedFrom,
+            modifiedTo,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
+    }
+
+    private PortCallsJson doFindPortCalls(
+        final Date modifiedDate,
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime modifiedTo,
+        final ZonedDateTime etaFrom,
+        final ZonedDateTime etaTo,
+        final ZonedDateTime etdFrom,
+        final ZonedDateTime etdTo,
+        final ZonedDateTime ataFrom,
+        final ZonedDateTime ataTo,
+        final ZonedDateTime atdFrom,
+        final ZonedDateTime atdTo,
+        final String locode,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
         final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS);
 
-        final List<Long> portCallIds = getPortCallIds(date, from, to, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        final List<Long> portCallIds = getPortCallIds(modifiedDate,
+            modifiedFrom,
+            modifiedTo,
+            etaFrom,
+            etaTo,
+            etdFrom,
+            etdTo,
+            ataFrom,
+            ataTo,
+            atdFrom,
+            atdTo,
+            locode,
+            vesselName,
+            mmsi,
+            imo,
+            nationality,
+            vesselTypeCode);
 
         if (CollectionUtils.isEmpty(portCallIds)) {
             return new PortCallsJson(lastUpdated, Collections.emptyList());
@@ -60,19 +199,36 @@ public class PortCallService {
         return new PortCallsJson(lastUpdated, portCallList);
     }
 
-    private List<Long> getPortCallIds(final Date date, final ZonedDateTime from, ZonedDateTime to, final String locode, final String vesselName,
-                                      final Integer mmsi, final Integer imo, final List<String> nationality, final Integer vesselTypeCode) {
+    private List<Long> getPortCallIds(
+        final Date modifiedDate,
+        final ZonedDateTime modifiedFrom,
+        final ZonedDateTime modifiedTo,
+        final ZonedDateTime etaFrom,
+        final ZonedDateTime etaTo,
+        final ZonedDateTime etdFrom,
+        final ZonedDateTime etdTo,
+        final ZonedDateTime ataFrom,
+        final ZonedDateTime ataTo,
+        final ZonedDateTime atdFrom,
+        final ZonedDateTime atdTo,
+        final String locode,
+        final String vesselName,
+        final Integer mmsi,
+        final Integer imo,
+        final List<String> nationality,
+        final Integer vesselTypeCode) {
+
         final QueryBuilder<Long, PortCall> qb = new QueryBuilder<>(entityManager, Long.class, PortCall.class);
 
-        if (date != null) {
-            qb.gte(qb.<Timestamp>get("portCallTimestamp"), date);
-            qb.lt(qb.<Timestamp>get("portCallTimestamp"), DateUtils.addDays(date, 1));
+        if (modifiedDate != null) {
+            qb.gte(qb.<Timestamp>get("portCallTimestamp"), modifiedDate);
+            qb.lt(qb.<Timestamp>get("portCallTimestamp"), DateUtils.addDays(modifiedDate, 1));
         }
-        if (from != null) {
-            qb.gte(qb.get("portCallTimestamp"), Date.from(from.toInstant()));
+        if (modifiedFrom != null) {
+            qb.gte(qb.get("portCallTimestamp"), Date.from(modifiedFrom.toInstant()));
         }
-        if (to != null) {
-            qb.lt(qb.get("portCallTimestamp"), Date.from(to.toInstant()));
+        if (modifiedTo != null) {
+            qb.lt(qb.get("portCallTimestamp"), Date.from(modifiedTo.toInstant()));
         }
         if (locode != null) {
             qb.equals("portToVisit", locode);
@@ -93,6 +249,40 @@ public class PortCallService {
 
         if(vesselTypeCode != null) {
             qb.equals("vesselTypeCode", vesselTypeCode);
+        }
+
+        final Path<PortAreaDetails> portAreaDetails = qb.join("portAreaDetails");
+
+        if (etaFrom != null) {
+            qb.gte(portAreaDetails.get("eta"), Date.from(etaFrom.toInstant()));
+        }
+
+        if (etaTo != null) {
+            qb.lt(portAreaDetails.get("eta"), Date.from(etaTo.toInstant()));
+        }
+
+        if (etdFrom != null) {
+            qb.gte(portAreaDetails.get("etd"), Date.from(etdFrom.toInstant()));
+        }
+
+        if (etdTo != null) {
+            qb.lt(portAreaDetails.get("etd"), Date.from(etdTo.toInstant()));
+        }
+
+        if (ataFrom != null) {
+            qb.gte(portAreaDetails.get("ata"), Date.from(ataFrom.toInstant()));
+        }
+
+        if (ataTo != null) {
+            qb.lt(portAreaDetails.get("ata"), Date.from(ataTo.toInstant()));
+        }
+
+        if (atdFrom != null) {
+            qb.gte(portAreaDetails.get("atd"), Date.from(atdFrom.toInstant()));
+        }
+
+        if (atdTo != null) {
+            qb.lt(portAreaDetails.get("atd"), Date.from(atdTo.toInstant()));
         }
 
         return qb.getResults( "portCallId");

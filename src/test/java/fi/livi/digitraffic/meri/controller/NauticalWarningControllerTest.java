@@ -13,8 +13,8 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -54,7 +54,7 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
 
     private MockRestServiceServer pookiMockServer;
 
-    @Before
+    @BeforeEach
     public void createBaseUrl() throws IOException {
         localNauticalWarningsUrl = String.format("http://localhost:%s%s%s", serverPort, API_V1_BASE_PATH, "/nautical-warnings");
         dummyData = readResourceContent("classpath:pooki/PUBLISHED.json");

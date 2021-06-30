@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -41,11 +43,12 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setUnmarshaller(marshaller);
 
         final HttpComponentsMessageSender sender = new HttpComponentsMessageSender();
-        sender.setConnectionTimeout(30000);
-        sender.setReadTimeout(30000);
+        sender.setConnectionTimeout(60000);
+        sender.setReadTimeout(60000);
         setMessageSender(sender);
     }
 
+    @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public Ports getWinterNavigationPorts() {
         final JAXBElement<PortsResponseType> portsResponseTypeJAXBElement =
             (JAXBElement<PortsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createPortsRequest(new PortsRequestType()));
@@ -53,6 +56,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         return portsResponseTypeJAXBElement.getValue().getPorts();
     }
 
+    @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public WinterShips getWinterNavigationShips() {
         final JAXBElement<WinterShipsResponseType> winterShipsResponseTypeJAXBElement =
             (JAXBElement<WinterShipsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createWinterShipsRequest(new WinterShipsRequestType()));
@@ -60,6 +64,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         return winterShipsResponseTypeJAXBElement.getValue().getWinterShips();
     }
 
+    @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public DirWaysType getWinterNavigationWaypoints() {
         final JAXBElement<WaypointsResponseType> waypointsResponseTypeJAXBElement =
             (JAXBElement<WaypointsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createWaypointsRequest(new WaypointsRequestType()));

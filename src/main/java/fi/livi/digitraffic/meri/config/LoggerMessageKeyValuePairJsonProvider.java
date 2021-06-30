@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.config;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
@@ -28,10 +28,13 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
 
     private final static Splitter spaceSplitter = Splitter.on(' ').omitEmptyStrings().trimResults();
     private final static Pattern tagsPattern = Pattern.compile("[<][^>]*[>]");
+    // Must start with upper or lower case letter
+    // Must end with number or upper or lower case letter
+    // Between can be numbers, letters, one at the time of "_", "-" or "." surrounded by numbers or letters
+    private final static Pattern keyPattern = Pattern.compile("^[a-zA-Z]+([_\\.-]?[a-zA-Z0-9])*$");
 
     @Override
     public void writeTo(final JsonGenerator generator, final ILoggingEvent event) {
-
         final String formattedMessage = event.getFormattedMessage();
 
         if (StringUtils.isBlank(formattedMessage)) {
@@ -58,21 +61,28 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
         });
     }
 
-    private Object getObjectValue(final String value) {
-        if( "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) ) {
+    private static Object getObjectValue(final String value) {
+        if(isQuoted(value)) {
+            return value.substring(1, value.length() - 1);
+        } else if( "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) ) {
             return Boolean.valueOf(value);
         }
+
         try {
             // Iso date time value
             return ZonedDateTime.parse(value).toInstant().toString();
-        } catch (DateTimeParseException e) {
+        } catch (final DateTimeParseException e) {
             // empty
         }
         try {
-            return DecimalFormat.getInstance(Locale.ROOT).parse(value);
-        } catch (ParseException e) {
+            return NumberFormat.getInstance(Locale.ROOT).parse(value);
+        } catch (final ParseException e) {
             return value;
         }
+    }
+
+    private static boolean isQuoted(final String value) {
+        return value.length() > 2 && value.charAt(0) == '\"' && value.charAt(value.length() - 1) == '\"';
     }
 
     private static List<Pair<String, String>> parseKeyValuePairs(final String formattedMessage) {
@@ -81,12 +91,22 @@ public class LoggerMessageKeyValuePairJsonProvider extends AbstractJsonProvider<
             .stream()
             .map(kv -> kv.split("=")) // split message chunks by =
             // Filter empty key or value pairs
-            .filter(kv -> kv.length > 1 && StringUtils.isNotBlank(kv[0]) && StringUtils.isNotBlank(kv[1]))
-            .map(kv -> Pair.of(kv[0], kv[1]))
+            .filter(kv -> kv.length > 1 && StringUtils.isNotBlank(kv[0]) && StringUtils.isNotBlank(kv[1]) && keyPattern.matcher(kv[0]).matches())
+            .map(kv -> Pair.of(kv[0], safeValue(kv[1])))
             .collect(Collectors.toList());
     }
 
+    private static String safeValue(final String value) {
+        if("NULL".equalsIgnoreCase(value)) return null;
+
+        return value;
+    }
+
     private static String stripXmlTags(final String message) {
+        if (StringUtils.contains(message, "healthCheckValue=")) {
+            // Can be ie. healthCheckValue=<status>ok</status>
+            return message;
+        }
         return tagsPattern.matcher(message).replaceAll(" ");
     }
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,7 +24,8 @@ public class BerthClient {
         this.berthReader = new BerthReader();
     }
 
-    public List<BerthLine> getBerthLines() throws IOException {
+    @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
+    public List<BerthLine> getBerthLines() {
         final String res = restTemplate.getForObject(FILENAME, String.class);
 
         return berthReader.readCsv(res);

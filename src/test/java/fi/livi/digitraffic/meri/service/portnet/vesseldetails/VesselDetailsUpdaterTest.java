@@ -1,15 +1,13 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -25,6 +23,8 @@ import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class VesselDetailsUpdaterTest extends AbstractTestBase {
     private VesselDetailsClient vesselDetailsClient;
     private VesselDetailsUpdater vesselDetailsUpdater;
@@ -39,7 +39,7 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
     @Autowired
     private RestTemplate authenticatedRestTemplate;
 
-    @Before
+    @BeforeEach
     public void before() {
         vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", authenticatedRestTemplate);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);

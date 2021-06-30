@@ -1,12 +1,12 @@
 package fi.livi.digitraffic.meri.service.sse;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 import javax.transaction.Transactional;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -85,7 +85,7 @@ public class SseServiceTestWithMocks extends AbstractTestBase {
         Mockito.verify(sseTlscReportRepository, Mockito.times(3))
             .save(any(SseTlscReport.class));
 
-        Assert.assertEquals(3, saved);
+        assertEquals(3, saved);
     }
 
     private void verifyConverterTimes(final int times, Class<?> sourceType, Class<?> targetType) {

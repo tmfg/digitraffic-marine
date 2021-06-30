@@ -1,152 +1,234 @@
 package fi.livi.digitraffic.meri.conf;
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.LoggerContextVO;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.livi.digitraffic.meri.config.LoggerMessageKeyValuePairJsonProvider;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.IThrowableProxy;
-import ch.qos.logback.classic.spi.LoggerContextVO;
-import fi.livi.digitraffic.meri.config.LoggerMessageKeyValuePairJsonProvider;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Import({ JacksonAutoConfiguration.class })
-@RunWith(SpringRunner.class)
 public class LoggerMessageKeyValuePairJsonProviderTest {
     private static final Logger log = LoggerFactory.getLogger(LoggerMessageKeyValuePairJsonProviderTest.class);
 
     final LoggerMessageKeyValuePairJsonProvider provider = new LoggerMessageKeyValuePairJsonProvider();
 
-    private ByteArrayOutputStream out;
-    private JsonGenerator jsonGenerator;
-
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Before
-    public void init() throws IOException {
-        out = new ByteArrayOutputStream();
-        final JsonFactory factory = new JsonFactory();
+    private JsonFactory factory;
+
+    @BeforeEach
+    public void init() {
+        factory = new JsonFactory();
         factory.setCodec(objectMapper);
-        jsonGenerator = factory.createGenerator(out, JsonEncoding.UTF8);
+    }
+
+    private JsonGenerator createJsonGenerator(final OutputStream out) throws IOException {
+        return factory.createGenerator(out, JsonEncoding.UTF8);
+    }
+
+    final static String[] ALLOWED_KEYS = {
+        "a",
+        "a1",
+        "a-b",
+        "a_b",
+        "a.b",
+        "abc1",
+        "fi.livi",
+        "abc_def1",
+        "a.b.c123"
+    };
+
+    final static String[] NOT_ALLOWED_KEYS = {
+        "123",
+        "a..b",
+        "a__b",
+        "a--b",
+        "a_.b",
+        "a.-b",
+        "a_-b",
+        "\"",
+        "\"&",
+        "\"\\'",
+        "\"\\001",
+        "\"\\002",
+        "\"\\002y",
+        "\"xMin",
+        ",aliverkonPeite",
+        ",asemanTila",
+        ",id",
+        "19.0,violatingParameter\n",
+        "OPERATOR(pg_catalog\n",
+        "Oy,organisaatio",
+        "fi.livi.digitraffic.tie.external.lotju.metadata.kamera.EsiasentoVO@5fea7b58[jarjestys",
+        "Esiasento@abc",
+        "abc[jarjestys",
+        "(ka)],sijainti",
+        "(ka)",
+        "]sijainti",
+        "a]sijainti",
+        "a[sijainti",
+        "a}sijainti",
+        "a{sijainti",
+        "a)sijainti",
+        "a(sijainti",
+        "metadata-api?group",
+        "a\\/b",
+        "a/b",
+    };
+
+    @Test
+    public void allowedKeys() throws IOException {
+        for (String allowedKey : ALLOWED_KEYS) {
+            log.info("Test key {}", allowedKey);
+            final String result = sendEventWithFormatedMessageAndReturnResultJson(allowedKey + "=bar");
+            assertEquals(String.format("{\"%s\":\"bar\"}", allowedKey), result);
+        }
+
+    }
+
+    @Test
+    public void notAllowedKeys() throws IOException {
+        for (String notAllowedKey : NOT_ALLOWED_KEYS) {
+            log.info("Test key {}", notAllowedKey);
+            final String result = sendEventWithFormatedMessageAndReturnResultJson(notAllowedKey + "=bar");
+            assertEquals("{}", result);
+        }
+
     }
 
     @Test
     public void simpleKeyValuePair() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=bar");
-        Assert.assertEquals("{\"foo\":\"bar\"}", result);
+        assertEquals("{\"foo\":\"bar\"}", result);
     }
+
+    @Test
+    public void simpleKeyValuePair3() throws IOException {
+        final String result = sendEventWithFormatedMessageAndReturnResultJson("healthCheckValue=<status>ok</status>");
+        assertEquals("{\"healthCheckValue\":\"<status>ok</status>\"}", result);
+    }
+
 
     @Test
     public void simpleKeyValuePair2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("  \n  \t    foo=bar     \n   ");
-        Assert.assertEquals("{\"foo\":\"bar\"}", result);
+        assertEquals("{\"foo\":\"bar\"}", result);
     }
 
     @Test
     public void intValue() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=1");
-        Assert.assertEquals("{\"foo\":1}", result);
+        assertEquals("{\"foo\":1}", result);
     }
 
     @Test
     public void doubleValue() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=1.4");
-        Assert.assertEquals("{\"foo\":1.4}", result);
+        assertEquals("{\"foo\":1.4}", result);
     }
 
     @Test
     public void doubleValueWithComma() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=1,4");
-        Assert.assertEquals("{\"foo\":14}", result);
+        assertEquals("{\"foo\":14}", result);
     }
 
     @Test
     public void isoDateTimeOffset() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=2020-05-01T12:00+02:00");
-        Assert.assertEquals("{\"foo\":\"2020-05-01T10:00:00Z\"}", result);
+        assertEquals("{\"foo\":\"2020-05-01T10:00:00Z\"}", result);
     }
 
     @Test
     public void isoDateTimeZ() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=2020-05-01T12:00:00Z");
-        Assert.assertEquals("{\"foo\":\"2020-05-01T12:00:00Z\"}", result);
+        assertEquals("{\"foo\":\"2020-05-01T12:00:00Z\"}", result);
     }
 
     @Test
     public void isoDateTimeZMillis() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=2020-05-01T12:00:00.123Z");
-        Assert.assertEquals("{\"foo\":\"2020-05-01T12:00:00.123Z\"}", result);
+        assertEquals("{\"foo\":\"2020-05-01T12:00:00.123Z\"}", result);
     }
 
     @Test
     public void keyValueChainTakesFirstPair() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo=bar=hello=world and=this");
-        Assert.assertEquals("{\"foo\":\"bar\",\"and\":\"this\"}", result);
+        assertEquals("{\"foo\":\"bar\",\"and\":\"this\"}", result);
     }
 
     @Test
     public void xmlTagsAreStripped() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("a=b " + LONG_XML);
-        Assert.assertEquals("{\"a\":\"b\"}", result);
+        assertEquals("{\"a\":\"b\"}", result);
     }
 
     @Test
     public void xmlTagsAreStripped2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("a=b " + LONG_XML2);
-        Assert.assertEquals("{\"a\":\"b\"}", result);
+        assertEquals("{\"a\":\"b\"}", result);
     }
 
     @Test
     public void nullMessage() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson(null);
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyMessage() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyMessage2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("    ");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyResultWhenSpaces() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson(" a = b ");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
     }
 
     @Test
     public void emptyResultWhenSpaces2() throws IOException {
         final String result = sendEventWithFormatedMessageAndReturnResultJson("foo =bar hello= world");
-        Assert.assertEquals("{}", result);
+        assertEquals("{}", result);
+    }
+
+    @Test
+    public void s3VersionId() throws IOException {
+        final String result = sendEventWithFormatedMessageAndReturnResultJson("s3VersionId=\"1_9XcT207HmV5yyEExF7GhsaSzUoeNFY\"");
+        assertEquals("{\"s3VersionId\":\"1_9XcT207HmV5yyEExF7GhsaSzUoeNFY\"}", result);
     }
 
     private String sendEventWithFormatedMessageAndReturnResultJson(final String formattedMessage) throws IOException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final JsonGenerator jsonGenerator = createJsonGenerator(out);
         jsonGenerator.writeStartObject();
         provider.writeTo(jsonGenerator, createEvent(formattedMessage));
         jsonGenerator.writeEndObject();

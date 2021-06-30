@@ -59,7 +59,6 @@ public class SseLoggingListener {
     }
 
     private static synchronized void addStatistics(final SseLoggingType loggingType, final boolean sendSuccessful) {
-
         final Statistics statistics = sentStatisticsMap.get(loggingType);
         int messages = sendSuccessful ? 1 : 0;
         int failures = sendSuccessful ? 0 : 1;
@@ -106,12 +105,12 @@ public class SseLoggingListener {
                 }
             }
 
-            Statistics statusMessage = new StatusMessage(sendCount+1, errorCount);
+            final Statistics statusMessage = new StatusMessage(sendCount+1, errorCount);
 
             try {
                 boolean sendStatus = sseMqttSender.sendStatusMessage(statusMessage);
                 addSendStatusMessagesStatistics(sendStatus);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.error("Json parse error", e);
             }
         }
@@ -135,7 +134,7 @@ public class SseLoggingListener {
         }
     }
 
-    private static class StatusMessage extends Statistics {
+    protected static class StatusMessage extends Statistics {
         private final ZonedDateTime timeStamp;
 
         public StatusMessage(final int messages, final int failures) {

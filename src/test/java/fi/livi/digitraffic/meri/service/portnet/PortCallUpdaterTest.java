@@ -1,22 +1,12 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.junit.Before;
-import org.junit.Test;
+import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
+import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -28,10 +18,21 @@ import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class PortCallUpdaterTest extends AbstractTestBase {
     @Autowired
@@ -47,10 +48,16 @@ public class PortCallUpdaterTest extends AbstractTestBase {
     private PortCallUpdater portCallUpdater;
     private MockRestServiceServer server;
 
-    @Before
+    @BeforeEach
     public void before() {
         portCallClient = Mockito.spy(new PortCallClient("portCallUrl/", jax2bRestTemplate));
-        portCallUpdater = new PortCallUpdater(portCallRepository, updatedTimestampRepository, portCallClient, 42, 42);
+        portCallUpdater = new PortCallUpdater(
+            portCallRepository,
+            updatedTimestampRepository,
+            portCallClient,
+            Optional.of(new NoOpPortcallEstimateUpdater()),
+            42,
+            42);
         server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
 
@@ -123,4 +130,10 @@ public class PortCallUpdaterTest extends AbstractTestBase {
 
         verify(portCallClient, times(2)).getList(any(), any());
     }
+
+    private static class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
+        @Override
+        public void updatePortcallEstimate(PortCallNotification pcn) {}
+    }
+
 }

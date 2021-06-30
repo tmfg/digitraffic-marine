@@ -1,14 +1,14 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
 import static java.time.ZoneOffset.UTC;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
@@ -27,49 +27,49 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
     public void noArguments() {
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.hasSize(2));
+        assertThat(vesselDetails, Matchers.hasSize(2));
     }
 
     @Test
     public void vesselNameFound() {
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, VESSEL_NAME, null, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.hasSize(1));
+        assertThat(vesselDetails, Matchers.hasSize(1));
     }
 
     @Test
     public void vesselNameNotFound() {
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, NOT_FOUND, null, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.empty());
+        assertThat(vesselDetails, Matchers.empty());
     }
 
     @Test
     public void vesselMMSIFound() {
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, MMSI, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.hasSize(1));
+        assertThat(vesselDetails, Matchers.hasSize(1));
     }
 
     @Test
     public void vesselMMSINotFound() {
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, -1, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.empty());
+        assertThat(vesselDetails, Matchers.empty());
     }
 
     @Test
     public void vesselIMOFound() {
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, IMO, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.hasSize(1));
+        assertThat(vesselDetails, Matchers.hasSize(1));
     }
 
     @Test
     public void vesselIMONotFound() {
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, -1, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.empty());
+        assertThat(vesselDetails, Matchers.empty());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
         final ZonedDateTime from = LocalDateTime.of(2019, 1, 1, 0, 0, 0).atZone(UTC);
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(from, null, null, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.hasSize(2));
+        assertThat(vesselDetails, Matchers.hasSize(2));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
         final ZonedDateTime from = LocalDateTime.of(2019, 1, 5, 0, 0, 0).atZone(UTC);
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(from, null, null, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.hasSize(1));
+        assertThat(vesselDetails, Matchers.hasSize(1));
     }
 
     @Test
@@ -93,7 +93,35 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
         final ZonedDateTime from = LocalDateTime.of(2019, 1, 11, 0, 0, 0).atZone(UTC);
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(from, null, null, null, null, null);
 
-        Assert.assertThat(vesselDetails, Matchers.empty());
+        assertThat(vesselDetails, Matchers.empty());
+    }
+
+    @Test
+    public void vesseltypeFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, null, 30);
+
+        assertThat(vesselDetails, Matchers.hasSize(1));
+    }
+
+    @Test
+    public void vessetypeNotFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, null, -1);
+
+        assertThat(vesselDetails, Matchers.empty());
+    }
+
+    @Test
+    public void nationalityFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, List.of("FI"), null);
+
+        assertThat(vesselDetails, Matchers.hasSize(1));
+    }
+
+    @Test
+    public void nationalityNotFound() {
+        final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(null, null, null, null, List.of("XZ"), null);
+
+        assertThat(vesselDetails, Matchers.empty());
     }
 
 }

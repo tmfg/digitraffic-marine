@@ -10,7 +10,6 @@ import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
 
 public final class TypeUtil {
     private TypeUtil() {
-
     }
 
     public static Integer getInteger(final BigInteger bi) {
@@ -21,7 +20,7 @@ public final class TypeUtil {
         return bd == null ? null : bd.doubleValue();
     }
 
-    public static String getEnum(final Enum e) {
+    public static String getEnum(final Enum<?> e) {
         return e == null ? null : e.name();
     }
 

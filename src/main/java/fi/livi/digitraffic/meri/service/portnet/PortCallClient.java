@@ -49,7 +49,11 @@ public class PortCallClient {
     }
 
     private static void logInfo(final PortCallList portCallList) {
-        log.info("Number of received notificationsCount={}", portCallList.getPortCallNotification().size());
+        if(portCallList == null) {
+            log.info("Empty portcalllist received! notificationsCount=0");
+        } else {
+            log.info("Number of received notificationsCount={}", portCallList.getPortCallNotification().size());
+        }
     }
 
     private String buildUrl(final ZonedDateTime lastUpdated, final ZonedDateTime now) {

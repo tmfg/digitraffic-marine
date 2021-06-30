@@ -69,3 +69,4 @@ buildNumber.properties
 **/*no_commit*
 **/*.tmp
 /pom.xml.versionsBackup
+**/sse_export_test_6.json.gz

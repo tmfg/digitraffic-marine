@@ -25,7 +25,7 @@ public final class TimeUtil {
      * time is!  There will be no zone information in the returned string.
      */
     public static String dateToString(final String datePrefix, final ZonedDateTime timestamp) {
-        return String.format("%s=%s", datePrefix, timestamp.format(DATE_FORMATTER));
+        return timestamp == null ? "" : String.format("%s=%s", datePrefix, timestamp.format(DATE_FORMATTER));
     }
 
     /**

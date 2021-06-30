@@ -41,12 +41,14 @@ public class MarineApplicationConfiguration {
     public DataSource dataSource(final @Value("${marine.datasource.url}") String url,
                                  final @Value("${marine.datasource.username}") String username,
                                  final @Value("${marine.datasource.password}") String password,
+                                 final @Value("${marine.datasource.driver}") String driver,
                                  final @Value("${marine.datasource.hikari.maximum-pool-size:20}") Integer maximumPoolSize) {
 
         final HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
+        config.setDriverClassName(driver);
 
         config.setMaximumPoolSize(maximumPoolSize);
 

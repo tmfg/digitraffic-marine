@@ -6,6 +6,8 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fi.livi.digitraffic.meri.util.StringUtil;
+
 public final class SoapFaultLogger {
     public static final void logException(final Logger logger, final Exception e) {
         if(e instanceof SoapFaultClientException) {
@@ -16,10 +18,6 @@ public final class SoapFaultLogger {
     }
 
     private static String getSoapFaultAsString(final SoapFaultClientException e) {
-        try {
-            return new ObjectMapper().writeValueAsString(e.getSoapFault());
-        } catch (final JsonProcessingException e1) {
-            return e1.getMessage();
-        }
+        return StringUtil.toJsonStringLogSafe(e.getSoapFault());
     }
 }

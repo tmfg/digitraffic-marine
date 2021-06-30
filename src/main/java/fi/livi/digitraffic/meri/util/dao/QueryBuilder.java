@@ -1,19 +1,9 @@
 package fi.livi.digitraffic.meri.util.dao;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * T - what is returned
@@ -24,7 +14,7 @@ public class QueryBuilder<T, K> {
     private final CriteriaBuilder cb;
     private final CriteriaQuery<T> query;
     private final Root<K> root;
-    private final List<Predicate> predicateList = new ArrayList();
+    private final List<Predicate> predicateList = new ArrayList<>();
 
     public QueryBuilder(final EntityManager entityManager, final Class<T> tclazz, final Class<K> kclazz) {
         this.entityManager = entityManager;
@@ -41,7 +31,7 @@ public class QueryBuilder<T, K> {
         predicateList.add(equalPredicate(e, o));
     }
 
-    public Predicate equalPredicate(final Expression e, final Object o) {
+    public Predicate equalPredicate(final Expression<?> e, final Object o) {
         return cb.equal(e, o);
     }
 

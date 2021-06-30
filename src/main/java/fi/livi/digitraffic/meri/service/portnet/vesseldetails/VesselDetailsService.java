@@ -32,7 +32,7 @@ public class VesselDetailsService {
     @Transactional(readOnly = true)
     public List<VesselDetails> findVesselDetails(final ZonedDateTime from, final String vesselName, final Integer mmsi,
             final Integer imo, final List<String> nationalities, final Integer vesselTypeCode) {
-        final QueryBuilder qb = new QueryBuilder<>(entityManager, VesselDetails.class, VesselDetails.class);
+        final QueryBuilder<VesselDetails, VesselDetails> qb = new QueryBuilder<>(entityManager, VesselDetails.class, VesselDetails.class);
 
         if (from != null) {
             qb.gte(qb.get("updateTimestamp"), Date.from(from.toInstant()));
