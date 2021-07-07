@@ -20,6 +20,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -47,13 +48,15 @@ public class RestTemplateConfiguration {
     }
 
     @Bean("authenticatedRestTemplate")
-    @ConditionalOnExpression("'${config.test}' == 'true'")
+//    @ConditionalOnExpression("'${config.test}' == 'true'")
+    @ConditionalOnExpression("!T(org.springframework.util.StringUtils).isEmpty('${portnet.privatekey}')")
     public RestTemplate restTemplateForTest() {
         return jax2bRestTemplate();
     }
 
     @Bean
-    @ConditionalOnExpression("'${config.test}' != 'true'")
+//    @ConditionalOnExpression("'${config.test}' != 'true'")
+    @ConditionalOnProperty(name = "portnet.privatekey")
     public RestTemplate authenticatedRestTemplate(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException, InvalidKeySpecException {
         final KeyStore clientKeyStore = openKeyStore(portnetPrivateKeyBase64);
 
