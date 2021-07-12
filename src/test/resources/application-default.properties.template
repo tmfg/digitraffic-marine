@@ -13,13 +13,11 @@ marine.datasource.url=jdbc:postgresql://localhost:54321/marine?reWriteBatchedIns
 marine.datasource.username=marine
 marine.datasource.password=marine
 
-dt.pooki.url = http://localhost:18080/pooki_www/services/rest.ashx
+dt.pooki.url = http://localhost:18080/test/nautical-warnings
 dt.portnet.portcall.url = https://localhost:4433/portnet/rest/PortCall/List/
 dt.portnet.vesselDetails.url = https://localhost:4433/portnet/rest/VesselDetails/List/
 
 winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/services/IBNet_Baltice_Service/
-
-metadata.csv.baseUrl = https://raw.githubusercontent.com/tmfg/metadata/master/csv/
 
 # Job schedules in ms or by cron in UTC
 # Cron: http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html
@@ -47,6 +45,17 @@ dt.job.SsnLocationUpdateJob.schedule =            0 0 0/12 * * ?
 portCallUpdateJob.maxTimeFrameToFetch = 360000
 portCallUpdateJob.overlapTimeFrame = 2000
 
+# AIS-tcp gateway
+ais.connector.address =
+ais.connector.port =
+ais.connector.user =
+ais.connector.password =
+
+ais.connector.socket.timeout = 10000
+ais.connector.socket.keep-alive-timeout = 30000
+ais.connector.socket.keep-alive-initial-delay = 20000
+ais.connector.socket.keep-alive-fixed-delay = 10000
+
 # Allowed mmsis cache time in millis
 cache.allowedMmsis = #{60*1000}
 
@@ -59,15 +68,15 @@ spring.main.web-application-type=servlet
 # Domain for the app ie. https://digitraffic.fi
 dt.domain.url=http://localhost:9001
 
-# if set to false websocket reading(vessel locations and metadata) are not activated.  Should be true for daemon processes.
-ais.websocketRead.enabled=false
+# if set to false tcp reading(ais vessel locations and metadata) are not activated. Should be true for daemon processes.
+ais.reader.enabled=false
 
 # if set to false no messages are sent to mqtt.  Should be true for daemon process
 ais.mqtt.enabled=false
+sse.mqtt.enabled=false
 
 # Is metadata updates on. Should be true only for daemon processes.
 quartz.enabled=false
-
 
 # Logging
 logging.level.fi.livi.digitraffic.meri=INFO

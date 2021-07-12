@@ -1,5 +1,6 @@
 # Copy this file as application-localhost.properties and configure
 # datasource etc. according to your environment.
+spring.main.banner-mode=off
 
 # http-server port
 server.port = 9001
@@ -12,12 +13,11 @@ marine.datasource.url=jdbc:postgresql://localhost:54321/marine?reWriteBatchedIns
 marine.datasource.username=marine
 marine.datasource.password=marine
 
+dt.pooki.url = http://localhost:18080/test/nautical-warnings
 dt.portnet.portcall.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/satamakaynti/v1.0
 dt.portnet.vesselDetails.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/alustiedot/v1.0
 
 winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/services/IBNet_Baltice_Service/
-
-metadata.csv.baseUrl = https://raw.githubusercontent.com/tmfg/metadata/master/csv/
 
 # Job schedules in ms or by cron in UTC
 # Cron: http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html
