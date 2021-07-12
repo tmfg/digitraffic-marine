@@ -18,11 +18,14 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
@@ -30,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfiguration {
+    private static final Logger log = LoggerFactory.getLogger(RestTemplateConfiguration.class);
     private static final char[] EMPTY_PASSWORD = "".toCharArray();
 
     @Bean
@@ -49,15 +53,17 @@ public class RestTemplateConfiguration {
 
     @Bean("authenticatedRestTemplate")
 //    @ConditionalOnExpression("'${config.test}' == 'true'")
-    @ConditionalOnExpression("!T(org.springframework.util.StringUtils).isEmpty('${portnet.privatekey}')")
+    @Profile("!aws")
     public RestTemplate restTemplateForTest() {
+        log.info("Init RestTemplate without authentication");
         return jax2bRestTemplate();
     }
 
     @Bean
-//    @ConditionalOnExpression("'${config.test}' != 'true'")
-    @ConditionalOnProperty(name = "portnet.privatekey")
+//    @ConditionalOnExpression("'${config.test}' != 'true' && ")
+    @Profile("aws")
     public RestTemplate authenticatedRestTemplate(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException, InvalidKeySpecException {
+        log.info("Init RestTemplate with authentication");
         final KeyStore clientKeyStore = openKeyStore(portnetPrivateKeyBase64);
 
         final SSLContextBuilder sslContextBuilder = new SSLContextBuilder()
