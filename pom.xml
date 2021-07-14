@@ -519,6 +519,7 @@
 
                 <configuration>
                     <sourceDirectory>${basedir}/src/main/resources/schema/json/</sourceDirectory>
+                    <sourceType>json</sourceType>
                     <targetPackage>fi.livi.digitraffic.meri.external</targetPackage>
                     <outputDirectory>${project.build.directory}/generated-sources/json</outputDirectory>
                     <dateTimeType>java.time.ZonedDateTime</dateTimeType>
