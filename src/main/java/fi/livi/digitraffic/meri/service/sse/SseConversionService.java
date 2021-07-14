@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.service.sse;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
 
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +15,7 @@ import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.sse.SseFeature;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.model.sse.SseProperties;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
 public class SseConversionService {
@@ -32,7 +32,7 @@ public class SseConversionService {
 
         final List<SseFeature> features = sseReports.stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
 
-        return new SseFeatureCollection(updated, features);
+        return new SseFeatureCollection(TimeUtil.toInstant(updated), features);
     }
 
     public SseFeature createSseFeatureFrom(final SseReport sseReport) {
@@ -42,7 +42,7 @@ public class SseConversionService {
             sseReport.getSiteNumber(),
             sseReport.getSiteName(),
             sseReport.getSiteType(),
-            sseReport.getLastUpdate().withZoneSameInstant(ZoneOffset.UTC),
+            sseReport.getLastUpdate(),
             floating ? sseReport.getSeaState() : null,
             floating ? sseReport.getTrend() : null,
             floating ? sseReport.getWindWaveDir() : null,

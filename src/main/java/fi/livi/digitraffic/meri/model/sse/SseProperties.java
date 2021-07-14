@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.model.sse;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -25,7 +25,7 @@ public class SseProperties extends Properties {
 
     /* SSE fields */
     @ApiModelProperty(value = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
-    private ZonedDateTime lastUpdate;
+    private Instant lastUpdate;
 
     @ApiModelProperty(value = "Sea state. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE)
     private SeaState seaState;
@@ -58,7 +58,7 @@ public class SseProperties extends Properties {
                               "show higher readings than the actual air temperature")
     private Integer temperature;
 
-    public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
+    public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final Instant lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
                          final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature) {
         this.siteNumber = siteNumber;
         this.siteName = siteName;
@@ -85,7 +85,7 @@ public class SseProperties extends Properties {
         return siteType;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public Instant getLastUpdate() {
         return lastUpdate;
     }
 

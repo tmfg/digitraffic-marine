@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dao.sse;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.QueryHint;
@@ -24,13 +24,13 @@ public interface SseReportRepository extends PagingAndSortingRepository<SseRepor
     List<SseReport> findByLatestIsTrueOrderBySiteNumber();
 
     @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
-    List<SseReport> findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(final ZonedDateTime from,
-                                                                             final ZonedDateTime to,
+    List<SseReport> findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(final Instant from,
+                                                                             final Instant to,
                                                                              final Pageable page);
 
     @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
-    List<SseReport> findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(final ZonedDateTime from,
-                                                                                          final ZonedDateTime to,
+    List<SseReport> findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(final Instant from,
+                                                                                          final Instant to,
                                                                                           final Integer siteNumber,
                                                                                           final Pageable page);
 

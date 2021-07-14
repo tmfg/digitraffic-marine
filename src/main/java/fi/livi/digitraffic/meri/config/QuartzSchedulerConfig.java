@@ -38,7 +38,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import fi.livi.digitraffic.meri.quartz.AutowiringSpringBeanJobFactory;
 import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
-import fi.livi.digitraffic.meri.quartz.SseReportUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
 import fi.livi.digitraffic.meri.quartz.WinterNavigationDirwayUpdateJob;
@@ -160,11 +159,6 @@ public class QuartzSchedulerConfig {
     }
 
     @Bean
-    public JobDetailFactoryBean sseReportUpdateJobUpdateJobDetail() {
-        return createJobDetail(SseReportUpdateJob.class);
-    }
-
-    @Bean
     public FactoryBean<? extends Trigger> portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail) {
         return createTrigger(portCallUpdateJobDetail);
     }
@@ -197,11 +191,6 @@ public class QuartzSchedulerConfig {
     @Bean
     public FactoryBean<? extends Trigger> winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail) {
         return createTrigger(winterNavigationDirwayUpdateJobDetail);
-    }
-
-    @Bean
-    public FactoryBean<? extends Trigger> sseReportUpdateJobUpdateJobDetailTrigger(final JobDetail sseReportUpdateJobUpdateJobDetail) {
-        return createTrigger(sseReportUpdateJobUpdateJobDetail);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {

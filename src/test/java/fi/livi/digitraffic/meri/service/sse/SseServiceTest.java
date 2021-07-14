@@ -3,12 +3,14 @@ package fi.livi.digitraffic.meri.service.sse;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.Confidence;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.LightStatus;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.Trend;
-import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -18,19 +20,20 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.test.annotation.Rollback;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.external.tlsc.sse.TlscSseReports;
+import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
+import fi.livi.digitraffic.meri.domain.sse.SseReport;
 import fi.livi.digitraffic.meri.model.sse.SseFeature;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
+import fi.livi.digitraffic.meri.model.sse.SseProperties;
 import fi.livi.digitraffic.meri.model.sse.SseProperties.SeaState;
 
 @Transactional
@@ -41,27 +44,19 @@ public class SseServiceTest extends AbstractTestBase {
     @SpyBean
     private SseService sseService;
 
-    @SpyBean
-    private SseUpdateService sseUpdateService;
-
-    @SpyBean
-    @Qualifier("conversionService")
-    private ConversionService conversionService;
-
-    @MockBean // Lazy in service and not initialized in tests
-    private SseDataListener sseDataListener;
-
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private SseReportRepository sseReportRepository;
 
     @Transactional
     @Rollback
     @Test
-    public void handleUnhandledSseReports() throws IOException {
+    public void findLatestFromMultipleVersions() throws IOException {
 
         // First update
         saveNewTlscReports("example-sse-report1.json");
-        final int handledFirst = sseUpdateService.handleUnhandledSseReports(10);
         SseFeatureCollection latestFirst = sseService.findLatest();
         log.info("{}", latestFirst);
 
@@ -70,11 +65,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Second update
         saveNewTlscReports("example-sse-report2.json");
-        final int handledSecond = sseUpdateService.handleUnhandledSseReports(10);
         SseFeatureCollection latestSecond = sseService.findLatest();
-
-        assertEquals(3, handledFirst);
-        assertEquals(2, handledSecond);
 
         assertEquals(2, latestSecond.getFeatures().size());
         assertEquals("Hattukari", latestSecond.getFeatures().get(0).getProperties().getSiteName());
@@ -128,7 +119,6 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include all of site 20243 and none of site 20169
         final List<SseFeature> latest =
@@ -146,7 +136,6 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should throw IllegalArgumentException as site 12345 not exists
         assertThrows(IllegalArgumentException.class, () -> {
@@ -161,11 +150,10 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include all of site 20243 and none of site 20169
         final List<SseFeature> history =
-            sseService.findHistory(ZonedDateTime.parse(SITE_20243_1), ZonedDateTime.parse(SITE_20243_3)).getFeatures();
+            sseService.findHistory(ZonedDateTime.parse(SITE_20243_1).toInstant(), ZonedDateTime.parse(SITE_20243_3).toInstant()).getFeatures();
 
         assertEquals(3, history.size());
         assertSiteNumber(20243, 0, history);
@@ -183,11 +171,11 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include second of site 20169 and first of 20243
         final List<SseFeature> history =
-            sseService.findHistory(ZonedDateTime.parse(SITE_20169_1).plusSeconds(1), ZonedDateTime.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
+            sseService.findHistory(ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
+                                   ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
         assertEquals(2, history.size());
 
         assertSiteNumber(20169, 0, history);
@@ -203,11 +191,11 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Time span should include all but query filtered with site 20243 -> all of it's
         final List<SseFeature> history =
-            sseService.findHistory(20243, ZonedDateTime.parse(SITE_20169_1), ZonedDateTime.parse(SITE_20243_3)).getFeatures();
+            sseService.findHistory(20243, ZonedDateTime.parse(SITE_20169_1).toInstant(),
+                                   ZonedDateTime.parse(SITE_20243_3).toInstant()).getFeatures();
 
         assertEquals(3, history.size());
         assertSiteNumber(20243, 0, history);
@@ -225,11 +213,11 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include second of site 20169
         final List<SseFeature> history =
-            sseService.findHistory(20169, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1), ZonedDateTime.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
+            sseService.findHistory(20169, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
+                                   ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
         assertEquals(1, history.size());
 
         assertSiteNumber(20169, 0, history);
@@ -243,7 +231,6 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should include second of site 20169
         final List<SseFeature> history =
@@ -263,11 +250,11 @@ public class SseServiceTest extends AbstractTestBase {
         // Some data
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
-        sseUpdateService.handleUnhandledSseReports(500);
 
         // Should throw IllegalArgumentException as site 12345 not exists
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            sseService.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1), ZonedDateTime.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
+            sseService.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
+                                   ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
         });
     }
     private void assertSiteNumber(final int expected, final int historyIndex, final List<SseFeature> history) {
@@ -275,12 +262,55 @@ public class SseServiceTest extends AbstractTestBase {
     }
 
     private void assertLastUpdate(final String expectedTime, int historyIndex, final List<SseFeature> history) {
-        assertEquals(ZonedDateTime.parse(expectedTime).toInstant().atZone(UTC), history.get(historyIndex).getProperties().getLastUpdate());
+        assertEquals(ZonedDateTime.parse(expectedTime).toInstant(), history.get(historyIndex).getProperties().getLastUpdate());
     }
 
     private void saveNewTlscReports(final String file) throws IOException {
         final String postJson = readFile("sse/" + file);
-        final TlscSseReports postObject = objectMapper.readerFor(TlscSseReports.class).readValue(postJson);
-        sseService.saveTlscSseReports(postObject);
+        final ObjectReader genericJsonReader = objectMapper.reader();
+        final JsonNode json = genericJsonReader.readTree(postJson);
+        List<SseReport> sseReports = convertToSseReports(json);
+        sseReports.forEach(sseReport -> {
+            sseReportRepository.markSiteLatestReportAsNotLatest(sseReport.getSiteNumber());
+            sseReportRepository.save(sseReport);
+        });
+    }
+
+    private List<SseReport> convertToSseReports(final JsonNode json) {
+        List<SseReport> sseReports = new ArrayList<>();
+        final JsonNode sseReportsNode = json.get("SSE_Reports");
+        for(int i = 0; i < sseReportsNode.size(); i++) {
+            final JsonNode reportNode = sseReportsNode.get(i);
+            sseReports.add(convertToSseReport(reportNode));
+        }
+        return sseReports;
+    }
+
+    private static SseReport convertToSseReport(final JsonNode r) {
+        final JsonNode site = r.get("Site");
+        final JsonNode sseFields = r.get("SSE_Fields");
+        final JsonNode extraFields = r.get("Extra_Fields");
+
+        return new SseReport(
+            Instant.now(),
+            true,
+            site.get("SiteNumber").asInt(),
+            site.get("SiteName").asText(),
+            SseProperties.SiteType.fromValue(site.get("SiteType").asText()),
+            ZonedDateTime.parse(sseFields.get("Last_Update").asText()).toInstant(),
+            SseProperties.SeaState.fromValue(sseFields.get("SeaState").asText()),
+            SseProperties.Trend.fromValue(sseFields.get("Trend").asText()),
+            sseFields.get("WindWaveDir").asInt(),
+            SseProperties.Confidence.fromValue(sseFields.get("Confidence").asText()),
+            asBigDecimal(extraFields.get("Heel_Angle").asDouble()),
+            SseProperties.LightStatus.fromValue(extraFields.get("Light_Status").asText()),
+            extraFields.get("Temperature").asInt(),
+            asBigDecimal(extraFields.get("Coord_Longitude").asDouble()),
+            asBigDecimal(extraFields.get("Coord_Latitude").asDouble())
+        );
+    }
+
+    private static BigDecimal asBigDecimal(final Double value) {
+        return value != null ? BigDecimal.valueOf(value) : null;
     }
 }
