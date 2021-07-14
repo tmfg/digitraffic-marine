@@ -512,27 +512,26 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.jsonschema2pojo</groupId>
-                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-                <version>1.1.1</version>
+<!--            <plugin>-->
+<!--                <groupId>org.jsonschema2pojo</groupId>-->
+<!--                <artifactId>jsonschema2pojo-maven-plugin</artifactId>-->
+<!--                <version>1.1.1</version>-->
 
-                <configuration>
-                    <sourceDirectory>${basedir}/src/main/resources/schema/json/</sourceDirectory>
-                    <sourceType>json</sourceType>
-                    <targetPackage>fi.livi.digitraffic.meri.external</targetPackage>
-                    <outputDirectory>${project.build.directory}/generated-sources/json</outputDirectory>
-                    <dateTimeType>java.time.ZonedDateTime</dateTimeType>
-                    <dateType>java.time.LocalDate</dateType>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--                <configuration>-->
+<!--                    <sourceDirectory>${basedir}/src/main/resources/schema/json/</sourceDirectory>-->
+<!--                    <targetPackage>fi.livi.digitraffic.meri.external</targetPackage>-->
+<!--                    <outputDirectory>${project.build.directory}/generated-sources/json</outputDirectory>-->
+<!--                    <dateTimeType>java.time.ZonedDateTime</dateTimeType>-->
+<!--                    <dateType>java.time.LocalDate</dateType>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
