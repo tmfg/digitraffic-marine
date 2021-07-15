@@ -1,7 +1,10 @@
 package fi.livi.digitraffic.meri.service.sse;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.controller.CachedLocker;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -10,10 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.controller.CachedLocker;
 
 @ExtendWith(MockitoExtension.class)
 public class SseLoggingListenerTest extends AbstractTestBase {

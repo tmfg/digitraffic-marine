@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.util;
 
+import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -44,5 +46,9 @@ public final class TimeUtil {
 
     public static ZonedDateTime toZonedDateTime(final Instant from) {
         return from != null ? from.atZone(ZoneOffset.UTC) : null;
+    }
+
+    public static Instant withoutMillis(final Instant from) {
+        return from != null ? from.with(MILLI_OF_SECOND, 0) : null;
     }
 }

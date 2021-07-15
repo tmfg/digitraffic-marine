@@ -16,6 +16,7 @@ import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
 import fi.livi.digitraffic.meri.domain.sse.SseReport;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @ConditionalOnWebApplication
 @Service
@@ -78,6 +79,13 @@ public class SseService {
 
         checkMaxResultSize(history);
 
+        return sseConversionService.createSseFeatureCollectionFrom(history);
+    }
+
+    @Transactional(readOnly = true)
+    public SseFeatureCollection findCreatedAfter(final Instant after) throws BadRequestException {
+        final List<SseReport> history =
+            sseReportRepository.findByCreatedAfterOrderByCreatedAsc(TimeUtil.withoutMillis(after));
         return sseConversionService.createSseFeatureCollectionFrom(history);
     }
 

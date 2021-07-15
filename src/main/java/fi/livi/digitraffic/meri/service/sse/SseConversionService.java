@@ -49,7 +49,8 @@ public class SseConversionService {
             sseReport.getConfidence(),
             floating ? sseReport.getHeelAngle() : null,
             sseReport.getLightStatus(),
-            sseReport.getTemperature());
+            sseReport.getTemperature(),
+            sseReport.getCreated());
 
         final Point point = createPointFrom(sseReport);
 

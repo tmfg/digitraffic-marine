@@ -36,6 +36,9 @@ public interface SseReportRepository extends PagingAndSortingRepository<SseRepor
 
     SseReport findByLatestIsTrueAndSiteNumber(int siteNumber);
 
+    @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
+    List<SseReport> findByCreatedAfterOrderByCreatedAsc(final Instant created);
+
     @Modifying
     @Query(value = "UPDATE SSE_REPORT SET latest = FALSE WHERE site_number = :siteNumber AND latest = TRUE", nativeQuery = true)
     int markSiteLatestReportAsNotLatest(@Param(value = "siteNumber") final Integer siteNumber);

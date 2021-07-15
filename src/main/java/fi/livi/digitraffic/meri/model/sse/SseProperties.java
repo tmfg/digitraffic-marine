@@ -3,9 +3,14 @@ package fi.livi.digitraffic.meri.model.sse;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -58,8 +63,11 @@ public class SseProperties extends Properties {
                               "show higher readings than the actual air temperature")
     private Integer temperature;
 
+    @JsonIgnore // For internal use
+    private Instant created;
+
     public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final Instant lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
-                         final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature) {
+                         final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature, final Instant created) {
         this.siteNumber = siteNumber;
         this.siteName = siteName;
         this.siteType = siteType;
@@ -71,6 +79,7 @@ public class SseProperties extends Properties {
         this.heelAngle = heelAngle;
         this.lightStatus = lightStatus;
         this.temperature = temperature;
+        this.created = TimeUtil.withoutMillis(created);
     }
 
     public int getSiteNumber() {
@@ -115,6 +124,10 @@ public class SseProperties extends Properties {
 
     public Integer getTemperature() {
         return temperature;
+    }
+
+    public Instant getCreated() {
+        return created;
     }
 
     /*
@@ -237,5 +250,29 @@ public class SseProperties extends Properties {
             }
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final SseProperties that = (SseProperties) o;
+
+        return new EqualsBuilder().append(siteNumber, that.siteNumber).append(siteName, that.siteName)
+            .append(siteType, that.siteType).append(lastUpdate, that.lastUpdate).append(seaState, that.seaState).append(trend, that.trend)
+            .append(windWaveDir, that.windWaveDir).append(confidence, that.confidence).append(heelAngle, that.heelAngle)
+            .append(lightStatus, that.lightStatus).append(temperature, that.temperature).append(created, that.created).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(siteNumber).append(siteName).append(siteType).append(lastUpdate).append(seaState).append(trend)
+            .append(windWaveDir).append(confidence).append(heelAngle).append(lightStatus).append(temperature).append(created).toHashCode();
     }
 }

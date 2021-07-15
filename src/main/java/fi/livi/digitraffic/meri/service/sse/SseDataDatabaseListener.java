@@ -3,17 +3,17 @@ package fi.livi.digitraffic.meri.service.sse;
 import java.time.Instant;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import fi.livi.digitraffic.meri.controller.CachedLocker;
-import fi.livi.digitraffic.meri.model.sse.SseFeature;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Component
-@ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("sse.mqtt.enabled")
 public class SseDataDatabaseListener {
 
@@ -29,16 +29,16 @@ public class SseDataDatabaseListener {
         this.sseMqttSender = sseMqttSender;
         this.sseCachedLocker = sseCachedLocker;
         this.sseService = sseService;
-        this.latest = Instant.now();
+        this.latest = TimeUtil.withoutMillis(Instant.now());
     }
 
     @Scheduled(fixedRate = 1000)
-    public void receiveMessage() {
+    public void checkNewSseReports() {
         if (!sseCachedLocker.hasLock()) {
             return;
         }
 
-        final SseFeatureCollection history = sseService.findHistory(latest, null);
+        final SseFeatureCollection history = sseService.findCreatedAfter(latest);
         if (history.getFeatures().isEmpty()) {
             return;
         }
@@ -49,7 +49,7 @@ public class SseDataDatabaseListener {
         });
 
         final Optional<Instant> max =
-            history.getFeatures().stream().map(s -> s.getProperties().getLastUpdate()).max(Instant::compareTo);
+            history.getFeatures().stream().map(s -> s.getProperties().getCreated()).max(Instant::compareTo);
         if (max.isPresent()) {
             latest = max.get();
         }
