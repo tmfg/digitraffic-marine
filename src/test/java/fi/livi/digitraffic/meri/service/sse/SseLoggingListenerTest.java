@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -29,6 +30,7 @@ public class SseLoggingListenerTest extends AbstractTestBase {
 
     @Test
     public void test() {
+        Mockito.reset(sseMqttSender);
         final SseLoggingListener sseLoggingListener = new SseLoggingListener(cachedLocker, sseMqttSender);
         // log two messages, one successful and one failed
         sseLoggingListener.addSendSseMessagesStatistics(true);
@@ -40,8 +42,8 @@ public class SseLoggingListenerTest extends AbstractTestBase {
 
         verify(sseMqttSender).sendStatusMessage(statusCaptor.capture());
         // assert two messages, one failed
-        assertEquals(statusCaptor.getValue().messages, 2);
-        assertEquals(statusCaptor.getValue().failures, 1);
+        assertEquals(2, statusCaptor.getValue().messages);
+        assertEquals(1, statusCaptor.getValue().failures);
         assertNotNull(statusCaptor.getValue().getTimeStamp());
     }
 }
