@@ -5,12 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -30,8 +31,9 @@ public class SseLoggingListenerTest extends AbstractTestBase {
 
     @Test
     public void test() {
-        Mockito.reset(sseMqttSender);
         final SseLoggingListener sseLoggingListener = new SseLoggingListener(cachedLocker, sseMqttSender);
+        // Clear static status of the class as other tests modify it
+        ((ConcurrentHashMap)ReflectionTestUtils.getField(sseLoggingListener,"sentStatisticsMap")).clear();
         // log two messages, one successful and one failed
         sseLoggingListener.addSendSseMessagesStatistics(true);
         sseLoggingListener.addSendStatusMessagesStatistics(false);
