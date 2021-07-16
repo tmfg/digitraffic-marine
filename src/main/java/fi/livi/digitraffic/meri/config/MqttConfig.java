@@ -19,7 +19,7 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
-@ConditionalOnExpression("'${ais.mqtt.enabled}' == 'true' or '${sse.mqtt.enabled}' == 'true'")
+@ConditionalOnExpression("('${ais.mqtt.enabled}' == 'true' OR '${sse.mqtt.enabled}' == 'true') AND '${config.test}' != 'true'")
 @Configuration
 @EnableIntegration
 @IntegrationComponentScan

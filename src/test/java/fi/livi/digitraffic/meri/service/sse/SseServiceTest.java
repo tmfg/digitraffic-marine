@@ -16,6 +16,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,11 @@ public class SseServiceTest extends AbstractTestBase {
     @Autowired
     private SseReportRepository sseReportRepository;
 
-    @Transactional
-    @Rollback
+    @BeforeEach
+    public void cleanup() {
+        sseReportRepository.deleteAll();
+    }
+
     @Test
     public void findLatestFromMultipleVersions() throws IOException {
 
@@ -112,8 +116,6 @@ public class SseServiceTest extends AbstractTestBase {
     private static String SITE_20243_2 = "2019-04-11T12:33:20+03:00";
     private static String SITE_20243_3 = "2019-04-11T13:00:00+03:00";
 
-    @Transactional
-    @Rollback
     @Test
     public void findLatestBySiteNumber() throws IOException {
         // Some data
@@ -129,8 +131,6 @@ public class SseServiceTest extends AbstractTestBase {
         assertLastUpdate(SITE_20243_3, 0, latest);
     }
 
-    @Transactional
-    @Rollback
     @Test
     public void findLatestByNotExistingSiteNumber() throws IOException {
         // Some data
@@ -143,8 +143,6 @@ public class SseServiceTest extends AbstractTestBase {
         });
     }
 
-    @Transactional
-    @Rollback
     @Test
     public void findHistoryByTimeIncludingStartAndEnd() throws IOException {
         // Some data
@@ -164,8 +162,6 @@ public class SseServiceTest extends AbstractTestBase {
         assertLastUpdate(SITE_20243_3, 2, history);
     }
 
-    @Transactional
-    @Rollback
     @Test
     public void findHistoryByTimeSecondTimeDiff() throws IOException {
         // Some data
@@ -184,8 +180,6 @@ public class SseServiceTest extends AbstractTestBase {
         assertLastUpdate(SITE_20243_1, 1, history);
     }
 
-    @Transactional
-    @Rollback
     @Test
     public void findHistoryByTimeAndSiteNumberIncludingStartAndEnd() throws IOException {
         // Some data
@@ -206,8 +200,6 @@ public class SseServiceTest extends AbstractTestBase {
         assertLastUpdate(SITE_20243_3, 2, history);
     }
 
-    @Transactional
-    @Rollback
     @Test
     public void findHistoryByTimeAndSiteNumberSecondTimeDiff() throws IOException {
         // Some data
@@ -224,8 +216,6 @@ public class SseServiceTest extends AbstractTestBase {
         assertLastUpdate(SITE_20169_2, 0, history);
     }
 
-    @Transactional
-    @Rollback
     @Test
     public void findHistoryBySiteNumber() throws IOException {
         // Some data
@@ -243,8 +233,6 @@ public class SseServiceTest extends AbstractTestBase {
         assertLastUpdate(SITE_20169_2, 1, history);
     }
 
-    @Transactional
-    @Rollback
     @Test
     public void findHistoryByTimeAndNotExistingSiteNumber() throws IOException {
         // Some data
