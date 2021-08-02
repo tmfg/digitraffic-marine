@@ -39,7 +39,8 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
         createFormatter("d.M.yyyy H:m:s"),
         createFormatter("d.M.yyyy H:m"),
-        createFormatter("d.M.yyyy")
+        createFormatter("d.M.yyyy"),
+        createFormatter("yyyy-MM-dd HH:mm:ss")
     );
 
     @Override

@@ -17,6 +17,10 @@ public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBas
         assertEquals(expected, actual);
     }
 
+    private void testParsingFails(final String input) {
+        testParsing(null, input);
+    }
+
     @Test
     public void simple() {
         testParsing("2016-01-01T01:01:01+02:00[Europe/Helsinki]", "1.1.2016 1:1:1");
@@ -48,7 +52,17 @@ public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBas
     }
 
     @Test
+    public void withHyphen() {
+        testParsing("2016-01-01T01:01:01+02:00[Europe/Helsinki]", "2016-01-01 01:01:01");
+    }
+
+    @Test
+    public void withHyphenWithoutTime() {
+        testParsingFails("2016-01-01");
+    }
+
+    @Test
     public void rubbish() {
-        testParsing(null, "rubbish");
+        testParsingFails("rubbish");
     }
 }
