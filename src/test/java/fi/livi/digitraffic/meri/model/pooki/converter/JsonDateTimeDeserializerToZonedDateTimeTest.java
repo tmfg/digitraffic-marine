@@ -58,7 +58,7 @@ public class JsonDateTimeDeserializerToZonedDateTimeTest extends AbstractTestBas
 
     @Test
     public void withHyphenWithoutTime() {
-        testParsingFails("2016-01-01");
+        testParsing("2016-01-01T00:00:00+02:00[Europe/Helsinki]", "2016-01-01");
     }
 
     @Test

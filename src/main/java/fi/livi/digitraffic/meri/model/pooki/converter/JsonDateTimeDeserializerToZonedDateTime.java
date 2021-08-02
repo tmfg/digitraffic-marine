@@ -40,7 +40,8 @@ public class JsonDateTimeDeserializerToZonedDateTime extends JsonDeserializer<Zo
         createFormatter("d.M.yyyy H:m:s"),
         createFormatter("d.M.yyyy H:m"),
         createFormatter("d.M.yyyy"),
-        createFormatter("yyyy-MM-dd HH:mm:ss")
+        createFormatter("yyyy-MM-dd HH:mm:ss"),
+        createFormatter("yyyy-MM-dd")
     );
 
     @Override
