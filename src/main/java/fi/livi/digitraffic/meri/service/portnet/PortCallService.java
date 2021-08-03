@@ -34,6 +34,8 @@ public class PortCallService {
 
     private final EntityManager entityManager;
 
+    private static final String PORTCALL_PORTCALL_TIMESTAMP = "portCallTimestamp";
+
     public PortCallService(final UpdatedTimestampRepository updatedTimestampRepository,
                            final PortCallRepository portCallRepository,
                            final EntityManager entityManager) {
@@ -221,14 +223,14 @@ public class PortCallService {
         final QueryBuilder<Long, PortCall> qb = new QueryBuilder<>(entityManager, Long.class, PortCall.class);
 
         if (modifiedDate != null) {
-            qb.gte(qb.<Timestamp>get("portCallTimestamp"), modifiedDate);
-            qb.lt(qb.<Timestamp>get("portCallTimestamp"), DateUtils.addDays(modifiedDate, 1));
+            qb.gte(qb.<Timestamp>get(PORTCALL_PORTCALL_TIMESTAMP), modifiedDate);
+            qb.lt(qb.<Timestamp>get(PORTCALL_PORTCALL_TIMESTAMP), DateUtils.addDays(modifiedDate, 1));
         }
         if (modifiedFrom != null) {
-            qb.gte(qb.get("portCallTimestamp"), Date.from(modifiedFrom.toInstant()));
+            qb.gte(qb.get(PORTCALL_PORTCALL_TIMESTAMP), Date.from(modifiedFrom.toInstant()));
         }
         if (modifiedTo != null) {
-            qb.lt(qb.get("portCallTimestamp"), Date.from(modifiedTo.toInstant()));
+            qb.lt(qb.get(PORTCALL_PORTCALL_TIMESTAMP), Date.from(modifiedTo.toInstant()));
         }
         if (locode != null) {
             qb.equals("portToVisit", locode);

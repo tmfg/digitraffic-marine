@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.File;
@@ -17,15 +18,17 @@ import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-                properties = { "quartz.enabled=false", "cache.allowedMmsis = 200" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = { "config.test=true", "logging.level.org.springframework.test.context.transaction.TransactionContext=WARN",
+                                   "quartz.enabled=false", "cache.allowedMmsis = 200", "dt.scheduled.annotation.enabled=false",
+                                   "marine.datasource.hikari.maximum-pool-size=2" })
 @AutoConfigureMockMvc
 public abstract class AbstractTestBase {
 
     @Autowired
     protected ResourceLoader resourceLoader;
 
-    @Autowired
+    @Autowired(required = false) // not for daemon tests
     protected MockMvc mockMvc;
 
     protected String readFile(final String filename) throws IOException {

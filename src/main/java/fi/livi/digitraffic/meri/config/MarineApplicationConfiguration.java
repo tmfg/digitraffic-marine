@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.config;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,14 +42,16 @@ public class MarineApplicationConfiguration {
     public DataSource dataSource(final @Value("${marine.datasource.url}") String url,
                                  final @Value("${marine.datasource.username}") String username,
                                  final @Value("${marine.datasource.password}") String password,
-                                 final @Value("${marine.datasource.driver}") String driver,
+                                 final @Value("${marine.datasource.driver:}") String driver, // default empty if property not found
                                  final @Value("${marine.datasource.hikari.maximum-pool-size:20}") Integer maximumPoolSize) {
 
         final HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
-        config.setDriverClassName(driver);
+        if (StringUtils.isNotBlank(driver)) {
+            config.setDriverClassName(driver);
+        }
 
         config.setMaximumPoolSize(maximumPoolSize);
 

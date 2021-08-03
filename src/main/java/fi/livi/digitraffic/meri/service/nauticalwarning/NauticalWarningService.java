@@ -5,12 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.model.pooki.PookiFeatureCollection;
 
+@ConditionalOnWebApplication
 @Service
 public class NauticalWarningService {
     private static final Logger log = LoggerFactory.getLogger(NauticalWarningService.class);

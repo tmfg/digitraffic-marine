@@ -21,6 +21,10 @@ public class LocationParserTest {
     public void parseInvalidLatitudeFails() {
         assertLatitudeFails("(N)44° 52' 0'';foobar");
         assertLatitudeFails("(Z)100° 45' 95''");
+        assertLatitudeFails("(S)44x 52' 0''");
+        assertLatitudeFails("(S)44° 52x 0''");
+        assertLatitudeFails("(S)44° 52' 0'x");
+        assertLatitudeFails("(S)44° 5x' 0''");
     }
 
     @Test
