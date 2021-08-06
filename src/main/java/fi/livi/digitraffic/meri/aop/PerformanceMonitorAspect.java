@@ -32,7 +32,7 @@ public class PerformanceMonitorAspect {
      * logging execution start and end.
      */
     @Around("@annotation(org.springframework.scheduling.annotation.Scheduled)")
-    public Object monitorScheduledJob(ProceedingJoinPoint pjp) throws Throwable {
+    public Object monitorScheduledJob(final ProceedingJoinPoint pjp) throws Throwable {
 
         final MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
 
@@ -42,7 +42,7 @@ public class PerformanceMonitorAspect {
 
         try {
             return pjp.proceed();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logScheduledJob.info("jobType=Scheduled jobName={} end jobEndStatus={} jobTimeMs={} lastError: {} {}",
                 jobName, "FAIL", stopWatch.getTime(), e.getClass(), e.getMessage());
             throw e;
