@@ -20,24 +20,20 @@
  */
 package fi.livi.digitraffic.meri.controller.reader;
 
+import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
+import fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import fi.livi.digitraffic.meri.controller.AisMessageConverter;
-import fi.livi.digitraffic.meri.controller.MessageConverter;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParser;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty("ais.reader.enabled")
@@ -48,7 +44,7 @@ public class AisMessageReader implements Runnable {
     private String cachedFirstPart = null;
     private AtomicBoolean readingEnabled = new AtomicBoolean(false);
 
-    private final LinkedBlockingQueue<AisRadioMsg> queue = new LinkedBlockingQueue<AisRadioMsg>(4096);
+    private final LinkedBlockingQueue<AisRadioMsg> queue = new LinkedBlockingQueue<>(4096);
 
     public AisMessageReader(final AisTcpSocketClient aisTcpSocketClient) {
         this.aisTcpSocketClient = aisTcpSocketClient;
@@ -63,8 +59,9 @@ public class AisMessageReader implements Runnable {
     public AisRadioMsg getAisRadioMessage() {
         try {
             return queue.take();
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             log.error("Failed to get ais message from queue", e);
+            Thread.currentThread().interrupt();
         }
 
         return null;
@@ -132,7 +129,7 @@ public class AisMessageReader implements Runnable {
                     try {
                         // Do small sleep and continue
                         TimeUnit.SECONDS.sleep(5);
-                    } catch (InterruptedException e) {
+                    } catch (final InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                 }
@@ -143,7 +140,7 @@ public class AisMessageReader implements Runnable {
                 try {
                     // Do small sleep and continue
                     TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
@@ -153,7 +150,7 @@ public class AisMessageReader implements Runnable {
     }
 
     private AisRadioMsg parse(final String messagePart) {
-        AisRadioMsg msg;
+        final AisRadioMsg msg;
 
         if (cachedFirstPart == null) {
             msg = AisRadioMsgParser.parseToAisRadioMessage(messagePart);
