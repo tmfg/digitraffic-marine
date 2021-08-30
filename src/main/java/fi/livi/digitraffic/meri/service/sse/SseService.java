@@ -66,7 +66,9 @@ public class SseService {
             count++;
             log.info("method=saveTlscSseReports report=\n{}", StringUtil.toJsonString(saved));
         }
-        updatedTimestampRepository.setUpdated(SSE_DATA, ZonedDateTime.now(), SseService.class.getSimpleName());
+        if (count > 0) {
+            updatedTimestampRepository.setUpdated(SSE_DATA, ZonedDateTime.now(), SseService.class.getSimpleName());
+        }
         log.info("method=saveTlscSseReports countSaved={}", count);
         return count;
     }
