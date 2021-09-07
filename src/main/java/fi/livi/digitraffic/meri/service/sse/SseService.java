@@ -18,7 +18,6 @@ import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.util.TimeUtil;
 
-@ConditionalOnWebApplication
 @Service
 public class SseService {
 
