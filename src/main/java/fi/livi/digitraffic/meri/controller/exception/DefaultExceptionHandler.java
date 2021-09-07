@@ -1,8 +1,6 @@
 package fi.livi.digitraffic.meri.controller.exception;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -190,8 +188,8 @@ public class DefaultExceptionHandler {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        final ErrorResponse response = new ErrorResponse(Timestamp.from(ZonedDateTime.now().toInstant()), httpStatus.value(), httpStatus.getReasonPhrase(), errorMsg,
-            request.getRequest().getRequestURI());
+        final ErrorResponse response = new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase(),
+            errorMsg, request.getRequest().getRequestURI());
 
         return new ResponseEntity<>(response, headers, httpStatus);
     }

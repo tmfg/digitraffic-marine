@@ -1,20 +1,17 @@
 package fi.livi.digitraffic.meri.model.pooki;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE;
-
-import java.time.ZonedDateTime;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import fi.livi.digitraffic.meri.model.geojson.Properties;
 import fi.livi.digitraffic.meri.model.pooki.converter.JsonDateTimeDeserializerToZonedDateTime;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.time.ZonedDateTime;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE;
 
 @JsonPropertyOrder({"type", "id"})
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -150,7 +147,7 @@ public class PookiProperties extends Properties {
                            @JsonProperty(value = "VALITTUKOHDE_TOOLTIP", access = JsonProperty.Access.WRITE_ONLY) final String tooltip,
                            @JsonProperty(value = "VIRTUAALINENTURVALAITE", access = JsonProperty.Access.WRITE_ONLY) final Boolean virtualNavaids,
                            @JsonProperty(value = "NAVTEX", access = JsonProperty.Access.WRITE_ONLY) final Boolean navtex,
-                           @JsonProperty(value = "asdfTALLENNUSPAIVA", access = JsonProperty.Access.WRITE_ONLY) @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime recordingTime,
+                           @JsonProperty(value = "TALLENNUSPAIVA", access = JsonProperty.Access.WRITE_ONLY) @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime recordingTime,
                            @JsonProperty(value = "TURVALAITE_TXT", access = JsonProperty.Access.WRITE_ONLY) final String navaidInfo,
                            @JsonProperty(value = "VAYLAALUE_TXT", access = JsonProperty.Access.WRITE_ONLY) final String fairwayInfo,
                            @JsonProperty(value = "NAVIGOINTILINJA_TXT", access = JsonProperty.Access.WRITE_ONLY) final String navigationLineInfo,
