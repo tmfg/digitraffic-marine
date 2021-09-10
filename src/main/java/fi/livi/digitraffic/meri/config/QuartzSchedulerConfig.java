@@ -105,14 +105,13 @@ public class QuartzSchedulerConfig {
         final SchedulerFactoryBean factory = new SchedulerFactoryBean() {
             @Override
             protected Scheduler createScheduler(final SchedulerFactory schedulerFactory, final String schedulerName) throws SchedulerException {
-                Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
+                final Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
 
                 final List<Trigger> triggers = triggerBeans.orElse(Collections.emptyList());
                 final Set<JobKey> jobKeys = triggers.stream().map(Trigger::getJobKey).collect(Collectors.toSet());
 
-                // Remove jobs from the db that are not in current apps job list
-                for (String groupName : scheduler.getJobGroupNames()) {
-                    for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+                for (final String groupName : scheduler.getJobGroupNames()) {
+                    for (final JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
                         if (!jobKeys.contains(jobKey)) {
                             try {
                                 log.warn("method=createScheduler Deleting job={}", jobKey);
@@ -134,7 +133,7 @@ public class QuartzSchedulerConfig {
         factory.setQuartzProperties(quartzProperties());
 
         if (triggerBeans.isPresent()) {
-            for (Trigger triggerBean : triggerBeans.get()) {
+            for (final Trigger triggerBean : triggerBeans.get()) {
                 if (triggerBean instanceof  SimpleTriggerImpl) {
                     log.info("Schedule trigger={} repeatInterval={}", triggerBean.getJobKey(), ((SimpleTriggerImpl)triggerBean).getRepeatInterval());
                 } else {
