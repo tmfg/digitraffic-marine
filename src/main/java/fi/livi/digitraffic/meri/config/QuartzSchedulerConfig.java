@@ -1,17 +1,25 @@
 package fi.livi.digitraffic.meri.config;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
 import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
@@ -94,7 +102,30 @@ public class QuartzSchedulerConfig {
                                                      final JobFactory jobFactory,
                                                      final Optional<List<Trigger>> triggerBeans) throws IOException {
 
-        final SchedulerFactoryBean factory = new SchedulerFactoryBean();
+        final SchedulerFactoryBean factory = new SchedulerFactoryBean() {
+            @Override
+            protected Scheduler createScheduler(final SchedulerFactory schedulerFactory, final String schedulerName) throws SchedulerException {
+                Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
+
+                final List<Trigger> triggers = triggerBeans.orElse(Collections.emptyList());
+                final Set<JobKey> jobKeys = triggers.stream().map(Trigger::getJobKey).collect(Collectors.toSet());
+
+                // Remove jobs from the db that are not in current apps job list
+                for (String groupName : scheduler.getJobGroupNames()) {
+                    for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+                        if (!jobKeys.contains(jobKey)) {
+                            try {
+                                log.warn("method=createScheduler Deleting job={}", jobKey);
+                                scheduler.deleteJob(jobKey);
+                            } catch (SchedulerException e) {
+                                log.error("method=createScheduler Deleting job=" + jobKey + " failed", e);
+                            }
+                        }
+                    }
+                }
+                return scheduler;
+            }
+        };
         // this allows to update triggers in DB when updating settings in config file:
         factory.setOverwriteExistingJobs(true);
         factory.setDataSource(quartzDataSource);
