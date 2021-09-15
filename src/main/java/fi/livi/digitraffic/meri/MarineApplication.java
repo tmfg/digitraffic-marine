@@ -50,7 +50,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     WebClientAutoConfiguration.class,
     WebFluxAutoConfiguration.class,
     WebFluxMetricsAutoConfiguration.class})
-@EnableScheduling
 @EnableTransactionManagement
 public class MarineApplication {
     public static void main(final String[] args) {

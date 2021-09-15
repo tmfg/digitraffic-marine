@@ -1,9 +1,7 @@
 package fi.livi.digitraffic.meri.service.sse;
 
-import static java.time.ZoneOffset.UTC;
-
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +12,10 @@ import fi.livi.digitraffic.meri.model.sse.SseProperties;
 
 public class SseFeatureCollectionBuilder {
 
-    private final ZonedDateTime lastUpdate;
+    private final Instant lastUpdate;
 
-    public SseFeatureCollectionBuilder(final ZonedDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate.toInstant().atZone(UTC);
+    public SseFeatureCollectionBuilder(final Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public SseFeatureCollection build() {
@@ -27,7 +25,7 @@ public class SseFeatureCollectionBuilder {
             features.add(new SseFeature(new Point(20.0, 60.0),
                          new SseProperties(i, "siteName" + i, SseProperties.SiteType.FLOATING, lastUpdate, SseProperties.SeaState.STORM,
                                            SseProperties.Trend.ASCENDING, 90, SseProperties.Confidence.GOOD, BigDecimal.valueOf(45.0),
-                                           SseProperties.LightStatus.ON, 10), i) {
+                                           SseProperties.LightStatus.ON, 10, Instant.now()), i) {
             });
         }
 

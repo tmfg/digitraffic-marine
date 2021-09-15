@@ -1,17 +1,25 @@
 package fi.livi.digitraffic.meri.config;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
 import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
@@ -38,7 +46,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import fi.livi.digitraffic.meri.quartz.AutowiringSpringBeanJobFactory;
 import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
-import fi.livi.digitraffic.meri.quartz.SseReportUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
 import fi.livi.digitraffic.meri.quartz.WinterNavigationDirwayUpdateJob;
@@ -95,7 +102,29 @@ public class QuartzSchedulerConfig {
                                                      final JobFactory jobFactory,
                                                      final Optional<List<Trigger>> triggerBeans) throws IOException {
 
-        final SchedulerFactoryBean factory = new SchedulerFactoryBean();
+        final SchedulerFactoryBean factory = new SchedulerFactoryBean() {
+            @Override
+            protected Scheduler createScheduler(final SchedulerFactory schedulerFactory, final String schedulerName) throws SchedulerException {
+                final Scheduler scheduler = super.createScheduler(schedulerFactory, schedulerName);
+
+                final List<Trigger> triggers = triggerBeans.orElse(Collections.emptyList());
+                final Set<JobKey> jobKeys = triggers.stream().map(Trigger::getJobKey).collect(Collectors.toSet());
+
+                for (final String groupName : scheduler.getJobGroupNames()) {
+                    for (final JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+                        if (!jobKeys.contains(jobKey)) {
+                            try {
+                                log.warn("method=createScheduler Deleting job={}", jobKey);
+                                scheduler.deleteJob(jobKey);
+                            } catch (SchedulerException e) {
+                                log.error("method=createScheduler Deleting job=" + jobKey + " failed", e);
+                            }
+                        }
+                    }
+                }
+                return scheduler;
+            }
+        };
         // this allows to update triggers in DB when updating settings in config file:
         factory.setOverwriteExistingJobs(true);
         factory.setDataSource(quartzDataSource);
@@ -104,7 +133,7 @@ public class QuartzSchedulerConfig {
         factory.setQuartzProperties(quartzProperties());
 
         if (triggerBeans.isPresent()) {
-            for (Trigger triggerBean : triggerBeans.get()) {
+            for (final Trigger triggerBean : triggerBeans.get()) {
                 if (triggerBean instanceof  SimpleTriggerImpl) {
                     log.info("Schedule trigger={} repeatInterval={}", triggerBean.getJobKey(), ((SimpleTriggerImpl)triggerBean).getRepeatInterval());
                 } else {
@@ -160,11 +189,6 @@ public class QuartzSchedulerConfig {
     }
 
     @Bean
-    public JobDetailFactoryBean sseReportUpdateJobUpdateJobDetail() {
-        return createJobDetail(SseReportUpdateJob.class);
-    }
-
-    @Bean
     public FactoryBean<? extends Trigger> portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail) {
         return createTrigger(portCallUpdateJobDetail);
     }
@@ -197,11 +221,6 @@ public class QuartzSchedulerConfig {
     @Bean
     public FactoryBean<? extends Trigger> winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail) {
         return createTrigger(winterNavigationDirwayUpdateJobDetail);
-    }
-
-    @Bean
-    public FactoryBean<? extends Trigger> sseReportUpdateJobUpdateJobDetailTrigger(final JobDetail sseReportUpdateJobUpdateJobDetail) {
-        return createTrigger(sseReportUpdateJobUpdateJobDetail);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class jobClass) {

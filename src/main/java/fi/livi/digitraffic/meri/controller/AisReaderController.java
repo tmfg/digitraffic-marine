@@ -38,7 +38,6 @@ public class AisReaderController implements Runnable {
 
     private final AisMessageReader reader;
     private final VesselMetadataService vesselMetadataService;
-    private final VesselLoggingListener vesselLoggingListener;
 
     @Autowired
     public AisReaderController(final AisMessageReader reader,
@@ -50,7 +49,6 @@ public class AisReaderController implements Runnable {
                                final VesselLoggingListener vesselLoggingListener) {
 
         this.reader = reader;
-        this.vesselLoggingListener = vesselLoggingListener;
         this.vesselMetadataService = vesselMetadataService;
 
         aisLocationListeners = Arrays.asList(
@@ -82,7 +80,7 @@ public class AisReaderController implements Runnable {
     public void run() {
         while (running.get()) {
             try {
-                AisRadioMsg msg = reader.getAisRadioMessage();
+                final AisRadioMsg msg = reader.getAisRadioMessage();
 
                 if (msg != null) {
                     updateMmsiAllowedStatus(msg);
@@ -93,13 +91,13 @@ public class AisReaderController implements Runnable {
                         aisMetadataListeners.forEach(aisMessageListener -> aisMessageListener.receiveMessage(msg));
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.error("Failed to prosess AIS-message", e);
             }
         }
     }
 
-    private void updateMmsiAllowedStatus(AisRadioMsg msg) {
+    private void updateMmsiAllowedStatus(final AisRadioMsg msg) {
         if (msg.getMessageType() == AisRadioMsg.MessageType.POSITION) {
             msg.setMmsiAllowed(vesselMetadataService.findAllowedMmsis().contains(msg.getUserId()));
         } else {

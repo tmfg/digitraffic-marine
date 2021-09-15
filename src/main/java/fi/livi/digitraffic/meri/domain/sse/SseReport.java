@@ -1,8 +1,7 @@
 package fi.livi.digitraffic.meri.domain.sse;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -26,7 +25,7 @@ public class SseReport {
                       parameters = @Parameter(name = "sequence_name", value = "SEQ_SSE_REPORT"))
     @GeneratedValue(generator = "SEQ_SSE_REPORT")
     private Long sseReportId;
-    private ZonedDateTime created;
+    private Instant created;
     private Boolean latest;
 
     // SSE data
@@ -34,7 +33,7 @@ public class SseReport {
     private String siteName;
     @Enumerated(EnumType.STRING)
     private SiteType siteType;
-    private ZonedDateTime lastUpdate;
+    private Instant lastUpdate;
     @Enumerated(EnumType.STRING)
     private SseProperties.SeaState seaState;
     @Enumerated(EnumType.STRING)
@@ -52,7 +51,7 @@ public class SseReport {
 
     public SseReport() {}
 
-    public SseReport(final ZonedDateTime created, final Boolean latest, final Integer siteNumber, final String siteName, final SiteType siteType, final ZonedDateTime lastUpdate,
+    public SseReport(final Instant created, final Boolean latest, final Integer siteNumber, final String siteName, final SiteType siteType, final Instant lastUpdate,
                      final SseProperties.SeaState seaState, final SseProperties.Trend trend, final Integer windWaveDir,
                      final SseProperties.Confidence confidence, final BigDecimal heelAngle, final SseProperties.LightStatus lightStatus, final Integer temperature,
                      final BigDecimal longitude, final BigDecimal latitude) {
@@ -82,11 +81,11 @@ public class SseReport {
         this.sseReportId = sseReportId;
     }
 
-    public ZonedDateTime getCreated() {
+    public Instant getCreated() {
         return created;
     }
 
-    public void setCreated(ZonedDateTime created) {
+    public void setCreated(final Instant created) {
         this.created = created;
     }
 
@@ -122,11 +121,11 @@ public class SseReport {
         this.siteType = siteType;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public Instant getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(Instant lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

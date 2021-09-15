@@ -1,6 +1,10 @@
 package fi.livi.digitraffic.meri.util;
 
+import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
+
+import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -34,5 +38,17 @@ public final class TimeUtil {
      */
     public static String timeToString(final String timePrefix, final ZonedDateTime timestamp) {
         return timestamp == null ? "" : String.format("%s=%s", timePrefix, timestamp.format(TIME_FORMATTER));
+    }
+
+    public static Instant toInstant(final ZonedDateTime from) {
+        return from != null ? from.toInstant() : null;
+    }
+
+    public static ZonedDateTime toZonedDateTime(final Instant from) {
+        return from != null ? from.atZone(ZoneOffset.UTC) : null;
+    }
+
+    public static Instant withoutMillis(final Instant from) {
+        return from != null ? from.with(MILLI_OF_SECOND, 0) : null;
     }
 }

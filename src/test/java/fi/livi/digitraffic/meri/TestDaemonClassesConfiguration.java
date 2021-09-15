@@ -10,11 +10,9 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
-import fi.livi.digitraffic.meri.model.sse.SseFeature;
 import fi.livi.digitraffic.meri.service.portnet.location.LocationCoordinateReader;
 import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationClient;
 import fi.livi.digitraffic.meri.service.portnet.location.SsnLocationUpdater;
-import fi.livi.digitraffic.meri.service.sse.SseDataListener;
 
 /**
  * Definitons for beans to satisfy test dependencies
@@ -32,16 +30,6 @@ public class TestDaemonClassesConfiguration {
     public SsnLocationUpdater ssnLocastionUpdater(final SsnLocationRepository ssnLocationRepository, final SsnLocationClient
         ssnLocationClient, final LocationCoordinateReader locationCoordinateReader) {
         return new SsnLocationUpdater(ssnLocationRepository, ssnLocationClient, locationCoordinateReader);
-    }
-
-    @Bean
-    public SseDataListener sseDataListener() {
-        return new SseDataListener(null, null) {
-            @Override
-            public void receiveMessage(SseFeature message) {
-                log.info("SseDataListener.receiveMessage: {}", message);
-            }
-        };
     }
 
     @Bean

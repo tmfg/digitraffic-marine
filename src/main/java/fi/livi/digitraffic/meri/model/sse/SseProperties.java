@@ -1,11 +1,16 @@
 package fi.livi.digitraffic.meri.model.sse;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
+import fi.livi.digitraffic.meri.util.TimeUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -25,7 +30,7 @@ public class SseProperties extends Properties {
 
     /* SSE fields */
     @ApiModelProperty(value = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
-    private ZonedDateTime lastUpdate;
+    private Instant lastUpdate;
 
     @ApiModelProperty(value = "Sea state. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE)
     private SeaState seaState;
@@ -58,8 +63,11 @@ public class SseProperties extends Properties {
                               "show higher readings than the actual air temperature")
     private Integer temperature;
 
-    public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final ZonedDateTime lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
-                         final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature) {
+    @JsonIgnore // For internal use
+    private Instant created;
+
+    public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final Instant lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
+                         final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature, final Instant created) {
         this.siteNumber = siteNumber;
         this.siteName = siteName;
         this.siteType = siteType;
@@ -71,6 +79,7 @@ public class SseProperties extends Properties {
         this.heelAngle = heelAngle;
         this.lightStatus = lightStatus;
         this.temperature = temperature;
+        this.created = TimeUtil.withoutMillis(created);
     }
 
     public int getSiteNumber() {
@@ -85,7 +94,7 @@ public class SseProperties extends Properties {
         return siteType;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public Instant getLastUpdate() {
         return lastUpdate;
     }
 
@@ -115,6 +124,10 @@ public class SseProperties extends Properties {
 
     public Integer getTemperature() {
         return temperature;
+    }
+
+    public Instant getCreated() {
+        return created;
     }
 
     /*
@@ -237,5 +250,29 @@ public class SseProperties extends Properties {
             }
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final SseProperties that = (SseProperties) o;
+
+        return new EqualsBuilder().append(siteNumber, that.siteNumber).append(siteName, that.siteName)
+            .append(siteType, that.siteType).append(lastUpdate, that.lastUpdate).append(seaState, that.seaState).append(trend, that.trend)
+            .append(windWaveDir, that.windWaveDir).append(confidence, that.confidence).append(heelAngle, that.heelAngle)
+            .append(lightStatus, that.lightStatus).append(temperature, that.temperature).append(created, that.created).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(siteNumber).append(siteName).append(siteType).append(lastUpdate).append(seaState).append(trend)
+            .append(windWaveDir).append(confidence).append(heelAngle).append(lightStatus).append(temperature).append(created).toHashCode();
     }
 }

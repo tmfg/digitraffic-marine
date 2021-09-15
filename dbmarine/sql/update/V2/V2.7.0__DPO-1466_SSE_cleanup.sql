@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS sse_tlsc_report;
