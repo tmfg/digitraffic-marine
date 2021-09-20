@@ -1,0 +1,1 @@
+alter table area rename column description_se to description_sv;
