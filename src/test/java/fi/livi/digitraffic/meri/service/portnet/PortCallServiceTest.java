@@ -39,6 +39,7 @@ public class PortCallServiceTest extends AbstractTestBase {
     private static final String PORT_LOCODE = "TEST";
     private static final String VESSEL_NAME = "TESTNAME";
     private static final String VESSEL_NATIONALITY = "DT";
+    private static final String VESSEL_MASTER_NAME = "MASTER";
     private static final int VESSEL_MMSI = 12345;
     private static final int VESSEL_IMO = 2345;
     private static final int VESSEL_TYPECODE = 5;
@@ -394,6 +395,17 @@ public class PortCallServiceTest extends AbstractTestBase {
             .assertException(portCallService);
     }
 
+    @Test
+    public void master_is_empty() {
+        newPortCall(null, null, null, null);
+
+        final PortCallsJson json = new PortcallQueryBuilder()
+            .imo(VESSEL_IMO)
+            .assertCount(portCallService, 1);
+
+        assertEquals("", json.portCalls.get(0).getShipMasterArrival());
+    }
+
     private void newPortCall(
         final Timestamp eta,
         final Timestamp etd,
@@ -431,6 +443,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         pc.setImoLloyds(VESSEL_IMO);
         pc.setNationality(VESSEL_NATIONALITY);
         pc.setVesselTypeCode(VESSEL_TYPECODE);
+        pc.setShipMasterArrival(VESSEL_MASTER_NAME);
 
         portCallRepository.save(pc);
     }
