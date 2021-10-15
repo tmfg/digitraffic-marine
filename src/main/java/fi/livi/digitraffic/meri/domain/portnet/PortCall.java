@@ -16,6 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @DynamicUpdate
 public class PortCall {
+    public static final String EMPTY = "";
     @Id
     private Long portCallId;
 

@@ -47,22 +47,22 @@ public interface PortCallJson {
     Integer getDischarge();
 
     @ApiModelProperty(value = "Ship master at the moment of arrival(deprecated)")
-    @Value("${default.value:}")
+    @Value("#{target.EMPTY}")
     String getShipMasterArrival();
     @ApiModelProperty(value = "Ship master at the moment of departure(deprecated)")
-    @Value("${default.value:}")
+    @Value("#{target.EMPTY}")
     String getShipMasterDeparture();
     @ApiModelProperty(value = "Ship management name at moment of arrival(deprecated)")
-    @Value("${default.value:}")
+    @Value("#{target.EMPTY}")
     String getManagementNameArrival();
     @ApiModelProperty(value = "Ship management name at moment of departure(deprecated)")
-    @Value("${default.value:}")
+    @Value("#{target.EMPTY}")
     String getManagementNameDeparture();
     @ApiModelProperty(value = "Forwarder at moment of arrival(deprecated)")
-    @Value("${default.value:}")
+    @Value("#{target.EMPTY}")
     String getForwarderNameArrival();
     @ApiModelProperty(value = "Forwarder at moment of departure(deprecated)")
-    @Value("${default.value:}")
+    @Value("#{target.EMPTY}")
     String getForwarderNameDeparture();
 
     @ApiModelProperty(value = "Notes concerning arrival")
