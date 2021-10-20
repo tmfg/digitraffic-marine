@@ -200,10 +200,10 @@ public class PortCallUpdater {
 
         //pc.setShipMasterArrival(det.getShipMasterArrival());
         //pc.setShipMasterDeparture(det.getShipMasterDeparture());
-        //pc.setManagementNameArrival(det.getManagementNameArrival());
-        //pc.setManagementNameDeparture(det.getManagementNameDeparture());
-        //pc.setForwarderNameArrival(det.getForwarderNameArrival());
-        //pc.setForwarderNameDeparture(det.getForwarderNameDeparture());
+        pc.setManagementNameArrival(det.getManagementNameArrival());
+        pc.setManagementNameDeparture(det.getManagementNameDeparture());
+        pc.setForwarderNameArrival(det.getForwarderNameArrival());
+        pc.setForwarderNameDeparture(det.getForwarderNameDeparture());
         pc.setFreeTextArrival(det.getFreeTextArrival());
         pc.setFreeTextDeparture(det.getFreeTextDeparture());
 

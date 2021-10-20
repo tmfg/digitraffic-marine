@@ -52,17 +52,13 @@ public interface PortCallJson {
     @ApiModelProperty(value = "Ship master at the moment of departure(deprecated)")
     @Value("#{target.EMPTY}")
     String getShipMasterDeparture();
-    @ApiModelProperty(value = "Ship management name at moment of arrival(deprecated)")
-    @Value("#{target.EMPTY}")
+    @ApiModelProperty(value = "Ship management name at moment of arrival")
     String getManagementNameArrival();
-    @ApiModelProperty(value = "Ship management name at moment of departure(deprecated)")
-    @Value("#{target.EMPTY}")
+    @ApiModelProperty(value = "Ship management name at moment of departure")
     String getManagementNameDeparture();
-    @ApiModelProperty(value = "Forwarder at moment of arrival(deprecated)")
-    @Value("#{target.EMPTY}")
+    @ApiModelProperty(value = "Forwarder at moment of arrival")
     String getForwarderNameArrival();
-    @ApiModelProperty(value = "Forwarder at moment of departure(deprecated)")
-    @Value("#{target.EMPTY}")
+    @ApiModelProperty(value = "Forwarder at moment of departure")
     String getForwarderNameDeparture();
 
     @ApiModelProperty(value = "Notes concerning arrival")
