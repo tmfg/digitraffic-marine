@@ -1,0 +1,1 @@
+alter table aton_type rename column name_se to name_sv;

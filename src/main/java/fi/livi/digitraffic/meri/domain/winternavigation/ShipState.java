@@ -10,8 +10,10 @@ import javax.persistence.OneToOne;
 
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionAccuracy;
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionSource;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
+@DynamicUpdate
 public class ShipState {
 
     @Id

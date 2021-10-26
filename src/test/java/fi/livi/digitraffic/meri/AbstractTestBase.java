@@ -1,31 +1,35 @@
 package fi.livi.digitraffic.meri;
 
+import static java.time.ZoneOffset.UTC;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.util.Random;
+
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
-
-import static java.time.ZoneOffset.UTC;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-                properties = { "quartz.enabled=false", "cache.allowedMmsis = 200" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = { "config.test=true", "logging.level.org.springframework.test.context.transaction.TransactionContext=WARN",
+                                   "quartz.enabled=false", "cache.allowedMmsis = 200", "dt.scheduled.annotation.enabled=false",
+                                   "marine.datasource.hikari.maximum-pool-size=2" })
 @AutoConfigureMockMvc
 public abstract class AbstractTestBase {
 
     @Autowired
     protected ResourceLoader resourceLoader;
 
-    @Autowired
+    @Autowired(required = false) // not for daemon tests
     protected MockMvc mockMvc;
 
     protected String readFile(final String filename) throws IOException {
@@ -59,5 +63,10 @@ public abstract class AbstractTestBase {
         final ZonedDateTime tz2 = t2.withZoneSameInstant(UTC);
 
         assertEquals(tz1, tz2);
+    }
+
+    protected static int getRandom(final int minInclusive, final int maxExclusive) {
+        final Random random = new Random();
+        return random.ints(minInclusive, maxExclusive).findFirst().orElseThrow();
     }
 }

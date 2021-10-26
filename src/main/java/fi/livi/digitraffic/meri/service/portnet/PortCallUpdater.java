@@ -198,8 +198,8 @@ public class PortCallUpdater {
         pc.setNotLoading(det.isNotLoading());
         pc.setDischarge(det.getDischarge() == null ? null : det.getDischarge().intValue());
 
-        pc.setShipMasterArrival(det.getShipMasterArrival());
-        pc.setShipMasterDeparture(det.getShipMasterDeparture());
+        //pc.setShipMasterArrival(det.getShipMasterArrival());
+        //pc.setShipMasterDeparture(det.getShipMasterDeparture());
         pc.setManagementNameArrival(det.getManagementNameArrival());
         pc.setManagementNameDeparture(det.getManagementNameDeparture());
         pc.setForwarderNameArrival(det.getForwarderNameArrival());

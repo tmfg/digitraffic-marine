@@ -5,7 +5,9 @@ import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
+import fi.livi.digitraffic.meri.service.BadRequestException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +17,7 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -36,6 +39,7 @@ public class PortCallServiceTest extends AbstractTestBase {
     private static final String PORT_LOCODE = "TEST";
     private static final String VESSEL_NAME = "TESTNAME";
     private static final String VESSEL_NATIONALITY = "DT";
+    private static final String VESSEL_MASTER_NAME = "MASTER";
     private static final int VESSEL_MMSI = 12345;
     private static final int VESSEL_IMO = 2345;
     private static final int VESSEL_TYPECODE = 5;
@@ -383,6 +387,25 @@ public class PortCallServiceTest extends AbstractTestBase {
             .assertCount(portCallService, 0);
     }
 
+    @Test
+    public void over1000() {
+        IntStream.range(0, 1001).forEach(i -> newPortCall(null, null, null, null));
+
+        new PortcallQueryBuilder()
+            .assertException(portCallService);
+    }
+
+    @Test
+    public void master_is_empty() {
+        newPortCall(null, null, null, null);
+
+        final PortCallsJson json = new PortcallQueryBuilder()
+            .imo(VESSEL_IMO)
+            .assertCount(portCallService, 1);
+
+        assertEquals("", json.portCalls.get(0).getShipMasterArrival());
+    }
+
     private void newPortCall(
         final Timestamp eta,
         final Timestamp etd,
@@ -420,6 +443,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         pc.setImoLloyds(VESSEL_IMO);
         pc.setNationality(VESSEL_NATIONALITY);
         pc.setVesselTypeCode(VESSEL_TYPECODE);
+        pc.setShipMasterArrival(VESSEL_MASTER_NAME);
 
         portCallRepository.save(pc);
     }
@@ -450,6 +474,10 @@ public class PortCallServiceTest extends AbstractTestBase {
             assertEquals(assertedCount, json.portCalls.size());
 
             return json;
+        }
+
+        public void assertException(final PortCallService portCallService) {
+            Assertions.assertThrows(BadRequestException.class, () -> assertCount(portCallService, 0));
         }
 
         public PortcallQueryBuilder atdFrom(final ZonedDateTime atdFrom) {
