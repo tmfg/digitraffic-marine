@@ -70,3 +70,4 @@ buildNumber.properties
 **/*.tmp
 /pom.xml.versionsBackup
 **/sse_export_test_6.json.gz
+/build
