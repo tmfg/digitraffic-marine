@@ -135,7 +135,11 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     @Override
     public void updatePortcallEstimate(final PortCallNotification pcn) {
+        log.info("method=updatePortcallEstimate processing port call {}", pcn.getPortCallId());
         final List<PortcallEstimate> pces = estimatesFromPortcallNotification(pcn);
+        if (pces.isEmpty()) {
+            log.warn("method=updatePortcallEstimate didn't create estimates from port call {}", pcn.getPortCallId());
+        }
         log.info("method=updatePortcallEstimate created {} estimates from portcall notification", pces.size());
         for (final PortcallEstimateEndpoint endpoint : portcallEstimateEndpoints) {
             updatePortcallEstimateToEndpoint(pces, endpoint);
@@ -208,6 +212,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 portCallDetails.getPrevPort(),
                 portcallId);
         }
+        log.info("method=getEtaEstimate no ETA for port call {}", portcallId);
         return null;
     }
 
@@ -232,6 +237,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 portCallDetails.getPrevPort(),
                 portcallId);
         }
+        log.info("method=getEtaEstimate no ETD for port call {}", portcallId);
         return null;
     }
 
@@ -256,6 +262,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 portCallDetails.getPrevPort(),
                 portcallId);
         }
+        log.info("method=getEtaEstimate no ATA for port call {}", portcallId);
         return null;
     }
 
