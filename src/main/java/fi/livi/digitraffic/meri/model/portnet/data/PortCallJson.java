@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.beans.factory.annotation.Value;
 
 @ApiModel(description = "Port call")
 @JsonPropertyOrder({ "portCallId", "portCallTimestamp", "customsReference", "portToVisit", "prevPort", "nextPort", "domesticTrafficArrival",
@@ -45,9 +46,11 @@ public interface PortCallJson {
     @ApiModelProperty(value = "Type of discharge", allowableValues = "range[1, 4]")
     Integer getDischarge();
 
-    @ApiModelProperty(value = "Ship master at the moment of arrival")
+    @ApiModelProperty(value = "Ship master at the moment of arrival(deprecated)")
+    @Value("#{target.EMPTY}")
     String getShipMasterArrival();
-    @ApiModelProperty(value = "Ship master at the moment of departure")
+    @ApiModelProperty(value = "Ship master at the moment of departure(deprecated)")
+    @Value("#{target.EMPTY}")
     String getShipMasterDeparture();
     @ApiModelProperty(value = "Ship management name at moment of arrival")
     String getManagementNameArrival();
