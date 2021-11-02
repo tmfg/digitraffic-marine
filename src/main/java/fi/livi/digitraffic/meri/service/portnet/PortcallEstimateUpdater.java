@@ -196,6 +196,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         if (bd.getEta() != null && bd.getEtaTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
             if (ship == null) {
+                log.warn("method=getEtaEstimate ship was null for ETA port call {}", portcallId);
                 return null;
             }
             return new PortcallEstimate(EventType.ETA,
@@ -219,6 +220,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         if (bd.getEtd() != null && bd.getEtdTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
             if (ship == null) {
+                log.warn("method=getEtaEstimate ship was null for ETD port call {}", portcallId);
                 return null;
             }
             return new PortcallEstimate(EventType.ETD,
@@ -242,6 +244,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         if (bd.getAta() != null && bd.getAtaTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
             if (ship == null) {
+                log.warn("method=getEtaEstimate ship was null for ATA port call {}", portcallId);
                 return null;
             }
             return new PortcallEstimate(EventType.ATA,
@@ -258,9 +261,11 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     private Ship getShipFromVesselDetails(final VesselDetails vesselDetails) {
         if (vesselDetails.getIdentificationData() == null) {
+            log.warn("method=getShipFromVesselDetails vessel identification data was null");
             return null;
         }
         if (vesselDetails.getIdentificationData().getMmsi() == null && vesselDetails.getIdentificationData().getImoLloyds() == null) {
+            log.warn("method=getShipFromVesselDetails mmsi & imo were null");
             return null;
         }
         final BigInteger mmsi = vesselDetails.getIdentificationData().getMmsi();
