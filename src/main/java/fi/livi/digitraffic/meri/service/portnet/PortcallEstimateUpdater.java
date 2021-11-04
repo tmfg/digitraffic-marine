@@ -158,7 +158,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
                 final StatusLine status = httpClient.execute(post).getStatusLine();
                 if (status.getStatusCode() != HttpStatus.SC_OK) {
-                    log.warn("method=updatePortcallEstimate got status code {}, reason {}", status.getStatusCode(), status.getReasonPhrase());
+                    log.warn("method=updatePortcallEstimate got status code {}, reason {} for json {}", status.getStatusCode(), status.getReasonPhrase(), json);
                 } else {
                     log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
                 }
