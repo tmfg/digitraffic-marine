@@ -6,6 +6,7 @@ import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -403,7 +404,8 @@ public class PortCallServiceTest extends AbstractTestBase {
             .imo(VESSEL_IMO)
             .assertCount(portCallService, 1);
 
-        assertEquals("", json.portCalls.get(0).getShipMasterArrival());
+        assertEquals(StringUtils.EMPTY, json.portCalls.get(0).getShipMasterArrival());
+        assertEquals(StringUtils.EMPTY, json.portCalls.get(0).getShipMasterDeparture());
     }
 
     private void newPortCall(
@@ -444,6 +446,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         pc.setNationality(VESSEL_NATIONALITY);
         pc.setVesselTypeCode(VESSEL_TYPECODE);
         pc.setShipMasterArrival(VESSEL_MASTER_NAME);
+        pc.setShipMasterDeparture(VESSEL_MASTER_NAME);
 
         portCallRepository.save(pc);
     }

@@ -135,7 +135,11 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     @Override
     public void updatePortcallEstimate(final PortCallNotification pcn) {
+        log.info("method=updatePortcallEstimate processing port call {}", pcn.getPortCallId());
         final List<PortcallEstimate> pces = estimatesFromPortcallNotification(pcn);
+        if (pces.isEmpty()) {
+            log.warn("method=updatePortcallEstimate didn't create estimates from port call {}", pcn.getPortCallId());
+        }
         log.info("method=updatePortcallEstimate created {} estimates from portcall notification", pces.size());
         for (final PortcallEstimateEndpoint endpoint : portcallEstimateEndpoints) {
             updatePortcallEstimateToEndpoint(pces, endpoint);
@@ -154,7 +158,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
                 final StatusLine status = httpClient.execute(post).getStatusLine();
                 if (status.getStatusCode() != HttpStatus.SC_OK) {
-                    log.warn("method=updatePortcallEstimate got status code {}, reason {}", status.getStatusCode(), status.getReasonPhrase());
+                    log.warn("method=updatePortcallEstimate got status code {}, reason {} for json {}", status.getStatusCode(), status.getReasonPhrase(), json);
                 } else {
                     log.info("method=updatePortcallEstimate Updated portcall estimate {}", json);
                 }
@@ -196,6 +200,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         if (bd.getEta() != null && bd.getEtaTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
             if (ship == null) {
+                log.warn("method=getEtaEstimate ship was null for ETA port call {}", portcallId);
                 return null;
             }
             return new PortcallEstimate(EventType.ETA,
@@ -207,6 +212,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 portCallDetails.getPrevPort(),
                 portcallId);
         }
+        log.info("method=getEtaEstimate no ETA for port call {}", portcallId);
         return null;
     }
 
@@ -219,6 +225,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         if (bd.getEtd() != null && bd.getEtdTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
             if (ship == null) {
+                log.warn("method=getEtaEstimate ship was null for ETD port call {}", portcallId);
                 return null;
             }
             return new PortcallEstimate(EventType.ETD,
@@ -230,6 +237,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 portCallDetails.getPrevPort(),
                 portcallId);
         }
+        log.info("method=getEtaEstimate no ETD for port call {}", portcallId);
         return null;
     }
 
@@ -242,6 +250,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         if (bd.getAta() != null && bd.getAtaTimeStamp() != null) {
             final Ship ship = getShipFromVesselDetails(portCallDetails.getVesselDetails());
             if (ship == null) {
+                log.warn("method=getEtaEstimate ship was null for ATA port call {}", portcallId);
                 return null;
             }
             return new PortcallEstimate(EventType.ATA,
@@ -253,14 +262,17 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 portCallDetails.getPrevPort(),
                 portcallId);
         }
+        log.info("method=getEtaEstimate no ATA for port call {}", portcallId);
         return null;
     }
 
     private Ship getShipFromVesselDetails(final VesselDetails vesselDetails) {
         if (vesselDetails.getIdentificationData() == null) {
+            log.warn("method=getShipFromVesselDetails vessel identification data was null");
             return null;
         }
         if (vesselDetails.getIdentificationData().getMmsi() == null && vesselDetails.getIdentificationData().getImoLloyds() == null) {
+            log.warn("method=getShipFromVesselDetails mmsi & imo were null");
             return null;
         }
         final BigInteger mmsi = vesselDetails.getIdentificationData().getMmsi();
