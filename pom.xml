@@ -26,7 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <maven.compiler.release>11</maven.compiler.release>
-        <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
+        <ch.qos.logback.version>1.2.10</ch.qos.logback.version>
         <jackson.dataformat.version>2.11.4</jackson.dataformat.version>
         <io.springfox.version>3.0.0</io.springfox.version>
         <aws.sdk.version>1.11.926</aws.sdk.version>
