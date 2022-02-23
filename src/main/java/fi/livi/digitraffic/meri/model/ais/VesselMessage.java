@@ -18,7 +18,7 @@ public class VesselMessage implements Validatable {
 
     @Override
     public boolean validate() {
-        return !StringUtils.isEmpty(vesselAttributes.vesselName) && vesselAttributes.mmsi > 0;
+        return !StringUtils.hasText(vesselAttributes.vesselName) && vesselAttributes.mmsi > 0;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

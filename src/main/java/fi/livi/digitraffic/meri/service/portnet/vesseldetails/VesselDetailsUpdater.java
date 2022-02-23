@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 
 @Service
 @ConditionalOnNotWebApplication
@@ -69,7 +69,7 @@ public class VesselDetailsUpdater {
         }
     }
 
-    private void update(final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd, final List<VesselDetails> added, final List<VesselDetails> updated) {
+    private void update(final fi.livi.digitraffic.meri.portnet.xsd.VesselDetails vd, final List<VesselDetails> added, final List<VesselDetails> updated) {
         final VesselDetails old = vesselDetailsRepository.findById(vd.getIdentificationData().getVesselId().longValue()).orElse(null);
 
         if(old != null) {
