@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ptns="http://portnet.fi/PortnetWS/PortnetTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://portnet.fi/PortnetWS/PortnetTypes">
+    <xs:complexType name="ResponseType">
+        <xs:sequence>
+            <xs:element name="Status" maxOccurs="1" minOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="OK" />
+                        <xs:enumeration value="NOT_FOUND" />
+                        <xs:enumeration value="INVALID_REQUEST" />
+                        <xs:enumeration value="SERVICE_ERROR" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Reference" type="xs:string" minOccurs="0" />
+            <xs:element name="Description" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="string2000">
+        <xs:annotation>
+            <xs:documentation>String length max 50 chars</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="2000" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="string8">
+        <xs:annotation>
+            <xs:documentation>String length max 8 chars</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="8" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="rcsType">
+        <xs:annotation>
+            <xs:documentation>Vessel callsign type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="real" />
+            <xs:enumeration value="fake" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="string4">
+        <xs:annotation>
+            <xs:documentation>String length max 4 chars</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="4" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="int7">
+        <xs:annotation>
+            <xs:documentation>Integer length 7</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:positiveInteger">
+            <xs:totalDigits value="7" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="int9">
+        <xs:annotation>
+            <xs:documentation>Integer max length 9</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:positiveInteger">
+            <xs:totalDigits value="9" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="imoNumber">
+        <xs:annotation>
+            <xs:documentation>imoNumber length 8</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:positiveInteger">
+            <xs:totalDigits value="7" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ediNumber">
+        <xs:annotation>
+            <xs:documentation>String max length 13</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="13" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="natCde">
+        <xs:annotation>
+            <xs:documentation>ISO 3166 nationality code</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z][A-Z]" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="string50">
+        <xs:annotation>
+            <xs:documentation>String length max 50 chars</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="string30">
+        <xs:annotation>
+            <xs:documentation>String length max 30 chars</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="30" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="string25">
+        <xs:annotation>
+            <xs:documentation>String length max 25 chars</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="25" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="vesselTypeCde">
+        <xs:annotation>
+            <xs:documentation>vesselType code</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="10" />
+            <xs:enumeration value="20" />
+            <xs:enumeration value="30" />
+            <xs:enumeration value="40" />
+            <xs:enumeration value="44" />
+            <xs:enumeration value="50" />
+            <xs:enumeration value="60" />
+            <xs:enumeration value="70" />
+            <xs:enumeration value="80" />
+            <xs:enumeration value="81" />
+            <xs:enumeration value="82" />
+            <xs:enumeration value="83" />
+            <xs:enumeration value="90" />
+            <xs:enumeration value="91" />
+            <xs:enumeration value="93" />
+            <xs:enumeration value="94" />
+            <xs:enumeration value="95" />
+            <xs:enumeration value="96" />
+            <xs:enumeration value="97" />
+            <xs:enumeration value="99" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="iceClassCde">
+        <xs:annotation>
+            <xs:documentation>Number code from list</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="IAS" />
+            <xs:enumeration value="IA" />
+            <xs:enumeration value="IB" />
+            <xs:enumeration value="IC" />
+            <xs:enumeration value="II" />
+            <xs:enumeration value="III" />
+            <xs:enumeration value="Unknown" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="decimal9-2">
+        <xs:restriction base="xs:decimal">
+            <xs:maxInclusive value="999999999" />
+            <xs:fractionDigits value="2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="vesselData">
+        <xs:annotation>
+            <xs:documentation>Vessel data confirmation</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SHIP" />
+            <xs:enumeration value="LIVI" />
+            <xs:enumeration value="CUST" />
+            <xs:enumeration value="-" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dischargeCode">
+        <xs:annotation>
+            <xs:documentation>Code for discharging</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="1" />
+            <xs:enumeration value="2" />
+            <xs:enumeration value="3" />
+            <xs:enumeration value="4" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="agentRole">
+        <xs:annotation>
+            <xs:documentation>Agent's role</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="1" />
+            <xs:enumeration value="2" />
+            <xs:enumeration value="3" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="locode">
+        <xs:annotation>
+            <xs:documentation>5 uppercase letter UN/LOCODE without space between countrycode and 3-character element
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z][A-Z][A-Z][A-Z][A-Z]" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="timeSource">
+        <xs:annotation>
+            <xs:documentation>Source for timedata</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Agent" />
+            <xs:enumeration value="Port" />
+            <xs:enumeration value="Pilot / VTS" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="lang">
+        <xs:annotation>
+            <xs:documentation>Language code</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FI" />
+            <xs:enumeration value="SE" />
+            <xs:enumeration value="EN" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="Header">
+        <xs:sequence>
+            <xs:element name="responseType" type="ptns:ResponseType" />
+        </xs:sequence>
+        <xs:attribute name="Version" type="xs:string" use="required" />
+        <xs:attribute name="SentAt" type="xs:dateTime" use="required" />
+        <xs:attribute name="From" type="xs:string" use="required" />
+        <xs:attribute name="lang" type="ptns:lang" use="required" />
+    </xs:complexType>
+    <xs:complexType name="VesselDetails">
+        <xs:sequence>
+            <xs:element ref="ptns:IdentificationData" />
+            <xs:element ref="ptns:RegistrationData" />
+            <xs:element ref="ptns:ConstructionData" />
+            <xs:element ref="ptns:Dimensions" />
+            <xs:element ref="ptns:System" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="IdentificationData">
+        <xs:complexType>
+            <xs:attribute name="vesselId" type="xs:integer" use="required" />
+            <xs:attribute name="name" type="ptns:string50" use="required" />
+            <xs:attribute name="namePrefix" type="ptns:string4" />
+            <xs:attribute name="radioCallSign" type="ptns:string8" use="required" />
+            <xs:attribute name="radioCallSignType" type="ptns:rcsType" use="required" />
+            <xs:attribute name="imoLloyds" type="ptns:imoNumber" />
+            <xs:attribute name="mmsi" type="ptns:int9" />
+            <xs:attribute name="dataSource" type="xs:string" fixed="Portnet" />
+            <xs:attribute name="updateTimeStamp" type="xs:dateTime" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RegistrationData">
+        <xs:complexType>
+            <xs:attribute name="nationality" type="ptns:natCde" use="required" />
+            <xs:attribute name="portOfRegistry" type="ptns:string50" />
+            <xs:attribute name="domicile" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ConstructionData">
+        <xs:complexType>
+            <xs:attribute name="vesselTypeCode" type="ptns:vesselTypeCde" use="required" />
+            <xs:attribute name="vesselTypeName" type="ptns:string50" use="required" />
+            <xs:attribute name="iceClassCode" type="ptns:iceClassCde" use="required" />
+            <xs:attribute name="iceClassIssueDate" type="xs:date" />
+            <xs:attribute name="iceClassIssuePlace" type="ptns:string50" />
+            <xs:attribute name="iceClassEndDate" type="xs:date" />
+            <xs:attribute name="classificationSociety" type="ptns:string50" />
+            <xs:attribute name="doubleBottom" type="xs:boolean" />
+            <xs:attribute name="inertGasSystem" type="xs:boolean" />
+            <xs:attribute name="ballastTank" type="xs:boolean" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Dimensions">
+        <xs:complexType>
+            <xs:attribute name="tonnageCertificateIssuer" type="ptns:string50" />
+            <xs:attribute name="dateOfIssue" type="xs:date" />
+            <xs:attribute name="grossTonnage" type="ptns:int9" use="required" />
+            <xs:attribute name="netTonnage" type="ptns:int9" use="required" />
+            <xs:attribute name="deathWeight" type="ptns:int9" />
+            <xs:attribute name="length" type="ptns:decimal9-2" />
+            <xs:attribute name="overallLength" type="ptns:decimal9-2" />
+            <xs:attribute name="height" type="ptns:decimal9-2" />
+            <xs:attribute name="breadth" type="xs:decimal" />
+            <xs:attribute name="draught" type="ptns:decimal9-2" />
+            <xs:attribute name="maxSpeed" type="ptns:decimal9-2" />
+            <xs:attribute name="enginePower" type="ptns:string30" />
+            <xs:attribute name="totalPower" type="ptns:int9" />
+            <xs:attribute name="maxPersons" type="ptns:int9" />
+            <xs:attribute name="maxPassengers" type="ptns:int9" />
+            <xs:attribute name="keelDate" type="xs:date" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="System">
+        <xs:complexType>
+            <xs:attribute name="shipOwner" type="ptns:string50" />
+            <xs:attribute name="shipTelephone1" type="ptns:string25" />
+            <xs:attribute name="shipTelephone2" type="ptns:string25" />
+            <xs:attribute name="shipFax" type="ptns:string25" />
+            <xs:attribute name="shipEmail" type="xs:string" />
+            <xs:attribute name="shipVerifier" type="ptns:vesselData" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="VesselDetails" type="ptns:VesselDetails" />
+    <xs:element name="Header" type="ptns:Header" />
+    <!-- PortCallNotification -->
+    <xs:simpleType name="cargoCde">
+        <xs:annotation>
+            <xs:documentation>Cargo code</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="301" />
+            <xs:enumeration value="302" />
+            <xs:enumeration value="303" />
+            <xs:enumeration value="304" />
+            <xs:enumeration value="305" />
+            <xs:enumeration value="306" />
+            <xs:enumeration value="307" />
+            <xs:enumeration value="308" />
+            <xs:enumeration value="309" />
+            <xs:enumeration value="310" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="portCallDirection">
+        <xs:annotation>
+            <xs:documentation>Agent's role on portcall</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Arrival or whole PortCall" />
+            <xs:enumeration value="Departure" />
+            <xs:enumeration value="Other" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- JAO 20160205: added for optional search target parameter. -->
+    <xs:simpleType name="searchTarget">
+        <xs:annotation>
+            <xs:documentation>Defines the target of which update timestamp limits the port calls returned. Possible values are PORTCALL_UPDATED = port call's update timestamp limits the result (default value), LATEST_PC_TIMETBL_UPDATED = port call's time tables' latest update timestamp limits the result.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PORTCALL_UPDATED" />
+            <xs:enumeration value="LATEST_PC_TIMETBL_UPDATED" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="PortCallListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="startDte" type="xs:date" />
+                <xs:element name="endDte" type="xs:date" />
+                <!-- JAO 20151130: added optional time parameters. -->
+                <xs:element name="startTme" type="xs:time" minOccurs="0"/>
+                <xs:element name="endTme" type="xs:time" minOccurs="0"/>
+                <!-- JAO 20160205: added optional search target parameter. -->
+                <xs:element name="searchTarget" type="ptns:searchTarget" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="PortCallList">
+        <xs:sequence>
+            <xs:element ref="ptns:Header" />
+            <xs:element name="PortCallNotification" type="ptns:PortCallNotification" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PortCallNotification">
+        <xs:sequence>
+            <xs:element name="PortCallDetails" type="ptns:PortCallDetails" />
+        </xs:sequence>
+        <xs:attribute name="portCallId" type="xs:integer" />
+        <xs:attribute name="portCallTimestamp" type="xs:dateTime" />
+    </xs:complexType>
+    <xs:complexType name="PortCallDetails">
+        <xs:sequence>
+            <xs:element name="AgentInfo" type="ptns:AgentInfo" maxOccurs="3" />
+            <xs:element name="ImoInformation" type="ptns:ImoInformation" maxOccurs="2" />
+            <xs:element name="SecurityMeasures" type="ptns:SecurityMeasures" />
+            <xs:element name="PortAreaDetails" type="ptns:PortAreaDetails" maxOccurs="unbounded" />
+            <xs:element ref="ptns:VesselDetails" />
+            <xs:element name="LocationData" type="ptns:LocationData" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="customsReference" type="xs:string" />
+        <xs:attribute name="portToVisit" type="ptns:locode" />
+        <xs:attribute name="prevPort" type="ptns:locode" />
+        <xs:attribute name="nextPort" type="ptns:locode" />
+        <xs:attribute name="domesticTrafficArrival" type="xs:boolean" />
+        <xs:attribute name="domesticTrafficDeparture" type="xs:boolean" />
+        <xs:attribute name="arrivalWithCargo" type="xs:boolean" />
+        <xs:attribute name="discharge" type="ptns:dischargeCode" />
+        <xs:attribute name="notLoading" type="xs:boolean" />
+        <xs:attribute name="shipMasterArrival" type="ptns:string50" />
+        <xs:attribute name="shipMasterDeparture" type="ptns:string50" />
+        <xs:attribute name="managementNameArrival" type="ptns:string50" />
+        <xs:attribute name="managementNameDeparture" type="ptns:string50" />
+        <xs:attribute name="forwarderNameArrival" type="ptns:string50" />
+        <xs:attribute name="forwarderNameDeparture" type="ptns:string50" />
+        <xs:attribute name="freeTextArrival" type="ptns:string2000" />
+        <xs:attribute name="freeTextDeparture" type="ptns:string2000" />
+    </xs:complexType>
+    <xs:complexType name="AgentInfo">
+        <xs:attribute name="role" type="ptns:agentRole" />
+        <xs:attribute name="portCallDirection" type="ptns:portCallDirection" />
+        <xs:attribute name="name" type="ptns:string50" />
+        <xs:attribute name="ediNumber" type="ptns:ediNumber" />
+    </xs:complexType>
+    <xs:complexType name="ImoInformation">
+        <xs:attribute name="imoGeneralDeclaration" type="xs:string" />
+        <xs:attribute name="briefParticularsVoyage" type="xs:string" />
+        <xs:attribute name="portOfDischarge" type="ptns:locode" />
+        <xs:attribute name="numberOfCrew" type="ptns:int9" />
+        <xs:attribute name="numberOfPassengers" type="ptns:int9" />
+        <xs:attribute name="cargoDeclarationsOnBoard" type="ptns:int9" />
+        <xs:attribute name="crewListsOnBoard" type="ptns:int9" />
+        <xs:attribute name="crewsEffectsDeclarationsOnBoard" type="ptns:int9" />
+        <xs:attribute name="shipStoresDeclarationsOnBoard" type="ptns:int9" />
+        <xs:attribute name="passengerListsOnBoard" type="ptns:int9" />
+        <xs:attribute name="healthDeclarationsOnBoard" type="ptns:int9" />
+    </xs:complexType>
+    <xs:complexType name="SecurityMeasures">
+        <xs:sequence>
+            <xs:element name="SecurityLevelHistory" type="ptns:SecurityLevelHistory" maxOccurs="10" />
+        </xs:sequence>
+        <xs:attribute type="xs:boolean" name="shipCertificateValidity" />
+        <xs:attribute type="xs:string" name="certificateIssuer" />
+        <xs:attribute type="xs:dateTime" name="certificateStartDate" />
+        <xs:attribute type="xs:dateTime" name="certificateEndDate" />
+        <xs:attribute type="xs:positiveInteger" name="currentSecurityLevel" />
+    </xs:complexType>
+    <xs:complexType name="SecurityLevelHistory">
+        <xs:attribute name="order" type="xs:integer" />
+        <xs:attribute name="level" type="xs:integer" />
+    </xs:complexType>
+    <xs:complexType name="PortAreaDetails">
+        <xs:sequence>
+            <xs:element name="BerthDetails" type="ptns:BerthDetails" />
+        </xs:sequence>
+        <xs:attribute name="portAreaCode" type="xs:string" />
+        <xs:attribute name="portAreaName" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="BerthDetails">
+        <xs:sequence>
+            <xs:element name="CargoInfo" type="ptns:CargoInfo" maxOccurs="2" />
+        </xs:sequence>
+        <xs:attribute name="berthCode" type="xs:string" />
+        <xs:attribute name="berthName" type="xs:string" />
+        <xs:attribute name="eta" type="xs:dateTime" />
+        <xs:attribute name="etaTimeStamp" type="xs:dateTime" />
+        <xs:attribute name="etaSource" type="ptns:timeSource" />
+        <xs:attribute name="etd" type="xs:dateTime" />
+        <xs:attribute name="etdTimeStamp" type="xs:dateTime" />
+        <xs:attribute name="etdSource" type="ptns:timeSource" />
+        <xs:attribute name="ata" type="xs:dateTime" />
+        <xs:attribute name="ataTimeStamp" type="xs:dateTime" />
+        <xs:attribute name="ataSource" type="ptns:timeSource" />
+        <xs:attribute name="atd" type="xs:dateTime" />
+        <xs:attribute name="atdTimeStamp" type="xs:dateTime" />
+        <xs:attribute name="atdSource" type="ptns:timeSource" />
+        <xs:attribute name="arrivalDraught" type="xs:decimal" />
+        <xs:attribute name="departureDraught" type="xs:decimal" />
+    </xs:complexType>
+    <xs:complexType name="CargoInfo">
+        <xs:attribute name="cargoDischargeCode" type="ptns:cargoCde" />
+        <xs:attribute name="cargoDescription" type="ptns:string50" />
+        <xs:attribute name="cargoAmount" type="xs:decimal" />
+    </xs:complexType>
+    <xs:complexType name="LocationData">
+        <xs:attribute name="latitude" type="xs:decimal" />
+        <xs:attribute name="longitude" type="xs:decimal" />
+        <xs:attribute name="course" type="xs:decimal" />
+        <xs:attribute name="speed" type="xs:decimal" />
+        <xs:attribute name="timeStamp" type="xs:dateTime" />
+    </xs:complexType>
+    <xs:element name="VesselListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="fromDte" type="xs:date" />
+                <!-- JAO 20160303: added optional from time parameter (RT 113913). -->
+                <xs:element name="fromTme" type="xs:time" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="VesselList">
+        <xs:sequence>
+            <xs:element ref="ptns:Header" />
+            <xs:element ref="ptns:VesselDetails" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- JAO 20151028: added acknowledge message service. -->
+    <xs:complexType name="AcknowledgeMsgTpe">
+        <xs:sequence>
+            <xs:element name="MsgId" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="AcknowledgeMsg" type="ptns:AcknowledgeMsgTpe" />
+</xs:schema>

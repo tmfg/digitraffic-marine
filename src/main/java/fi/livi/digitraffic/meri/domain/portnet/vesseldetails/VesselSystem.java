@@ -13,7 +13,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.System;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -53,7 +54,7 @@ public class VesselSystem {
     @ApiModelProperty(value = "Ship verifier")
     private String shipVerifier;
 
-    public void setAll(BigInteger vesselId, VesselDetails.System system) {
+    public void setAll(final BigInteger vesselId, final System system) {
         this.vesselId = vesselId.longValue();
         this.shipOwner = system.getShipOwner();
         this.shipTelephone1 = system.getShipTelephone1();

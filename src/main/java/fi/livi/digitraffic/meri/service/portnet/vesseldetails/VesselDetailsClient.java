@@ -5,6 +5,7 @@ import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
 
 import java.time.ZonedDateTime;
 
+import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,9 +13,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 import fi.livi.digitraffic.meri.util.StringUtil;
 
 @Service

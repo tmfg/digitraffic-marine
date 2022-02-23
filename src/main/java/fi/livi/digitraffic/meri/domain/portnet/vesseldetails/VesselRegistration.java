@@ -8,12 +8,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import fi.livi.digitraffic.meri.portnet.xsd.RegistrationData;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -43,7 +43,7 @@ public class VesselRegistration {
     @JsonIgnore
     private String domicile;
 
-    public void setAll(BigInteger vesselId, VesselDetails.RegistrationData registrationData) {
+    public void setAll(final BigInteger vesselId, final RegistrationData registrationData) {
         this.vesselId = vesselId.longValue();
         this.nationality = registrationData.getNationality();
         this.portOfRegistry = registrationData.getPortOfRegistry();

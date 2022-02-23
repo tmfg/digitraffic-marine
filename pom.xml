@@ -462,12 +462,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-xjc-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <extensions>
-                        <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:3.3.0</extension>
-                    </extensions>
-                </configuration>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
@@ -475,25 +470,28 @@
                         <goals>
                             <goal>xsdtojava</goal>
                         </goals>
-                        <configuration>
-                            <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
-                            <xsdOptions>
-                                <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/portnet/PortnetTypes.xsd</xsd>
-                                    <packagename>fi.livi.digitraffic.meri.portnet.xsd</packagename>
-                                </xsdOption>
-                                <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/portnet/vesseldetails/VesselDetails.xsd</xsd>
-                                    <packagename>fi.livi.digitraffic.meri.portnet.vesseldetails.xsd</packagename>
-                                </xsdOption>
-                                <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/portnet/vesseldetails/PortnetTypes.xsd</xsd>
-                                    <packagename>fi.livi.digitraffic.meri.portnet.vesseldetails.xsd</packagename>
-                                </xsdOption>
-                            </xsdOptions>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <extensions>
+                        <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:3.3.1</extension>
+                    </extensions>
+                    <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
+                    <xsdOptions>
+                        <xsdOption>
+                            <xsd>${basedir}/src/main/resources/portnet/PortCallNotification.xsd</xsd>
+                            <packagename>fi.livi.digitraffic.meri.portnet.xsd</packagename>
+                        </xsdOption>
+                        <xsdOption>
+                            <xsd>${basedir}/src/main/resources/portnet/VesselInformation.xsd</xsd>
+                            <packagename>fi.livi.digitraffic.meri.portnet.xsd</packagename>
+                        </xsdOption>
+                        <xsdOption>
+                            <xsd>${basedir}/src/main/resources/portnet/PortnetSchemaTypes.xsd</xsd>
+                            <packagename>fi.livi.digitraffic.meri.portnet.xsd</packagename>
+                        </xsdOption>
+                    </xsdOptions>
+                </configuration>
             </plugin>
 
             <plugin>

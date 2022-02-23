@@ -9,12 +9,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import fi.livi.digitraffic.meri.portnet.xsd.Dimensions;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 import fi.livi.digitraffic.meri.util.TypeUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -89,7 +89,7 @@ public class VesselDimensions {
     @JsonIgnore
     private Timestamp keelDate;
 
-    public void setAll(BigInteger vesselId, VesselDetails.Dimensions dimensions) {
+    public void setAll(final BigInteger vesselId, final Dimensions dimensions) {
         this.vesselId = vesselId.longValue();
         this.tonnageCertificateIssuer = dimensions.getTonnageCertificateIssuer();
         this.dateOfIssue = TypeUtil.getTimestamp(dimensions.getDateOfIssue());
