@@ -74,12 +74,12 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
 
             final String body = response.getBody();
 
-            assertThat(body, containsString("\"id\" : 1162"));
-            assertThat(body, containsString("\"areasFi\" : \"AHVENANMERI\""));
-            assertThat(body, containsString("\"creationTime\" : \"2015-08-19T00:00:00+03:00\""));
-            assertThat(body, containsString("\"type\" : \"FeatureCollection\""));
-            assertThat(body, containsString("\"type\" : \"Feature\""));
-            assertThat(body, containsString("\"type\" : \"Polygon\""));
+            assertThat(body, containsString("\"id\":1162"));
+            assertThat(body, containsString("\"areasFi\":\"AHVENANMERI\""));
+            assertThat(body, containsString("\"creationTime\":\"2015-08-19T00:00:00+03:00\""));
+            assertThat(body, containsString("\"type\":\"FeatureCollection\""));
+            assertThat(body, containsString("\"type\":\"Feature\""));
+            assertThat(body, containsString("\"type\":\"Polygon\""));
         }
         pookiMockServer.verify();
     }
@@ -140,9 +140,9 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
         pookiVerify();
         final String body = response.getBody();
 
-        assertThat(body, containsString(String.format("\"status\" : %s", HttpStatus.BAD_GATEWAY.value())));
-        assertThat(body, containsString(String.format("\"error\" : \"%s\"", HttpStatus.BAD_GATEWAY.getReasonPhrase())));
-        assertThat(body, containsString("\"message\" : \"Bad Gateway. Pooki responded with error response.\""));
+        assertThat(body, containsString(String.format("\"status\":%s", HttpStatus.BAD_GATEWAY.value())));
+        assertThat(body, containsString(String.format("\"error\":\"%s\"", HttpStatus.BAD_GATEWAY.getReasonPhrase())));
+        assertThat(body, containsString("\"message\":\"Bad Gateway. Pooki responded with error response.\""));
     }
 
     private ResponseEntity<String> requestWithStatus(final Status status) {

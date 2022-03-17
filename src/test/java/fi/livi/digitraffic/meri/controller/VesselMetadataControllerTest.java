@@ -34,7 +34,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
                 VesselMetadataController.VESSELS_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("[ ]"))
+                .andExpect(content().string("[]"))
         ;
     }
 
