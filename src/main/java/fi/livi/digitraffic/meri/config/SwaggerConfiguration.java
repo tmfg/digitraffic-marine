@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
 
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.service.AisApiInfoService;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.DocExpansion;
@@ -31,7 +30,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @ConditionalOnWebApplication
 @Configuration
-@EnableWebMvc
 @EnableSwagger2
 public class SwaggerConfiguration {
 
