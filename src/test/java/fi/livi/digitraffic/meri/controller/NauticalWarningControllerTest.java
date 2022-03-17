@@ -74,12 +74,12 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
 
             final String body = response.getBody();
 
-            assertThat(body, containsString("\"id\":1162"));
-            assertThat(body, containsString("\"areasFi\":\"AHVENANMERI\""));
-            assertThat(body, containsString("\"creationTime\":\"2015-08-19T00:00:00+03:00\""));
-            assertThat(body, containsString("\"type\":\"FeatureCollection\""));
-            assertThat(body, containsString("\"type\":\"Feature\""));
-            assertThat(body, containsString("\"type\":\"Polygon\""));
+            assertThat(body, containsString("\"id\" : 1162"));
+            assertThat(body, containsString("\"areasFi\" : \"AHVENANMERI\""));
+            assertThat(body, containsString("\"creationTime\" : \"2015-08-19T00:00:00+03:00\""));
+            assertThat(body, containsString("\"type\" : \"FeatureCollection\""));
+            assertThat(body, containsString("\"type\" : \"Feature\""));
+            assertThat(body, containsString("\"type\" : \"Polygon\""));
         }
         pookiMockServer.verify();
     }
