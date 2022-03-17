@@ -30,7 +30,7 @@
         <jackson.dataformat.version>2.11.4</jackson.dataformat.version>
         <io.springfox.version>3.0.0</io.springfox.version>
         <aws.sdk.version>1.11.926</aws.sdk.version>
-        <spring.cloud.version>3.1.1</spring.cloud.version>
+        <spring.cloud.version>3.0.6</spring.cloud.version>
     </properties>
 
     <repositories>
