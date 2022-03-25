@@ -1,39 +1,39 @@
 package fi.livi.digitraffic.meri.service.sse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.livi.digitraffic.meri.controller.CachedLocker;
+import fi.livi.digitraffic.meri.model.sse.SseFeature;
+import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
+import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
+import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import fi.livi.digitraffic.meri.config.MqttConfig.SynchronizedMqttGateway;
-import fi.livi.digitraffic.meri.model.sse.SseFeature;
+import java.time.ZoneId;
 
 @ConditionalOnProperty("sse.mqtt.enabled")
 @Component
 public class SseMqttSender {
     private static final Logger LOG = LoggerFactory.getLogger(SseMqttSender.class);
 
-    private final SynchronizedMqttGateway mqttGateway;
-    private final ObjectMapper objectMapper;
+    private final MqttMessageSender mqttMessageSender;
 
     private static final String SSE_DATA_TOPIC = "sse/site/%d";
     private static final String SSE_STATUS_TOPIC  ="sse/status";
 
-    @Autowired
-    public SseMqttSender(final SynchronizedMqttGateway mqttGateway,
-                         final ObjectMapper objectMapper) {
-        this.mqttGateway = mqttGateway;
-        this.objectMapper = objectMapper;
+    public SseMqttSender(final MqttRelayQueue mqttRelayQueue,
+                         final ObjectMapper objectMapper,
+                         final CachedLocker cachedLocker) {
+        this.mqttMessageSender = new MqttMessageSender(LOG, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, cachedLocker);
     }
 
     public boolean sendSseMessage(final SseFeature sseData) {
         try {
-            final String sseAsString = objectMapper.writeValueAsString(sseData);
-
-            mqttGateway.sendToMqtt(String.format(SSE_DATA_TOPIC, sseData.getSiteNumber()), sseAsString);
+            mqttMessageSender.sendMqttMessage(sseData.getProperties().getLastUpdate().atZone(ZoneId.of("UTC")),
+                new MqttDataMessageV2(SSE_DATA_TOPIC, sseData));
+                //.sendToMqtt(String.format(SSE_DATA_TOPIC, sseData.getSiteNumber()), sseAsString);
 
             return true;
         } catch (final Exception e) {
@@ -45,9 +45,7 @@ public class SseMqttSender {
 
     public boolean sendStatusMessage(final Object status) {
         try {
-            final String statusAsString = objectMapper.writeValueAsString(status);
-
-            mqttGateway.sendToMqtt(SSE_STATUS_TOPIC, statusAsString);
+            mqttMessageSender.sendStatusMessageV1(SSE_STATUS_TOPIC, status);
 
             return true;
         } catch (final Exception e) {

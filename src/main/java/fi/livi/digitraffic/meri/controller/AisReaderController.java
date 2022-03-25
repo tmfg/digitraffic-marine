@@ -9,13 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
-import fi.livi.digitraffic.meri.controller.reader.AisMessageListener;
-import fi.livi.digitraffic.meri.controller.reader.AisMessageReader;
-import fi.livi.digitraffic.meri.controller.reader.VesselLocationDatabaseListener;
-import fi.livi.digitraffic.meri.controller.reader.VesselLocationRelayListener;
-import fi.livi.digitraffic.meri.controller.reader.VesselLoggingListener;
-import fi.livi.digitraffic.meri.controller.reader.VesselMetadataDatabaseListener;
-import fi.livi.digitraffic.meri.controller.reader.VesselMetadataRelayListener;
+import fi.livi.digitraffic.meri.controller.reader.*;
 
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 import org.slf4j.Logger;
@@ -43,9 +37,10 @@ public class AisReaderController implements Runnable {
     public AisReaderController(final AisMessageReader reader,
                                final VesselMetadataService vesselMetadataService,
                                final VesselMetadataDatabaseListener vesselMetadataDatabaseListener,
-                               final VesselMetadataRelayListener vesselMetadataRelayListener,
+                               final VesselMetadataRelayListenerV1 vesselMetadataRelayListener,
                                final VesselLocationDatabaseListener vesselLocationDatabaseListener,
-                               final VesselLocationRelayListener vesselLocationRelayListener,
+                               final VesselLocationRelayListenerV1 vesselLocationRelayListenerV1,
+                               final VesselLocationRelayListenerV2 vesselLocationRelayListenerV2,
                                final VesselLoggingListener vesselLoggingListener) {
 
         this.reader = reader;
@@ -53,7 +48,8 @@ public class AisReaderController implements Runnable {
 
         aisLocationListeners = Arrays.asList(
             vesselLocationDatabaseListener,
-            vesselLocationRelayListener,
+            vesselLocationRelayListenerV1,
+            vesselLocationRelayListenerV2,
             vesselLoggingListener);
 
         aisMetadataListeners = Arrays.asList(
