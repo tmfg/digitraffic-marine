@@ -31,7 +31,7 @@ public class CachedLocker {
             throw new IllegalArgumentException(String.format("Lock named %s is already used. Lock name must be unique. Try with another name.", lockName));
         }
         this.lockName = lockName;
-        log.info("Created new {}", this.toString());
+        log.info("Created new {}", this);
     }
 
     public boolean hasLock() {

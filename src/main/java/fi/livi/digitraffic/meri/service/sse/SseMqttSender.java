@@ -25,8 +25,8 @@ public class SseMqttSender {
 
     public SseMqttSender(final MqttRelayQueue mqttRelayQueue,
                          final ObjectMapper objectMapper,
-                         final CachedLocker cachedLocker) {
-        this.mqttMessageSender = new MqttMessageSender(LOG, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, cachedLocker);
+                         final CachedLocker sseCachedLocker) {
+        this.mqttMessageSender = new MqttMessageSender(LOG, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, sseCachedLocker);
     }
 
     public boolean sendSseMessage(final SseFeature sseData) {
