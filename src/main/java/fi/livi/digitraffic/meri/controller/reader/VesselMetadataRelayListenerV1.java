@@ -36,8 +36,8 @@ public class VesselMetadataRelayListenerV1 implements AisMessageListener {
 
     public VesselMetadataRelayListenerV1(final MqttRelayQueue mqttRelayQueue,
                                          final ObjectMapper objectMapper,
-                                         final CachedLocker cachedLocker) {
-        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_METADATA, cachedLocker);
+                                         final CachedLocker aisCachedLocker) {
+        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_METADATA, aisCachedLocker);
     }
 
     @Override
