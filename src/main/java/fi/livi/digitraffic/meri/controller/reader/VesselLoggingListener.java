@@ -193,7 +193,6 @@ public class VesselLoggingListener implements AisMessageListener {
 
             try {
                 sentAisMessagesStatistics(AISLoggingType.STATUS, vesselSender.sendStatusMessageV1(VESSEL_STATUS_V1_TOPIC, statusMessage));
-                sentAisMessagesStatistics(AISLoggingType.STATUS, vesselSender.sendStatusMessageV2(VESSEL_STATUS_V2_TOPIC));
             } catch (final Exception e) {
                 log.error("Json parse error", e);
             }

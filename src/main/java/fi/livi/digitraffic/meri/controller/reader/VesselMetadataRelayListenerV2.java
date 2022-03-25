@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.controller.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
 import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
+import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
+import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
 import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
-import fi.livi.digitraffic.meri.mqtt.MqttVesselLocationMessageV2;
+import fi.livi.digitraffic.meri.mqtt.MqttVesselMetadataMessageV2;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
-import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -20,39 +19,38 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 
-import static fi.livi.digitraffic.meri.controller.reader.VesselLoggingListener.AISLoggingType.POSITION;
-import static fi.livi.digitraffic.meri.service.MqttRelayQueue.StatisticsType.AIS_LOCATION;
+import static fi.livi.digitraffic.meri.controller.reader.VesselLoggingListener.AISLoggingType.METADATA;
+import static fi.livi.digitraffic.meri.service.MqttRelayQueue.StatisticsType.AIS_METADATA;
 import static fi.livi.digitraffic.meri.util.MqttUtil.getTopicForMessage;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("ais.reader.enabled")
-public class VesselLocationRelayListenerV2 implements AisMessageListener {
+public class VesselMetadataRelayListenerV2 implements AisMessageListener {
     private final MqttMessageSender mqttMessageSender;
 
-    private static final String VESSELS_LOCATIONS_V2_TOPIC = "vessels-v2/%d/locations";
-    private static final String VESSELS_LOCATIONS_V2_STATUS_TOPIC = "vessels-v2/%d/locations";
+    private static final String VESSELS_METADATA_V2_TOPIC = "vessels-v2/%d/metadata";
+    public static final String VESSEL_STATUS_V2_TOPIC ="vessels-v2/status";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VesselLocationRelayListenerV1.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VesselMetadataRelayListenerV2.class);
 
-    public VesselLocationRelayListenerV2(final MqttRelayQueue mqttRelayQueue,
+    public VesselMetadataRelayListenerV2(final MqttRelayQueue mqttRelayQueue,
                                          final ObjectMapper objectMapper,
                                          final CachedLocker aisCachedLocker) {
-        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_LOCATION, aisCachedLocker);
+        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_METADATA, aisCachedLocker);
     }
 
     @Override
     public void receiveMessage(final AisRadioMsg message) {
         if (message.isMmsiAllowed() && mqttMessageSender.hasLock()) {
-            final AISMessage ais = AisMessageConverter.convertLocation(message);
+            final VesselMessage vm = AisMessageConverter.convertMetadata(message);
 
-            if (ais.validate()) {
-                final MqttVesselLocationMessageV2 mqttMessage = new MqttVesselLocationMessageV2(ais);
-                final String topic = getTopicForMessage(VESSELS_LOCATIONS_V2_TOPIC, ais.attributes.mmsi);
-
+            if (vm.validate()) {
+                final MqttVesselMetadataMessageV2 mqttMessage = new MqttVesselMetadataMessageV2(vm.vesselAttributes);
+                final String topic = getTopicForMessage(VESSELS_METADATA_V2_TOPIC, vm.vesselAttributes.mmsi);
                 mqttMessageSender.sendMqttMessage(ZonedDateTime.now(), new MqttDataMessageV2(topic, mqttMessage));
 
-                VesselLoggingListener.sentAisMessagesStatistics(POSITION, true);
+                VesselLoggingListener.sentAisMessagesStatistics(METADATA, true);
             }
         }
     }
@@ -60,9 +58,7 @@ public class VesselLocationRelayListenerV2 implements AisMessageListener {
     @Scheduled(fixedDelayString = "30000")
     public void sendStatusMessage() {
         if (mqttMessageSender.hasLock()) {
-            mqttMessageSender.sendStatusMessageV2(VESSELS_LOCATIONS_V2_STATUS_TOPIC);
+            mqttMessageSender.sendStatusMessageV2(VESSEL_STATUS_V2_TOPIC);
         }
     }
-
 }
-

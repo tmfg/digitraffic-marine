@@ -37,7 +37,8 @@ public class AisReaderController implements Runnable {
     public AisReaderController(final AisMessageReader reader,
                                final VesselMetadataService vesselMetadataService,
                                final VesselMetadataDatabaseListener vesselMetadataDatabaseListener,
-                               final VesselMetadataRelayListenerV1 vesselMetadataRelayListener,
+                               final VesselMetadataRelayListenerV1 vesselMetadataRelayListenerV1,
+                               final VesselMetadataRelayListenerV2 vesselMetadataRelayListenerV2,
                                final VesselLocationDatabaseListener vesselLocationDatabaseListener,
                                final VesselLocationRelayListenerV1 vesselLocationRelayListenerV1,
                                final VesselLocationRelayListenerV2 vesselLocationRelayListenerV2,
@@ -54,7 +55,8 @@ public class AisReaderController implements Runnable {
 
         aisMetadataListeners = Arrays.asList(
             vesselMetadataDatabaseListener,
-            vesselMetadataRelayListener,
+            vesselMetadataRelayListenerV1,
+            vesselMetadataRelayListenerV2,
             vesselLoggingListener);
     }
 
