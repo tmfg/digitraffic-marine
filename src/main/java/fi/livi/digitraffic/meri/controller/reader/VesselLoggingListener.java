@@ -10,7 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.mqtt.MqttStatusMessageV1;
+import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +42,12 @@ public class VesselLoggingListener implements AisMessageListener {
     private final MqttMessageSender vesselSender;
     private final AisMessageReader messageReader;
 
-    public VesselLoggingListener(final CachedLocker aisCachedLocker,
-                                 final MqttMessageSender vesselSender,
+    public VesselLoggingListener(final MqttRelayQueue mqttRelayQueue,
+                                 final ObjectMapper objectMapper,
+                                 final CachedLocker aisCachedLocker,
                                  final AisMessageReader messageReader) {
         this.aisCachedLocker = aisCachedLocker;
-        this.vesselSender = vesselSender;
+        this.vesselSender = new MqttMessageSender(log, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, aisCachedLocker);
         this.messageReader = messageReader;
 
         executor.scheduleAtFixedRate(this::logReadStatistics, 30, 60, TimeUnit.SECONDS);

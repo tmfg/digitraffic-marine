@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.mqtt;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
-import fi.livi.digitraffic.meri.model.ais.StatusMessage;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.slf4j.Logger;
 
