@@ -1,16 +1,9 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PreDestroy;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.livi.digitraffic.meri.controller.CachedLocker;
+import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
+import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
 import fi.livi.digitraffic.meri.mqtt.MqttStatusMessageV1;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.apache.commons.lang3.time.StopWatch;
@@ -20,12 +13,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.controller.CachedLocker;
-import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
+import javax.annotation.PreDestroy;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static fi.livi.digitraffic.meri.controller.reader.VesselMetadataRelayListenerV1.VESSEL_STATUS_V1_TOPIC;
-import static fi.livi.digitraffic.meri.controller.reader.VesselMetadataRelayListenerV1.VESSEL_STATUS_V2_TOPIC;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")

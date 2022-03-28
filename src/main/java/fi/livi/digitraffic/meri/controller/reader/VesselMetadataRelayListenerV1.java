@@ -30,7 +30,6 @@ public class VesselMetadataRelayListenerV1 implements AisMessageListener {
 
     private static final String VESSELS_METADATA_V1_TOPIC = "vessels/%d/metadata";
     public static final String VESSEL_STATUS_V1_TOPIC ="vessels/status";
-    public static final String VESSEL_STATUS_V2_TOPIC ="vessels-v2/status";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VesselMetadataRelayListenerV1.class);
 
