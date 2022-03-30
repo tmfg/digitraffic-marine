@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
+import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -31,12 +32,12 @@ public class SseLoggingListener {
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     private final CachedLocker sseCachedLocker;
-    private final SseMqttSender sseMqttSender;
+    private final SseMqttSenderV1 sseMqttSenderV1;
 
     public SseLoggingListener(final CachedLocker sseCachedLocker,
-                              final SseMqttSender sseMqttSender) {
+                              final SseMqttSenderV1 sseMqttSenderV1) {
         this.sseCachedLocker = sseCachedLocker;
-        this.sseMqttSender = sseMqttSender;
+        this.sseMqttSenderV1 = sseMqttSenderV1;
 
         executor.scheduleAtFixedRate(this::sendStatusAndLogSentStatistics, 30, 60, TimeUnit.SECONDS);
     }
@@ -108,7 +109,7 @@ public class SseLoggingListener {
             final Statistics statusMessage = new StatusMessage(sendCount+1, errorCount);
 
             try {
-                boolean sendStatus = sseMqttSender.sendStatusMessage(statusMessage);
+                boolean sendStatus = sseMqttSenderV1.sendStatusMessage(statusMessage);
                 addSendStatusMessagesStatistics(sendStatus);
             } catch (final Exception e) {
                 log.error("Json parse error", e);
@@ -116,7 +117,7 @@ public class SseLoggingListener {
         }
     }
 
-    private static class Statistics {
+    public static class Statistics {
         final int messages;
         final int failures;
 

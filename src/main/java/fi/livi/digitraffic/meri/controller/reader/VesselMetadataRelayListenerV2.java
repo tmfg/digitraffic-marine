@@ -55,7 +55,7 @@ public class VesselMetadataRelayListenerV2 implements AisMessageListener {
         }
     }
 
-    @Scheduled(fixedDelayString = "30000")
+    @Scheduled(fixedDelayString = "${mqtt.status.intervalMs}")
     public void sendStatusMessage() {
         if (mqttMessageSender.hasLock()) {
             mqttMessageSender.sendStatusMessageV2(VESSEL_STATUS_V2_TOPIC);

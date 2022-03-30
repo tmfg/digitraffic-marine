@@ -5,12 +5,10 @@ import fi.livi.digitraffic.meri.controller.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
 import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
 import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
 import fi.livi.digitraffic.meri.mqtt.MqttVesselLocationMessageV2;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
-import fi.livi.digitraffic.meri.service.ais.VesselLocationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -57,7 +55,7 @@ public class VesselLocationRelayListenerV2 implements AisMessageListener {
         }
     }
 
-    @Scheduled(fixedDelayString = "30000")
+    @Scheduled(fixedDelayString = "${mqtt.status.intervalMs}")
     public void sendStatusMessage() {
         if (mqttMessageSender.hasLock()) {
             mqttMessageSender.sendStatusMessageV2(VESSELS_LOCATIONS_V2_STATUS_TOPIC);

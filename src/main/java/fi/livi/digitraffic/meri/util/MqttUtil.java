@@ -16,4 +16,8 @@ public abstract class MqttUtil {
     public static String getTopicForMessage(final String topicString, final Object...topicParams) {
         return String.format(topicString, topicParams);
     }
+
+    public static String getEnum(final Enum value) {
+        return value == null ? null : value.toString();
+    }
 }
