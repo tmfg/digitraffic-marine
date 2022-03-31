@@ -185,15 +185,11 @@ public class VesselLoggingListener implements AisMessageListener {
                 errorsCount
             );
 
-            final StopWatch sw = StopWatch.createStarted();
-
             try {
                 sentAisMessagesStatistics(AISLoggingType.STATUS, vesselSender.sendStatusMessageV1(VESSEL_STATUS_V1_TOPIC, statusMessage));
             } catch (final Exception e) {
                 log.error("Json parse error", e);
             }
-
-            //log.info("sendStatus tookMs={}", sw.getTime());
         }
     }
 

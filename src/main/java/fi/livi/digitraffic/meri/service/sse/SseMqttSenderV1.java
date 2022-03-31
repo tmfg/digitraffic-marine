@@ -62,7 +62,7 @@ public class SseMqttSenderV1 {
         }
     }
 
-    @Scheduled(fixedDelayString = "${mqtt.status.intervalMs}")
+    // called from SseLoggingListener
     public boolean sendStatusMessage(final SseLoggingListener.Statistics statusMessage) {
         return mqttMessageSender.sendStatusMessageV1(SSE_V1_STATUS_TOPIC, statusMessage);
     }
