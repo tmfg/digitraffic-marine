@@ -28,8 +28,8 @@ import static fi.livi.digitraffic.meri.util.MqttUtil.getTopicForMessage;
 public class VesselLocationRelayListenerV2 implements AisMessageListener {
     private final MqttMessageSender mqttMessageSender;
 
-    private static final String VESSELS_LOCATIONS_V2_TOPIC = "vessels-v2/%d/locations";
-    private static final String VESSELS_LOCATIONS_V2_STATUS_TOPIC = "vessels-v2/%d/locations";
+    private static final String VESSELS_LOCATIONS_V2_TOPIC = "vessels-v2/%d/location";
+    private static final String VESSELS_LOCATIONS_V2_STATUS_TOPIC = "vessels-v2/status";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VesselLocationRelayListenerV1.class);
 
