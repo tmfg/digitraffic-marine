@@ -8,6 +8,8 @@ import static fi.livi.digitraffic.meri.util.MqttUtil.getEnum;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MqttSseMessageV2 {
+    public final long timestamp;
+
     public final String seaState;
     public final String trend;
     public final Integer windWaveDir;
@@ -18,6 +20,8 @@ public class MqttSseMessageV2 {
 
     public MqttSseMessageV2(final SseFeature feature) {
         final SseProperties p = feature.getProperties();
+
+        this.timestamp = p.getLastUpdate().getEpochSecond();
         this.seaState = getEnum(p.getSeaState());
         this.trend = getEnum(p.getTrend());
         this.windWaveDir = p.getWindWaveDir();
