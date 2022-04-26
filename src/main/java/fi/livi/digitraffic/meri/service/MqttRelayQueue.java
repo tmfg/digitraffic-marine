@@ -62,7 +62,10 @@ public class MqttRelayQueue {
     private Triple<String, String, StatisticsType> getNextMessage() {
         try {
             return messageList.take();
-        } catch (Exception e) {
+        } catch (final InterruptedException ie) {
+            logger.error("method=getNextMessage Interrupted", ie);
+            Thread.currentThread().interrupt();
+        } catch (final Exception e) {
             logger.error("method=getNextMessage Mqtt messageList.take() failed", e);
             return null;
         }
