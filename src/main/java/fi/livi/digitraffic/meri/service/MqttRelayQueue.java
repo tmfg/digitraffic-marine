@@ -67,8 +67,9 @@ public class MqttRelayQueue {
             Thread.currentThread().interrupt();
         } catch (final Exception e) {
             logger.error("method=getNextMessage Mqtt messageList.take() failed", e);
-            return null;
         }
+
+        return null;
     }
 
     @Scheduled(fixedRate = 60000)
