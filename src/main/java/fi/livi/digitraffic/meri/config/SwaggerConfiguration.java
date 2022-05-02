@@ -101,6 +101,7 @@ public class SwaggerConfiguration {
                regex(API_V2_BASE_PATH +"/*.*"));
     }
 
+    // DPO-1792 fix, TODO: remove when getting rid of springfox
     @Bean
     public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
         return new BeanPostProcessor() {
