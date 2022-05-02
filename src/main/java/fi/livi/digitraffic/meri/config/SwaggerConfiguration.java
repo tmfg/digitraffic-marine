@@ -65,8 +65,18 @@ public class SwaggerConfiguration {
     }
 
     @Bean
+    public Docket marineApi() {
+        return getDocket("marine-api", getMetadataApiPaths());
+    }
+
+    @Bean
     public Docket betaApi() {
         return getDocket("metadata-api-beta", regex(API_BETA_BASE_PATH + "/*.*"));
+    }
+
+    @Bean
+    public Docket marineBetaApi() {
+        return getDocket("marine-api-beta", regex(API_BETA_BASE_PATH + "/*.*"));
     }
 
     @Bean
