@@ -7,7 +7,7 @@ import static fi.livi.digitraffic.meri.util.MqttUtil.roundToScale;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MqttVesselLocationMessageV2 {
-    public final long timestamp;
+    public final long time;
 
     public final double sog;
     public final double cog;
@@ -17,11 +17,11 @@ public class MqttVesselLocationMessageV2 {
     public final boolean raim;
     public final int heading;
 
-    public final double x;
-    public final double y;
+    public final double lon;
+    public final double lat;
 
     public MqttVesselLocationMessageV2(final AISMessage ais) {
-        this.timestamp = ais.attributes.timestampExternal;
+        this.time = ais.attributes.timestampExternal / 1000;
 
         this.sog = ais.attributes.sog;
         this.cog = ais.attributes.cog;
@@ -31,7 +31,7 @@ public class MqttVesselLocationMessageV2 {
         this.raim = ais.attributes.raim == 1;
         this.heading = ais.attributes.heading;
 
-        this.x = roundToScale(ais.geometry.x, 6);
-        this.y = roundToScale(ais.geometry.y, 6);
+        this.lon = roundToScale(ais.geometry.x, 6);
+        this.lat = roundToScale(ais.geometry.y, 6);
     }
 }
