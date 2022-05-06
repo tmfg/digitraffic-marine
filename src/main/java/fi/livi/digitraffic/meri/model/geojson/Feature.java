@@ -2,20 +2,19 @@ package fi.livi.digitraffic.meri.model.geojson;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "GeoJSON Feature object")
+@Schema(description = "GeoJSON Feature object")
 public abstract class Feature<G extends Geometry, P extends Properties>  extends GeoJsonObject {
 
-    @ApiModelProperty(value = "Type of GeoJSON object", allowableValues = "Feature", required = true, example = "Feature", position = 2)
+    @Schema(description = "Type of GeoJSON object", allowableValues = "Feature", required = true, example = "Feature")
     private final String type = "Feature";
 
-    @ApiModelProperty(value = "GeoJSON Geometry object", required = true, position = 3)
+    @Schema(description = "GeoJSON Geometry object", required = true)
     @JsonProperty("geometry")
     private G geometry;
 
-    @ApiModelProperty(value = "GeoJSON Properties object", required = true, position = 4)
+    @Schema(description = "GeoJSON Properties object", required = true)
     private P properties;
 
     public Feature() {

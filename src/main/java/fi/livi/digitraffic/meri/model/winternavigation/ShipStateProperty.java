@@ -4,55 +4,55 @@ import java.time.ZonedDateTime;
 
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionAccuracy;
 import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionSource;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "ShipState")
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "ShipState")
 public class ShipStateProperty {
 
-    @ApiModelProperty(value = "Timestamp of position observation")
+    @Schema(description = "Timestamp of position observation")
     public final ZonedDateTime timestamp;
 
-    @ApiModelProperty(value = "Pre-formatted friendly output")
+    @Schema(description = "Pre-formatted friendly output")
     public final String posPrintable;
 
-    @ApiModelProperty(value = "Ship position accuracy")
+    @Schema(description = "Ship position accuracy")
     public final PositionAccuracy posAccuracy;
 
-    @ApiModelProperty(value = "Ship position source")
+    @Schema(description = "Ship position source")
     public final PositionSource posSource;
 
     public final String posArea;
 
-    @ApiModelProperty(value = "Observed speed in knots")
+    @Schema(description = "Observed speed in knots")
     public final Double speed;
 
-    @ApiModelProperty(value = "Observed course in degrees")
+    @Schema(description = "Observed course in degrees")
     public final Double course;
 
-    @ApiModelProperty(value = "Observed heading in degrees")
+    @Schema(description = "Observed heading in degrees")
     public final Double heading;
 
-    @ApiModelProperty(value = "Ship's current dynamic draught (entered into its own AIS device)")
+    @Schema(description = "Ship's current dynamic draught (entered into its own AIS device)")
     public final Double aisDraught;
 
-    @ApiModelProperty(value = "0-15, see AIS standard")
+    @Schema(description = "0-15, see AIS standard")
     public final Integer aisState;
 
-    @ApiModelProperty(value = "Text description of AIS state")
+    @Schema(description = "Text description of AIS state")
     public final String aisStateText;
 
-    @ApiModelProperty(value = "Destination text entered by ship into its own AIS transponder; often significantly different " +
+    @Schema(description = "Destination text entered by ship into its own AIS transponder; often significantly different " +
                               "from what is available in “Voyage” section")
     public final String aisDestination;
 
-    @ApiModelProperty(value = "When the ship was observed to start moving")
+    @Schema(description = "When the ship was observed to start moving")
     public final ZonedDateTime movingSince;
 
-    @ApiModelProperty(value = "When the ship was observed to having been stopped")
+    @Schema(description = "When the ship was observed to having been stopped")
     public final ZonedDateTime stoppedSince;
 
-    @ApiModelProperty(value = "When the ship was no more observed / was deactivated from the system")
+    @Schema(description = "When the ship was no more observed / was deactivated from the system")
     public final ZonedDateTime inactiveSince;
 
     public ShipStateProperty(ZonedDateTime timestamp, String posPrintable, PositionAccuracy posAccuracy,

@@ -3,10 +3,9 @@ package fi.livi.digitraffic.meri.model.geojson;
 import java.util.Arrays;
 import java.util.List;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "GeoJSON Point Geometry object")
+@Schema(description = "GeoJSON Point Geometry object")
 public class Point extends Geometry<List<Double>> {
 
     public Point() {
@@ -23,14 +22,14 @@ public class Point extends Geometry<List<Double>> {
     }
 
 
-    @ApiModelProperty(required = true, allowableValues = "Point", example = "Point")
+    @Schema(required = true, allowableValues = "Point", example = "Point")
     @Override
     public String getType() {
         return super.getType();
     }
 
-    @ApiModelProperty(required = true, position = 2, example = "[26.97677492, 65.34673850]",
-                      value = "An array of coordinates. " + COORD_FORMAT_WGS84_LONG_INC_ALT)
+    @Schema(required = true, example = "[26.97677492, 65.34673850]",
+                      description = "An array of coordinates. " + COORD_FORMAT_WGS84_LONG_INC_ALT)
     @Override
     public List<Double> getCoordinates() {
         return super.getCoordinates();

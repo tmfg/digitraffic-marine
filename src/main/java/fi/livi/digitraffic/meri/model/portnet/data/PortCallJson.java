@@ -5,11 +5,11 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import org.springframework.beans.factory.annotation.Value;
 
-@ApiModel(description = "Port call")
+@Schema(description = "Port call")
 @JsonPropertyOrder({ "portCallId", "portCallTimestamp", "customsReference", "portToVisit", "prevPort", "nextPort", "domesticTrafficArrival",
                      "domesticTrafficDeparture",
                      "arrivalWithCargo", "notLoading", "discharge", "shipMasterArrival", "shipMasterDeparture", "managementNameArrival",
@@ -20,84 +20,84 @@ import org.springframework.beans.factory.annotation.Value;
                      "certificateIssuer", "certificateStartDate", "certificateEndDate", "currentSecurityLevel", "agentInfo", "imoInformation",
                      "portAreaDetails" })
 public interface PortCallJson {
-    @ApiModelProperty(value = "Unique identifier for port call", required = true)
+    @Schema(description = "Unique identifier for port call", required = true)
     Long getPortCallId();
 
-    @ApiModelProperty(value = "Port call information modification time")
+    @Schema(description = "Port call information modification time")
     Timestamp getPortCallTimestamp();
 
-    @ApiModelProperty(value = "Custom's reference")
+    @Schema(description = "Custom's reference")
     String getCustomsReference();
-    @ApiModelProperty(value = "Code of the port to visit")
+    @Schema(description = "Code of the port to visit")
     String getPortToVisit();
-    @ApiModelProperty(value = "Code of the previous port")
+    @Schema(description = "Code of the previous port")
     String getPrevPort();
-    @ApiModelProperty(value = "Code of the next port")
+    @Schema(description = "Code of the next port")
     String getNextPort();
 
-    @ApiModelProperty(value = "Is this a domestic arrival")
+    @Schema(description = "Is this a domestic arrival")
     Boolean getDomesticTrafficArrival();
-    @ApiModelProperty(value = "Is this a domestic departure")
+    @Schema(description = "Is this a domestic departure")
     Boolean getDomesticTrafficDeparture();
-    @ApiModelProperty(value = "Does the ship arrive with cargo")
+    @Schema(description = "Does the ship arrive with cargo")
     Boolean getArrivalWithCargo();
-    @ApiModelProperty(value = "Does the ship load")
+    @Schema(description = "Does the ship load")
     Boolean getNotLoading();
-    @ApiModelProperty(value = "Type of discharge", allowableValues = "range[1, 4]")
+    @Schema(description = "Type of discharge", allowableValues = "range[1, 4]")
     Integer getDischarge();
 
-    @ApiModelProperty(value = "Ship master at the moment of arrival(deprecated)")
+    @Schema(description = "Ship master at the moment of arrival(deprecated)")
     @Value("#{target.EMPTY}")
     String getShipMasterArrival();
-    @ApiModelProperty(value = "Ship master at the moment of departure(deprecated)")
+    @Schema(description = "Ship master at the moment of departure(deprecated)")
     @Value("#{target.EMPTY}")
     String getShipMasterDeparture();
-    @ApiModelProperty(value = "Ship management name at moment of arrival")
+    @Schema(description = "Ship management name at moment of arrival")
     String getManagementNameArrival();
-    @ApiModelProperty(value = "Ship management name at moment of departure")
+    @Schema(description = "Ship management name at moment of departure")
     String getManagementNameDeparture();
-    @ApiModelProperty(value = "Forwarder at moment of arrival")
+    @Schema(description = "Forwarder at moment of arrival")
     String getForwarderNameArrival();
-    @ApiModelProperty(value = "Forwarder at moment of departure")
+    @Schema(description = "Forwarder at moment of departure")
     String getForwarderNameDeparture();
 
-    @ApiModelProperty(value = "Notes concerning arrival")
+    @Schema(description = "Notes concerning arrival")
     String getFreeTextArrival();
-    @ApiModelProperty(value = "Notes concerning departure")
+    @Schema(description = "Notes concerning departure")
     String getFreeTextDeparture();
 
-    @ApiModelProperty(value = "Vessel name")
+    @Schema(description = "Vessel name")
     String getVesselName();
-    @ApiModelProperty(value = "Vessel name prefix")
+    @Schema(description = "Vessel name prefix")
     String getVesselNamePrefix();
-    @ApiModelProperty(value = "Ship radio call sign")
+    @Schema(description = "Ship radio call sign")
     String getRadioCallSign();
-    @ApiModelProperty(value = "Ship radio call sign type")
+    @Schema(description = "Ship radio call sign type")
     String getRadioCallSignType();
 
-    @ApiModelProperty(value = "Ship IMO / Lloyds")
+    @Schema(description = "Ship IMO / Lloyds")
     Integer getImoLloyds();
 
-    @ApiModelProperty(value = "Ship nationality")
+    @Schema(description = "Ship nationality")
     String getNationality();
-    @ApiModelProperty(value = "Ship Vessel Type Code")
+    @Schema(description = "Ship Vessel Type Code")
     Integer getVesselTypeCode();
 
-    @ApiModelProperty(value = "Ship MMSI (Maritime Mobile Service Identity)")
+    @Schema(description = "Ship MMSI (Maritime Mobile Service Identity)")
     Integer getMmsi();
-    @ApiModelProperty(value = "Name of certificate issuer")
+    @Schema(description = "Name of certificate issuer")
     String getCertificateIssuer();
-    @ApiModelProperty(value = "Certificate start date")
+    @Schema(description = "Certificate start date")
     Timestamp getCertificateStartDate();
-    @ApiModelProperty(value = "Certificate end date")
+    @Schema(description = "Certificate end date")
     Timestamp getCertificateEndDate();
-    @ApiModelProperty(value = "Current security level. 1 = normal security level, 2 = raised security level, 3 = exceptional security level")
+    @Schema(description = "Current security level. 1 = normal security level, 2 = raised security level, 3 = exceptional security level")
     Integer getCurrentSecurityLevel();
 
-    @ApiModelProperty(value = "Ship agents")
+    @Schema(description = "Ship agents")
     Set<AgentInfoJson> getAgentInfo();
-    @ApiModelProperty(value = "IMO information")
+    @Schema(description = "IMO information")
     Set<ImoInformationJson> getImoInformation();
-    @ApiModelProperty(value = "Port area details")
+    @Schema(description = "Port area details")
     Set<PortAreaDetailsJson> getPortAreaDetails();
 }

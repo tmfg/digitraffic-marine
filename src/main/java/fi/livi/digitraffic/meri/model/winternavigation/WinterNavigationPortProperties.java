@@ -5,24 +5,24 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({ "name", "nationality", "seaArea", "portRestrictions" })
 public class WinterNavigationPortProperties extends Properties {
 
-    @ApiModelProperty(value = "Port SafeSeaNet location code", required = true, position = 1)
+    @Schema(description = "Port SafeSeaNet location code", required = true)
     public final String locode;
 
-    @ApiModelProperty(value = "Name", required = true)
+    @Schema(description = "Name", required = true)
     public final String name;
 
-    @ApiModelProperty(value = "Port nationality", required = true)
+    @Schema(description = "Port nationality", required = true)
     public final String nationality;
 
-    @ApiModelProperty(value = "Sea area where port is located", required = true)
+    @Schema(description = "Sea area where port is located", required = true)
     public final String seaArea;
 
-    @ApiModelProperty(value = "Currently effective or announced traffic restrictions at the port")
+    @Schema(description = "Currently effective or announced traffic restrictions at the port")
     public final List<PortRestrictionProperty> portRestrictions;
 
     public WinterNavigationPortProperties(final String locode, final String name, final String nationality, final String seaArea,

@@ -1,20 +1,19 @@
 package fi.livi.digitraffic.meri.model.portnet.data;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description="Agent info")
+@Schema(description="Agent info")
 public interface AgentInfoJson {
 
-    @ApiModelProperty(value = "Role of the agent")
+    @Schema(description = "Role of the agent")
     Integer getRole();
 
-    @ApiModelProperty(value = "Port call direction")
+    @Schema(description = "Port call direction")
     String getPortCallDirection();
 
-    @ApiModelProperty(value = "Name of the agent")
+    @Schema(description = "Name of the agent")
     String getName();
 
-    @ApiModelProperty(value = "Electronic data interchange number")
+    @Schema(description = "Electronic data interchange number")
     String getEdiNumber();
 }

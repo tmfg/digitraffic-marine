@@ -14,10 +14,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Vessel system", value = "VesselSystem")
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description="Vessel system", name = "VesselSystem")
 @JsonPropertyOrder({ "vesselId", "shipOwner", "shipTelephone1", "shipTelephone2", "shipFax", "shipEmail", "shipVerifier" })
 @Entity
 @DynamicUpdate
@@ -33,24 +33,24 @@ public class VesselSystem {
     @MapsId
     private fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails;
 
-    @ApiModelProperty(value = "Ship owner name")
+    @Schema(description = "Ship owner name")
     private String shipOwner;
 
-    @ApiModelProperty(value = "Ship telephone")
+    @Schema(description = "Ship telephone")
     private String shipTelephone1;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private String shipTelephone2;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private String shipFax;
 
-    @ApiModelProperty(value = "Ship email address")
+    @Schema(description = "Ship email address")
     private String shipEmail;
 
-    @ApiModelProperty(value = "Ship verifier")
+    @Schema(description = "Ship verifier")
     private String shipVerifier;
 
     public void setAll(BigInteger vesselId, VesselDetails.System system) {

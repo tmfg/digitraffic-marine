@@ -3,71 +3,71 @@ package fi.livi.digitraffic.meri.model.winternavigation;
 import java.util.List;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class WinterNavigationShipProperties extends Properties {
 
-    @ApiModelProperty(value = "Vessel identification code. Equals IMO-{IMO-code} when vessel IMO is present. " +
-        "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true, position = 1)
+    @Schema(description = "Vessel identification code. Equals IMO-{IMO-code} when vessel IMO is present. " +
+        "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true)
     public final String vesselId;
 
-    @ApiModelProperty(value = "Data source identifier")
+    @Schema(description = "Data source identifier")
     public final String vesselSource;
 
-    @ApiModelProperty(value = "Ship Maritime Mobile Service Identity")
+    @Schema(description = "Ship Maritime Mobile Service Identity")
     public final String mmsi;
 
-    @ApiModelProperty(value = "Ship name")
+    @Schema(description = "Ship name")
     public final String name;
 
-    @ApiModelProperty(value = "Radio call sign")
+    @Schema(description = "Radio call sign")
     public final String callSign;
 
-    @ApiModelProperty(value = "IMO unique ship identifier")
+    @Schema(description = "IMO unique ship identifier")
     public final String imo;
 
-    @ApiModelProperty(value = "Deadweight")
+    @Schema(description = "Deadweight")
     public final Double dwt;
 
-    @ApiModelProperty(value = "Ship length from official ship register")
+    @Schema(description = "Ship length from official ship register")
     public final Double length;
 
-    @ApiModelProperty(value = "Ship width from official ship register")
+    @Schema(description = "Ship width from official ship register")
     public final Double width;
 
-    @ApiModelProperty(value = "Ship length as entered into AIS device")
+    @Schema(description = "Ship length as entered into AIS device")
     public final Double aisLength;
 
-    @ApiModelProperty(value = "Ship width as entered into AIS device")
+    @Schema(description = "Ship width as entered into AIS device")
     public final Double aisWidth;
 
-    @ApiModelProperty(value = "Pre-formatted ship dimensions, e.g. \"13 x 80m\"")
+    @Schema(description = "Pre-formatted ship dimensions, e.g. \"13 x 80m\"")
     public final String dimensions;
 
-    @ApiModelProperty(value = "Nominal draught from ship register")
+    @Schema(description = "Nominal draught from ship register")
     public final Double nominalDraught;
 
-    @ApiModelProperty(value = "IAS, IA, IB, IC, II, empty")
+    @Schema(description = "IAS, IA, IB, IC, II, empty")
     public final String iceClass;
 
-    @ApiModelProperty(value = "International 2-letter code")
+    @Schema(description = "International 2-letter code")
     public final String natCode;
 
-    @ApiModelProperty(value = "Nationality name")
+    @Schema(description = "Nationality name")
     public final String nationality;
 
-    @ApiModelProperty(value = "Ship type")
+    @Schema(description = "Ship type")
     public final String shipType;
 
-    @ApiModelProperty(value = "AIS ship type")
+    @Schema(description = "AIS ship type")
     public final Integer aisShipType;
 
-    @ApiModelProperty(value = "Dynamically observed navigational status of the ship, originating either from " +
+    @Schema(description = "Dynamically observed navigational status of the ship, originating either from " +
                               "the AIS network or from manual input by users. " +
                               "In IBNet terms, this element might also be called SHIPPASSAGE, POSITION or OBSERVATION.")
     public final ShipStateProperty shipState;
 
-    @ApiModelProperty(value = "Currently known and validated user-given information on the vessel's port-of-destination, " +
+    @Schema(description = "Currently known and validated user-given information on the vessel's port-of-destination, " +
                               "port-of-residence, port-of-origin and/or previous and next ports. " +
                               "Note that this information is available in IBNet only if the ship has current or a " +
                               "future port visit to some Baltic Area port. " +
@@ -75,11 +75,11 @@ public class WinterNavigationShipProperties extends Properties {
                               "sources and timestamps, should be represented distinctly.")
     public final ShipVoyageProperty shipVoyage;
 
-    @ApiModelProperty(value = "Represents the ship state (or activity) given by icebreaker, VTS operator, " +
+    @Schema(description = "Represents the ship state (or activity) given by icebreaker, VTS operator, " +
                               "winter navigation administrator, port authority or representative.")
     public final List<ShipActivityProperty> shipActivities;
 
-    @ApiModelProperty(value = "Planned future assistance by an icebreaker or an icebreaker-specific activity " +
+    @Schema(description = "Planned future assistance by an icebreaker or an icebreaker-specific activity " +
                               "like bunkering or crew change.")
     public final List<ShipPlannedActivityProperty> shipPlannedActivities;
 

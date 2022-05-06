@@ -16,10 +16,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 import fi.livi.digitraffic.meri.util.TypeUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Vessel dimensions", value = "VesselDimensions")
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description="Vessel dimensions", name = "VesselDimensions")
 @JsonPropertyOrder({ "vesselId", "tonnageCertificateIssuer", "dateOfIssue", "grossTonnage", "netTonnage", "deathWeight", "length",
                      "overallLength", "height", "breadth", "draught", "maxSpeed", "enginePower", "totalPower", "maxPersons",
                      "maxPassengers", "keelDate" })
@@ -37,55 +37,55 @@ public class VesselDimensions {
     @MapsId
     private fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails;
 
-    @ApiModelProperty(value = "Tonnage certificate issuer")
+    @Schema(description = "Tonnage certificate issuer")
     private String tonnageCertificateIssuer;
 
-    @ApiModelProperty(value = "Date when tonnage certificate was issued")
+    @Schema(description = "Date when tonnage certificate was issued")
     private Timestamp dateOfIssue;
 
-    @ApiModelProperty(value = "Ship gross tonnage")
+    @Schema(description = "Ship gross tonnage")
     private Integer grossTonnage;
 
-    @ApiModelProperty(value = "Ship net tonnage")
+    @Schema(description = "Ship net tonnage")
     private Integer netTonnage;
 
-    @ApiModelProperty(value = "Ship death weight")
+    @Schema(description = "Ship death weight")
     private Integer deathWeight;
 
-    @ApiModelProperty(value = "Ship length")
+    @Schema(description = "Ship length")
     private Double length;
 
-    @ApiModelProperty(value = "Ship overall length")
+    @Schema(description = "Ship overall length")
     private Double overallLength;
 
-    @ApiModelProperty(value = "Ship height")
+    @Schema(description = "Ship height")
     private Double height;
 
-    @ApiModelProperty(value = "Ship breadth")
+    @Schema(description = "Ship breadth")
     private Double breadth;
 
-    @ApiModelProperty(value = "Ship draught")
+    @Schema(description = "Ship draught")
     private Double draught;
 
-    @ApiModelProperty(value = "Ship max speed")
+    @Schema(description = "Ship max speed")
     private Double maxSpeed;
 
-    @ApiModelProperty(value = "Ship engine power")
+    @Schema(description = "Ship engine power")
     private String enginePower;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private Integer totalPower;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private Integer maxPersons;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private Integer maxPassengers;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private Timestamp keelDate;
 

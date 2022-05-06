@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Feature;
 import fi.livi.digitraffic.meri.model.geojson.Point;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({
         "locode",
@@ -14,10 +15,10 @@ import io.swagger.annotations.ApiModelProperty;
 })
 public class PortAreaFeature extends Feature<Point, PortAreaProperties> {
 
-    @ApiModelProperty(value = "Maritime Mobile Service Identity", required = true, position = 1)
+    @Schema(description = "Maritime Mobile Service Identity", required = true)
     public final String locode;
 
-    @ApiModelProperty(value = "Port area code", required = true)
+    @Schema(description = "Port area code", required = true)
     public final String portAreaCode;
 
     public PortAreaFeature(final String locode, final String portAreaCode,

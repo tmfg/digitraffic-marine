@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import fi.livi.digitraffic.meri.model.geojson.Properties;
 import fi.livi.digitraffic.meri.model.pooki.converter.JsonDateTimeDeserializerToZonedDateTime;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.ZonedDateTime;
@@ -17,113 +19,113 @@ import static org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class PookiProperties extends Properties {
 
-    @ApiModelProperty(required = true)
+    @Schema(required = true)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
 
     // Merialueet suomeksi
-    @ApiModelProperty(value = "Area in Finnish")
+    @Schema(description = "Area in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String areasFi;
 
-    @ApiModelProperty("Area in Swedish")
+    @Schema(description = "Area in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String areasSv;
 
-    @ApiModelProperty("Area in English")
+    @Schema(description = "Area in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String areasEn;
 
     // Numerointi alkaa jokaisen vuoden alussa aina ykkösestä ja annetaan vasta sitten kun varoituksen tila muuttuu julkaistuksi
-    @ApiModelProperty("Nautical warning number. Starts with the digit 1 at the begining of the year. Set when warning was published.")
+    @Schema(description = "Nautical warning number. Starts with the digit 1 at the begining of the year. Set when warning was published.")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer number;
 
     // Sijainnin tarkennus suomeksi
-    @ApiModelProperty("Location specifier in Finnish")
+    @Schema(description = "Location specifier in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String locationFi;
 
-    @ApiModelProperty("Location specifier in Swedish")
+    @Schema(description = "Location specifier in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String locationSv;
 
-    @ApiModelProperty("Location specifier in English")
+    @Schema(description = "Location specifier in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String locationEn;
 
     // Merivaroituksen sisältö suomeksi
-    @ApiModelProperty("Nautical warning contents in Finnish")
+    @Schema(description = "Nautical warning contents in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String contentsFi;
 
-    @ApiModelProperty("Nautical warning contents in Swedish")
+    @Schema(description = "Nautical warning contents in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String contentsSv;
 
-    @ApiModelProperty("Nautical warning contents in English")
+    @Schema(description = "Nautical warning contents in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String contentsEn;
 
     // Päiväys ja aika
-    @ApiModelProperty("Set when nautical warning was created")
+    @Schema(description = "Set when nautical warning was created")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime creationTime;
 
     // Merivaroitustyypin selite suomeksi
-    @ApiModelProperty("Nautical warning type in Finnish")
+    @Schema(description = "Nautical warning type in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String typeFi;
 
-    @ApiModelProperty("Nautical warning type in Swedish")
+    @Schema(description = "Nautical warning type in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String typeSv;
 
-    @ApiModelProperty("Nautical warning type in English")
+    @Schema(description = "Nautical warning type in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String typeEn;
 
-    @ApiModelProperty("Beginning of validity time")
+    @Schema(description = "Beginning of validity time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime validityStartTime;
 
-    @ApiModelProperty("End of validity time")
+    @Schema(description = "End of validity time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime validityEndTime;
 
     // Should this be hidden?
-    @ApiModelProperty("Nautical warning contents for tooltip")
+    @Schema(description = "Nautical warning contents for tooltip")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String tooltip;
 
-    @ApiModelProperty("Are there virtual navaids related to this warning")
+    @Schema(description = "Are there virtual navaids related to this warning")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean virtualNavaids;
 
-    @ApiModelProperty("Is navtex message")
+    @Schema(description = "Is navtex message")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean navtex;
 
     // Merivaroitukseen liittyvän turvalaitteen ominaisuustiedot  (rivinvaihdoilla eroteltuina)
-    @ApiModelProperty("Aids to navigation related to the nautical warning")
+    @Schema(description = "Aids to navigation related to the nautical warning")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String navaidInfo;
 
     // Merivaroitukseen liittyvän väyläalueen ominaisuustiedot (rivinvaihdoilla eroteltuina)
-    @ApiModelProperty("Fairway features related to the nautical warning (separated by line breaks)")
+    @Schema(description = "Fairway features related to the nautical warning (separated by line breaks)")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String fairwayInfo;
 
     // Merivaroitukseen liittyvän navigointilinjan ominaisuustiedot (rivinvaihdoilla eroteltuina)
-    @ApiModelProperty("Navigation line features related to the nautical warning (separated by line breaks)")
+    @Schema(description = "Navigation line features related to the nautical warning (separated by line breaks)")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String navigationLineInfo;
 
-    @ApiModelProperty("Nautical warning publishing time")
+    @Schema(description = "Nautical warning publishing time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime publishingTime;
 
-    @ApiModelProperty("Notificator")
+    @Schema(description = "Notificator")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String notificator;
 

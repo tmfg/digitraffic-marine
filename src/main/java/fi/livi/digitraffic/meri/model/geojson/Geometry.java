@@ -6,14 +6,13 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({
     "type",
     "coordinates"
 })
-@ApiModel(description = "GeoJSON Geometry object")
+@Schema(description = "GeoJSON Geometry object")
 public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     public static final String COORD_FORMAT_WGS84 = "Coordinates are in WGS84 format in decimal degrees.";
@@ -22,7 +21,7 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     private GeometryType type;
 
-    @ApiModelProperty(value = COORD_FORMAT_WGS84_LONG_INC_ALT, required = true)
+    @Schema(description = COORD_FORMAT_WGS84_LONG_INC_ALT, required = true)
     @JsonProperty(required = true)
     private T coordinates;
 
@@ -46,7 +45,7 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
         this.coordinates = coordinates;
     }
 
-    @ApiModelProperty( value = "Type of GeoJSON Geometry object", allowableValues = "Point,MultiPoint,LineString,MultiLineString,Polygon,MultiPolygon", required = true)
+    @Schema(description = "Type of GeoJSON Geometry object", allowableValues = "Point,MultiPoint,LineString,MultiLineString,Polygon,MultiPolygon", required = true)
     @Override
     public String getType() {
         return type.name();
@@ -57,7 +56,7 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
         return "Geometry { type=" + getType() + ", coordinates=" + coordinates + " }";
     }
 
-    @ApiModel
+    @Schema
     public enum GeometryType {
         Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
     }
