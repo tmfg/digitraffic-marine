@@ -24,16 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
-@Api
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_SSE_PATH)
 @ConditionalOnWebApplication
+@Tag(name = "sse-controller", description = "Sse Controller")
 public class SseController {
 
     private static final Logger log = LoggerFactory.getLogger(SseController.class);
@@ -51,7 +52,7 @@ public class SseController {
         this.sseService = sseService;
     }
 
-    @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON")
+    @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON")
     @GetMapping(path = LATEST_PATH , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -60,25 +61,25 @@ public class SseController {
         return sseService.findLatest();
     }
 
-    @ApiOperation("Return latest SSE (Sea State Estimation) data as GeoJSON for given site")
+    @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON for given site")
     @ApiResponses(value = {
-        @ApiResponse(code = 400, message = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
+        @ApiResponse(responseCode = "400", description = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
     })
     @GetMapping(path = LATEST_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public SseFeatureCollection findLatest(
-        @ApiParam(value = "SSE site number", required = true)
+        @Parameter(description = "SSE site number", required = true)
         @PathVariable("siteNumber")
         final int siteNumber) {
 
         return sseService.findLatest(siteNumber);
     }
 
-    @ApiOperation("Return SSE history data (Sea State Estimation) data as GeoJSON for given time")
+    @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given time")
     @ApiResponses(value = {
-        @ApiResponse(code = 400, message = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+        @ApiResponse(responseCode = "400", description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })
     @GetMapping(path = HISTORY_PATH, produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
@@ -87,12 +88,12 @@ public class SseController {
     @ResponseBody
     public SseFeatureCollection findHistory(
 
-        @ApiParam(value = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE, required = true)
+        @Parameter(description = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE, required = true)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @RequestParam(value = "from")
         final ZonedDateTime from,
 
-        @ApiParam(value = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE, required = true)
+        @Parameter(description = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE, required = true)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @RequestParam(value = "to")
         final ZonedDateTime to) {
@@ -100,9 +101,9 @@ public class SseController {
         return sseService.findHistory(toInstant(from), toInstant(to));
     }
 
-    @ApiOperation("Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time")
+    @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time")
     @ApiResponses(value = {
-        @ApiResponse(code = 400, message = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+        @ApiResponse(responseCode = "400", description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
             CODE_400_NOT_EXISTS_WITH_IDENTIFIER + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })
@@ -111,16 +112,16 @@ public class SseController {
                                                                     MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public SseFeatureCollection findHistoryBySite(
-        @ApiParam(value = "SSE site number", required = true)
+        @Parameter(description = "SSE site number", required = true)
         @PathVariable(value = "siteNumber")
         final Integer siteNumber,
 
-        @ApiParam(value = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE)
+        @Parameter(description = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @RequestParam(value = "from", required = false)
         final ZonedDateTime from,
 
-        @ApiParam(value = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE)
+        @Parameter(description = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @RequestParam(value = "to", required = false)
         final ZonedDateTime to) {

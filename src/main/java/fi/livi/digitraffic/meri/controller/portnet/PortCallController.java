@@ -22,14 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
 import fi.livi.digitraffic.meri.service.portnet.PortCallService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_PORT_CALLS_PATH)
 @ConditionalOnWebApplication
+@Tag(name="port-call-controller", description = "Port Call Controller")
 public class PortCallController {
     private final PortCallService portCallService;
 
@@ -41,66 +45,66 @@ public class PortCallController {
         this.portCallService = portCallService;
     }
 
-    @ApiOperation(value = "Find port calls", notes = NOTE)
+    @Operation(summary = "Find port calls", description = NOTE)
     @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
-                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of port calls"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
     @ResponseBody
     public PortCallsJson listAllPortCalls(
-            @ApiParam("Return port calls received on given date.")
+            @Parameter(description = "Return port calls received on given date.")
             @RequestParam(value = "date", required = false)
             @DateTimeFormat(iso = DATE) final Date date,
 
-            @ApiParam("Return port calls received after given time. " +
+            @Parameter(description = "Return port calls received after given time. " +
                       "Default value is now minus 24 hours if all parameters are empty.")
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime from,
 
-            @ApiParam("Return port calls whose ETA time is after the given time")
+            @Parameter(description = "Return port calls whose ETA time is after the given time")
             @RequestParam(value = "etaFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaFrom,
 
-            @ApiParam("Return port calls whose ETD time is after the given time")
+            @Parameter(description = "Return port calls whose ETD time is after the given time")
             @RequestParam(value = "etdFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdFrom,
 
-            @ApiParam("Return port calls whose ATA time is after the given time")
+            @Parameter(description = "Return port calls whose ATA time is after the given time")
             @RequestParam(value = "ataFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataFrom,
 
-            @ApiParam("Return port calls whose ATD time is after the given time")
+            @Parameter(description = "Return port calls whose ATD time is after the given time")
             @RequestParam(value = "atdFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdFrom,
 
-            @ApiParam("Return port calls whose ETA time is before the given time")
+            @Parameter(description = "Return port calls whose ETA time is before the given time")
             @RequestParam(value = "etaTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaTo,
 
-            @ApiParam("Return port calls whose ETD time is before the given time")
+            @Parameter(description = "Return port calls whose ETD time is before the given time")
             @RequestParam(value = "etdTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdTo,
 
-            @ApiParam("Return port calls whose ATA time is before the given time")
+            @Parameter(description = "Return port calls whose ATA time is before the given time")
             @RequestParam(value = "ataTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataTo,
 
-            @ApiParam("Return port calls whose ATD time is before the given time")
+            @Parameter(description = "Return port calls whose ATD time is before the given time")
             @RequestParam(value = "atdTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdTo,
 
-            @ApiParam("Return port calls for given vessel name")
+            @Parameter(description = "Return port calls for given vessel name")
             @RequestParam(value = "vesselName", required = false) final String vesselName,
 
-            @ApiParam("Return port calls for given mmsi")
+            @Parameter(description = "Return port calls for given mmsi")
             @RequestParam(value = "mmsi", required = false) final Integer mmsi,
 
-            @ApiParam("Return port calls for given IMO/LLOYDS")
+            @Parameter(description = "Return port calls for given IMO/LLOYDS")
             @RequestParam(value = "imo", required = false) final Integer imo,
 
-            @ApiParam("Return port calls for vessels with given nationality")
+            @Parameter(description = "Return port calls for vessels with given nationality")
             @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
-            @ApiParam("Return port calls for given vessel type code")
+            @Parameter(description = "Return port calls for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
             ) {
 
@@ -125,72 +129,72 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @ApiOperation(value = "Find port calls", notes = NOTE)
+    @Operation(summary = "Find port calls", description = NOTE)
     @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
-                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of port calls"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
     @ResponseBody
     public PortCallsJson listAllPortCallsFromLocode(
-            @ApiParam(value = "Return port calls from given port", required = true)
+            @Parameter(description = "Return port calls from given port", required = true)
             @PathVariable("locode") final String locode,
 
-            @ApiParam("Return port calls received on given date.")
+            @Parameter(description = "Return port calls received on given date.")
             @RequestParam(value = "date", required = false)
             @DateTimeFormat(iso = DATE) final Date date,
 
-            @ApiParam("Return port calls received after given time.")
+            @Parameter(description = "Return port calls received after given time.")
             @RequestParam(value = "from", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime from,
 
-            @ApiParam("Return port calls received before given time.")
+            @Parameter(description = "Return port calls received before given time.")
             @RequestParam(value = "to", required = false)
             @DateTimeFormat(iso = DATE_TIME) final ZonedDateTime to,
 
-            @ApiParam("Return port calls whose ETA time is after the given time")
+            @Parameter(description = "Return port calls whose ETA time is after the given time")
             @RequestParam(value = "etaFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaFrom,
 
-            @ApiParam("Return port calls whose ETD time is after the given time")
+            @Parameter(description = "Return port calls whose ETD time is after the given time")
             @RequestParam(value = "etdFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdFrom,
 
-            @ApiParam("Return port calls whose ATA time is after the given time")
+            @Parameter(description = "Return port calls whose ATA time is after the given time")
             @RequestParam(value = "ataFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataFrom,
 
-            @ApiParam("Return port calls whose ATD time is after the given time")
+            @Parameter(description = "Return port calls whose ATD time is after the given time")
             @RequestParam(value = "atdFrom", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdFrom,
 
-            @ApiParam("Return port calls whose ETA time is before the given time")
+            @Parameter(description = "Return port calls whose ETA time is before the given time")
             @RequestParam(value = "etaTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaTo,
 
-            @ApiParam("Return port calls whose ETD time is before the given time")
+            @Parameter(description = "Return port calls whose ETD time is before the given time")
             @RequestParam(value = "etdTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdTo,
 
-            @ApiParam("Return port calls whose ATA time is before the given time")
+            @Parameter(description = "Return port calls whose ATA time is before the given time")
             @RequestParam(value = "ataTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataTo,
 
-            @ApiParam("Return port calls whose ATD time is before the given time")
+            @Parameter(description = "Return port calls whose ATD time is before the given time")
             @RequestParam(value = "atdTo", required = false)
             @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdTo,
 
-            @ApiParam("Return port calls for given vessel name")
+            @Parameter(description = "Return port calls for given vessel name")
             @RequestParam(value = "vesselName", required = false) final String vesselName,
 
-            @ApiParam("Return port calls for given mmsi")
+            @Parameter(description = "Return port calls for given mmsi")
             @RequestParam(value = "mmsi", required = false) final Integer mmsi,
 
-            @ApiParam("Return port calls for given IMO/LLOYDS")
+            @Parameter(description = "Return port calls for given IMO/LLOYDS")
             @RequestParam(value = "imo", required = false) final Integer imo,
 
-            @ApiParam("Return port calls for vessels with given nationality")
+            @Parameter(description = "Return port calls for vessels with given nationality")
             @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
-            @ApiParam("Return port calls for given vessel type code")
+            @Parameter(description = "Return port calls for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
         return portCallService.findPortCalls(date,
@@ -212,35 +216,35 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @ApiOperation(value = "Find port calls", notes = NOTE)
+    @Operation(summary = "Find port calls", description = NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(code = 200, message = "Successful retrieval of port calls"),
-                    @ApiResponse(code = 500, message = "Internal server error") })
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of port calls"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
     @ResponseBody
     public PortCallsJson listAllPortCallsFromTo(
-        @ApiParam(value = "Return port calls received after given time.",
+        @Parameter(description = "Return port calls received after given time.",
                   required = true)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @PathVariable("from") final ZonedDateTime from,
 
-        @ApiParam(value = "Return port calls received before given time.",
+        @Parameter(description = "Return port calls received before given time.",
                   required = true)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         @PathVariable("to") final ZonedDateTime to,
 
-        @ApiParam("Return port calls for given vessel name")
+        @Parameter(description = "Return port calls for given vessel name")
         @RequestParam(value = "vesselName", required = false) final String vesselName,
 
-        @ApiParam("Return port calls for given mmsi")
+        @Parameter(description = "Return port calls for given mmsi")
         @RequestParam(value = "mmsi", required = false) final Integer mmsi,
 
-        @ApiParam("Return port calls for given IMO/LLOYDS")
+        @Parameter(description = "Return port calls for given IMO/LLOYDS")
         @RequestParam(value = "imo", required = false) final Integer imo,
 
-        @ApiParam("Return port calls for vessels with given nationality")
+        @Parameter(description = "Return port calls for vessels with given nationality")
         @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
-        @ApiParam("Return port calls for given vessel type code")
+        @Parameter(description = "Return port calls for given vessel type code")
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
                                          ) {
         return portCallService.findPortCallsWithoutTimestamps(from,
