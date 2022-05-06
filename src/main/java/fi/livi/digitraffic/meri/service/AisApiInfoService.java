@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.service;
 import fi.livi.digitraffic.meri.documentation.AisApiInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springfox.documentation.service.ApiInfo;
 
 @Service
 public class AisApiInfoService {
@@ -18,7 +17,7 @@ public class AisApiInfoService {
         this.buildVersionService = buildVersionService;
     }
 
-    public ApiInfo getApiInfo() {
+    public AisApiInfo getApiInfo() {
         return new AisApiInfo(messageService, buildVersionService);
     }
 }

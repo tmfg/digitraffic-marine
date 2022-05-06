@@ -4,61 +4,46 @@ import java.util.Collections;
 
 import fi.livi.digitraffic.meri.service.BuildVersionService;
 import fi.livi.digitraffic.meri.service.MessageService;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.License;
 
-public class AisApiInfo extends ApiInfo {
+public class AisApiInfo {
     private BuildVersionService buildVersionService;
     protected MessageService messageService;
 
     public AisApiInfo(final MessageService messageService, final BuildVersionService buildVersionService) {
-        super(null, //title,
-              null, //description,
-              null, //version,
-              null, //termsOfServiceUrl,
-              null, //contact,
-              null, //license,
-              null,
-                Collections.emptyList()); //licenseUrl)
         this.messageService = messageService;
         this.buildVersionService = buildVersionService;
     }
 
-    @Override
     public String getTitle() {
         return messageService.getMessage("apiInfo.title");
     }
 
-    @Override
     public String getDescription() {
         return messageService.getMessage("apiInfo.description");
     }
 
-    @Override
     public String getVersion() {
-            return buildVersionService.getAppFullVersion();
+        return buildVersionService.getAppFullVersion();
     }
 
-    @Override
     public Contact getContact() {
-        return new Contact(
-                messageService.getMessage("apiInfo.contact.name"),
-                messageService.getMessage("apiInfo.contact.url"),
-                "");
+        return new Contact()
+            .name(messageService.getMessage("apiInfo.contact.name"))
+            .url(messageService.getMessage("apiInfo.contact.url"));
     }
 
-    @Override
     public String getTermsOfServiceUrl() {
         return messageService.getMessage("apiInfo.terms.of.service");
     }
 
-
-    @Override
-    public String getLicense() {
-        return messageService.getMessage("apiInfo.licence");
+    public License getLicense() {
+        return new License()
+            .name(messageService.getMessage("apiInfo.licence"))
+            .url(messageService.getMessage("apiInfo.licence.url"));
     }
 
-    @Override
     public String getLicenseUrl() {
         return messageService.getMessage("apiInfo.licence.url");
     }
