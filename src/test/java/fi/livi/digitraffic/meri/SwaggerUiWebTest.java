@@ -55,6 +55,16 @@ public class SwaggerUiWebTest extends AbstractTestBase {
     }
 
     @Test
+    public void testSwaggerRestMarineApi() throws Exception {
+        mockMvc.perform(get("/v2/api-docs?group=marine-api"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(restContentType))
+            .andExpect(jsonPath("$.swagger", is("2.0")))
+            .andExpect(jsonPath("$.info.version", is(versionService.getAppFullVersion())))
+            .andExpect(jsonPath("$.paths." + API_V1_BASE_PATH + API_METADATA_PART_PATH + API_LOCATIONS_PATH, anything()));
+    }
+
+    @Test
     public void testSwaggerRestApiBeta() throws Exception {
         mockMvc.perform(get("/v2/api-docs?group=metadata-api-beta"))
             .andExpect(status().isOk())
@@ -62,6 +72,17 @@ public class SwaggerUiWebTest extends AbstractTestBase {
             .andExpect(jsonPath("$.swagger", is("2.0")))
             .andExpect(jsonPath("$.info.version", is(versionService.getAppFullVersion())))
 //            .andExpect(content().string(containsString(API_BETA_BASE_PATH + "/")))
+        ;
+    }
+
+    @Test
+    public void testMarineSwaggerRestMarineApiBeta() throws Exception {
+        mockMvc.perform(get("/v2/api-docs?group=marine-api-beta"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(restContentType))
+            .andExpect(jsonPath("$.swagger", is("2.0")))
+            .andExpect(jsonPath("$.info.version", is(versionService.getAppFullVersion())))
+        //            .andExpect(content().string(containsString(API_BETA_BASE_PATH + "/")))
         ;
     }
 }

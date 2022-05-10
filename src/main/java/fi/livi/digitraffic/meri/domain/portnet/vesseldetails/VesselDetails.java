@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import fi.livi.digitraffic.meri.portnet.xsd.IdentificationData;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -70,8 +71,8 @@ public class VesselDetails {
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselSystem vesselSystem;
 
-    public void setAll(final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails vd) {
-        final fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails.IdentificationData idData = vd.getIdentificationData();
+    public void setAll(final fi.livi.digitraffic.meri.portnet.xsd.VesselDetails vd) {
+        final IdentificationData idData = vd.getIdentificationData();
         this.vesselId = idData.getVesselId().longValue();
         this.mmsi = TypeUtil.getInteger(idData.getMmsi());
         this.name = idData.getName();

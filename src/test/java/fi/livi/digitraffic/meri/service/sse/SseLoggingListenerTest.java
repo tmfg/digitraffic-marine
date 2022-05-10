@@ -24,7 +24,7 @@ public class SseLoggingListenerTest extends AbstractTestBase {
     private CachedLocker cachedLocker;
 
     @Mock
-    private SseMqttSender sseMqttSender;
+    private SseMqttSenderV1 sseMqttSender;
 
     @Captor
     private ArgumentCaptor<SseLoggingListener.StatusMessage> statusCaptor;

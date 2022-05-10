@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.System;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -53,7 +54,7 @@ public class VesselSystem {
     @Schema(description = "Ship verifier")
     private String shipVerifier;
 
-    public void setAll(BigInteger vesselId, VesselDetails.System system) {
+    public void setAll(final BigInteger vesselId, final System system) {
         this.vesselId = vesselId.longValue();
         this.shipOwner = system.getShipOwner();
         this.shipTelephone1 = system.getShipTelephone1();

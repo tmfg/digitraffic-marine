@@ -5,6 +5,7 @@ import fi.livi.digitraffic.meri.portnet.xsd.*;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -110,6 +111,12 @@ class PortcallEstimateEndpoint {
 class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
 
     private final HttpClient httpClient = HttpClients.createDefault();
+    private static final RequestConfig REQUEST_CONFIG = RequestConfig.custom()
+        .setSocketTimeout(30 * 1000)
+        .setConnectionRequestTimeout(30 * 1000)
+        .setConnectTimeout(30 * 1000)
+        .build();
+
     private final List<PortcallEstimateEndpoint> portcallEstimateEndpoints = new ArrayList<>();
 
     private final ObjectMapper om;
@@ -156,6 +163,7 @@ class HttpPortcallEstimateUpdater implements PortcallEstimateUpdater {
                 post.setHeader("X-Api-Key", endpoint.apiKey);
                 final String json = om.writeValueAsString(pce);
                 post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+                post.setConfig(REQUEST_CONFIG);
                 final StatusLine status = httpClient.execute(post).getStatusLine();
                 if (status.getStatusCode() != HttpStatus.SC_OK) {
                     log.warn("method=updatePortcallEstimate got status code {}, reason {} for json {}", status.getStatusCode(), status.getReasonPhrase(), json);

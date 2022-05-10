@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.config;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.IntegrationComponentScan;
@@ -20,10 +21,11 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
 @ConditionalOnExpression("('${ais.mqtt.enabled}' == 'true' OR '${sse.mqtt.enabled}' == 'true') AND '${config.test}' != 'true'")
+@ConditionalOnNotWebApplication
 @Configuration
 @EnableIntegration
 @IntegrationComponentScan
-public class MqttConfig {
+public class MqttConfiguration {
     private final String clientId = "marine_updater_" + MqttClient.generateClientId();
 
     @Bean
@@ -56,26 +58,8 @@ public class MqttConfig {
     }
 
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel", defaultRequestTimeout = "2000", defaultReplyTimeout = "2000")
-    private interface MqttGateway {
+    public interface MqttGateway {
         // Paho does not support concurrency, all calls to this must be synchronized!
         void sendToMqtt(@Header(MqttHeaders.TOPIC) final String topic, @Header(MqttHeaders.QOS) final Integer qos, @Payload final String data);
-    }
-
-    @Bean
-    public SynchronizedMqttGateway synchronizedMqttGateway(final MqttGateway mqttGateway) {
-        return new SynchronizedMqttGateway(mqttGateway);
-    }
-
-    public class SynchronizedMqttGateway {
-        private final Integer QOS = 0;
-        private final MqttConfig.MqttGateway mqttGateway;
-
-        public SynchronizedMqttGateway(final MqttConfig.MqttGateway mqttGateway) {
-            this.mqttGateway = mqttGateway;
-        }
-
-        public synchronized void sendToMqtt(final String topic, final String data) {
-            mqttGateway.sendToMqtt(topic, QOS, data);
-        }
     }
 }

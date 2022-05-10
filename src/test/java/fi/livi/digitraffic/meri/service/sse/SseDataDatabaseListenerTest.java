@@ -4,6 +4,7 @@ import static fi.livi.digitraffic.meri.model.sse.SseProperties.Confidence;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.LightStatus;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.Trend;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +18,11 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
+import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -43,20 +49,20 @@ import fi.livi.digitraffic.meri.util.StringUtil;
 @Transactional
 @TestPropertySource(properties = { "sse.mqtt.enabled=true" })
 public class SseDataDatabaseListenerTest extends AbstractTestBase {
-
-    private static final Logger log = LoggerFactory.getLogger(SseDataDatabaseListenerTest.class);
-
     @MockBean
     private CachedLocker cachedLocker;
 
     @MockBean
-    private SseMqttSender sseMqttSender;
+    private MqttRelayQueue mqttRelayQueue;
 
     @SpyBean
-    private SseDataDatabaseListener sseDataDatabaseListener;
+    private SseMqttSenderV1 sseMqttSenderV1;
 
     @Autowired
     private SseReportRepository sseReportRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void cleanUp() {
@@ -66,21 +72,20 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
     @Test
     public void verifyMqttSendMessagesIsCalledFromScheduler() throws IOException {
         when(cachedLocker.hasLock()).thenReturn(true);
-        final Instant first = Instant.now().minus(30, ChronoUnit.MINUTES);
+        final Instant first = Instant.now().plus(30, ChronoUnit.MINUTES);
         final Instant second = first.plus(10, ChronoUnit.MINUTES);
         final Instant third = second.plus(10, ChronoUnit.MINUTES);
-        ReflectionTestUtils.setField(sseDataDatabaseListener, "latest", first.minusSeconds(1));
 
         // First no new reports in db
         triggerSheduledTask();
-        verify(sseMqttSender, Mockito.never()).sendSseMessage(Mockito.any(SseFeature.class));
+        verify(mqttRelayQueue, Mockito.never()).queueMqttMessage(any(), any(), any());
 
         // One new report
-        SseFeatureCollection sse1 = createFeatureCollection(1, first);
+        final SseFeatureCollection sse1 = createFeatureCollection(1, first);
         saveReports(sse1);
         // Trigger scheduled run and check the new report is send to mqtt
         triggerSheduledTask();
-        verify(sseMqttSender, Mockito.times(1)).sendSseMessage(Mockito.any(SseFeature.class));
+        verify(mqttRelayQueue, Mockito.times(1)).queueMqttMessage(any(), any(), any());
 
         // Create two more
         final SseFeatureCollection sse2 = createFeatureCollection(2, second);
@@ -88,21 +93,25 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
         saveReports(sse2);
         saveReports(sse3);
         // Trigger scheduled run
-        ReflectionTestUtils.invokeMethod(sseDataDatabaseListener,  "checkNewSseReports");
-        final ArgumentCaptor<SseFeature> argumentCaptor = ArgumentCaptor.forClass(SseFeature.class);
+        ReflectionTestUtils.invokeMethod(sseMqttSenderV1,  "checkNewSseReports");
+        final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         // 3 times as 1. is counted also
-        verify(sseMqttSender, Mockito.times(3)).sendSseMessage(argumentCaptor.capture());
-        final List<SseFeature> capturedValues = argumentCaptor.getAllValues();
+        verify(mqttRelayQueue, Mockito.times(3)).queueMqttMessage(any(), argumentCaptor.capture(), any());
+        final List<String> capturedValues = argumentCaptor.getAllValues();
         assertEquals(3, capturedValues.size());
 
         // Check the that reports are send to mqtt in right order and they equals with original data
-        assertSseFeaturesEquals(sse1.getFeatures().get(0), capturedValues.get(0));
-        assertSseFeaturesEquals(sse2.getFeatures().get(0), capturedValues.get(1));
-        assertSseFeaturesEquals(sse3.getFeatures().get(0), capturedValues.get(2));
+        assertSseFeaturesEquals(sse1.getFeatures().get(0), convertFromString(capturedValues.get(0)));
+        assertSseFeaturesEquals(sse2.getFeatures().get(0), convertFromString(capturedValues.get(1)));
+        assertSseFeaturesEquals(sse3.getFeatures().get(0), convertFromString(capturedValues.get(2)));
+    }
+
+    private SseFeature convertFromString(final String value) throws JsonProcessingException {
+        return objectMapper.readerFor(SseFeature.class).readValue(value);
     }
 
     private void triggerSheduledTask() {
-        ReflectionTestUtils.invokeMethod(sseDataDatabaseListener,  "checkNewSseReports");
+        ReflectionTestUtils.invokeMethod(sseMqttSenderV1,  "checkNewSseReports");
     }
 
     private void assertSseFeaturesEquals(final SseFeature expected, final SseFeature captured) {
@@ -112,7 +121,7 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
     }
 
     private SseFeatureCollection createFeatureCollection(final int siteNumber, final Instant created) {
-        SseProperties properties = new SseProperties(
+        final SseProperties properties = new SseProperties(
             siteNumber,
             "siteName" + siteNumber,
             SseProperties.SiteType.FLOATING,
@@ -130,9 +139,8 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
         return new SseFeatureCollection(Instant.now(), Collections.singletonList(f));
     }
 
-    private void saveReports(final SseFeatureCollection sseFeatureCollection) throws IOException {
-        List<SseReport> sseReports = convertToSseReports(sseFeatureCollection);
-        sseReports.forEach(sseReport -> {
+    private void saveReports(final SseFeatureCollection sseFeatureCollection) {
+        convertToSseReports(sseFeatureCollection).forEach(sseReport -> {
             sseReportRepository.markSiteLatestReportAsNotLatest(sseReport.getSiteNumber());
             sseReportRepository.save(sseReport);
         });
