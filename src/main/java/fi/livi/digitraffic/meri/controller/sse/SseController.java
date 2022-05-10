@@ -100,6 +100,8 @@ public class SseController {
         return sseService.findHistory(toInstant(from), toInstant(to));
     }
 
+    // TODO just test
+    @Deprecated
     @ApiOperation("Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time")
     @ApiResponses(value = {
         @ApiResponse(code = 400, message = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
