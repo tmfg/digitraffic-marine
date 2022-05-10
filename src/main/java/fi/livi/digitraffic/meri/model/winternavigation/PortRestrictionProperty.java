@@ -5,7 +5,7 @@ import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "PortRestriction")
+@Schema(name = "PortRestriction")
 public class PortRestrictionProperty {
 
     @Schema(description = "Indicates whether this restriction is currently in effect (true); false implies past/future restriction")

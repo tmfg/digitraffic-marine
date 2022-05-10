@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "ShipPlannedActivity")
+@Schema(name = "ShipPlannedActivity")
 public class ShipPlannedActivityProperty {
 
     @Schema(description = "PLA = Planned assistance " +

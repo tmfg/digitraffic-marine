@@ -7,7 +7,7 @@ import fi.livi.digitraffic.meri.service.winternavigation.dto.PositionSource;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "ShipState")
+@Schema(name = "ShipState")
 public class ShipStateProperty {
 
     @Schema(description = "Timestamp of position observation")

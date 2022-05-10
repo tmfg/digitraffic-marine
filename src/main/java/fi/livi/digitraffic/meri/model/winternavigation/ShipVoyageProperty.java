@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "ShipVoyage")
+@Schema(name = "ShipVoyage")
 public class ShipVoyageProperty {
 
     @Schema(description = "UN locode of the previous port, if known")
