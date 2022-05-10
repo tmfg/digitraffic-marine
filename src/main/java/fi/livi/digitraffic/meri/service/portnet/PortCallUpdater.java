@@ -183,7 +183,7 @@ public class PortCallUpdater {
 
     private static void updateData(final PortCall pc, final PortCallNotification pcn) {
         final PortCallDetails det = pcn.getPortCallDetails();
-        final VesselDetails.IdentificationData id = det.getVesselDetails().getIdentificationData();
+        final IdentificationData id = det.getVesselDetails().getIdentificationData();
 
         pc.setPortCallId(pcn.getPortCallId().longValue());
         pc.setPortCallTimestamp(getTimestamp(pcn.getPortCallTimestamp()));

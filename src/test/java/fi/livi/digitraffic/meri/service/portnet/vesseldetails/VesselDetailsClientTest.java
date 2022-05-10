@@ -4,13 +4,13 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import javax.net.ssl.HttpsURLConnection;
 
+import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselList;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

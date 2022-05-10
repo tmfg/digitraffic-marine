@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ptns="http://portnet.fi/PortnetWS/PortnetTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://portnet.fi/PortCallNotification">
+    <xs:import namespace="http://portnet.fi/PortnetWS/PortnetTypes" schemaLocation="PortnetSchemaTypes.xsd" />
+    <!-- Main document -->
+    <xs:element name="PortCallList" type="ptns:PortCallList" />
+    <xs:element name="PortCallPublicList" type="ptns:PortCallList" />
+</xs:schema>

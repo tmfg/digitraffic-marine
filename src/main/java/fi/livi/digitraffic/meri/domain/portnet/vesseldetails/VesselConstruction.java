@@ -8,9 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import fi.livi.digitraffic.meri.portnet.xsd.ConstructionData;
 import org.hibernate.annotations.DynamicUpdate;
-
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -66,7 +65,7 @@ public class VesselConstruction {
     @ApiModelProperty(value = "Tells whether vessel has a ballast tank")
     private Boolean ballastTank;
 
-    public void setAll(BigInteger vesselId, VesselDetails.ConstructionData cd) {
+    public void setAll(final BigInteger vesselId, final ConstructionData cd) {
         this.vesselId = vesselId.longValue();
         this.vesselTypeCode = TypeUtil.getInteger(cd.getVesselTypeCode());
         this.vesselTypeName = cd.getVesselTypeName();

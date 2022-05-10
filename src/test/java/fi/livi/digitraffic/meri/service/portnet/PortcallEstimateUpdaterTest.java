@@ -58,7 +58,7 @@ public class PortcallEstimateUpdaterTest extends AbstractTestBase {
         final BerthDetails bd = new BerthDetails();
 
         final VesselDetails vd = new VesselDetails();
-        final VesselDetails.IdentificationData id = new VesselDetails.IdentificationData();
+        final IdentificationData id = new IdentificationData();
 
         pcn.setPortCallDetails(pcd);
         pcn.setPortCallId(BigInteger.valueOf(PORTCALL_ID));
