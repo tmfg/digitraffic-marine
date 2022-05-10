@@ -13,9 +13,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
 import fi.livi.digitraffic.meri.portnet.xsd.System;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Vessel system", name = "VesselSystem")

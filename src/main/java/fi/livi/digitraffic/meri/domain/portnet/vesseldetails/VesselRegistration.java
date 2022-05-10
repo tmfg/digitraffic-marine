@@ -8,15 +8,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import fi.livi.digitraffic.meri.portnet.xsd.RegistrationData;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.portnet.vesseldetails.xsd.VesselDetails;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import fi.livi.digitraffic.meri.portnet.xsd.RegistrationData;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Vessel registration", name = "VesselRegistration")
