@@ -50,17 +50,17 @@ public class SwaggerConfiguration {
     }
 
     @Bean
-    public GroupedOpenApi metadataApi() {
+    public GroupedOpenApi marineApi() {
         return GroupedOpenApi.builder()
-            .group("metadata-api")
+            .group("marine-api")
             .pathsToMatch(API_V1_BASE_PATH + "/**", API_V2_BASE_PATH + "/**")
             .addOpenApiCustomiser(openApiConfig())
             .build();
     }
     @Bean
-    public GroupedOpenApi metadataApiBeta() {
+    public GroupedOpenApi marineApiBeta() {
         return GroupedOpenApi.builder()
-            .group("metadata-api-beta")
+            .group("marine-api-beta")
             .pathsToMatch(API_BETA_BASE_PATH + "/**")
             .addOpenApiCustomiser(openApiConfig())
             .build();
