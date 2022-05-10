@@ -91,7 +91,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
         "a{sijainti",
         "a)sijainti",
         "a(sijainti",
-        "metadata-api?group",
+        "marine-api?group",
         "a\\/b",
         "a/b",
     };
