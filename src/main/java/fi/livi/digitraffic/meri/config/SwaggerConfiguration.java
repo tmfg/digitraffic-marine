@@ -8,8 +8,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
-import fi.livi.digitraffic.meri.documentation.AisApiInfo;
-import fi.livi.digitraffic.meri.service.AisApiInfoService;
+import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
+import fi.livi.digitraffic.meri.service.MarineApiInfoService;
 
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
@@ -27,16 +27,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfiguration {
 
-    private final AisApiInfoService aisApiInfoService;
-    private final AisApiInfo aisApiInfo;
+    private final MarineApiInfoService marineApiInfoService;
+    private final MarineApiInfo marineApiInfo;
     private final String host;
     private final String scheme;
 
     @Autowired
-    public SwaggerConfiguration(final AisApiInfoService aisApiInfoService,
+    public SwaggerConfiguration(final MarineApiInfoService marineApiInfoService,
                                 final @Value("${dt.domain.url}") String domainUrl) throws URISyntaxException {
-        this.aisApiInfoService = aisApiInfoService;
-        this.aisApiInfo = aisApiInfoService.getApiInfo();
+        this.marineApiInfoService = marineApiInfoService;
+        this.marineApiInfo = marineApiInfoService.getApiInfo();
 
         URI uri = new URI(domainUrl);
 
@@ -79,12 +79,12 @@ public class SwaggerConfiguration {
         return openApi -> {
             openApi
                 .setInfo(new Info()
-                    .title(aisApiInfo.getTitle())
-                    .description(aisApiInfo.getDescription())
-                    .version(aisApiInfo.getVersion())
-                    .contact(aisApiInfo.getContact())
-                    .termsOfService(aisApiInfo.getTermsOfServiceUrl())
-                    .license(aisApiInfo.getLicense()));
+                    .title(marineApiInfo.getTitle())
+                    .description(marineApiInfo.getDescription())
+                    .version(marineApiInfo.getVersion())
+                    .contact(marineApiInfo.getContact())
+                    .termsOfService(marineApiInfo.getTermsOfServiceUrl())
+                    .license(marineApiInfo.getLicense()));
 
             Server server = new Server();
             server.setUrl(host);

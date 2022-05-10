@@ -1,17 +1,15 @@
 package fi.livi.digitraffic.meri.documentation;
 
-import java.util.Collections;
-
 import fi.livi.digitraffic.meri.service.BuildVersionService;
 import fi.livi.digitraffic.meri.service.MessageService;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.License;
 
-public class AisApiInfo {
+public class MarineApiInfo {
     private BuildVersionService buildVersionService;
     protected MessageService messageService;
 
-    public AisApiInfo(final MessageService messageService, final BuildVersionService buildVersionService) {
+    public MarineApiInfo(final MessageService messageService, final BuildVersionService buildVersionService) {
         this.messageService = messageService;
         this.buildVersionService = buildVersionService;
     }
