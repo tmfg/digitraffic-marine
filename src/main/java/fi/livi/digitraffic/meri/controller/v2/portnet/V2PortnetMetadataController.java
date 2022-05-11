@@ -2,6 +2,9 @@ package fi.livi.digitraffic.meri.controller.v2.portnet;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_METADATA_PART_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V2_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOUND;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 import java.time.ZonedDateTime;
@@ -62,9 +65,9 @@ public class V2PortnetMetadataController {
 
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of ssn location"),
-                    @ApiResponse(responseCode = "404", description = "Ssn location not found", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
+                    @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public LocationFeatureCollections findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
         return v2PortnetMetadataService.findSsnLocationByLocode(locode);
@@ -79,8 +82,8 @@ public class V2PortnetMetadataController {
 
     @Operation(summary = "Return list of vessels details")
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of vessel details"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public List<VesselDetails> findVesselDetails(
             @Parameter(description = "Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z. " +

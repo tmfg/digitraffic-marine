@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.controller.sse;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_SSE_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_BAD_REQUEST;
 import static fi.livi.digitraffic.meri.model.Constants.ISO_DATE_TIME_FROM_DOC;
 import static fi.livi.digitraffic.meri.model.Constants.ISO_DATE_TIME_FROM_VALUE;
 import static fi.livi.digitraffic.meri.model.Constants.ISO_DATE_TIME_TO_DOC;
@@ -63,7 +64,7 @@ public class SseController {
 
     @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON for given site")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
+        @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
     })
     @GetMapping(path = LATEST_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -79,7 +80,7 @@ public class SseController {
 
     @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given time")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+        @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })
     @GetMapping(path = HISTORY_PATH, produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
@@ -103,7 +104,7 @@ public class SseController {
 
     @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+        @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
             CODE_400_NOT_EXISTS_WITH_IDENTIFIER + " or " +
             CODE_400_ILLEGAL_ARGUMENTS)
     })

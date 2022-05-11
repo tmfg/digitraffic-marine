@@ -2,6 +2,8 @@ package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_WINTER_NAVIGATION_PATH;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
@@ -45,8 +47,8 @@ public class WinterNavigationController {
     @GetMapping(path = "/ports", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
                                               MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of winter navigation ports"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of winter navigation ports"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public WinterNavigationPortFeatureCollection getWinterNavigationPorts() {
         return winterNavigationService.getWinterNavigationPorts();
@@ -56,8 +58,8 @@ public class WinterNavigationController {
     @GetMapping(path = "/ships", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
                                               MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of winter navigation ships"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of winter navigation ships"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public WinterNavigationShipFeatureCollection getWinterNavigationShips() {
         return winterNavigationService.getWinterNavigationShips();
@@ -67,8 +69,8 @@ public class WinterNavigationController {
     @GetMapping(path = "/dirways", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                 MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                 MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of winter navigation dirways"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error") })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of winter navigation dirways"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public WinterNavigationDirwayFeatureCollection getWinterNavigationDirways() {
         return winterNavigationService.getWinterNavigationDirways();
@@ -78,8 +80,8 @@ public class WinterNavigationController {
     @GetMapping(path = "/ships/{vesselId}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                          MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                          MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of a winter navigation ship"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of a winter navigation ship"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public WinterNavigationShipFeature getWinterNavigationShipByVesselId(@Parameter(description = "Vessel identification code. Equals " +
         "IMO-{IMO-code} when vessel IMO is present. Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true)
@@ -92,8 +94,8 @@ public class WinterNavigationController {
     @GetMapping(path = "/ports/{locode}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                        MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                        MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of a winter navigation port"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of a winter navigation port"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public WinterNavigationPortFeature getWinterNavigationPortByLocode(@Parameter(description = "Port locode", required = true)
                                                                        @PathVariable("locode") final String locode) {
