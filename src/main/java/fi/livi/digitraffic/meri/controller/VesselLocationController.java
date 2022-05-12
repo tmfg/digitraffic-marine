@@ -81,9 +81,9 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(from, to);
     }
 
-    @Operation(summary = "Find vessel locations within a circle surrounding a point. " +
-                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
-                  "boats without the AIS system, vessels outside of the AIS range and so on.)")
+    @Operation(summary = "Find vessel locations within a circle surrounding a point.",
+               description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
+               "vessels with AIS turned off or vessels outside AIS range will be missing.")
     @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                                                              MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                                                              MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -107,9 +107,9 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from.toInstant().toEpochMilli());
     }
 
-    @Operation(summary = "Find vessel locations within a circle surrounding a vessel. " +
-                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
-                  "boats without the AIS system, vessels outside of the AIS range and so on.)")
+    @Operation(summary = "Find vessel locations within a circle surrounding a vessel.",
+               description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
+               "vessels with AIS turned off or vessels outside AIS range will be missing.")
     @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                                MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                                MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
