@@ -2,6 +2,8 @@ package fi.livi.digitraffic.meri.controller.sse;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_SSE_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_BAD_REQUEST;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static fi.livi.digitraffic.meri.model.Constants.ISO_DATE_TIME_FROM_DOC;
 import static fi.livi.digitraffic.meri.model.Constants.ISO_DATE_TIME_FROM_VALUE;
 import static fi.livi.digitraffic.meri.model.Constants.ISO_DATE_TIME_TO_DOC;
@@ -24,9 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -63,7 +65,8 @@ public class SseController {
 
     @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON for given site")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = CODE_400_NOT_EXISTS_WITH_IDENTIFIER)
+        @ApiResponse(responseCode = HTTP_OK),
+        @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_NOT_EXISTS_WITH_IDENTIFIER, content = @Content)
     })
     @GetMapping(path = LATEST_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                                    MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -79,8 +82,9 @@ public class SseController {
 
     @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given time")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
-            CODE_400_ILLEGAL_ARGUMENTS)
+        @ApiResponse(responseCode = HTTP_OK),
+        @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+            CODE_400_ILLEGAL_ARGUMENTS, content = @Content)
     })
     @GetMapping(path = HISTORY_PATH, produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -103,9 +107,10 @@ public class SseController {
 
     @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
+        @ApiResponse(responseCode = HTTP_OK),
+        @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
             CODE_400_NOT_EXISTS_WITH_IDENTIFIER + " or " +
-            CODE_400_ILLEGAL_ARGUMENTS)
+            CODE_400_ILLEGAL_ARGUMENTS, content = @Content)
     })
     @GetMapping(path = HISTORY_PATH + "/{siteNumber}", produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                                     MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,

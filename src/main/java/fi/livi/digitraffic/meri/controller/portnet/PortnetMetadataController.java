@@ -2,6 +2,9 @@ package fi.livi.digitraffic.meri.controller.portnet;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_METADATA_PART_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOUND;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 import java.time.ZonedDateTime;
@@ -10,7 +13,6 @@ import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,6 @@ import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
 import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -63,9 +64,9 @@ public class PortnetMetadataController {
 
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of ssn location"),
-                    @ApiResponse(responseCode = "404", description = "Ssn location not found", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
+                    @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public LocationFeatureCollections findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
         return portnetMetadataService.findSsnLocationByLocode(locode);
@@ -80,8 +81,8 @@ public class PortnetMetadataController {
 
     @Operation(summary = "Return list of vessels details")
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of vessel details"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public List<VesselDetails> findVesselDetails(
             @Parameter(description = "Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z. " +

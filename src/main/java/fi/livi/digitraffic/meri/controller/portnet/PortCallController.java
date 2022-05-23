@@ -2,6 +2,8 @@ package fi.livi.digitraffic.meri.controller.portnet;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_PORT_CALLS_PATH;
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -47,8 +49,8 @@ public class PortCallController {
 
     @Operation(summary = "Find port calls", description = NOTE)
     @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of port calls"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public PortCallsJson listAllPortCalls(
             @Parameter(description = "Return port calls received on given date.")
@@ -131,8 +133,8 @@ public class PortCallController {
 
     @Operation(summary = "Find port calls", description = NOTE)
     @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of port calls"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public PortCallsJson listAllPortCallsFromLocode(
             @Parameter(description = "Return port calls from given port", required = true)
@@ -218,8 +220,8 @@ public class PortCallController {
 
     @Operation(summary = "Find port calls", description = NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of port calls"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public PortCallsJson listAllPortCallsFromTo(
         @Parameter(description = "Return port calls received after given time.",
