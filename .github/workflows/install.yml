@@ -267,9 +267,10 @@ jobs:
         runs-on: ubuntu-20.04
         environment: ${{ github.event.inputs.env }}
         steps:
-            -   name: Parameters
+            -   name: Parameters ${{ matrix.ap  }}
                 run: |
-                    echo ${{ matrix.app }} revision ${{ needs.install.outputs.revision.${{ matrix.app }} }}
+                    echo revision_daemon ${{ needs.install.outputs.revision.daemon }}
+                    echo revision_web ${{ needs.install.outputs.revision.web }}
             -   name: Update ${{ matrix.app }} service
                 uses: tmfg/digitraffic-actions@ecs-service-update/v1
                 with:
