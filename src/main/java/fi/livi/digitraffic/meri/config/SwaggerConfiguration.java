@@ -86,12 +86,11 @@ public class SwaggerConfiguration {
                     .termsOfService(marineApiInfo.getTermsOfServiceUrl())
                     .license(marineApiInfo.getLicense()));
 
-            Server server = new Server();
-            server.setUrl(host);
+            final Server server = new Server();
+            final String url = scheme + "://" + host;
+            server.setUrl(url);
 
-            openApi
-                .setServers(Arrays.asList(server));
-
+            openApi.setServers(Arrays.asList(server));
         };
     }
 
