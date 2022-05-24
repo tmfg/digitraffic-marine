@@ -179,8 +179,8 @@ jobs:
         runs-on: ubuntu-20.04
         environment: ${{ github.event.inputs.env }}
         outputs:
-            revision.daemon: ${{ steps.revision.outputs.revision_daemon }}
-            revision.web: ${{ steps.revision.outputs.revision_web }}
+            revision_daemon: ${{ steps.revision.outputs.revision_daemon }}
+            revision_web: ${{ steps.revision.outputs.revision_web }}
         steps:
             -   name: Configure AWS credentials for ${{ matrix.app }}
                 uses: aws-actions/configure-aws-credentials@v1
@@ -203,6 +203,7 @@ jobs:
             -   name: Set ${{ matrix.app }} output
                 id: revision
                 run : |
+                    echo outputs ${{join(steps.update.outputs.*, '\n')}}
                     echo "::set-output name=revision_${{ matrix.app }}::${{ steps.update.outputs.revision }}"
     stop-services:
         needs: install
@@ -269,8 +270,9 @@ jobs:
         steps:
             -   name: Parameters ${{ matrix.ap  }}
                 run: |
-                    echo revision_daemon ${{ needs.install.outputs.revision.daemon }}
-                    echo revision_web ${{ needs.install.outputs.revision.web }}
+                    echo revision_daemon ${{ needs.install.outputs.revision_daemon }}
+                    echo revision_web ${{ needs.install.outputs.revision_web }}
+                    echo ${{ needs }}
             -   name: Update ${{ matrix.app }} service
                 uses: tmfg/digitraffic-actions@ecs-service-update/v1
                 with:
