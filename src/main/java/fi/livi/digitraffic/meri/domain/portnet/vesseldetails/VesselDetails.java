@@ -14,10 +14,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.util.TypeUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Vessel details", value = "VesselDetails")
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description="Vessel details", name = "VesselDetails")
 @JsonPropertyOrder({ "vesselId", "mmsi", "name", "namePrefix", "imoLloyds", "radioCallSign", "radioCallSignType", "updateTimestamp",
                      "dataSource", "vesselConstruction", "vesselDimensions", "vesselRegistration", "vesselSystem" })
 @Entity
@@ -27,46 +27,46 @@ public class VesselDetails {
     @Id
     private Long vesselId;
 
-    @ApiModelProperty(value = "Ship MMSI (Maritime Mobile Service Identity)")
+    @Schema(description = "Ship MMSI (Maritime Mobile Service Identity)")
     private Integer mmsi;
 
-    @ApiModelProperty(value = "Vessel name")
+    @Schema(description = "Vessel name")
     private String name;
 
-    @ApiModelProperty(value = "Vessel name prefix")
+    @Schema(description = "Vessel name prefix")
     private String namePrefix;
 
-    @ApiModelProperty(value = "Ship IMO / Lloyds")
+    @Schema(description = "Ship IMO / Lloyds")
     private Integer imoLloyds;
 
-    @ApiModelProperty(value = "Ship radio call sign")
+    @Schema(description = "Ship radio call sign")
     private String radioCallSign;
 
-    @ApiModelProperty(value = "Ship radio call sign type")
+    @Schema(description = "Ship radio call sign type")
     private String radioCallSignType;
 
-    @ApiModelProperty(value = "Timestamp of last vessel metadata update")
+    @Schema(description = "Timestamp of last vessel metadata update")
     private Timestamp updateTimestamp;
 
-    @ApiModelProperty(value = "Data source")
+    @Schema(description = "Data source")
     private String dataSource;
 
-    @ApiModelProperty(value = "Vessel construction information")
+    @Schema(description = "Vessel construction information")
     @OneToOne(targetEntity = VesselConstruction.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselConstruction vesselConstruction;
 
-    @ApiModelProperty(value = "Vessel dimension information")
+    @Schema(description = "Vessel dimension information")
     @OneToOne(targetEntity = VesselDimensions.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselDimensions vesselDimensions;
 
-    @ApiModelProperty(value = "Vessel registration information")
+    @Schema(description = "Vessel registration information")
     @OneToOne(targetEntity = VesselRegistration.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselRegistration vesselRegistration;
 
-    @ApiModelProperty(value = "Vessel system information")
+    @Schema(description = "Vessel system information")
     @OneToOne(targetEntity = VesselSystem.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselSystem vesselSystem;

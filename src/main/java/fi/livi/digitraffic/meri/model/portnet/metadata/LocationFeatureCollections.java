@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({
         "dataUpdatedTime",
@@ -13,16 +13,16 @@ import io.swagger.annotations.ApiModelProperty;
         "berthFeature",
 })
 public class LocationFeatureCollections {
-    @ApiModelProperty(value = "Data last updated", required = true)
+    @Schema(description = "Data last updated", required = true)
     public final ZonedDateTime dataUpdatedTime;
 
-    @ApiModelProperty(value = "Ssn Locations in Feature Collection", required = true)
+    @Schema(description = "Ssn Locations in Feature Collection", required = true)
     public final SsnLocationFeatureCollection ssnLocationFeatureCollection;
 
-    @ApiModelProperty(value = "Port Areas in Feature Collection", required = false)
+    @Schema(description = "Port Areas in Feature Collection", required = false)
     public final PortAreaFeatureCollection portAreaFeatureCollection;
 
-    @ApiModelProperty(value = "Berths in Feature Collection", required = false)
+    @Schema(description = "Berths in Feature Collection", required = false)
     public final BerthFeatureCollection berthFeatureCollection;
 
     public LocationFeatureCollections(final ZonedDateTime dataUpdatedTime,

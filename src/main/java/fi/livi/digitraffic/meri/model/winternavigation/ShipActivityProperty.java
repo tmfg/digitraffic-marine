@@ -2,13 +2,12 @@ package fi.livi.digitraffic.meri.model.winternavigation;
 
 import java.time.ZonedDateTime;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "ShipActivity")
+@Schema(name = "ShipActivity")
 public class ShipActivityProperty {
 
-    @ApiModelProperty(value = "('FRI','FREE') = 'Moving freely'; " +
+    @Schema(description = "('FRI','FREE') = 'Moving freely'; " +
                               "('STL','STOP') = 'Stopped'; " +
                               "('VLG','WAIT') = 'Waiting for icebreaker assistance'; " +
                               "('HMN','PORT') = 'In port'; " +
@@ -27,40 +26,40 @@ public class ShipActivityProperty {
                               "('BUN')        = 'Planned bunkering'")
     public final String activityType;
 
-    @ApiModelProperty(value = "See \"activityType\"'")
+    @Schema(description = "See \"activityType\"'")
     public final String activityText;
 
-    @ApiModelProperty(value = "User-given comment about the activity")
+    @Schema(description = "User-given comment about the activity")
     public final String activityComment;
 
-    @ApiModelProperty(value = "When the activity was started; the start of the validity period of the activity")
+    @Schema(description = "When the activity was started; the start of the validity period of the activity")
     public final ZonedDateTime beginTime;
 
-    @ApiModelProperty(value = "When activity was ended (available only when querying past events); the end of the validity period of the activity")
+    @Schema(description = "When activity was ended (available only when querying past events); the end of the validity period of the activity")
     public final ZonedDateTime endTime;
 
-    @ApiModelProperty(value = "When the begintime was entered into the source system")
+    @Schema(description = "When the begintime was entered into the source system")
     public final ZonedDateTime timestampBegin;
 
-    @ApiModelProperty(value = "When the endtime was entered into the source system")
+    @Schema(description = "When the endtime was entered into the source system")
     public final ZonedDateTime timestampEnd;
 
-    @ApiModelProperty(value = "When an erroneous activity was canceled (if ever)")
+    @Schema(description = "When an erroneous activity was canceled (if ever)")
     public final ZonedDateTime timestampCanceled;
 
-    @ApiModelProperty(value = "Key of icebreaker that is giving assistance (or supervising)")
+    @Schema(description = "Key of icebreaker that is giving assistance (or supervising)")
     public final String operatingIcebreakerPK;
 
-    @ApiModelProperty(value = "Name of icebreaker that is giving assistance (or supervising)")
+    @Schema(description = "Name of icebreaker that is giving assistance (or supervising)")
     public final String operatingIcebreakerName;
 
-    @ApiModelProperty(value = "For icebreakers, key of ship that is being assisted (or supervised)")
+    @Schema(description = "For icebreakers, key of ship that is being assisted (or supervised)")
     public final String operatedVesselPK;
 
-    @ApiModelProperty(value = "For icebreakers, name of ship that is being assisted (or supervised)")
+    @Schema(description = "For icebreakers, name of ship that is being assisted (or supervised)")
     public final String operatedVesselName;
 
-    @ApiModelProperty(value = "Position in icebreaker convoy, if any (with 0 reserved for a towed ship); results should be given in this order")
+    @Schema(description = "Position in icebreaker convoy, if any (with 0 reserved for a towed ship); results should be given in this order")
     public final Integer convoyOrder;
 
     public ShipActivityProperty(String activityType, String activityText, String activityComment, ZonedDateTime beginTime, ZonedDateTime endTime,

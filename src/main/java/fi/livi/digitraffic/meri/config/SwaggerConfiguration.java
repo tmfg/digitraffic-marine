@@ -1,53 +1,43 @@
 package fi.livi.digitraffic.meri.config;
 
-import fi.livi.digitraffic.meri.controller.MediaTypes;
-import fi.livi.digitraffic.meri.service.AisApiInfoService;
-import org.springframework.beans.BeansException;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_BETA_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V2_BASE_PATH;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+
+import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
+import fi.livi.digitraffic.meri.service.MarineApiInfoService;
+
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.SwaggerUiConfigProperties;
+import org.springdoc.core.customizers.OpenApiCustomiser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
-import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
-import springfox.documentation.swagger.web.DocExpansion;
-import springfox.documentation.swagger.web.ModelRendering;
-import springfox.documentation.swagger.web.UiConfiguration;
-import springfox.documentation.swagger.web.UiConfigurationBuilder;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.*;
-import static springfox.documentation.builders.PathSelectors.regex;
 
 @ConditionalOnWebApplication
 @Configuration
-@EnableSwagger2
 public class SwaggerConfiguration {
 
-    private final AisApiInfoService aisApiInfoService;
-
+    private final MarineApiInfoService marineApiInfoService;
+    private final MarineApiInfo marineApiInfo;
     private final String host;
     private final String scheme;
 
     @Autowired
-    public SwaggerConfiguration(final AisApiInfoService aisApiInfoService,
+    public SwaggerConfiguration(final MarineApiInfoService marineApiInfoService,
                                 final @Value("${dt.domain.url}") String domainUrl) throws URISyntaxException {
-        this.aisApiInfoService = aisApiInfoService;
+        this.marineApiInfoService = marineApiInfoService;
+        this.marineApiInfo = marineApiInfoService.getApiInfo();
+
         URI uri = new URI(domainUrl);
 
         final int port = uri.getPort();
@@ -60,93 +50,48 @@ public class SwaggerConfiguration {
     }
 
     @Bean
-    public Docket metadataApi() {
-        return getDocket("metadata-api", getMetadataApiPaths());
+    public GroupedOpenApi marineApi() {
+        return GroupedOpenApi.builder()
+            .group("marine-api")
+            .pathsToMatch(API_V1_BASE_PATH + "/**", API_V2_BASE_PATH + "/**")
+            .addOpenApiCustomiser(openApiConfig())
+            .build();
     }
-
     @Bean
-    public Docket marineApi() {
-        return getDocket("marine-api", getMetadataApiPaths());
-    }
-
-    @Bean
-    public Docket betaApi() {
-        return getDocket("metadata-api-beta", regex(API_BETA_BASE_PATH + "/*.*"));
-    }
-
-    @Bean
-    public Docket marineBetaApi() {
-        return getDocket("marine-api-beta", regex(API_BETA_BASE_PATH + "/*.*"));
-    }
-
-    @Bean
-    UiConfiguration uiConfiguration() {
-        return UiConfigurationBuilder.builder()
-            .docExpansion(DocExpansion.LIST)
-            .defaultModelRendering(ModelRendering.MODEL)
-            // There is bugs in online validator, so not use it at the moment ie. https://github.com/swagger-api/validator-badge/issues/97
-            //.validatorUrl("https://online.swagger.io/validator")
+    public GroupedOpenApi marineApiBeta() {
+        return GroupedOpenApi.builder()
+            .group("marine-api-beta")
+            .pathsToMatch(API_BETA_BASE_PATH + "/**")
+            .addOpenApiCustomiser(openApiConfig())
             .build();
     }
 
-    private Docket getDocket(final String groupName, final Predicate<String> apiPaths) {
-        return new Docket(DocumentationType.SWAGGER_2)
-            .host(host)
-            .protocols(Set.of(scheme))
-            .groupName(groupName)
-            .produces(new HashSet<>(Collections.singletonList(MediaTypes.MEDIA_TYPE_APPLICATION_JSON)))
-            .apiInfo(aisApiInfoService.getApiInfo())
-            .select()
-            .paths(apiPaths)
-            .build()
-            .useDefaultResponseMessages(false);
-    }
-
-    /**
-     * Declares api paths to document by Swagger
-     * @return api paths
-     */
-    private static Predicate<String> getMetadataApiPaths() {
-        return regex(API_V1_BASE_PATH +"/*.*").or(
-               regex(API_V2_BASE_PATH +"/*.*"));
-    }
-
-    // DPO-1792 fix, TODO: remove when getting rid of springfox
+    // https://springdoc.org/#swagger-ui-properties
     @Bean
-    public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
-        return new BeanPostProcessor() {
+    public SwaggerUiConfigProperties swaggerUiConfig() {
+        SwaggerUiConfigProperties config = new SwaggerUiConfigProperties();
+        config.setDocExpansion("none");
+        config.setDefaultModelRendering("example");
+        return config;
+    }
 
-            @Override
-            public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
-                if (bean instanceof WebMvcRequestHandlerProvider || bean instanceof WebFluxRequestHandlerProvider) {
-                    customizeSpringfoxHandlerMappings(getHandlerMappings(bean));
-                }
-                return bean;
-            }
+    private OpenApiCustomiser openApiConfig() {
+        return openApi -> {
+            openApi
+                .setInfo(new Info()
+                    .title(marineApiInfo.getTitle())
+                    .description(marineApiInfo.getDescription())
+                    .version(marineApiInfo.getVersion())
+                    .contact(marineApiInfo.getContact())
+                    .termsOfService(marineApiInfo.getTermsOfServiceUrl())
+                    .license(marineApiInfo.getLicense()));
 
-            private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(final List<T> mappings) {
-                final List<T> copy = mappings.stream()
-                    .filter(mapping -> mapping.getPatternParser() == null)
-                    .collect(Collectors.toList());
-                mappings.clear();
-                mappings.addAll(copy);
-            }
+            final Server server = new Server();
+            final String url = scheme + "://" + host;
+            server.setUrl(url);
 
-            @SuppressWarnings("unchecked")
-            private List<RequestMappingInfoHandlerMapping> getHandlerMappings(final Object bean) {
-                try {
-                    final Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
-
-                    if (field != null) {
-                        field.setAccessible(true);
-                        return (List<RequestMappingInfoHandlerMapping>) field.get(bean);
-                    }
-
-                    throw new IllegalStateException("no handlerMappings found");
-                } catch (final IllegalArgumentException | IllegalAccessException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
+            openApi.setServers(Arrays.asList(server));
         };
     }
+
 }

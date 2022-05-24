@@ -3,42 +3,41 @@ package fi.livi.digitraffic.meri.model.winternavigation;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "PortRestriction")
+@Schema(name = "PortRestriction")
 public class PortRestrictionProperty {
 
-    @ApiModelProperty(value = "Indicates whether this restriction is currently in effect (true); false implies past/future restriction")
+    @Schema(description = "Indicates whether this restriction is currently in effect (true); false implies past/future restriction")
     public final Boolean isCurrent;
 
-    @ApiModelProperty(value = "Indicates whether traffic to this port is restricted (true) or not (false)")
+    @Schema(description = "Indicates whether traffic to this port is restricted (true) or not (false)")
     public final Boolean portRestricted;
 
-    @ApiModelProperty(value = "Indicates if the port is closed due to extreme ice conditions; icebreaker assistance is not provided")
+    @Schema(description = "Indicates if the port is closed due to extreme ice conditions; icebreaker assistance is not provided")
     public final Boolean portClosed;
 
-    @ApiModelProperty(value = "Date and time of issue/announcement")
+    @Schema(description = "Date and time of issue/announcement")
     public final ZonedDateTime issueTime;
 
-    @ApiModelProperty(value = "Date and time of last modification")
+    @Schema(description = "Date and time of last modification")
     public final ZonedDateTime lastModified;
 
-    @ApiModelProperty(value = "Date when this restriction starts/started to be in effect; this is optional if isCurrent is true and\n" +
+    @Schema(description = "Date when this restriction starts/started to be in effect; this is optional if isCurrent is true and\n" +
                               "portRestricted is false, because during early winter – when no restrictions yet exist – the\n" +
                               "past restriction data (end time of past season's last restriction) might not always be available")
     public final Date validFrom;
 
-    @ApiModelProperty(value = "Date when this restriction ceased to be in effect")
+    @Schema(description = "Date when this restriction ceased to be in effect")
     public final Date validUntil;
 
-    @ApiModelProperty(value = "Raw text of the port traffic restriction.\n" +
+    @Schema(description = "Raw text of the port traffic restriction.\n" +
                               "Finnish-Swedish ice classes are IA Super, IA, IB, IC, II and I.\n" +
                               "The number following the ice class code stands for minimum required ship deadweight tonnage.\n" +
                               "'2000 t' in 'IA 4000 | 2000 t' code stands for minimum cargo the ship has to load or unload.")
     public final String rawText;
 
-    @ApiModelProperty(value = "Traffic restriction text pre-formatted (HTML)")
+    @Schema(description = "Traffic restriction text pre-formatted (HTML)")
     public final String formattedText;
 
     public PortRestrictionProperty(Boolean isCurrent, Boolean portRestricted, Boolean portClosed, ZonedDateTime issueTime, ZonedDateTime lastModified,

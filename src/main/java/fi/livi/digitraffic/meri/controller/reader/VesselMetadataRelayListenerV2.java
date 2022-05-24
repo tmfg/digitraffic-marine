@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.controller.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
 import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
-import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
 import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;

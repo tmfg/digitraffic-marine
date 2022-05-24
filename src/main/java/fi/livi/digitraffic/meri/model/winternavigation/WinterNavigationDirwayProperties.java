@@ -5,24 +5,25 @@ import java.time.ZonedDateTime;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({ "issueTime", "issuerCode", "issuerName", "validUntil" })
 public class WinterNavigationDirwayProperties extends Properties {
 
-    @ApiModelProperty(value = "Name of the dirway", required = true, position = 1)
+    @Schema(description = "Name of the dirway", required = true)
     public final String name;
 
-    @ApiModelProperty(value = "Time when the dirway was issued")
+    @Schema(description = "Time when the dirway was issued")
     public final ZonedDateTime issueTime;
 
-    @ApiModelProperty(value = "Issuer code, e.g. URH")
+    @Schema(description = "Issuer code, e.g. URH")
     public final String issuerCode;
 
-    @ApiModelProperty(value = "Issuer name, e.g. URHO")
+    @Schema(description = "Issuer name, e.g. URHO")
     public final String issuerName;
 
-    @ApiModelProperty(value = "Date and time until this dirway was in effect")
+    @Schema(description = "Date and time until this dirway was in effect")
     public final ZonedDateTime validUntil;
 
     public WinterNavigationDirwayProperties(final String name,

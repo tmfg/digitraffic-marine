@@ -6,20 +6,20 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import fi.livi.digitraffic.meri.model.v2.V2CodeDescription;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Code descriptions associated with port calls")
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description="Code descriptions associated with port calls")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class V2CodeDescriptions {
-    @ApiModelProperty(value = "Timestamp when metadata were last updated", required = true)
+    @Schema(description = "Timestamp when metadata were last updated", required = true)
     public final ZonedDateTime lastUpdated;
 
-    @ApiModelProperty(value = "All cargo type descriptions", required = true)
+    @Schema(description = "All cargo type descriptions", required = true)
     public final List<V2CodeDescription> cargoTypes;
-    @ApiModelProperty(value = "All vessel type descriptions", required = true)
+    @Schema(description = "All vessel type descriptions", required = true)
     public final List<V2CodeDescription> vesselTypes;
-    @ApiModelProperty(value = "All agent type descriptions", required = true)
+    @Schema(description = "All agent type descriptions", required = true)
     public final List<V2CodeDescription> agentTypes;
 
     public V2CodeDescriptions(final ZonedDateTime lastUpdated,
