@@ -275,10 +275,10 @@ jobs:
                     echo revision_web ${{ needs.install.outputs.revision_web }}
 
                     if [ "${{ matrix.app }}" == "web" ]
-                        echo "::set-output name=revision::${{ needs.install.outputs.revision_web }}"
                     then
-                        echo "::set-output name=revision::${{ needs.install.outputs.revision_daemon }}"
+                        echo "::set-output name=revision::${{ needs.install.outputs.revision_web }}"
                     else
+                        echo "::set-output name=revision::${{ needs.install.outputs.revision_daemon }}"
                     fi
             -   name: Update ${{ matrix.app }} service
                 uses: tmfg/digitraffic-actions@ecs-service-update/v1
