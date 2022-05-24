@@ -8,16 +8,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import fi.livi.digitraffic.meri.portnet.xsd.RegistrationData;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import fi.livi.digitraffic.meri.portnet.xsd.RegistrationData;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description="Vessel registration", value = "VesselRegistration")
+@Schema(description="Vessel registration", name = "VesselRegistration")
 @JsonPropertyOrder({ "vesselId", "nationality", "portOfRegistry", "domicile" })
 @Entity
 @DynamicUpdate
@@ -33,13 +32,13 @@ public class VesselRegistration {
     @MapsId
     private fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails;
 
-    @ApiModelProperty(value = "Ship nationality")
+    @Schema(description = "Ship nationality")
     private String nationality;
 
-    @ApiModelProperty(value = "Ship home city")
+    @Schema(description = "Ship home city")
     private String portOfRegistry;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private String domicile;
 

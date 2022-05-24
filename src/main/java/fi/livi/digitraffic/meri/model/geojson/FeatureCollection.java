@@ -6,15 +6,15 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({ "type", "features" })
 public class FeatureCollection<FeatureType> extends GeoJsonObject {
 
-    @ApiModelProperty(value = "Type of GeoJSON object", allowableValues = "FeatureCollection", required = true, position = 1)
+    @Schema(description = "Type of GeoJSON object", allowableValues = "FeatureCollection", required = true)
     private final String type = "FeatureCollection";
 
-    @ApiModelProperty(required = true, position = 2)
+    @Schema(required = true)
     @JsonProperty("features")
     private List<FeatureType> features = new ArrayList<>();
 

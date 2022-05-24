@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_LOCATIONS_PATH)
 @ConditionalOnWebApplication
+@Tag(name = "vessel-location-controller", description = "Vessel Location Controller")
 public class VesselLocationController {
     private static final Logger LOG = LoggerFactory.getLogger(VesselLocationController.class);
 
@@ -40,19 +42,19 @@ public class VesselLocationController {
         this.vesselLocationService = vesselLocationService;
     }
 
-    @ApiOperation("Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
+    @Operation(summary = "Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                              MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                              MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsByMssiAndTimestamp(
-            @ApiParam(value = "Maritime Mobile Service Identity (MMSI)", required = true)
+            @Parameter(description = "Maritime Mobile Service Identity (MMSI)", required = true)
             @PathVariable("mmsi")
             final int mmsi,
-            @ApiParam("From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+            @Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
             @RequestParam(value = "from", required = false)
             final Long from,
-            @ApiParam("To timestamp")
+            @Parameter(description = "To timestamp")
             @RequestParam(value = "to", required = false)
             final Long to) {
 
@@ -61,16 +63,16 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(mmsi, from, to);
     }
 
-    @ApiOperation("Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
+    @Operation(summary = "Find latest vessel locations by timestamp interval in milliseconds from Unix epoch.")
     @GetMapping(path = LATEST_PATH, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                  MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsByTimestamp(
-            @ApiParam("From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+            @Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
             @RequestParam(value = "from", required = false)
             final Long from,
-            @ApiParam("To timestamp")
+            @Parameter(description = "To timestamp")
             @RequestParam(value = "to", required = false)
             final Long to) {
 
@@ -79,24 +81,24 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(from, to);
     }
 
-    @ApiOperation("Find vessel locations within a circle surrounding a point. " +
-                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
-                  "boats without the AIS system, vessels outside of the AIS range and so on.)")
+    @Operation(summary = "Find vessel locations within a circle surrounding a point.",
+               description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
+               "vessels with AIS turned off or vessels outside AIS range will be missing.")
     @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                                                              MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                                                              MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromPoint(
-            @ApiParam(value = "Radius of search circle in kilometers (km) using haversine formula.", required = true)
+            @Parameter(description = "Radius of search circle in kilometers (km) using haversine formula.", required = true)
             @PathVariable(value = "radius")
             final double radius,
-            @ApiParam(value = "Latitude of the point", required = true)
+            @Parameter(description = "Latitude of the point", required = true)
             @PathVariable(value = "latitude")
             final double latitude,
-            @ApiParam(value = "Longitude of the point", required = true)
+            @Parameter(description = "Longitude of the point", required = true)
             @PathVariable(value = "longitude")
             final double longitude,
-            @ApiParam(value = "Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g" +
+            @Parameter(description = "Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g" +
                 ". 2016-10-31T06:30:00.000Z.", required = true)
             @PathVariable(value = "from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -105,21 +107,21 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from.toInstant().toEpochMilli());
     }
 
-    @ApiOperation("Find vessel locations within a circle surrounding a vessel. " +
-                  "(CAUTION: Data is unreliable because it is missing some vessels such as fishing boats, boats with the AIS system turned off, " +
-                  "boats without the AIS system, vessels outside of the AIS range and so on.)")
+    @Operation(summary = "Find vessel locations within a circle surrounding a vessel.",
+               description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
+               "vessels with AIS turned off or vessels outside AIS range will be missing.")
     @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                                MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                                MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsWithingRadiusFromMMSI(
-            @ApiParam(value = "Radius of search circle in kilometers (km) using haversine formula.", required = true)
+            @Parameter(description = "Radius of search circle in kilometers (km) using haversine formula.", required = true)
             @PathVariable(value = "radius")
             final double radius,
-            @ApiParam(value = "MMSI of the vessel", required = true)
+            @Parameter(description = "MMSI of the vessel", required = true)
             @PathVariable(value = "mmsi")
             final int mmsi,
-            @ApiParam(value = "Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g" +
+            @Parameter(description = "Return vessel locations received after given time in ISO date time format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g" +
                 ". 2016-10-31T06:30:00.000Z.", required = true)
             @PathVariable(value = "from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -128,3 +130,4 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius, mmsi, from.toInstant().toEpochMilli());
     }
 }
+

@@ -2,9 +2,9 @@ package fi.livi.digitraffic.meri.model.geojson;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "GeoJSON Properties object")
+@Schema(description = "GeoJSON Properties object")
 public abstract class Properties implements Serializable {
 
 }

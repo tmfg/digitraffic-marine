@@ -14,10 +14,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import fi.livi.digitraffic.meri.util.TypeUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description="Vessel construction", value = "VesselConstruction")
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Vessel construction", name = "VesselConstruction")
 @JsonPropertyOrder({ "vesselId", "vesselTypeCode", "vesselTypeName", "iceClassCode", "iceClassIssueDate", "iceClassIssuePlace",
                      "iceClassEndDate", "classificationSociety", "doubleBottom", "inertGasSystem", "ballastTank" })
 @Entity
@@ -34,35 +34,35 @@ public class VesselConstruction {
     @MapsId
     private fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails vesselDetails;
 
-    @ApiModelProperty(value = "Ship Vessel Type Code")
+    @Schema(description = "Ship Vessel Type Code")
     private Integer vesselTypeCode;
 
-    @ApiModelProperty(value = "Ship Vessel Type Name")
+    @Schema(description = "Ship Vessel Type Name")
     private String vesselTypeName;
 
-    @ApiModelProperty(value = "Ship ice class code")
+    @Schema(description = "Ship ice class code")
     private String iceClassCode;
 
-    @ApiModelProperty(value = "Date when ice class endorsement was issued")
+    @Schema(description = "Date when ice class endorsement was issued")
     private Timestamp iceClassIssueDate;
 
-    @ApiModelProperty(value = "Place where ice class endorsement was issued")
+    @Schema(description = "Place where ice class endorsement was issued")
     private String iceClassIssuePlace;
 
-    @ApiModelProperty(value = "Date when ice class endorsement ends")
+    @Schema(description = "Date when ice class endorsement ends")
     private Timestamp iceClassEndDate;
 
-    @ApiModelProperty(value = "Always null")
+    @Schema(description = "Always null")
     @JsonIgnore
     private String classificationSociety;
 
-    @ApiModelProperty(value = "Tells whether vessel has a double bottom")
+    @Schema(description = "Tells whether vessel has a double bottom")
     private Boolean doubleBottom;
 
-    @ApiModelProperty(value = "Tells whether vessel has an Inert gas system")
+    @Schema(description = "Tells whether vessel has an Inert gas system")
     private Boolean inertGasSystem;
 
-    @ApiModelProperty(value = "Tells whether vessel has a ballast tank")
+    @Schema(description = "Tells whether vessel has a ballast tank")
     private Boolean ballastTank;
 
     public void setAll(final BigInteger vesselId, final ConstructionData cd) {

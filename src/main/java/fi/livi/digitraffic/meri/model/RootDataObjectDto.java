@@ -8,14 +8,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.FeatureCollection;
 import fi.livi.digitraffic.meri.util.TimeUtil;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({ "type",
                      "dataUpdatedTime",
                      "features" })
 public class RootDataObjectDto<FeatureType> extends FeatureCollection<FeatureType> {
 
-    @ApiModelProperty(value = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
+    @Schema(description = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
     private final Instant dataUpdatedTime;
 
     public RootDataObjectDto(final ZonedDateTime dataUpdatedTime,

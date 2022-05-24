@@ -20,12 +20,16 @@ import fi.livi.digitraffic.meri.model.pooki.PookiFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.nauticalwarning.NauticalWarningService;
 import fi.livi.digitraffic.meri.service.nauticalwarning.NauticalWarningService.Status;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping(API_V1_BASE_PATH)
 @ConditionalOnWebApplication
+@Tag(name = "nautical-warning-controller", description = "Nautical Warning Controller")
 public class NauticalWarningController {
 
     private static final Logger log = LoggerFactory.getLogger(NauticalWarningController.class);
@@ -36,13 +40,13 @@ public class NauticalWarningController {
         this.nauticalWarningService = nauticalWarningService;
     }
 
-    @ApiOperation("Return nautical warnings of given status.")
+    @Operation(summary = "Return nautical warnings of given status.")
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
                     produces = { MEDIA_TYPE_APPLICATION_JSON,
                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
                                  MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
-    public PookiFeatureCollection nauticalWarnings(@ApiParam(value = "Status", required = true, allowableValues = "published,archived" )
+    public PookiFeatureCollection nauticalWarnings(@Parameter(description = "Status", required = true, schema = @Schema(allowableValues = "published,archived"))
                                                    @PathVariable final String status) throws PookiException {
 
         // Parse status argument

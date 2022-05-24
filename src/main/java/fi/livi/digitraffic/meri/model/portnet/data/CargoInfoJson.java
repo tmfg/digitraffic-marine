@@ -2,18 +2,17 @@ package fi.livi.digitraffic.meri.model.portnet.data;
 
 import java.math.BigDecimal;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description="Port call")
+@Schema(description="Port call")
 public interface CargoInfoJson {
 
-    @ApiModelProperty(value = "Cargo discharge code")
+    @Schema(description = "Cargo discharge code")
     Integer getCargoDischargeCode();
 
-    @ApiModelProperty(value = "Cargo description")
+    @Schema(description = "Cargo description")
     String getCargoDescription();
 
-    @ApiModelProperty(value = "Cargo amount")
+    @Schema(description = "Cargo amount")
     BigDecimal getCargoAmount();
 }

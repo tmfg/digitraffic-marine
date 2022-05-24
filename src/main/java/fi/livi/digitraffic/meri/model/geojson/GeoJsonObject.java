@@ -10,10 +10,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "GeoJSON object", discriminator = "type")
+@Schema(description = "GeoJSON object", discriminatorProperty = "type")
 public abstract class GeoJsonObject implements Serializable {
 
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -21,7 +20,7 @@ public abstract class GeoJsonObject implements Serializable {
     public GeoJsonObject() {
     }
 
-    @ApiModelProperty(value = "GeoJSON object type")
+    @Schema(description = "GeoJSON object type")
     public abstract String getType();
 
     @JsonAnyGetter

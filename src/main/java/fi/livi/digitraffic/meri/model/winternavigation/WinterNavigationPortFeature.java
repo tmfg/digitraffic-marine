@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Feature;
 import fi.livi.digitraffic.meri.model.geojson.Point;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({
         "locode",
@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 })
 public class WinterNavigationPortFeature extends Feature<Point, WinterNavigationPortProperties> {
 
-    @ApiModelProperty(value = "Port SafeSeaNet location code", required = true, position = 1)
+    @Schema(description = "Port SafeSeaNet location code", required = true)
     public final String locode;
 
     public WinterNavigationPortFeature(final String locode, final WinterNavigationPortProperties properties, final Point geometry) {

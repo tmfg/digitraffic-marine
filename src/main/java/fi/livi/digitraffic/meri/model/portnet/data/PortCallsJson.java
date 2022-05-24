@@ -3,15 +3,14 @@ package fi.livi.digitraffic.meri.model.portnet.data;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description="Port call")
+@Schema(description="Port call")
 public final class PortCallsJson {
-    @ApiModelProperty(value = "Timestamp when port calls were updated", required = true)
+    @Schema(description = "Timestamp when port calls were updated", required = true)
     public final ZonedDateTime portCallsUpdated;
 
-    @ApiModelProperty(value = "Port calls", required = true)
+    @Schema(description = "Port calls", required = true)
     public final List<PortCallJson> portCalls;
 
     public PortCallsJson(final ZonedDateTime portCallsUpdated, final List<PortCallJson> portCalls) {
