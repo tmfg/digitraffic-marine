@@ -269,10 +269,17 @@ jobs:
         environment: ${{ github.event.inputs.env }}
         steps:
             -   name: Parameters ${{ matrix.ap  }}
+                id: revision
                 run: |
                     echo revision_daemon ${{ needs.install.outputs.revision_daemon }}
                     echo revision_web ${{ needs.install.outputs.revision_web }}
-                    echo ${{ needs }}
+
+                    if [ "${{ matrix.app }}" == "web" ]
+                        echo "::set-output name=revision::${{ needs.install.outputs.revision_web }}"
+                    then
+                        echo "::set-output name=revision::${{ needs.install.outputs.revision_daemon }}"
+                    else
+                    fi
             -   name: Update ${{ matrix.app }} service
                 uses: tmfg/digitraffic-actions@ecs-service-update/v1
                 with:
@@ -280,5 +287,5 @@ jobs:
                     aws-region: ${{ secrets.AWS_REGION }}
                     service-name: marine-${{ github.event.inputs.env }}-${{ matrix.app }}-service
                     cluster-name: ${{ secrets.CLUSTER_NAME }}
-                    task-definition: marine-${{ github.event.inputs.env }}-${{ matrix.app }}
+                    task-definition: marine-${{ github.event.inputs.env }}-${{ matrix.app }}:${{ steps.revision.outputs.revision }}
                     desired-count: 1
