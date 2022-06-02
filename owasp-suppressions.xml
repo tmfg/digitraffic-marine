@@ -44,6 +44,19 @@
         <cve>CVE-2022-22968</cve>
     </suppress>
 
+    <suppress until="2022-06-23Z">
+        <notes><![CDATA[
+   file name: spring-security-crypto-*.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
+
+        <!-- Crypto vulnerability, not using vulnerable version of Spring Security -->
+        <cve>CVE-2020-5408</cve>
+
+        <!-- BCrypt vulnerability, not used -->
+        <cve>CVE-2022-22976</cve>
+    </suppress>
+
     <!--
         Permanent suppressions
     -->
@@ -64,6 +77,15 @@
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
         <cve>CVE-2022-29885</cve>
+    </suppress>
+
+    <!-- Not using BCrypt -->
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-rsa-*.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-rsa@.*$</packageUrl>
+        <cve>CVE-2022-22976</cve>
     </suppress>
 
 </suppressions>
