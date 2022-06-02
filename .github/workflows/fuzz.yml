@@ -1,0 +1,22 @@
+name: Fuzz
+on:
+  schedule:
+    - cron: '0 8 * * *' # UTC
+  workflow_dispatch:
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fuzz
+        uses: mprencipe/waggers-action@v1
+        with:
+          url: https://meri-test.digitraffic.fi/swagger/swagger-spec.json
+      - name: Notify Slack
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: FAILED Marine fuzz
+          fields: repo, job, took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
