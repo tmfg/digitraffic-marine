@@ -37,4 +37,4 @@ jobs:
           text: FAILED Update Swagger Marine ${{ github.event.inputs.env }}
           fields: repo, job, took
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
