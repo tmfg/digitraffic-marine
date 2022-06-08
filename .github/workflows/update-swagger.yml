@@ -19,7 +19,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-to-assume: ${{ secrets.AWS_SWAGGER_ROLE }}
           role-session-name: gh-actions-update-swagger-marine-${{ github.event.inputs.env }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Set environment name
