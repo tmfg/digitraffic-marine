@@ -29,6 +29,9 @@ jobs:
       - name: Update API Gateway documentation
         run: |
           aws lambda invoke --region ${{ secrets.AWS_REGION }} --function-name SwaggerJoinerMarine${{ env.SWAGGER_ENV_NAME }}-UpdateApiDocumentation  update-api-docs-result.json
+      - name: Update Swagger documentation
+        run: |
+          aws lambda invoke --region ${{ secrets.AWS_REGION }} --function-name SwaggerJoinerMarine${{ env.SWAGGER_ENV_NAME }}-UpdateSwaggerDescriptions  update-swagger-docs-result.json
       - name: Notify Slack
         if: failure()
         uses: 8398a7/action-slack@v3
