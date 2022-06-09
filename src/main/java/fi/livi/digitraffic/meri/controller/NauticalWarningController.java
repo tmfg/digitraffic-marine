@@ -46,7 +46,7 @@ public class NauticalWarningController {
                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
                                  MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
-    public PookiFeatureCollection nauticalWarnings(@Parameter(description = "Status", required = true, schema = @Schema(allowableValues = "published,archived"))
+    public PookiFeatureCollection nauticalWarnings(@Parameter(description = "Status", required = true, schema = @Schema(allowableValues = {"published", "archived"}))
                                                    @PathVariable final String status) throws PookiException {
 
         // Parse status argument
