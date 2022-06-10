@@ -28,9 +28,6 @@
         <!-- File upload vulnerability, not using file uploads -->
         <cve>CVE-2022-22970</cve>
 
-        <!-- DoS via WebSocket vulnerability, WebSockets not served through application -->
-        <cve>CVE-2022-22971</cve>
-
         <!-- XXE vulnerability, not using vulnerable version of Spring -->
         <cve>CVE-2013-7315</cve>
 
@@ -55,32 +52,11 @@
 
         <!-- BCrypt vulnerability, not used -->
         <cve>CVE-2022-22976</cve>
-
-        <!-- Authorization not used -->
-        <cve>CVE-2022-22978</cve>
     </suppress>
 
     <!--
         Permanent suppressions
     -->
-
-    <!-- Using embedded Tomcat -->
-    <suppress>
-        <notes><![CDATA[
-   file name: tomcat-embed-core-*.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
-        <cve>CVE-2022-29885</cve>
-    </suppress>
-
-    <!-- Not using WebSockets -->
-    <suppress>
-        <notes><![CDATA[
-   file name: tomcat-embed-websocket-*.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
-        <cve>CVE-2022-29885</cve>
-    </suppress>
 
     <!-- Not using BCrypt -->
     <suppress>
