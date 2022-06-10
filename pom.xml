@@ -22,7 +22,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <maven.compiler.release>11</maven.compiler.release>
-        <ch.qos.logback.version>1.2.11</ch.qos.logback.version>
         <io.springfox.version>3.0.0</io.springfox.version>
         <aws.sdk.version>1.11.926</aws.sdk.version>
         <spring.cloud.version>3.1.1</spring.cloud.version>
@@ -55,24 +54,8 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <!-- *** https://github.com/logstash/logstash-logback-encoder#including-it-in-your-project *** -->
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${ch.qos.logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${ch.qos.logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-access</artifactId>
-                <version>${ch.qos.logback.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
@@ -82,7 +65,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <!-- *** https://github.com/logstash/logstash-logback-encoder#including-it-in-your-project *** -->
 
     <dependencies>
 
@@ -286,6 +268,11 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>7.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
 
         <!-- gzipped http response -->
