@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller;
 
 import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
+import static fi.livi.digitraffic.meri.controller.ApiDeprecations.API_NOTE_2022_11_01;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
@@ -27,9 +28,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
+@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
 @RequestMapping(API_V1_BASE_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "nautical-warning-controller", description = "Nautical Warning Controller")
+@Tag(name = "nautical-warning-controller", description = "Nautical Warning Controller. " + API_NOTE_2022_11_01)
 public class NauticalWarningController {
 
     private static final Logger log = LoggerFactory.getLogger(NauticalWarningController.class);
@@ -40,7 +42,8 @@ public class NauticalWarningController {
         this.nauticalWarningService = nauticalWarningService;
     }
 
-    @Operation(summary = "Return nautical warnings of given status.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Return nautical warnings of given status. " + API_NOTE_2022_11_01)
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
                     produces = { MEDIA_TYPE_APPLICATION_JSON,
                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
