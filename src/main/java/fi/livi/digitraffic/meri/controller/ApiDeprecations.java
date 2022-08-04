@@ -16,7 +16,9 @@ public final class ApiDeprecations {
     private static final String DEPRECATED_TEXT = "Will be removed after ";
 
     public static final String SINCE_2022_11_01 = "2022-11-01";
+    public static final String SINCE_FUTURE = "TBD";
     public static final String API_NOTE_2022_11_01 = DEPRECATED_TEXT + SINCE_2022_11_01;
+    public static final String API_NOTE_FUTURE = "Will be removed in the future";
 
     private ApiDeprecations() {}
 
