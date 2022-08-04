@@ -10,6 +10,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -48,21 +49,24 @@ public class PortnetMetadataController {
         this.portnetMetadataService = portnetMetadataService;
     }
 
-    @Operation(summary = "Return all code descriptions.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_2022_11_01)
     @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptions listCodeDescriptions() {
         return portnetMetadataService.listCodeDescriptions();
     }
 
-    @Operation(summary = "Return list of all berths, port areas and locations.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_2022_11_01)
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections listAllMetadata() {
         return portnetMetadataService.listaAllMetadata();
     }
 
-    @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code. " + ApiDeprecations.API_NOTE_2022_11_01)
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
@@ -72,14 +76,16 @@ public class PortnetMetadataController {
         return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 
-    @Operation(summary = "Return list of SafeSeaNet locations by country name")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_2022_11_01)
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
         return portnetMetadataService.findSsnLocationsByCountry(country);
     }
 
-    @Operation(summary = "Return list of vessels details")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Return list of vessels details. " + ApiDeprecations.API_NOTE_2022_11_01)
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
