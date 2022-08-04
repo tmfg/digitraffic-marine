@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -47,7 +48,8 @@ public class PortCallController {
         this.portCallService = portCallService;
     }
 
-    @Operation(summary = "Find port calls", description = NOTE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2022_11_01, description = NOTE)
     @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -131,7 +133,8 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @Operation(summary = "Find port calls", description = NOTE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2022_11_01, description = NOTE)
     @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -218,7 +221,8 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @Operation(summary = "Find port calls", description = NOTE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2022_11_01, description = NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
