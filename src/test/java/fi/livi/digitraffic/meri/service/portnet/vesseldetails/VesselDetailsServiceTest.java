@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 import static java.time.ZoneOffset.UTC;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -97,7 +98,7 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
 
     @Test
     public void vesselTimestampBoth() {
-        final ZonedDateTime from = LocalDateTime.of(2019, 1, 1, 0, 0, 0).atZone(UTC);
+        final Instant from = LocalDateTime.of(2019, 1, 1, 0, 0, 0).toInstant(UTC);
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(from, null, null, null, null, null);
 
         assertThat(vesselDetails, Matchers.hasSize(2));
@@ -105,7 +106,7 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
 
     @Test
     public void vesselTimestampOne() {
-        final ZonedDateTime from = LocalDateTime.of(2019, 1, 5, 0, 0, 0).atZone(UTC);
+        final Instant from = LocalDateTime.of(2019, 1, 5, 0, 0, 0).toInstant(UTC);
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(from, null, null, null, null, null);
 
         assertThat(vesselDetails, Matchers.hasSize(1));
@@ -113,7 +114,7 @@ public class VesselDetailsServiceTest extends AbstractTestBase {
 
     @Test
     public void vesselTimestampNone() {
-        final ZonedDateTime from = LocalDateTime.of(2019, 1, 11, 0, 0, 0).atZone(UTC);
+        final Instant from = LocalDateTime.of(2019, 1, 11, 0, 0, 0).toInstant(UTC);
         final List<VesselDetails> vesselDetails = vesselDetailsService.findVesselDetails(from, null, null, null, null, null);
 
         assertThat(vesselDetails, Matchers.empty());

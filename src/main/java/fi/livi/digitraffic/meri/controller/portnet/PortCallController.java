@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.controller.MediaTypes;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
-import fi.livi.digitraffic.meri.service.portnet.PortCallService;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;
+import fi.livi.digitraffic.meri.service.portnet.PortCallService_V1;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,14 +38,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @ConditionalOnWebApplication
 @Tag(name="port-call-controller", description = "Port Call Controller")
 public class PortCallController {
-    private final PortCallService portCallService;
+    private final PortCallService_V1 portCallServiceV1;
 
     private static final String NOTE = "If the search result size exceeds 1000 items, the operation will return an error. " +
                                        "In this case you should try to narrow down your search criteria.\n\n" +
                                        "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
-    public PortCallController(final PortCallService portCallService) {
-        this.portCallService = portCallService;
+    public PortCallController(final PortCallService_V1 portCallServiceV1) {
+        this.portCallServiceV1 = portCallServiceV1;
     }
 
     @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
@@ -54,7 +54,7 @@ public class PortCallController {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public PortCallsJson listAllPortCalls(
+    public PortCallsJson_V1 listAllPortCalls(
             @Parameter(description = "Return port calls received on given date.")
             @RequestParam(value = "date", required = false)
             @DateTimeFormat(iso = DATE) final Date date,
@@ -116,7 +116,7 @@ public class PortCallController {
             from = ZonedDateTime.now().minusDays(1);
         }
 
-        return portCallService.findPortCallsWithTimestamps(date,
+        return portCallServiceV1.findPortCallsWithTimestamps(date,
             from,
             etaFrom,
             etaTo,
@@ -139,7 +139,7 @@ public class PortCallController {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public PortCallsJson listAllPortCallsFromLocode(
+    public PortCallsJson_V1 listAllPortCallsFromLocode(
             @Parameter(description = "Return port calls from given port", required = true)
             @PathVariable("locode") final String locode,
 
@@ -202,7 +202,7 @@ public class PortCallController {
             @Parameter(description = "Return port calls for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
-        return portCallService.findPortCalls(date,
+        return portCallServiceV1.findPortCalls(date,
             from,
             to,
             etaFrom,
@@ -227,7 +227,7 @@ public class PortCallController {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public PortCallsJson listAllPortCallsFromTo(
+    public PortCallsJson_V1 listAllPortCallsFromTo(
         @Parameter(description = "Return port calls received after given time.",
                   required = true)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -253,7 +253,7 @@ public class PortCallController {
         @Parameter(description = "Return port calls for given vessel type code")
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
                                          ) {
-        return portCallService.findPortCallsWithoutTimestamps(from,
+        return portCallServiceV1.findPortCallsWithoutTimestamps(from,
             to,
             vesselName,
             mmsi,

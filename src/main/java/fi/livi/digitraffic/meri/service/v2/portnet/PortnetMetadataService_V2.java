@@ -19,14 +19,14 @@ import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
 import fi.livi.digitraffic.meri.dao.v2.V2CodeDescriptionRepository;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
 import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsService;
 
 @Service
 @ConditionalOnWebApplication
-public class V2PortnetMetadataService {
+public class PortnetMetadataService_V2 {
     private final BerthRepository berthRepository;
     private final PortAreaRepository portAreaRepository;
     private final SsnLocationRepository ssnLocationRepository;
@@ -35,12 +35,12 @@ public class V2PortnetMetadataService {
     private final UpdatedTimestampRepository updatedTimestampRepository;
     private final VesselDetailsService vesselDetailsService;
 
-    public V2PortnetMetadataService(final BerthRepository berthRepository,
-                                  final PortAreaRepository portAreaRepository,
-                                  final SsnLocationRepository ssnLocationRepository,
-                                  final V2CodeDescriptionRepository v2CodeDescriptionRepository,
-                                  final UpdatedTimestampRepository updatedTimestampRepository,
-                                  final VesselDetailsService vesselDetailsService) {
+    public PortnetMetadataService_V2(final BerthRepository berthRepository,
+                                     final PortAreaRepository portAreaRepository,
+                                     final SsnLocationRepository ssnLocationRepository,
+                                     final V2CodeDescriptionRepository v2CodeDescriptionRepository,
+                                     final UpdatedTimestampRepository updatedTimestampRepository,
+                                     final VesselDetailsService vesselDetailsService) {
         this.berthRepository = berthRepository;
         this.portAreaRepository = portAreaRepository;
         this.ssnLocationRepository = ssnLocationRepository;
@@ -60,8 +60,8 @@ public class V2PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public LocationFeatureCollections listaAllMetadata() {
-        return SsnLocationConverter.convert(
+    public LocationFeatureCollections_V1 listaAllMetadata() {
+        return SsnLocationConverter.convert_V1(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                 ssnLocationRepository.streamAllBy(),
                 portAreaRepository.streamAllBy(),
@@ -70,14 +70,14 @@ public class V2PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public LocationFeatureCollections findSsnLocationByLocode(final String locode) {
+    public LocationFeatureCollections_V1 findSsnLocationByLocode(final String locode) {
         final SsnLocation location = ssnLocationRepository.findByLocode(locode);
 
         if(location == null) {
             throw new ObjectNotFoundException("SsnLocation", locode);
         }
 
-        return SsnLocationConverter.convert(
+        return SsnLocationConverter.convert_V1(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                 Stream.of(location),
                 portAreaRepository.streamByPortAreaKeyLocode(locode),
@@ -86,11 +86,11 @@ public class V2PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public LocationFeatureCollections findSsnLocationsByCountry(final String country) {
+    public LocationFeatureCollections_V1 findSsnLocationsByCountry(final String country) {
         // Only Finland has port areas and berths defined
         final boolean isFinland = StringUtils.equals(country, "Finland");
 
-        return SsnLocationConverter.convert(
+        return SsnLocationConverter.convert_V1(
                 updatedTimestampRepository.findLastUpdated(PORT_METADATA),
                 ssnLocationRepository.streamByCountryIgnoreCase(country),
                 isFinland ? portAreaRepository.streamAllBy() : Stream.empty(),
@@ -100,6 +100,6 @@ public class V2PortnetMetadataService {
     @Transactional(readOnly = true)
     public List<VesselDetails> findVesselDetails(final ZonedDateTime from, final String vesselName, final Integer mmsi, final Integer imo,
                                                  final List<String> nationalities, final Integer vesselTypeCode) {
-        return vesselDetailsService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        return vesselDetailsService.findVesselDetails(from.toInstant(), vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }

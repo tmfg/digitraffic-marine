@@ -2,10 +2,11 @@ package fi.livi.digitraffic.meri.controller.portcall;
 
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
-import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
-import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
-import fi.livi.digitraffic.meri.service.portnet.PortCallService;
+import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
+import fi.livi.digitraffic.meri.service.portcall.PortCallServiceV1;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,7 +20,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -39,13 +41,13 @@ public class PortcallControllerV1 {
 
     private static final String API_PORT_CALL_BETA = API_PORT_CALL + BETA;
 
-    private final PortCallService portCallService;
+    private final PortCallServiceV1 portCallServiceV1;
 
     private final PortnetMetadataService portnetMetadataService;
 
-    public PortcallControllerV1(final PortCallService portCallService,
+    public PortcallControllerV1(final PortCallServiceV1 portCallServiceV1,
                                 final PortnetMetadataService portnetMetadataService) {
-        this.portCallService = portCallService;
+        this.portCallServiceV1 = portCallServiceV1;
         this.portnetMetadataService = portnetMetadataService;
     }
 
@@ -54,7 +56,7 @@ public class PortcallControllerV1 {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public PortCallsJson listAllPortCalls(
+    public PortCallsV1 listAllPortCalls(
         @Parameter(description = "Return port calls received on given date.")
         @RequestParam(value = "date", required = false)
         @DateTimeFormat(iso = DATE) final Date date,
@@ -62,39 +64,46 @@ public class PortcallControllerV1 {
         @Parameter(description = "Return port calls received after given time. " +
             "Default value is now minus 24 hours if all parameters are empty.")
         @RequestParam(value = "from", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime from,
+        @DateTimeFormat(iso = DATE_TIME) Instant from,
+
+        @Parameter(description = "Return port calls received before given time.")
+        @RequestParam(value = "to", required = false)
+        @DateTimeFormat(iso = DATE_TIME) final Instant to,
 
         @Parameter(description = "Return port calls whose ETA time is after the given time")
         @RequestParam(value = "etaFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaFrom,
+        @DateTimeFormat(iso = DATE_TIME) Instant etaFrom,
 
         @Parameter(description = "Return port calls whose ETD time is after the given time")
         @RequestParam(value = "etdFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdFrom,
+        @DateTimeFormat(iso = DATE_TIME) Instant etdFrom,
 
         @Parameter(description = "Return port calls whose ATA time is after the given time")
         @RequestParam(value = "ataFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataFrom,
+        @DateTimeFormat(iso = DATE_TIME) Instant ataFrom,
 
         @Parameter(description = "Return port calls whose ATD time is after the given time")
         @RequestParam(value = "atdFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdFrom,
+        @DateTimeFormat(iso = DATE_TIME) Instant atdFrom,
 
         @Parameter(description = "Return port calls whose ETA time is before the given time")
         @RequestParam(value = "etaTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etaTo,
+        @DateTimeFormat(iso = DATE_TIME) Instant etaTo,
 
         @Parameter(description = "Return port calls whose ETD time is before the given time")
         @RequestParam(value = "etdTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime etdTo,
+        @DateTimeFormat(iso = DATE_TIME) Instant etdTo,
 
         @Parameter(description = "Return port calls whose ATA time is before the given time")
         @RequestParam(value = "ataTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime ataTo,
+        @DateTimeFormat(iso = DATE_TIME) Instant ataTo,
 
         @Parameter(description = "Return port calls whose ATD time is before the given time")
         @RequestParam(value = "atdTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime atdTo,
+        @DateTimeFormat(iso = DATE_TIME) Instant atdTo,
+
+        @Parameter(description = "Return port calls for given locode")
+        @RequestParam(value = "locode", required = false) final String locode,
 
         @Parameter(description = "Return port calls for given vessel name")
         @RequestParam(value = "vesselName", required = false) final String vesselName,
@@ -113,11 +122,12 @@ public class PortcallControllerV1 {
     ) {
 
         if(!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
-            from = ZonedDateTime.now().minusDays(1);
+            from = Instant.now().minus(Duration.ofDays(1));
         }
 
-        return portCallService.findPortCallsWithTimestamps(date,
+        return portCallServiceV1.findPortCalls(date,
             from,
+            to,
             etaFrom,
             etaTo,
             etdFrom,
@@ -126,6 +136,7 @@ public class PortcallControllerV1 {
             ataTo,
             atdFrom,
             atdTo,
+            locode,
             vesselName,
             mmsi,
             imo,
@@ -136,15 +147,15 @@ public class PortcallControllerV1 {
     @Operation(summary = "Return all code descriptions")
     @GetMapping(path = API_PORT_CALL_BETA + "/code-descriptions", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public CodeDescriptions listCodeDescriptions() {
-        return portnetMetadataService.listCodeDescriptions();
+    public CodeDescriptionsV1 listCodeDescriptions() {
+        return portCallServiceV1.listCodeDescriptions();
     }
 
     @Operation(summary = "Return list of all berths, port areas and locations.")
     @GetMapping(path = API_PORT_CALL_BETA + "/locations", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public LocationFeatureCollections listAllMetadata() {
-        return portnetMetadataService.listaAllMetadata();
+    public LocationFeatureCollectionsV1 listAllMetadata() {
+        return portCallServiceV1.listaAllMetadata();
     }
 
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
@@ -153,8 +164,8 @@ public class PortcallControllerV1 {
         @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public LocationFeatureCollections findSsnLocationByLocode(@PathVariable(value = "locode") final String locode) {
-        return portnetMetadataService.findSsnLocationByLocode(locode);
+    public LocationFeatureCollectionsV1 findSsnLocationByLocode(@PathVariable(value = "locode") final String locode) {
+        return portCallServiceV1.findSsnLocationByLocode(locode);
     }
 
     @Operation(summary = "Return list of vessels details.")
@@ -166,7 +177,7 @@ public class PortcallControllerV1 {
         @Parameter(description = "Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z. " +
             "Default value is now minus 24 hours if all parameters are empty.")
         @RequestParam(value = "from", required = false)
-        @DateTimeFormat(iso = DATE_TIME) ZonedDateTime from,
+        @DateTimeFormat(iso = DATE_TIME) Instant from,
 
         @Parameter(description = "Return vessel details for given vessel name")
         @RequestParam(value = "vesselName", required = false) final String vesselName,
@@ -184,9 +195,9 @@ public class PortcallControllerV1 {
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode) {
 
         if (!ObjectUtils.anyNotNull(from, vesselName, mmsi, imo, nationalities, vesselTypeCode)) {
-            from = ZonedDateTime.now().minusDays(1L);
+            from = Instant.now().minus(Duration.ofDays(1));
         }
 
-        return portnetMetadataService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        return portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }

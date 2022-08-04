@@ -10,6 +10,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,9 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
 import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
-import fi.livi.digitraffic.meri.service.v2.portnet.V2PortnetMetadataService;
+import fi.livi.digitraffic.meri.service.v2.portnet.PortnetMetadataService_V2;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,44 +44,49 @@ public class V2PortnetMetadataController {
     public static final String SSN_LOCATIONS_BY_COUNTRY_PATH =  "/locations-by-country";
     public static final String VESSEL_DETAILS_PATH = "/vessel-details";
 
-    private final V2PortnetMetadataService v2PortnetMetadataService;
+    private final PortnetMetadataService_V2 portnetMetadataServiceV2;
 
-    public V2PortnetMetadataController(final V2PortnetMetadataService v2PortnetMetadataService) {
-        this.v2PortnetMetadataService = v2PortnetMetadataService;
+    public V2PortnetMetadataController(final PortnetMetadataService_V2 portnetMetadataServiceV2) {
+        this.portnetMetadataServiceV2 = portnetMetadataServiceV2;
     }
 
-    @Operation(summary = "Return all code descriptions.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public V2CodeDescriptions listCodeDescriptions() {
-        return v2PortnetMetadataService.listCodeDescriptions();
+        return portnetMetadataServiceV2.listCodeDescriptions();
     }
 
-    @Operation(summary = "Return list of all berths, port areas and locations.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LocationFeatureCollections listAllMetadata() {
-        return v2PortnetMetadataService.listaAllMetadata();
+    public LocationFeatureCollections_V1 listAllMetadata() {
+        return portnetMetadataServiceV2.listaAllMetadata();
     }
 
-    @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public LocationFeatureCollections findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
-        return v2PortnetMetadataService.findSsnLocationByLocode(locode);
+    public LocationFeatureCollections_V1 findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
+        return portnetMetadataServiceV2.findSsnLocationByLocode(locode);
     }
 
-    @Operation(summary = "Return list of SafeSeaNet locations by country name")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LocationFeatureCollections findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
-        return v2PortnetMetadataService.findSsnLocationsByCountry(country);
+    public LocationFeatureCollections_V1 findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
+        return portnetMetadataServiceV2.findSsnLocationsByCountry(country);
     }
 
-    @Operation(summary = "Return list of vessels details")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return list of vessels details. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -110,6 +116,6 @@ public class V2PortnetMetadataController {
             from = ZonedDateTime.now().minusDays(1L);
         }
 
-        return v2PortnetMetadataService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        return portnetMetadataServiceV2.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }
