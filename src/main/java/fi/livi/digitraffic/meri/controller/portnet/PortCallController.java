@@ -48,8 +48,8 @@ public class PortCallController {
         this.portCallService = portCallService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
-    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2022_11_01, description = NOTE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_FUTURE, description = NOTE)
     @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -133,8 +133,8 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
-    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2022_11_01, description = NOTE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_FUTURE, description = NOTE)
     @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -221,8 +221,8 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
-    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2022_11_01, description = NOTE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_FUTURE, description = NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
