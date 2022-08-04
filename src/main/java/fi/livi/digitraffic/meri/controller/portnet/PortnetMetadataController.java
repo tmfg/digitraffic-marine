@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions;
-import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
+import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions_V1;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,7 +53,7 @@ public class PortnetMetadataController {
     @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public CodeDescriptions listCodeDescriptions() {
+    public CodeDescriptions_V1 listCodeDescriptions() {
         return portnetMetadataService.listCodeDescriptions();
     }
 
@@ -61,7 +61,7 @@ public class PortnetMetadataController {
     @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public LocationFeatureCollections listAllMetadata() {
+    public LocationFeatureCollections_V1 listAllMetadata() {
         return portnetMetadataService.listaAllMetadata();
     }
 
@@ -72,7 +72,7 @@ public class PortnetMetadataController {
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public LocationFeatureCollections findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
+    public LocationFeatureCollections_V1 findSsnLocationByLocode(@PathVariable(value = "locode", required = true) final String locode) {
         return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 
@@ -80,7 +80,7 @@ public class PortnetMetadataController {
     @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public LocationFeatureCollections findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
+    public LocationFeatureCollections_V1 findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
         return portnetMetadataService.findSsnLocationsByCountry(country);
     }
 

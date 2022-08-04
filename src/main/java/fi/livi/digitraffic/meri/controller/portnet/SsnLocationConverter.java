@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.controller.portnet;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -7,11 +8,12 @@ import java.util.stream.Stream;
 import fi.livi.digitraffic.meri.domain.portnet.Berth;
 import fi.livi.digitraffic.meri.domain.portnet.PortArea;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
+import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
 import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthFeature;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthFeatureCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthProperties;
-import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections;
+import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaFeature;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaFeatureCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaProperties;
@@ -22,12 +24,20 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationProperties;
 public final class SsnLocationConverter {
     private SsnLocationConverter() {}
 
-    public static LocationFeatureCollections convert(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
-        final Stream<PortArea> portAreas, final Stream<Berth> berths) {
-        return new LocationFeatureCollections(timestamp,
+    public static LocationFeatureCollections_V1 convert_V1(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
+                                                           final Stream<PortArea> portAreas, final Stream<Berth> berths) {
+        return new LocationFeatureCollections_V1(timestamp,
                 convertSsnLocations(locations),
                 convertPortAreas(portAreas),
                 convertBerths(berths));
+    }
+
+    public static LocationFeatureCollectionsV1 convertV1(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
+                                                          final Stream<PortArea> portAreas, final Stream<Berth> berths) {
+        return new LocationFeatureCollectionsV1(timestamp.toInstant(),
+            convertSsnLocations(locations),
+            convertPortAreas(portAreas),
+            convertBerths(berths));
     }
 
     private static BerthFeatureCollection convertBerths(final Stream<Berth> berths) {

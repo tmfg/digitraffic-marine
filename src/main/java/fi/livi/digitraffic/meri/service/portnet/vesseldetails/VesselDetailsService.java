@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -30,12 +31,12 @@ public class VesselDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public List<VesselDetails> findVesselDetails(final ZonedDateTime from, final String vesselName, final Integer mmsi,
-            final Integer imo, final List<String> nationalities, final Integer vesselTypeCode) {
+    public List<VesselDetails> findVesselDetails(final Instant from, final String vesselName, final Integer mmsi,
+                                                 final Integer imo, final List<String> nationalities, final Integer vesselTypeCode) {
         final QueryBuilder<VesselDetails, VesselDetails> qb = new QueryBuilder<>(entityManager, VesselDetails.class, VesselDetails.class);
 
         if (from != null) {
-            qb.gte(qb.get("updateTimestamp"), Date.from(from.toInstant()));
+            qb.gte(qb.get("updateTimestamp"), Date.from(from));
         }
         if (vesselName != null) {
             qb.like("name", '%' + vesselName + '%');

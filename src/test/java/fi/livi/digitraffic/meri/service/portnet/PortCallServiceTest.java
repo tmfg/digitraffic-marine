@@ -4,7 +4,7 @@ import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PortCallServiceTest extends AbstractTestBase {
 
     @Autowired
-    private PortCallService portCallService;
+    private PortCallService_V1 portCallServiceV1;
 
     @Autowired
     private PortCallRepository portCallRepository;
@@ -52,7 +52,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .etaFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .etaTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .etaFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .etaTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .etaFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .etaTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .etdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .etdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .etdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .etdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .etdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .etdTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .ataFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .ataTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .ataFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -146,7 +146,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .ataTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -156,7 +156,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .ataFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .ataTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .atdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .atdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -175,7 +175,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .atdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .atdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .atdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
             .atdTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -204,7 +204,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .modifiedFrom(ZonedDateTime.now().minus(3, ChronoUnit.HOURS))
             .modifiedTo(ZonedDateTime.now().plus(3, ChronoUnit.HOURS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .modifiedFrom(ZonedDateTime.now().minus(3, ChronoUnit.HOURS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -222,7 +222,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .modifiedTo(ZonedDateTime.now().plus(3, ChronoUnit.HOURS))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -232,7 +232,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         new PortcallQueryBuilder()
             .modifiedFrom(ZonedDateTime.now().minus(3, ChronoUnit.HOURS))
             .modifiedTo(ZonedDateTime.now().minus(2, ChronoUnit.HOURS))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -241,7 +241,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .modifiedDate(Date.from(ZonedDateTime.now().minusDays(3).toInstant()))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -250,7 +250,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .modifiedDate(Date.from(ZonedDateTime.now().minusDays(1).toInstant()))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -259,7 +259,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .locode("NOT_FOUND")
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -268,7 +268,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .locode(PORT_LOCODE)
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -277,7 +277,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .vesselName("NOT_FOUND")
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -286,7 +286,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .vesselName(VESSEL_NAME)
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -295,7 +295,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .mmsi(1)
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -304,7 +304,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .mmsi(VESSEL_MMSI)
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -313,7 +313,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .imo(VESSEL_IMO)
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -322,7 +322,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .imo(1)
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -331,7 +331,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .vesselTypeCode(VESSEL_TYPECODE)
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -340,7 +340,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .vesselTypeCode(1)
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -349,7 +349,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .nationality(List.of(VESSEL_NATIONALITY))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -358,7 +358,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .nationality(List.of(VESSEL_NATIONALITY, "TEST"))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -367,7 +367,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .nationality(List.of("!TEST"))
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
     }
 
     @Test
@@ -376,7 +376,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .nationality(List.of("!" + VESSEL_NATIONALITY))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -385,7 +385,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         new PortcallQueryBuilder()
             .nationality(List.of("TEST"))
-            .assertCount(portCallService, 0);
+            .assertCount(portCallServiceV1, 0);
     }
 
     @Test
@@ -393,16 +393,16 @@ public class PortCallServiceTest extends AbstractTestBase {
         IntStream.range(0, 1001).forEach(i -> newPortCall(null, null, null, null));
 
         new PortcallQueryBuilder()
-            .assertException(portCallService);
+            .assertException(portCallServiceV1);
     }
 
     @Test
     public void master_is_empty() {
         newPortCall(null, null, null, null);
 
-        final PortCallsJson json = new PortcallQueryBuilder()
+        final PortCallsJson_V1 json = new PortcallQueryBuilder()
             .imo(VESSEL_IMO)
-            .assertCount(portCallService, 1);
+            .assertCount(portCallServiceV1, 1);
 
         assertEquals(StringUtils.EMPTY, json.portCalls.get(0).getShipMasterArrival());
         assertEquals(StringUtils.EMPTY, json.portCalls.get(0).getShipMasterDeparture());
@@ -470,8 +470,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         List<String> nationality= null;
         Integer vesselTypeCode= null;
 
-        public PortCallsJson assertCount(final PortCallService portCallService, final int assertedCount) {
-            final PortCallsJson json = portCallService.findPortCalls(modifiedDate, modifiedFrom, modifiedTo, etaFrom, etaTo, etdFrom, etdTo,
+        public PortCallsJson_V1 assertCount(final PortCallService_V1 portCallServiceV1, final int assertedCount) {
+            final PortCallsJson_V1 json = portCallServiceV1.findPortCalls(modifiedDate, modifiedFrom, modifiedTo, etaFrom, etaTo, etdFrom, etdTo,
                 ataFrom, ataTo, atdFrom, atdTo, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
 
             assertEquals(assertedCount, json.portCalls.size());
@@ -479,8 +479,8 @@ public class PortCallServiceTest extends AbstractTestBase {
             return json;
         }
 
-        public void assertException(final PortCallService portCallService) {
-            Assertions.assertThrows(BadRequestException.class, () -> assertCount(portCallService, 0));
+        public void assertException(final PortCallService_V1 portCallServiceV1) {
+            Assertions.assertThrows(BadRequestException.class, () -> assertCount(portCallServiceV1, 0));
         }
 
         public PortcallQueryBuilder atdFrom(final ZonedDateTime atdFrom) {

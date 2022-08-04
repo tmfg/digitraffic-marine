@@ -22,13 +22,13 @@ import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
 
 @Service
-public class PortCallService {
+public class PortCallService_V1 {
     private final UpdatedTimestampRepository updatedTimestampRepository;
     private final PortCallRepository portCallRepository;
 
@@ -36,16 +36,16 @@ public class PortCallService {
 
     private static final String PORTCALL_PORTCALL_TIMESTAMP = "portCallTimestamp";
 
-    public PortCallService(final UpdatedTimestampRepository updatedTimestampRepository,
-                           final PortCallRepository portCallRepository,
-                           final EntityManager entityManager) {
+    public PortCallService_V1(final UpdatedTimestampRepository updatedTimestampRepository,
+                              final PortCallRepository portCallRepository,
+                              final EntityManager entityManager) {
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallRepository = portCallRepository;
         this.entityManager = entityManager;
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson findPortCalls(
+    public PortCallsJson_V1 findPortCalls(
         final Date modifiedDate,
         final ZonedDateTime modifiedFrom,
         final ZonedDateTime modifiedTo,
@@ -84,7 +84,7 @@ public class PortCallService {
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson findPortCallsWithTimestamps(
+    public PortCallsJson_V1 findPortCallsWithTimestamps(
         final Date modifiedDate,
         final ZonedDateTime modifiedFrom,
         final ZonedDateTime etaFrom,
@@ -121,7 +121,7 @@ public class PortCallService {
     }
 
     @Transactional(readOnly = true)
-    public PortCallsJson findPortCallsWithoutTimestamps(
+    public PortCallsJson_V1 findPortCallsWithoutTimestamps(
         final ZonedDateTime modifiedFrom,
         final ZonedDateTime modifiedTo,
         final String vesselName,
@@ -149,7 +149,7 @@ public class PortCallService {
             vesselTypeCode);
     }
 
-    private PortCallsJson doFindPortCalls(
+    private PortCallsJson_V1 doFindPortCalls(
         final Date modifiedDate,
         final ZonedDateTime modifiedFrom,
         final ZonedDateTime modifiedTo,
@@ -189,7 +189,7 @@ public class PortCallService {
             vesselTypeCode);
 
         if (CollectionUtils.isEmpty(portCallIds)) {
-            return new PortCallsJson(lastUpdated, Collections.emptyList());
+            return new PortCallsJson_V1(lastUpdated, Collections.emptyList());
         }
 
         if (portCallIds.size() > 1000) {
@@ -198,7 +198,7 @@ public class PortCallService {
 
         final List<PortCallJson> portCallList = portCallRepository.findByPortCallIdIn(portCallIds);
 
-        return new PortCallsJson(lastUpdated, portCallList);
+        return new PortCallsJson_V1(lastUpdated, portCallList);
     }
 
     private List<Long> getPortCallIds(

@@ -6,14 +6,14 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Port call")
-public final class PortCallsJson {
+public final class PortCallsJson_V1 {
     @Schema(description = "Timestamp when port calls were updated", required = true)
     public final ZonedDateTime portCallsUpdated;
 
     @Schema(description = "Port calls", required = true)
     public final List<PortCallJson> portCalls;
 
-    public PortCallsJson(final ZonedDateTime portCallsUpdated, final List<PortCallJson> portCalls) {
+    public PortCallsJson_V1(final ZonedDateTime portCallsUpdated, final List<PortCallJson> portCalls) {
         this.portCallsUpdated = portCallsUpdated;
         this.portCalls = portCalls;
     }
