@@ -19,14 +19,12 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static fi.livi.digitraffic.meri.util.MqttUtil.getTopicForMessage;
-
 @ConditionalOnProperty("sse.mqtt.enabled")
 @ConditionalOnNotWebApplication
 @Component
 public class SseMqttSenderV2 {
     private final MqttMessageSender mqttMessageSender;
-    private final SseService sseService;
+    private final SseService_V1 sseServiceV1;
 
     private static final String SSE_V2_DATA_TOPIC = "sse-v2/site/%d";
     private static final String SSE_V2_STATUS_TOPIC ="sse-v2/status";
@@ -36,9 +34,9 @@ public class SseMqttSenderV2 {
     public SseMqttSenderV2(final MqttRelayQueue mqttRelayQueue,
                            final ObjectMapper objectMapper,
                            final CachedLocker sseCachedLocker,
-                           final SseService sseService) {
+                           final SseService_V1 sseServiceV1) {
         this.mqttMessageSender = new MqttMessageSender(LOG, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, sseCachedLocker);
-        this.sseService = sseService;
+        this.sseServiceV1 = sseServiceV1;
 
         this.mqttMessageSender.setLastUpdated(ZonedDateTime.now());
     }
@@ -46,7 +44,7 @@ public class SseMqttSenderV2 {
     @Scheduled(fixedRate = 10000)
     public void checkNewSseReports() {
         if (mqttMessageSender.hasLock()) {
-            final List<SseFeature> features = sseService.findCreatedAfter(mqttMessageSender.getLastUpdated().toInstant()).getFeatures();
+            final List<SseFeature> features = sseServiceV1.findCreatedAfter(mqttMessageSender.getLastUpdated().toInstant()).getFeatures();
 
             if (!features.isEmpty()) {
                 features.forEach(sseFeature -> {
