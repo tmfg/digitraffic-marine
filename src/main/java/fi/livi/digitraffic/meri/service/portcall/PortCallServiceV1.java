@@ -22,6 +22,7 @@ import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.Path;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +40,7 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Service
+@ConditionalOnWebApplication
 public class PortCallServiceV1 {
     private final VesselDetailsService vesselDetailsService;
 
