@@ -38,12 +38,17 @@ public class SseServiceV1 {
 
     @Transactional(readOnly = true)
     public SseFeatureCollection findMeasurements(final Integer siteNumber) {
+        final List<SseReport> reports;
+
         if (siteNumber != null) {
             final SseReport report = sseReportRepository.findByLatestIsTrueAndSiteNumber(siteNumber);
-            return sseConversionService.createSseFeatureCollectionFrom(Collections.singletonList(report));
+
+            reports = report == null ? Collections.emptyList() : Collections.singletonList(report);
+        } else {
+            reports = sseReportRepository.findByLatestIsTrueOrderBySiteNumber();
         }
 
-        return sseConversionService.createSseFeatureCollectionFrom(sseReportRepository.findByLatestIsTrueOrderBySiteNumber());
+        return sseConversionService.createSseFeatureCollectionFrom(reports);
     }
 
     @Transactional(readOnly = true)
