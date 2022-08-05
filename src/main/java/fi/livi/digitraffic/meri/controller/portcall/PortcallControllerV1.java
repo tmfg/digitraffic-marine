@@ -5,7 +5,6 @@ import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
 import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
 import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
-import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
 import fi.livi.digitraffic.meri.service.portcall.PortCallServiceV1;
 import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
 import io.swagger.v3.oas.annotations.Operation;
