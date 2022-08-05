@@ -32,8 +32,8 @@ public class SseControllerV1 {
         this.sseServiceV1 = sseServiceV1;
     }
 
-    @Operation(summary = "Return SSE (Sea State Estimation) data as GeoJSON.  If from/to parameters are given, returs" +
-        "measurements from history, else returns the latest measurements")
+    @Operation(summary = "Return SSE (Sea State Estimation) data as GeoJSON.  If from/to parameters are given, returs " +
+        "measurements from history, otherwise returns the latest measurements")
     @GetMapping(path = API_SSE_BETA + "/measurements" , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
         MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
         MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })

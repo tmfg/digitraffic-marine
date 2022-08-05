@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_PORT_CALLS_PATH)
 @ConditionalOnWebApplication
-@Tag(name="port-call-controller", description = "Port Call Controller")
+@Tag(name="port-call-controller", description = "Port Call Controller. " + ApiDeprecations.API_NOTE_FUTURE)
 public class PortCallController {
     private final PortCallService_V1 portCallServiceV1;
 

@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "portnet-metadata-controller", description = "Portnet Metadata Controller")
+@Tag(name = "portnet-metadata-controller", description = "Portnet Metadata Controller. " + ApiDeprecations.API_NOTE_FUTURE)
 public class PortnetMetadataController {
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";
     public static final String SSN_LOCATIONS_PATH =  "/locations";
