@@ -40,17 +40,17 @@ public class SseControllerV1 {
     @ResponseBody
     public SseFeatureCollection measurements(
         @Parameter(description = "SSE site number")
-        @RequestParam(value = "siteNumber")
+        @RequestParam(value = "siteNumber", required = false)
         final Integer siteNumber,
 
-        @Parameter(description = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE, required = true)
+        @Parameter(description = "Return SSE data after given time in " + ISO_DATE_TIME_FROM_DOC, example = ISO_DATE_TIME_FROM_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        @RequestParam(value = "from")
+        @RequestParam(value = "from", required = false)
         final Instant from,
 
-        @Parameter(description = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE, required = true)
+        @Parameter(description = "Return SSE data before given time in " + ISO_DATE_TIME_TO_DOC, example = ISO_DATE_TIME_TO_VALUE)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        @RequestParam(value = "to")
+        @RequestParam(value = "to", required = false)
         final Instant to) {
             if (from == null && to == null) {
                 return sseServiceV1.findMeasurements(siteNumber);
