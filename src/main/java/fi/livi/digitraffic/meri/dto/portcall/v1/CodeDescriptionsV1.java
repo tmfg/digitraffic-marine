@@ -2,12 +2,10 @@ package fi.livi.digitraffic.meri.dto.portcall.v1;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
-import fi.livi.digitraffic.meri.model.CodeDescription;
 import fi.livi.digitraffic.meri.model.v2.V2CodeDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Schema(description="Code descriptions associated with port calls")

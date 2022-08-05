@@ -3,27 +3,28 @@ package fi.livi.digitraffic.meri.controller.sse;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseServiceV1;
-import fi.livi.digitraffic.meri.service.sse.SseService_V1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 
 import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
 import static fi.livi.digitraffic.meri.model.Constants.*;
-import static fi.livi.digitraffic.meri.model.Constants.ISO_DATE_TIME_TO_VALUE;
 
 @Tag(name = SSE_BETA_TAG, description = "SSE Controller")
 @RestController
 @Validated
 @ConditionalOnWebApplication
 public class SseControllerV1 {
-    private static final String API_SSE_BETA = API_PORT_CALL + BETA;
+    private static final String API_SSE_BETA = API_SSE + BETA;
 
     private final SseServiceV1 sseServiceV1;
 

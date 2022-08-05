@@ -10,12 +10,12 @@ public final class ApiConstants {
     /** Port Call */
     public static final String PORT_CALL_BETA_TAG = "Port Call (BETA)";
 
-    public static final String API_PORT_CALL = API + "port-call";
+    public static final String API_PORT_CALL = API + "/port-call";
 
     /** SSE */
 
     public static final String SSE_BETA_TAG = "SSE (BETA)";
-    public static final String API_SSE = API + "sse";
+    public static final String API_SSE = API + "/sse";
 
     private ApiConstants() {}
 }
