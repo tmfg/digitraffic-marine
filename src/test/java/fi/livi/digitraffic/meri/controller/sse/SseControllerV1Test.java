@@ -44,7 +44,7 @@ public class SseControllerV1Test extends AbstractTestBase {
     public void sseHistory() throws Exception {
         final String start = "2019-01-10T10:00:01+03:00";
         final String end = "2019-01-11T10:00:01+03:00";
-        when(sseServiceV1.findHistory(null, ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
+        when(sseServiceV1.findHistory(ArgumentMatchers.isNull(), ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end).toInstant()).build());
 
         mockMvc.perform(get(SSE_MEASUREMENTS_PATH)
@@ -62,7 +62,7 @@ public class SseControllerV1Test extends AbstractTestBase {
         final int siteNumber = 1234;
         final String start = "2019-01-10T10:00:01+03:00";
         final String end = "2019-01-11T10:00:01+03:00";
-        when(sseServiceV1.findHistory(siteNumber, ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
+        when(sseServiceV1.findHistory(ArgumentMatchers.eq(siteNumber), ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end).toInstant()).build());
 
         mockMvc.perform(get(SSE_MEASUREMENTS_PATH)
