@@ -1,14 +1,15 @@
 package fi.livi.digitraffic.meri.controller.sse;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.service.sse.SseFeatureCollectionBuilder;
 import fi.livi.digitraffic.meri.service.sse.SseServiceV1;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import static fi.livi.digitraffic.meri.controller.sse.SseControllerV1.API_SSE_BETA;
@@ -43,7 +44,7 @@ public class SseControllerV1Test extends AbstractTestBase {
     public void sseHistory() throws Exception {
         final String start = "2019-01-10T10:00:01+03:00";
         final String end = "2019-01-11T10:00:01+03:00";
-        when(sseServiceV1.findHistory(null, ZonedDateTime.parse(start).toInstant(), ZonedDateTime.parse(end).toInstant()))
+        when(sseServiceV1.findHistory(null, ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end).toInstant()).build());
 
         mockMvc.perform(get(SSE_MEASUREMENTS_PATH)
@@ -61,11 +62,11 @@ public class SseControllerV1Test extends AbstractTestBase {
         final int siteNumber = 1234;
         final String start = "2019-01-10T10:00:01+03:00";
         final String end = "2019-01-11T10:00:01+03:00";
-        when(sseServiceV1.findHistory(siteNumber, ZonedDateTime.parse(start).toInstant(), ZonedDateTime.parse(end).toInstant()))
+        when(sseServiceV1.findHistory(siteNumber, ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end).toInstant()).build());
 
-        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
-                MarineApplicationConfiguration.API_SSE_PATH + SseController_V1.HISTORY_PATH + "/" + siteNumber)
+        mockMvc.perform(get(SSE_MEASUREMENTS_PATH)
+                .param("siteNumber", String.valueOf(siteNumber))
                 .param("from", start)
                 .param("to", end))
             .andExpect(status().isOk())
