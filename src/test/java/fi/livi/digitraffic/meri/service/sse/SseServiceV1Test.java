@@ -129,10 +129,8 @@ public class SseServiceV1Test extends AbstractTestBase {
         saveNewTlscReports("example-sse-report1.json");
         saveNewTlscReports("example-sse-report2.json");
 
-        // Should throw IllegalArgumentException as site 12345 not exists
-        assertThrows(IllegalArgumentException.class, () -> {
-            sseServiceV1.findMeasurements(12345);
-        });
+        final SseFeatureCollection latest = sseServiceV1.findMeasurements(12345);
+        assertEquals(0, latest.getFeatures().size());
     }
 
     @Test
@@ -232,10 +230,10 @@ public class SseServiceV1Test extends AbstractTestBase {
         saveNewTlscReports("example-sse-report2.json");
 
         // Should throw IllegalArgumentException as site 12345 not exists
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            sseServiceV1.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
+        final List<SseFeature> history =  sseServiceV1.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
                 ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
-        });
+
+        assertEquals(0, history.size());
     }
     private void assertSiteNumber(final int expected, final int historyIndex, final List<SseFeature> history) {
         assertEquals(expected, history.get(historyIndex).getSiteNumber());

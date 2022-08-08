@@ -24,7 +24,7 @@ import static fi.livi.digitraffic.meri.model.Constants.*;
 @Validated
 @ConditionalOnWebApplication
 public class SseControllerV1 {
-    private static final String API_SSE_BETA = API_SSE + BETA;
+    public static final String API_SSE_BETA = API_SSE + BETA;
 
     private final SseServiceV1 sseServiceV1;
 

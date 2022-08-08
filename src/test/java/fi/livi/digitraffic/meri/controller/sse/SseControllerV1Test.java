@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 
 import java.time.ZonedDateTime;
 
+import static fi.livi.digitraffic.meri.controller.sse.SseControllerV1.API_SSE_BETA;
 import static java.time.ZoneOffset.UTC;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,14 +22,15 @@ public class SseControllerV1Test extends AbstractTestBase {
     @MockBean
     private SseServiceV1 sseServiceV1;
 
+    private static final String SSE_MEASUREMENTS_PATH = API_SSE_BETA + "/measurements";
+
     @Test
     public void sseLatest() throws Exception {
         final String lastUpdate = "2019-01-11T10:00:01+03:00";
         when(sseServiceV1.findMeasurements(null))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(lastUpdate).toInstant()).build());
 
-        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
-                MarineApplicationConfiguration.API_SSE_PATH + SseController_V1.LATEST_PATH))
+        mockMvc.perform(get(SSE_MEASUREMENTS_PATH))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
@@ -44,8 +46,7 @@ public class SseControllerV1Test extends AbstractTestBase {
         when(sseServiceV1.findHistory(null, ZonedDateTime.parse(start).toInstant(), ZonedDateTime.parse(end).toInstant()))
             .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end).toInstant()).build());
 
-        mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
-                MarineApplicationConfiguration.API_SSE_PATH + SseController_V1.HISTORY_PATH)
+        mockMvc.perform(get(SSE_MEASUREMENTS_PATH)
                 .param("from", start)
                 .param("to", end))
             .andExpect(status().isOk())
