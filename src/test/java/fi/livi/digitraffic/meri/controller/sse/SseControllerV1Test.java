@@ -27,25 +27,25 @@ public class SseControllerV1Test extends AbstractTestBase {
 
     @Test
     public void sseLatest() throws Exception {
-        final String lastUpdate = "2019-01-11T10:00:01+03:00";
+        final String lastUpdate = "2019-01-11T10:00:01.000Z";
         when(sseServiceV1.findMeasurements(null))
-            .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(lastUpdate).toInstant()).build());
+            .thenReturn(new SseFeatureCollectionBuilder(Instant.parse(lastUpdate)).build());
 
         mockMvc.perform(get(SSE_MEASUREMENTS_PATH))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate",
-                Matchers.is(ZonedDateTime.parse(lastUpdate).toInstant().atZone(UTC).toString())))
+                Matchers.is(Instant.parse(lastUpdate).toString())))
         ;
     }
 
     @Test
     public void sseHistory() throws Exception {
-        final String start = "2019-01-10T10:00:01+03:00";
-        final String end = "2019-01-11T10:00:01+03:00";
+        final String start = "2019-01-10T10:00:01.000Z";
+        final String end = "2019-01-11T10:00:01.000Z";
         when(sseServiceV1.findHistory(ArgumentMatchers.isNull(), ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
-            .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end).toInstant()).build());
+            .thenReturn(new SseFeatureCollectionBuilder(Instant.parse(end)).build());
 
         mockMvc.perform(get(SSE_MEASUREMENTS_PATH)
                 .param("from", start)
@@ -53,17 +53,17 @@ public class SseControllerV1Test extends AbstractTestBase {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
-            .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
+            .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(Instant.parse(end).toString())))
         ;
     }
 
     @Test
     public void sseHistoryWithSiteNumber() throws Exception {
         final int siteNumber = 1234;
-        final String start = "2019-01-10T10:00:01+03:00";
-        final String end = "2019-01-11T10:00:01+03:00";
+        final String start = "2019-01-10T10:00:01.000Z";
+        final String end = "2019-01-11T10:00:01.000Z";
         when(sseServiceV1.findHistory(ArgumentMatchers.eq(siteNumber), ArgumentMatchers.any(Instant.class), ArgumentMatchers.any(Instant.class)))
-            .thenReturn(new SseFeatureCollectionBuilder(ZonedDateTime.parse(end).toInstant()).build());
+            .thenReturn(new SseFeatureCollectionBuilder(Instant.parse(end)).build());
 
         mockMvc.perform(get(SSE_MEASUREMENTS_PATH)
                 .param("siteNumber", String.valueOf(siteNumber))
@@ -72,7 +72,7 @@ public class SseControllerV1Test extends AbstractTestBase {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
-            .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
+            .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(Instant.parse(end).toString())))
         ;
     }
 }
