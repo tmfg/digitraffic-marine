@@ -34,7 +34,7 @@ public interface SseReportRepository extends PagingAndSortingRepository<SseRepor
                                                                                           final Integer siteNumber,
                                                                                           final Pageable page);
 
-    SseReport findByLatestIsTrueAndSiteNumber(int siteNumber);
+    SseReport findByLatestIsTrueAndSiteNumber(final int siteNumber);
 
     @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
     List<SseReport> findByCreatedAfterOrderByCreatedAsc(final Instant created);

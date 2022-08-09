@@ -18,9 +18,9 @@ import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
-public class SseService {
+public class SseService_V1 {
 
-    private static final Logger log = LoggerFactory.getLogger(SseService.class);
+    private static final Logger log = LoggerFactory.getLogger(SseService_V1.class);
 
     private final SseReportRepository sseReportRepository;
     private final UpdatedTimestampRepository updatedTimestampRepository;
@@ -32,9 +32,9 @@ public class SseService {
 
     private static final int MAX_QUERY_RESULT_SIZE = 1000;
 
-    public SseService(final SseReportRepository sseReportRepository,
-                      final UpdatedTimestampRepository updatedTimestampRepository,
-                      final SseConversionService sseConversionService) {
+    public SseService_V1(final SseReportRepository sseReportRepository,
+                         final UpdatedTimestampRepository updatedTimestampRepository,
+                         final SseConversionService sseConversionService) {
         this.sseReportRepository = sseReportRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.sseConversionService = sseConversionService;

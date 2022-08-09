@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
+import fi.livi.digitraffic.meri.controller.ApiConstants;
 import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
 import fi.livi.digitraffic.meri.service.MarineApiInfoService;
 
@@ -32,6 +33,9 @@ public class SwaggerConfiguration {
     private final String host;
     private final String scheme;
 
+    private final String API_PATHS = ApiConstants.API + "/**";
+    private final String BETA_PATHS = "/**" + ApiConstants.BETA + "/**";
+
     @Autowired
     public SwaggerConfiguration(final MarineApiInfoService marineApiInfoService,
                                 final @Value("${dt.domain.url}") String domainUrl) throws URISyntaxException {
@@ -53,7 +57,8 @@ public class SwaggerConfiguration {
     public GroupedOpenApi marineApi() {
         return GroupedOpenApi.builder()
             .group("marine-api")
-            .pathsToMatch(API_V1_BASE_PATH + "/**", API_V2_BASE_PATH + "/**")
+            .pathsToMatch(API_PATHS)
+            .pathsToExclude(BETA_PATHS)
             .addOpenApiCustomiser(openApiConfig())
             .build();
     }
@@ -61,7 +66,7 @@ public class SwaggerConfiguration {
     public GroupedOpenApi marineApiBeta() {
         return GroupedOpenApi.builder()
             .group("marine-api-beta")
-            .pathsToMatch(API_BETA_BASE_PATH + "/**")
+            .pathsToMatch(BETA_PATHS)
             .addOpenApiCustomiser(openApiConfig())
             .build();
     }

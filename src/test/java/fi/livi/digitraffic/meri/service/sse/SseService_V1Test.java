@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.annotation.Rollback;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,12 +37,12 @@ import fi.livi.digitraffic.meri.model.sse.SseProperties;
 import fi.livi.digitraffic.meri.model.sse.SseProperties.SeaState;
 
 @Transactional
-public class SseServiceTest extends AbstractTestBase {
+public class SseService_V1Test extends AbstractTestBase {
 
     private static final Logger log = LoggerFactory.getLogger(MessageConverter.class);
 
     @SpyBean
-    private SseService sseService;
+    private SseService_V1 sseServiceV1;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -61,7 +60,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // First update
         saveNewTlscReports("example-sse-report1.json");
-        SseFeatureCollection latestFirst = sseService.findLatest();
+        SseFeatureCollection latestFirst = sseServiceV1.findLatest();
         log.info("{}", latestFirst);
 
         assertEquals(2, latestFirst.getFeatures().size());
@@ -69,7 +68,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Second update
         saveNewTlscReports("example-sse-report2.json");
-        SseFeatureCollection latestSecond = sseService.findLatest();
+        SseFeatureCollection latestSecond = sseServiceV1.findLatest();
 
         assertEquals(2, latestSecond.getFeatures().size());
         assertEquals("Hattukari", latestSecond.getFeatures().get(0).getProperties().getSiteName());
@@ -124,7 +123,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Should include all of site 20243 and none of site 20169
         final List<SseFeature> latest =
-            sseService.findLatest(20243).getFeatures();
+            sseServiceV1.findLatest(20243).getFeatures();
 
         assertEquals(1, latest.size());
         assertSiteNumber(20243, 0, latest);
@@ -139,7 +138,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Should throw IllegalArgumentException as site 12345 not exists
         assertThrows(IllegalArgumentException.class, () -> {
-            sseService.findLatest(12345);
+            sseServiceV1.findLatest(12345);
         });
     }
 
@@ -151,7 +150,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Should include all of site 20243 and none of site 20169
         final List<SseFeature> history =
-            sseService.findHistory(ZonedDateTime.parse(SITE_20243_1).toInstant(), ZonedDateTime.parse(SITE_20243_3).toInstant()).getFeatures();
+            sseServiceV1.findHistory(ZonedDateTime.parse(SITE_20243_1).toInstant(), ZonedDateTime.parse(SITE_20243_3).toInstant()).getFeatures();
 
         assertEquals(3, history.size());
         assertSiteNumber(20243, 0, history);
@@ -170,7 +169,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Should include second of site 20169 and first of 20243
         final List<SseFeature> history =
-            sseService.findHistory(ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
+            sseServiceV1.findHistory(ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
                                    ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
         assertEquals(2, history.size());
 
@@ -188,7 +187,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Time span should include all but query filtered with site 20243 -> all of it's
         final List<SseFeature> history =
-            sseService.findHistory(20243, ZonedDateTime.parse(SITE_20169_1).toInstant(),
+            sseServiceV1.findHistory(20243, ZonedDateTime.parse(SITE_20169_1).toInstant(),
                                    ZonedDateTime.parse(SITE_20243_3).toInstant()).getFeatures();
 
         assertEquals(3, history.size());
@@ -208,7 +207,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Should include second of site 20169
         final List<SseFeature> history =
-            sseService.findHistory(20169, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
+            sseServiceV1.findHistory(20169, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
                                    ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
         assertEquals(1, history.size());
 
@@ -224,7 +223,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Should include second of site 20169
         final List<SseFeature> history =
-            sseService.findHistory(20169, null, null).getFeatures();
+            sseServiceV1.findHistory(20169, null, null).getFeatures();
         assertEquals(2, history.size());
 
         assertSiteNumber(20169, 0, history);
@@ -241,7 +240,7 @@ public class SseServiceTest extends AbstractTestBase {
 
         // Should throw IllegalArgumentException as site 12345 not exists
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            sseService.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
+            sseServiceV1.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
                                    ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
         });
     }

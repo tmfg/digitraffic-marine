@@ -2,13 +2,10 @@ package fi.livi.digitraffic.meri.service.sse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
-import fi.livi.digitraffic.meri.model.geojson.Feature;
 import fi.livi.digitraffic.meri.model.sse.SseFeature;
-import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
 import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
-import fi.livi.digitraffic.meri.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
@@ -16,11 +13,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static fi.livi.digitraffic.meri.util.MqttUtil.getTopicForMessage;
 
@@ -29,7 +24,7 @@ import static fi.livi.digitraffic.meri.util.MqttUtil.getTopicForMessage;
 @Component
 public class SseMqttSenderV1 {
     private final MqttMessageSender mqttMessageSender;
-    private final SseService sseService;
+    private final SseService_V1 sseServiceV1;
 
     private static final String SSE_V1_DATA_TOPIC = "sse/site/%d";
     private static final String SSE_V1_STATUS_TOPIC  ="sse/status";
@@ -39,9 +34,9 @@ public class SseMqttSenderV1 {
     public SseMqttSenderV1(final MqttRelayQueue mqttRelayQueue,
                            final ObjectMapper objectMapper,
                            final CachedLocker sseCachedLocker,
-                           final SseService sseService) {
+                           final SseService_V1 sseServiceV1) {
         this.mqttMessageSender = new MqttMessageSender(LOG, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, sseCachedLocker);
-        this.sseService = sseService;
+        this.sseServiceV1 = sseServiceV1;
 
         this.mqttMessageSender.setLastUpdated(ZonedDateTime.now());
     }
@@ -49,7 +44,7 @@ public class SseMqttSenderV1 {
     @Scheduled(fixedRate = 10000)
     public void checkNewSseReports() {
         if (mqttMessageSender.hasLock()) {
-            final List<SseFeature> features = sseService.findCreatedAfter(mqttMessageSender.getLastUpdated().toInstant()).getFeatures();
+            final List<SseFeature> features = sseServiceV1.findCreatedAfter(mqttMessageSender.getLastUpdated().toInstant()).getFeatures();
 
             if (!features.isEmpty()) {
                 features.forEach(sseFeature -> {
