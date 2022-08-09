@@ -17,5 +17,9 @@ public final class ApiConstants {
     public static final String SSE_BETA_TAG = "SSE (BETA)";
     public static final String API_SSE = API + "/sse";
 
+    /** Winter Navigation */
+    public static final String WINTER_NAVIGATION_BETA_TAG = "Winter Navigation (BETA)";
+    public static final String API_WINTER_NAVIGATION = "/winter-navigation";
+
     private ApiConstants() {}
 }
