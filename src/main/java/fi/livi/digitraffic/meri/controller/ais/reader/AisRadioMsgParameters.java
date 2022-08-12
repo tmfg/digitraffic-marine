@@ -18,7 +18,7 @@
  *
  * 2019.02.14: Original work is used here as an base implementation
  */
-package fi.livi.digitraffic.meri.controller.ais;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
 public final class AisRadioMsgParameters {
     private AisRadioMsgParameters() {}

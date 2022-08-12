@@ -51,9 +51,9 @@ public class VesselLocationService {
 
     @Transactional(readOnly = true)
     public VesselLocationFeatureCollection findAllowedLocationsWithinRadiusFromPoint(final double radius, final double latitude,
-                                                                                     final double longitude, final long from) {
+                                                                                     final double longitude, final Long from, final Long to) {
         return VesselLocationConverter.createFeatureCollection(
-                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, latitude, longitude, from, FORBIDDEN_SHIP_TYPES));
+                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, latitude, longitude, from, to, FORBIDDEN_SHIP_TYPES));
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +64,7 @@ public class VesselLocationService {
         }
 
         return VesselLocationConverter.createFeatureCollection(
-                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, location.getY(), location.getX(), from, FORBIDDEN_SHIP_TYPES));
+                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, location.getY(), location.getX(), from, null, FORBIDDEN_SHIP_TYPES));
     }
 
     private List<VesselLocation> findAllowedLocations(final Integer mmsi, final Long from, final Long to) {

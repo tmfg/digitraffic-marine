@@ -40,7 +40,8 @@ public class VesselMetadataController {
         this.vesselMetadataService = vesselMetadataService;
     }
 
-    @Operation(summary = "Return latest vessel metadata by mmsi.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return latest vessel metadata by mmsi. " + ApiDeprecations.API_NOTE_FUTURE)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Vessel metadata not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -50,7 +51,8 @@ public class VesselMetadataController {
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
-    @Operation(summary = "Return latest vessel metadata for all known vessels.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return latest vessel metadata for all known vessels. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = VESSELS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })

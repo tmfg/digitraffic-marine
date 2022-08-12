@@ -18,9 +18,11 @@ public interface VesselLocationRepository extends JpaRepository<VesselLocation, 
      * @return Vessel locations matching given parameters
      */
     @Query(value = "SELECT vl.* FROM VESSEL_LOCATION vl " +
-                   "WHERE EXISTS(SELECT 1 FROM VESSEL v WHERE v.mmsi = vl.mmsi AND v.ship_type NOT IN (?5)) " +
+                   "WHERE EXISTS(SELECT 1 FROM VESSEL v WHERE v.mmsi = vl.mmsi AND v.ship_type NOT IN (?6)) " +
                    "AND great_circle_distance(vl.y, vl.x, ?2, ?3) <= ?1 " +
-                   "AND timestamp_ext >= ?4", nativeQuery = true)
-    List<VesselLocation> findAllVesselsWithinRadiusFromPoint(final double radius, final double latitude, final double longitude, long from,
+                   "AND (?4 is null or timestamp_ext >= ?4)" +
+                   "AND (?5 is null or timestamp_ext <= ?5)",
+        nativeQuery = true)
+    List<VesselLocation> findAllVesselsWithinRadiusFromPoint(final double radius, final double latitude, final double longitude, Long from, Long to,
                                                              Collection<Integer> forbiddenShipTypes);
 }

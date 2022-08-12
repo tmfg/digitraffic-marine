@@ -18,7 +18,7 @@
  *
  * 2019.02.14: Original work is used here as an base implementation
  */
-package fi.livi.digitraffic.meri.controller.ais;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.*;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.*;
 
 public class AisRadioMsgParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(AisRadioMsgParser.class);

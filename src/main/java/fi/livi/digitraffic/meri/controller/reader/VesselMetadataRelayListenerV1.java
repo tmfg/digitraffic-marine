@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
 import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.slf4j.Logger;
@@ -9,10 +10,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.controller.AisMessageConverter;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
 import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
 import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 
