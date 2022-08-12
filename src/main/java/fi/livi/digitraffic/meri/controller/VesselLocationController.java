@@ -26,10 +26,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_LOCATIONS_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "vessel-location-controller", description = "Vessel Location Controller")
+@Tag(name = "vessel-location-controller", description = "Vessel Location Controller. " + ApiDeprecations.API_NOTE_FUTURE)
 public class VesselLocationController {
     private static final Logger LOG = LoggerFactory.getLogger(VesselLocationController.class);
 

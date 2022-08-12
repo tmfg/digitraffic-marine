@@ -26,10 +26,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "vessel-metadata-controller", description = "Vessel Metadata Controller")
+@Tag(name = "vessel-metadata-controller", description = "Vessel Metadata Controller. " + ApiDeprecations.API_NOTE_FUTURE)
 public class VesselMetadataController {
     private final VesselMetadataService vesselMetadataService;
 
