@@ -95,7 +95,10 @@ public class AisControllerV1 {
     @ResponseBody
     public List<VesselMetadataJson> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
                                                @RequestParam(value = "from", required = false)
-                                               final Long from) {
-        return vesselMetadataService.findAllowedVesselMetadataFrom(from);
+                                               final Long from,
+                                               @Parameter(description = "To timestamp")
+                                               @RequestParam(value = "to", required = false)
+                                               final Long to) {
+        return vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
     }
 }

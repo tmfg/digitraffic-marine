@@ -27,7 +27,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
 
     @Test
     public void allVesselsEmpty() throws Exception {
-        given(vesselMetadataService.findAllowedVesselMetadataFrom(null)).willReturn(Collections.emptyList());
+        given(vesselMetadataService.findAllowedVesselMetadataFrom(null, null)).willReturn(Collections.emptyList());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
@@ -40,7 +40,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
 
     @Test
     public void allVessels() throws Exception {
-        given(vesselMetadataService.findAllowedVesselMetadataFrom(null)).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
+        given(vesselMetadataService.findAllowedVesselMetadataFrom(null, null)).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
@@ -53,7 +53,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
 
     @Test
     public void allVesselsFrom() throws Exception {
-        given(vesselMetadataService.findAllowedVesselMetadataFrom(1L)).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
+        given(vesselMetadataService.findAllowedVesselMetadataFrom(1L, null)).willReturn(Collections.singletonList(new VesselMetadataBuilder(MMSI).build()));
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                             MarineApplicationConfiguration.API_METADATA_PART_PATH +

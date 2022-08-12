@@ -60,6 +60,6 @@ public class VesselMetadataController {
     public List<VesselMetadataJson> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
                                                @RequestParam(value = "from", required = false)
                                                final Long from) {
-        return vesselMetadataService.findAllowedVesselMetadataFrom(from);
+        return vesselMetadataService.findAllowedVesselMetadataFrom(from, null);
     }
 }
