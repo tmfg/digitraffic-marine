@@ -22,7 +22,7 @@ import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.*;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.*;
 
-@Tag(name = AIS_BETA_TAG, description = "SSE Controller")
+@Tag(name = AIS_BETA_TAG, description = "AIS Controller")
 @RestController
 @Validated
 @ConditionalOnWebApplication
@@ -75,11 +75,7 @@ public class AisControllerV1 {
             return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from, to);
         }
 
-        if(mmsi != null) {
-            return vesselLocationService.findAllowedLocations(mmsi, from, to);
-        }
-
-        return vesselLocationService.findAllowedLocations(from, to);
+        return vesselLocationService.findAllowedLocations(mmsi, from, to);
     }
 
     @Operation(summary = "Return latest vessel metadata by mmsi.")

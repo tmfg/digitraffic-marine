@@ -80,7 +80,7 @@ public class VesselLocationController {
 
         LOG.info(String.format("vesselLocationsByTimestamp from:\t%d to:\t%d", from, to));
 
-        return vesselLocationService.findAllowedLocations(from, to);
+        return vesselLocationService.findAllowedLocations(null, from, to);
     }
 
     @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)

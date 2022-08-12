@@ -40,13 +40,8 @@ public class VesselLocationService {
     }
 
     @Transactional(readOnly = true)
-    public VesselLocationFeatureCollection findAllowedLocations(final int mmsi, final Long from, final Long to) {
-        return VesselLocationConverter.createFeatureCollection(findAllowedLocations((Integer)mmsi, from, to));
-    }
-
-    @Transactional(readOnly = true)
-    public VesselLocationFeatureCollection findAllowedLocations(final Long from, final Long to) {
-        return VesselLocationConverter.createFeatureCollection(findAllowedLocations(null, from, to));
+    public VesselLocationFeatureCollection findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
+        return VesselLocationConverter.createFeatureCollection(findLocations(mmsi, from, to));
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +62,7 @@ public class VesselLocationService {
                 vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, location.getY(), location.getX(), from, null, FORBIDDEN_SHIP_TYPES));
     }
 
-    private List<VesselLocation> findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
+    private List<VesselLocation> findLocations(final Integer mmsi, final Long from, final Long to) {
         final QueryBuilder<VesselLocation, VesselLocation> qb = new QueryBuilder<>(entityManager, VesselLocation.class, VesselLocation.class);
         final Subquery<Integer> subquery = getMmsiSubQuery(qb, mmsi);
 
