@@ -28,15 +28,12 @@ import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 public class VesselLocationService {
     private final EntityManager entityManager;
     private final VesselLocationRepository vesselLocationRepository;
-    private final VesselMetadataRepository vesselMetadataRepository;
 
     @Autowired
     public VesselLocationService(final EntityManager entityManager,
-                                 final VesselLocationRepository vesselLocationRepository,
-                                 final VesselMetadataRepository vesselMetadataRepository) {
+                                 final VesselLocationRepository vesselLocationRepository) {
         this.entityManager = entityManager;
         this.vesselLocationRepository = vesselLocationRepository;
-        this.vesselMetadataRepository = vesselMetadataRepository;
     }
 
     @Transactional(readOnly = true)

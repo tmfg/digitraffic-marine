@@ -23,6 +23,7 @@ public interface VesselLocationRepository extends JpaRepository<VesselLocation, 
                    "AND (?4 is null or timestamp_ext >= ?4)" +
                    "AND (?5 is null or timestamp_ext <= ?5)",
         nativeQuery = true)
-    List<VesselLocation> findAllVesselsWithinRadiusFromPoint(final double radius, final double latitude, final double longitude, Long from, Long to,
-                                                             Collection<Integer> forbiddenShipTypes);
+    List<VesselLocation> findAllVesselsWithinRadiusFromPoint(final double radius, final double latitude, final double longitude,
+                                                             final Long from, final Long to,
+                                                             final Collection<Integer> forbiddenShipTypes);
 }
