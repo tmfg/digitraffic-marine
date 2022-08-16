@@ -23,10 +23,33 @@
         <java.version>11</java.version>
         <maven.compiler.release>11</maven.compiler.release>
         <io.springfox.version>3.0.0</io.springfox.version>
-        <aws.sdk.version>1.11.926</aws.sdk.version>
+        <aws.sdk.version>1.12.277</aws.sdk.version>
         <spring.cloud.version>3.1.3</spring.cloud.version>
         <org.glassfish.metro.ws.version>3.0.3</org.glassfish.metro.ws.version>
     </properties>
+    <profiles>
+        <profile>
+            <id>depcheck</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <defaultGoal>dependency-check:check</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>7.1.0</version>
+                        <configuration>
+                            <failBuildOnCVSS>5</failBuildOnCVSS>
+                            <suppressionFile>owasp-suppressions.xml</suppressionFile>
+                            <formats>html,xml</formats>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
@@ -346,16 +369,6 @@
                         <exclude>fi/livi/digitraffic/meri/aop/**/*.java</exclude>
                         <exclude>**/dto/**/*.java</exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>7.0.4</version>
-                <configuration>
-                    <failBuildOnCVSS>0</failBuildOnCVSS>
-                    <suppressionFile>owasp-suppressions.xml</suppressionFile>
                 </configuration>
             </plugin>
 

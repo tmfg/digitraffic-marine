@@ -20,5 +20,10 @@ public final class ApiConstants {
     /** AIS */
     public static final String AIS_BETA_TAG = "AIS (BETA)";
     public static final String API_AIS = API + "/ais";
+
+    /** Winter Navigation */
+    public static final String WINTER_NAVIGATION_BETA_TAG = "Winter Navigation (BETA)";
+    public static final String API_WINTER_NAVIGATION = API + "/winter-navigation";
+
     private ApiConstants() {}
 }
