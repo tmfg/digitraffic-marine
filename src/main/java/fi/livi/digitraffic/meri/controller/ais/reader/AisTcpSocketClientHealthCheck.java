@@ -18,10 +18,11 @@
  *
  * 2019.02.14: Original work is used here as an base implementation
  */
-package fi.livi.digitraffic.meri.controller.reader;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
 import java.io.IOException;
 
+import fi.livi.digitraffic.meri.controller.reader.VesselLoggingListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

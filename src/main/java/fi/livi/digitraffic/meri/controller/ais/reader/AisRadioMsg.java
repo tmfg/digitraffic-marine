@@ -18,11 +18,11 @@
  *
  * 2019.02.14: Original work is used here as an base implementation
  */
-package fi.livi.digitraffic.meri.controller.ais;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
-import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.MESSAGE_ID;
-import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.REPEAT_INDICATOR;
-import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.USER_ID;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.MESSAGE_ID;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.REPEAT_INDICATOR;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.USER_ID;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

@@ -74,16 +74,14 @@ public class VesselLocationServiceTest extends AbstractTestBase {
     @Transactional
     @Rollback
     public void findVesselsWithinRadiusSucceeds() {
+        final VesselLocationFeatureCollection featureCollection1 = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius1, p2.y, p2.x, now, null);
 
-        VesselLocationFeatureCollection featureCollection =
-                vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius1, p2.y, p2.x, now);
-
-        assertFalse(featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
+        assertFalse(featureCollection1.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
             "Vessel should not be found withing radius " + radius1);
 
-        featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius2, p2.y, p2.x, now);
+        final VesselLocationFeatureCollection featureCollection2 = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius2, p2.y, p2.x, now, null);
 
-        assertTrue(featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
+        assertTrue(featureCollection2.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
             "Vessel should be found withing radius " + radius2);
     }
 

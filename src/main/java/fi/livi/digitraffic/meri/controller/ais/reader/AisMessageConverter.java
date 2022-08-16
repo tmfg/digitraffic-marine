@@ -1,10 +1,10 @@
-package fi.livi.digitraffic.meri.controller;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 
-import static fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParameters.*;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.*;
 import java.math.BigDecimal;
 
 public final class AisMessageConverter {

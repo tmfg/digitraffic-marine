@@ -18,10 +18,8 @@
  *
  * 2019.02.14: Original work is used here as an base implementation
  */
-package fi.livi.digitraffic.meri.controller.reader;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsgParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

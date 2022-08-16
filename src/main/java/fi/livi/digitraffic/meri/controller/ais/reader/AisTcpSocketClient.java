@@ -18,7 +18,7 @@
  *
  * 2019.02.14: Original work is used here as an base implementation
  */
-package fi.livi.digitraffic.meri.controller.reader;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

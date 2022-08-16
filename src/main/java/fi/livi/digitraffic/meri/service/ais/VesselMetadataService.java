@@ -46,13 +46,17 @@ public class VesselMetadataService {
         return metadata;
     }
 
-    public List<VesselMetadataJson> findAllowedVesselMetadataFrom(final Long from) {
+    public List<VesselMetadataJson> findAllowedVesselMetadataFrom(final Long from, final Long to) {
         final QueryBuilder<VesselMetadataJson, VesselMetadata> qb = new QueryBuilder<>(entityManager, VesselMetadataJson.class, VesselMetadata.class);
 
         qb.notIn("shipType", FORBIDDEN_SHIP_TYPES);
 
         if(from != null) {
             qb.gte(qb.get("timestamp"), from);
+        }
+
+        if(to != null) {
+            qb.lte(qb.get("timestamp"), to);
         }
 
         return qb.getResults();

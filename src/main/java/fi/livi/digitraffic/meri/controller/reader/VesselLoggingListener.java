@@ -2,11 +2,13 @@ package fi.livi.digitraffic.meri.controller.reader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageReader;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisTcpSocketClient;
 import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
 import fi.livi.digitraffic.meri.mqtt.MqttStatusMessageV1;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
-import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;

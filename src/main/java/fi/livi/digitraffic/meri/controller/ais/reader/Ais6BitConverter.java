@@ -18,7 +18,7 @@
  *
  * 2019.02.14: Original work is used here as an base implementation
  */
-package fi.livi.digitraffic.meri.controller.ais;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
 public class Ais6BitConverter {
     public static String to6Bit(String str) {

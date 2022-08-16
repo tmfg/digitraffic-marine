@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.controller;
+package fi.livi.digitraffic.meri.controller.ais.reader;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
 import fi.livi.digitraffic.meri.controller.reader.*;
 
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;

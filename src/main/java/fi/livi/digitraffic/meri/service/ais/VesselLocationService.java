@@ -28,32 +28,24 @@ import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 public class VesselLocationService {
     private final EntityManager entityManager;
     private final VesselLocationRepository vesselLocationRepository;
-    private final VesselMetadataRepository vesselMetadataRepository;
 
     @Autowired
     public VesselLocationService(final EntityManager entityManager,
-                                 final VesselLocationRepository vesselLocationRepository,
-                                 final VesselMetadataRepository vesselMetadataRepository) {
+                                 final VesselLocationRepository vesselLocationRepository) {
         this.entityManager = entityManager;
         this.vesselLocationRepository = vesselLocationRepository;
-        this.vesselMetadataRepository = vesselMetadataRepository;
     }
 
     @Transactional(readOnly = true)
-    public VesselLocationFeatureCollection findAllowedLocations(final int mmsi, final Long from, final Long to) {
-        return VesselLocationConverter.createFeatureCollection(findAllowedLocations((Integer)mmsi, from, to));
-    }
-
-    @Transactional(readOnly = true)
-    public VesselLocationFeatureCollection findAllowedLocations(final Long from, final Long to) {
-        return VesselLocationConverter.createFeatureCollection(findAllowedLocations(null, from, to));
+    public VesselLocationFeatureCollection findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
+        return VesselLocationConverter.createFeatureCollection(findLocations(mmsi, from, to));
     }
 
     @Transactional(readOnly = true)
     public VesselLocationFeatureCollection findAllowedLocationsWithinRadiusFromPoint(final double radius, final double latitude,
-                                                                                     final double longitude, final long from) {
+                                                                                     final double longitude, final Long from, final Long to) {
         return VesselLocationConverter.createFeatureCollection(
-                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, latitude, longitude, from, FORBIDDEN_SHIP_TYPES));
+                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, latitude, longitude, from, to, FORBIDDEN_SHIP_TYPES));
     }
 
     @Transactional(readOnly = true)
@@ -64,10 +56,10 @@ public class VesselLocationService {
         }
 
         return VesselLocationConverter.createFeatureCollection(
-                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, location.getY(), location.getX(), from, FORBIDDEN_SHIP_TYPES));
+                vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, location.getY(), location.getX(), from, null, FORBIDDEN_SHIP_TYPES));
     }
 
-    private List<VesselLocation> findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
+    private List<VesselLocation> findLocations(final Integer mmsi, final Long from, final Long to) {
         final QueryBuilder<VesselLocation, VesselLocation> qb = new QueryBuilder<>(entityManager, VesselLocation.class, VesselLocation.class);
         final Subquery<Integer> subquery = getMmsiSubQuery(qb, mmsi);
 

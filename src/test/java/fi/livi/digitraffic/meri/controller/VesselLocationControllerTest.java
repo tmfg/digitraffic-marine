@@ -58,7 +58,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
 
     @Test
     public void vesselLocationsByTimestampEmpty() throws Exception {
-        when(vesselLocationService.findAllowedLocations(any(), any())).thenReturn(emptyFeatureCollection());
+        when(vesselLocationService.findAllowedLocations(any(), any(), any())).thenReturn(emptyFeatureCollection());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
@@ -72,7 +72,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
 
     @Test
     public void vesselLocationsByTimestamp() throws Exception {
-        when(vesselLocationService.findAllowedLocations(any(), any())).thenReturn(generateFeatureCollection());
+        when(vesselLocationService.findAllowedLocations(any(), any(), any())).thenReturn(generateFeatureCollection());
 
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +

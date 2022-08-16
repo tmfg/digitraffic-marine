@@ -1,9 +1,10 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.livi.digitraffic.meri.controller.AisMessageConverter;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.CachedLocker;
-import fi.livi.digitraffic.meri.controller.ais.AisRadioMsg;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
 import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;

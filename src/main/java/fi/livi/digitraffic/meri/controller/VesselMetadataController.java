@@ -26,10 +26,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "vessel-metadata-controller", description = "Vessel Metadata Controller")
+@Tag(name = "vessel-metadata-controller", description = "Vessel Metadata Controller. " + ApiDeprecations.API_NOTE_FUTURE)
 public class VesselMetadataController {
     private final VesselMetadataService vesselMetadataService;
 
@@ -40,7 +41,8 @@ public class VesselMetadataController {
         this.vesselMetadataService = vesselMetadataService;
     }
 
-    @Operation(summary = "Return latest vessel metadata by mmsi.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return latest vessel metadata by mmsi. " + ApiDeprecations.API_NOTE_FUTURE)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Vessel metadata not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -50,7 +52,8 @@ public class VesselMetadataController {
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
-    @Operation(summary = "Return latest vessel metadata for all known vessels.")
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+    @Operation(summary = "Return latest vessel metadata for all known vessels. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = VESSELS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -58,6 +61,6 @@ public class VesselMetadataController {
     public List<VesselMetadataJson> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
                                                @RequestParam(value = "from", required = false)
                                                final Long from) {
-        return vesselMetadataService.findAllowedVesselMetadataFrom(from);
+        return vesselMetadataService.findAllowedVesselMetadataFrom(from, null);
     }
 }
