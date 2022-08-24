@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.service.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -98,8 +99,8 @@ public class PortnetMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public List<VesselDetails> findVesselDetails(final ZonedDateTime from, final String vesselName, final Integer mmsi, final Integer imo,
+    public List<VesselDetails> findVesselDetails(final Instant from, final String vesselName, final Integer mmsi, final Integer imo,
                                                  final List<String> nationalities, final Integer vesselTypeCode) {
-        return vesselDetailsService.findVesselDetails(from.toInstant(), vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        return vesselDetailsService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }

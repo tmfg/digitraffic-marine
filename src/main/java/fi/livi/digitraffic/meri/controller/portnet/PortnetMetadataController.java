@@ -7,11 +7,14 @@ import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOU
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.Days;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -111,10 +114,14 @@ public class PortnetMetadataController {
             @Parameter(description = "Return vessel details for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode) {
 
+        final Instant fromInstant;
+
         if (!ObjectUtils.anyNotNull(from, vesselName, mmsi, imo, nationalities, vesselTypeCode)) {
-            from = ZonedDateTime.now().minusDays(1L);
+            fromInstant = Instant.now().minus(Duration.ofDays(1));
+        } else {
+            fromInstant = from == null ? null : from.toInstant();
         }
 
-        return portnetMetadataService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        return portnetMetadataService.findVesselDetails(fromInstant, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }

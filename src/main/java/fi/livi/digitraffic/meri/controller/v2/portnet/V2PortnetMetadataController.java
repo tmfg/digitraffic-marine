@@ -7,6 +7,8 @@ import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOU
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -112,10 +114,15 @@ public class V2PortnetMetadataController {
             @Parameter(description = "Return vessel details for given vessel type code")
             @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode) {
 
+        final Instant fromInstant;
+
         if (!ObjectUtils.anyNotNull(from, vesselName, mmsi, imo, nationalities, vesselTypeCode)) {
-            from = ZonedDateTime.now().minusDays(1L);
+            fromInstant = Instant.now().minus(Duration.ofDays(1));
+        } else {
+            fromInstant = from == null ? null : from.toInstant();
         }
 
-        return portnetMetadataServiceV2.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+
+        return portnetMetadataServiceV2.findVesselDetails(fromInstant, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
 }
