@@ -71,4 +71,3 @@ Check for Maven dependency updates
 ### GitFlow
 
 See http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/
-
