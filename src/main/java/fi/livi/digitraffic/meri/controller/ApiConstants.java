@@ -8,7 +8,7 @@ public final class ApiConstants {
     public static final String BETA = "/beta";
 
     /** Port Call */
-    public static final String PORT_CALL_BETA_TAG = "Port Call (BETA)";
+    public static final String PORT_CALL_V1_TAG = "Port Call V1";
 
     public static final String API_PORT_CALL = API + "/port-call";
 
