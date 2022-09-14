@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_WINTER_NAVIGATION_PATH)
 @ConditionalOnWebApplication
-@Tag(name= "winter-navigation-controller", description = "Winter Navigation Controller")
+@Tag(name= "winter-navigation-controller", description = "Winter Navigation Controller. " + ApiDeprecations.API_NOTE_2023_04_01)
 public class WinterNavigationController_V1 {
 
     private WinterNavigationService winterNavigationService;
@@ -43,8 +43,8 @@ public class WinterNavigationController_V1 {
         this.winterNavigationService = winterNavigationService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Return winter navigation ports. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return winter navigation ports. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ports", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
                                               MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -55,8 +55,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationPorts();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Return winter navigation ships. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return winter navigation ships. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ships", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
                                               MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -67,8 +67,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationShips();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Return winter navigation dirways. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return winter navigation dirways. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/dirways", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                 MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                 MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -79,8 +79,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationDirways();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Return winter navigation ship. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return winter navigation ship. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ships/{vesselId}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                          MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                          MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -94,8 +94,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationShipByVesselId(vesselId);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Return winter navigation port. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return winter navigation port. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ports/{locode}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                        MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                        MEDIA_TYPE_APPLICATION_VND_GEO_JSON })

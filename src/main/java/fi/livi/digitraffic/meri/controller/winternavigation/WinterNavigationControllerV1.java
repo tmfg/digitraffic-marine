@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.winternavigation;
+package fi.livi.digitraffic.meri.controller.winternavigation;
 
 import fi.livi.digitraffic.meri.model.winternavigation.*;
 import fi.livi.digitraffic.meri.service.winternavigation.WinterNavigationService;
@@ -21,12 +21,12 @@ import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNA
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.*;
 
-@Tag(name = WINTER_NAVIGATION_BETA_TAG, description = "Winter Navigation Controller")
+@Tag(name = WINTER_NAVIGATION_V1_TAG, description = "Winter Navigation Controller")
 @RestController
 @Validated
 @ConditionalOnWebApplication
 public class WinterNavigationControllerV1 {
-    private static final String API_WINTER_NAVIGATION_BETA = API_WINTER_NAVIGATION + BETA;
+    private static final String API_WINTER_NAVIGATION_V1 = API_WINTER_NAVIGATION + V1;
     private final WinterNavigationService winterNavigationService;
 
     @Autowired
@@ -35,7 +35,7 @@ public class WinterNavigationControllerV1 {
     }
 
     @Operation(summary = "Return winter navigation ports")
-    @GetMapping(path = API_WINTER_NAVIGATION_BETA + "/ports", produces = { MEDIA_TYPE_APPLICATION_JSON,
+    @GetMapping(path = API_WINTER_NAVIGATION_V1 + "/ports", produces = { MEDIA_TYPE_APPLICATION_JSON,
         MEDIA_TYPE_APPLICATION_GEO_JSON,
         MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of winter navigation ports"),
