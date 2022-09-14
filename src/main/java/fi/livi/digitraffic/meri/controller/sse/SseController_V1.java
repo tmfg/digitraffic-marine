@@ -37,7 +37,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_SSE_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "sse-controller", description = "Sse Controller. " + ApiDeprecations.API_NOTE_2023_03_01)
+@Tag(name = "sse-controller", description = "Sse Controller. " + ApiDeprecations.API_NOTE_2023_04_01)
 public class SseController_V1 {
 
     private static final Logger log = LoggerFactory.getLogger(SseController_V1.class);
@@ -55,8 +55,8 @@ public class SseController_V1 {
         this.sseServiceV1 = sseServiceV1;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_03_01)
-    @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON. " + ApiDeprecations.API_NOTE_2023_03_01)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = LATEST_PATH , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -65,8 +65,8 @@ public class SseController_V1 {
         return sseServiceV1.findLatest();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_03_01)
-    @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON for given site. " + ApiDeprecations.API_NOTE_2023_03_01)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON for given site. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses(value = {
         @ApiResponse(responseCode = HTTP_OK),
         @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_NOT_EXISTS_WITH_IDENTIFIER, content = @Content)
@@ -83,8 +83,8 @@ public class SseController_V1 {
         return sseServiceV1.findLatest(siteNumber);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_03_01)
-    @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given time. " + ApiDeprecations.API_NOTE_2023_03_01)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given time. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses(value = {
         @ApiResponse(responseCode = HTTP_OK),
         @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
@@ -109,8 +109,8 @@ public class SseController_V1 {
         return sseServiceV1.findHistory(toInstant(from), toInstant(to));
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_03_01)
-    @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time. " + ApiDeprecations.API_NOTE_2023_03_01)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses(value = {
         @ApiResponse(responseCode = HTTP_OK),
         @ApiResponse(responseCode = HTTP_BAD_REQUEST, description = CODE_400_SEARCH_RESULT_TOO_BIG + " or " +
