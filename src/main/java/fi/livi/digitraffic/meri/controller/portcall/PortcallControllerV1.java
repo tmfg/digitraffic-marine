@@ -29,7 +29,7 @@ import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
-@Tag(name = PORT_CALL_BETA_TAG, description = "Port Call Controller")
+@Tag(name = PORT_CALL_V1_TAG, description = "Port Call Controller")
 @RestController
 @Validated
 @ConditionalOnWebApplication
@@ -38,7 +38,7 @@ public class PortcallControllerV1 {
         "In this case you should try to narrow down your search criteria.\n\n" +
         "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
-    private static final String API_PORT_CALL_BETA = API_PORT_CALL + BETA;
+    private static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
 
     private final PortCallServiceV1 portCallServiceV1;
 
@@ -51,7 +51,7 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Find port calls", description = NOTE)
-    @GetMapping(path = API_PORT_CALL_BETA + "/port-calls", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + "/port-calls", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
@@ -144,21 +144,21 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Return all code descriptions")
-    @GetMapping(path = API_PORT_CALL_BETA + "/code-descriptions", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + "/code-descriptions", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptionsV1 listCodeDescriptions() {
         return portCallServiceV1.listCodeDescriptions();
     }
 
     @Operation(summary = "Return list of all berths, port areas and locations.")
-    @GetMapping(path = API_PORT_CALL_BETA + "/locations", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + "/locations", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollectionsV1 listAllMetadata() {
         return portCallServiceV1.listaAllMetadata();
     }
 
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
-    @GetMapping(path = API_PORT_CALL_BETA + "/locations/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + "/locations/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
         @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -168,7 +168,7 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Return list of vessels details.")
-    @GetMapping(path = API_PORT_CALL_BETA + "/vessel-details", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + "/vessel-details", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
