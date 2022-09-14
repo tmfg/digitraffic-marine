@@ -14,7 +14,7 @@ public final class ApiConstants {
 
     /** SSE */
 
-    public static final String SSE_BETA_TAG = "SSE (BETA)";
+    public static final String SSE_V1_TAG = "SSE V1";
     public static final String API_SSE = API + "/sse";
     
     /** AIS */

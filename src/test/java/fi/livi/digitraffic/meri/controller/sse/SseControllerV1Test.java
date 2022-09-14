@@ -10,10 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 
-import static fi.livi.digitraffic.meri.controller.sse.SseControllerV1.API_SSE_BETA;
-import static java.time.ZoneOffset.UTC;
+import static fi.livi.digitraffic.meri.controller.sse.SseControllerV1.API_SSE_V1;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,7 +21,7 @@ public class SseControllerV1Test extends AbstractTestBase {
     @MockBean
     private SseServiceV1 sseServiceV1;
 
-    private static final String SSE_MEASUREMENTS_PATH = API_SSE_BETA + "/measurements";
+    private static final String SSE_MEASUREMENTS_PATH = API_SSE_V1 + "/measurements";
 
     @Test
     public void sseLatest() throws Exception {
