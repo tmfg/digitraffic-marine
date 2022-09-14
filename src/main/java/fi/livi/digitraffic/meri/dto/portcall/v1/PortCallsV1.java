@@ -9,13 +9,13 @@ import java.util.List;
 @Schema(description="Port call")
 public final class PortCallsV1 {
     @Schema(description = "Timestamp when port calls were updated", required = true)
-    public final Instant updatedTimestamp;
+    public final Instant dataUpdatedTime;
 
     @Schema(description = "Port calls", required = true)
     public final List<PortCallJson> portCalls;
 
-    public PortCallsV1(final Instant portCallsUpdated, final List<PortCallJson> portCalls) {
-        this.updatedTimestamp = portCallsUpdated;
+    public PortCallsV1(final Instant dataUpdatedTime, final List<PortCallJson> portCalls) {
+        this.dataUpdatedTime = dataUpdatedTime;
         this.portCalls = portCalls;
     }
 
