@@ -26,11 +26,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "vessel-metadata-controller", description = "Vessel Metadata Controller. " + ApiDeprecations.API_NOTE_FUTURE)
+@Tag(name = "vessel-metadata-controller", description = "Vessel Metadata Controller. " + ApiDeprecations.API_NOTE_2023_04_01)
 public class VesselMetadataController {
     private final VesselMetadataService vesselMetadataService;
 
@@ -41,8 +41,8 @@ public class VesselMetadataController {
         this.vesselMetadataService = vesselMetadataService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Return latest vessel metadata by mmsi. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return latest vessel metadata by mmsi. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Vessel metadata not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -52,8 +52,8 @@ public class VesselMetadataController {
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Return latest vessel metadata for all known vessels. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Return latest vessel metadata for all known vessels. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = VESSELS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })

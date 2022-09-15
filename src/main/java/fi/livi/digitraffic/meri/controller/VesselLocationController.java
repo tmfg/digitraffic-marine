@@ -26,11 +26,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
+@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_LOCATIONS_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "vessel-location-controller", description = "Vessel Location Controller. " + ApiDeprecations.API_NOTE_FUTURE)
+@Tag(name = "vessel-location-controller", description = "Vessel Location Controller. " + ApiDeprecations.API_NOTE_2023_04_01)
 public class VesselLocationController {
     private static final Logger LOG = LoggerFactory.getLogger(VesselLocationController.class);
 
@@ -43,8 +43,8 @@ public class VesselLocationController {
         this.vesselLocationService = vesselLocationService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                              MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                              MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -65,8 +65,8 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(mmsi, from, to);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Find latest vessel locations by timestamp interval in milliseconds from Unix epoch. " + ApiDeprecations.API_NOTE_FUTURE)
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Find latest vessel locations by timestamp interval in milliseconds from Unix epoch. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = LATEST_PATH, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                  MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -84,8 +84,8 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(null, from, to);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Find vessel locations within a circle surrounding a point. " + ApiDeprecations.API_NOTE_FUTURE,
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Find vessel locations within a circle surrounding a point. " + ApiDeprecations.API_NOTE_2023_04_01,
                description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
                "vessels with AIS turned off or vessels outside AIS range will be missing.")
     @GetMapping(path = "latitude/{latitude}/longitude/{longitude}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
@@ -111,8 +111,8 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from.toInstant().toEpochMilli(), null);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_FUTURE)
-    @Operation(summary = "Find vessel locations within a circle surrounding a vessel. " + ApiDeprecations.API_NOTE_FUTURE,
+    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Operation(summary = "Find vessel locations within a circle surrounding a vessel. " + ApiDeprecations.API_NOTE_2023_04_01,
                description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
                "vessels with AIS turned off or vessels outside AIS range will be missing.")
     @GetMapping(path = "mmsi/{mmsi}/radius/{radius}/from/{from}", produces = { MEDIA_TYPE_APPLICATION_JSON,
