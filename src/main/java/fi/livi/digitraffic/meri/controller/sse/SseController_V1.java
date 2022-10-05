@@ -12,7 +12,6 @@ import static fi.livi.digitraffic.meri.util.TimeUtil.toInstant;
 
 import java.time.ZonedDateTime;
 
-import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -24,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.service.sse.SseService_V1;
@@ -55,7 +56,8 @@ public class SseController_V1 {
         this.sseServiceV1 = sseServiceV1;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = LATEST_PATH , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
                                                   MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -65,7 +67,8 @@ public class SseController_V1 {
         return sseServiceV1.findLatest();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return latest SSE (Sea State Estimation) data as GeoJSON for given site. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses(value = {
         @ApiResponse(responseCode = HTTP_OK),
@@ -83,7 +86,8 @@ public class SseController_V1 {
         return sseServiceV1.findLatest(siteNumber);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given time. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses(value = {
         @ApiResponse(responseCode = HTTP_OK),
@@ -109,7 +113,8 @@ public class SseController_V1 {
         return sseServiceV1.findHistory(toInstant(from), toInstant(to));
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return SSE history data (Sea State Estimation) data as GeoJSON for given site and time. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses(value = {
         @ApiResponse(responseCode = HTTP_OK),

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Annotation for marking the sunset date of a deprecated API.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD})
 public @interface Sunset {
     /**
      * The earliest date at which the deprecated API may be taken down.

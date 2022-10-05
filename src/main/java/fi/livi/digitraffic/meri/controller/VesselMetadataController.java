@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+@Deprecated(forRemoval = true)
+@Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 @ConditionalOnWebApplication
@@ -41,7 +43,8 @@ public class VesselMetadataController {
         this.vesselMetadataService = vesselMetadataService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return latest vessel metadata by mmsi. " + ApiDeprecations.API_NOTE_2023_04_01)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Vessel metadata not found", content = @Content),
@@ -52,7 +55,8 @@ public class VesselMetadataController {
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return latest vessel metadata for all known vessels. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = VESSELS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),

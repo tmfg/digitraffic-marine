@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayFeatureCollection;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
@@ -43,7 +44,8 @@ public class WinterNavigationController_V1 {
         this.winterNavigationService = winterNavigationService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return winter navigation ports. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ports", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -55,7 +57,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationPorts();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return winter navigation ships. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ships", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                               MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -67,7 +70,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationShips();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return winter navigation dirways. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/dirways", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                 MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -79,7 +83,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationDirways();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return winter navigation ship. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ships/{vesselId}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                          MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -94,7 +99,8 @@ public class WinterNavigationController_V1 {
         return winterNavigationService.getWinterNavigationShipByVesselId(vesselId);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return winter navigation port. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = "/ports/{locode}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                        MEDIA_TYPE_APPLICATION_GEO_JSON,

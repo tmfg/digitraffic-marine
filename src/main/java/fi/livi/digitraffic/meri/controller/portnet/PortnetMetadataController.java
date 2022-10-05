@@ -12,7 +12,6 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.CodeDescriptions_V1;
@@ -51,7 +52,8 @@ public class PortnetMetadataController {
         this.portnetMetadataService = portnetMetadataService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
@@ -59,7 +61,8 @@ public class PortnetMetadataController {
         return portnetMetadataService.listCodeDescriptions();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
@@ -67,7 +70,8 @@ public class PortnetMetadataController {
         return portnetMetadataService.listaAllMetadata();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
@@ -78,7 +82,8 @@ public class PortnetMetadataController {
         return portnetMetadataService.findSsnLocationByLocode(locode);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
@@ -86,7 +91,8 @@ public class PortnetMetadataController {
         return portnetMetadataService.findSsnLocationsByCountry(country);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Return list of vessels details. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
