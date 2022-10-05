@@ -20,13 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+@Deprecated(forRemoval = true)
+@Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_LOCATIONS_PATH)
 @ConditionalOnWebApplication
@@ -43,7 +45,8 @@ public class VesselLocationController {
         this.vesselLocationService = vesselLocationService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = LATEST_PATH + "/{mmsi}", produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                              MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -65,7 +68,7 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(mmsi, from, to);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
     @Operation(summary = "Find latest vessel locations by timestamp interval in milliseconds from Unix epoch. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = LATEST_PATH, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                  MEDIA_TYPE_APPLICATION_GEO_JSON,
@@ -84,7 +87,8 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocations(null, from, to);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Find vessel locations within a circle surrounding a point. " + ApiDeprecations.API_NOTE_2023_04_01,
                description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
                "vessels with AIS turned off or vessels outside AIS range will be missing.")
@@ -111,7 +115,8 @@ public class VesselLocationController {
         return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from.toInstant().toEpochMilli(), null);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Find vessel locations within a circle surrounding a vessel. " + ApiDeprecations.API_NOTE_2023_04_01,
                description = "NOTE: Data does not necessarily include all possible vessels. For example fishing boats, vessels without AIS, " +
                "vessels with AIS turned off or vessels outside AIS range will be missing.")

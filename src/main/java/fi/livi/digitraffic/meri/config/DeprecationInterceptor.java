@@ -15,6 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import fi.livi.digitraffic.meri.annotation.Sunset;
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 
 public class DeprecationInterceptor implements HandlerInterceptor {
 
@@ -34,14 +35,21 @@ public class DeprecationInterceptor implements HandlerInterceptor {
 
             if (handlerMethod.getMethod().isAnnotationPresent(Deprecated.class)
                 || handlerMethod.getMethod().isAnnotationPresent(Sunset.class)) {
+
                 if (handlerMethod.getMethod().isAnnotationPresent(Deprecated.class)
                     && handlerMethod.getMethod().isAnnotationPresent(Sunset.class)) {
-                    String sunsetHttpDate = isoToHttpDate(handlerMethod.getMethod().getAnnotation(Sunset.class).date());
+
+                    final String sunsetDate = handlerMethod.getMethod().getAnnotation(Sunset.class).date();
+                    final String sunsetHeaderContent = sunsetDate.equals(ApiDeprecations.SUNSET_FUTURE) ?
+                                                       sunsetDate :
+                                                       isoToHttpDate(handlerMethod.getMethod().getAnnotation(Sunset.class).date());
+
                     response.addHeader("Deprecation", "true");
-                    response.addHeader("Sunset", sunsetHttpDate);
-                }
-                else {
-                    throw new Exception("Deprecated handler " + handlerMethod.getMethod().getName() + " is missing either a @Deprecated or @Sunset annotation");
+                    response.addHeader("Sunset", sunsetHeaderContent);
+
+                } else {
+                    throw new Exception(
+                        "Deprecated handler " + handlerMethod.getMethod().getName() + " is missing either a @Deprecated or @Sunset annotation");
                 }
             }
         } catch (final Exception error) {

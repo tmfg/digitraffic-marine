@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
-import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,10 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;
 import fi.livi.digitraffic.meri.service.portnet.PortCallService_V1;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,7 +48,8 @@ public class PortCallController {
         this.portCallServiceV1 = portCallServiceV1;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_04_01, description = NOTE)
     @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
@@ -133,7 +134,8 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_04_01, description = NOTE)
     @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
@@ -221,7 +223,8 @@ public class PortCallController {
             vesselTypeCode);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2023_04_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_04_01, description = NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),

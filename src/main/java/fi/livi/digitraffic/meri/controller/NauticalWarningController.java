@@ -16,19 +16,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
 import fi.livi.digitraffic.meri.controller.exception.PookiException;
 import fi.livi.digitraffic.meri.model.pooki.PookiFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.nauticalwarning.NauticalWarningService;
 import fi.livi.digitraffic.meri.service.nauticalwarning.NauticalWarningService.Status;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+@Deprecated(forRemoval = true)
+@Sunset(date = ApiDeprecations.SUNSET_2022_11_01)
 @RequestMapping(API_V1_BASE_PATH)
 @ConditionalOnWebApplication
 @Tag(name = "nautical-warning-controller", description = "Nautical Warning Controller. " + API_NOTE_2022_11_01)
@@ -42,7 +43,8 @@ public class NauticalWarningController {
         this.nauticalWarningService = nauticalWarningService;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SINCE_2022_11_01)
+    @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2022_11_01)
     @Operation(summary = "Return nautical warnings of given status. " + API_NOTE_2022_11_01)
     @RequestMapping(method = RequestMethod.GET, path = "/nautical-warnings/{status}",
                     produces = { MEDIA_TYPE_APPLICATION_JSON,
