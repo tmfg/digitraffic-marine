@@ -9,7 +9,7 @@ package fi.livi.digitraffic.meri.controller;
  *
  * And add those values for deprecated APIs:
  * @Deprecated(forRemoval = true)
- * @Sunset(date = SUNSET_2022_01_01)
+ * @Sunset(date = SUNSET_2022_01_01) OR @Sunset(tbd = true)
  * @Operation(summary = "Api description plaa plaa. " + ApiDeprecations.API_NOTE_2022_01_01)
  */
 public final class ApiDeprecations {

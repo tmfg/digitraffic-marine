@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.annotation.Sunset;
 import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
@@ -51,7 +52,8 @@ public class V2PortnetMetadataController {
         this.portnetMetadataServiceV2 = portnetMetadataServiceV2;
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SUNSET_FUTURE)
+    @Deprecated(forRemoval = true)
+    @Sunset(tbd = true)
     @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -59,7 +61,8 @@ public class V2PortnetMetadataController {
         return portnetMetadataServiceV2.listCodeDescriptions();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SUNSET_FUTURE)
+    @Deprecated(forRemoval = true)
+    @Sunset(tbd = true)
     @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -67,7 +70,8 @@ public class V2PortnetMetadataController {
         return portnetMetadataServiceV2.listaAllMetadata();
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SUNSET_FUTURE)
+    @Deprecated(forRemoval = true)
+    @Sunset(tbd = true)
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
@@ -78,7 +82,8 @@ public class V2PortnetMetadataController {
         return portnetMetadataServiceV2.findSsnLocationByLocode(locode);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SUNSET_FUTURE)
+    @Deprecated(forRemoval = true)
+    @Sunset(tbd = true)
     @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -86,7 +91,8 @@ public class V2PortnetMetadataController {
         return portnetMetadataServiceV2.findSsnLocationsByCountry(country);
     }
 
-    @Deprecated(forRemoval = true, since = ApiDeprecations.SUNSET_FUTURE)
+    @Deprecated(forRemoval = true)
+    @Sunset(tbd = true)
     @Operation(summary = "Return list of vessels details. " + ApiDeprecations.API_NOTE_FUTURE)
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),

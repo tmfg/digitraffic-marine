@@ -13,10 +13,17 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD})
 public @interface Sunset {
     /**
-     * The earliest date at which the deprecated API may be taken down.
+     * The earliest date at which the deprecated API may be taken down. Should be in format YYYY-MM-DD.
      *
-     * @return sunset date as string in format YYYY-MM-DD
+     * @return sunset date as string
      */
-    String date();
+    String date() default "";
+
+    /**
+     * If true, sunset date is still to be determined.
+     *
+     * @return boolean value indicating if sunset date is TBD
+     */
+    boolean tbd() default false;
 }
 
