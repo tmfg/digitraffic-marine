@@ -69,6 +69,7 @@ public class VesselLocationController {
     }
 
     @Deprecated(forRemoval = true)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
     @Operation(summary = "Find latest vessel locations by timestamp interval in milliseconds from Unix epoch. " + ApiDeprecations.API_NOTE_2023_04_01)
     @GetMapping(path = LATEST_PATH, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                  MEDIA_TYPE_APPLICATION_GEO_JSON,

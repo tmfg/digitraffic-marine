@@ -40,9 +40,9 @@ public class DeprecationInterceptor implements HandlerInterceptor {
                     && handlerMethod.getMethod().isAnnotationPresent(Sunset.class)) {
 
                     final String sunsetDate = handlerMethod.getMethod().getAnnotation(Sunset.class).date();
-                    final String sunsetHeaderContent = sunsetDate.equals(ApiDeprecations.SUNSET_FUTURE) ?
-                                                       sunsetDate :
-                                                       isoToHttpDate(handlerMethod.getMethod().getAnnotation(Sunset.class).date());
+                    final String sunsetHeaderContent = handlerMethod.getMethod().getAnnotation(Sunset.class).tbd() ?
+                                                       ApiDeprecations.SUNSET_FUTURE :
+                                                       isoToHttpDate(sunsetDate);
 
                     response.addHeader("Deprecation", "true");
                     response.addHeader("Sunset", sunsetHeaderContent);
@@ -58,9 +58,9 @@ public class DeprecationInterceptor implements HandlerInterceptor {
 
     }
 
-    public static String isoToHttpDate(String yearMonthDayIso) throws ParseException {
-        SimpleDateFormat yearMonthDayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        SimpleDateFormat httpDate = new SimpleDateFormat(
+    public static String isoToHttpDate(final String yearMonthDayIso) throws ParseException {
+        final SimpleDateFormat yearMonthDayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        final SimpleDateFormat httpDate = new SimpleDateFormat(
             "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         httpDate.setTimeZone(TimeZone.getTimeZone("GMT"));
         return httpDate.format(yearMonthDayFormat.parse(yearMonthDayIso));
