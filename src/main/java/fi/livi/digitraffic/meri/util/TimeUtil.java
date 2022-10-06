@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.util;
 import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -12,7 +13,11 @@ public final class TimeUtil {
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
     public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmmss");
 
+    public static final DateTimeFormatter ISO_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    public static final DateTimeFormatter HTTP_DATE_FORMATTER = DateTimeFormatter.RFC_1123_DATE_TIME;
+
     public static final ZoneId FINLAND_ZONE = ZoneId.of("Europe/Helsinki");
+    public static final ZoneId GMT_ZONE = ZoneId.of("GMT");
 
     private TimeUtil() {}
 
@@ -50,5 +55,13 @@ public final class TimeUtil {
 
     public static Instant withoutMillis(final Instant from) {
         return from != null ? from.with(MILLI_OF_SECOND, 0) : null;
+    }
+
+    /**
+     * Convert from "YYYY-MM-DD" to "EEE, dd MMM yyyy HH:mm:ss z"
+     */
+    public static String isoLocalDateToHttpDateTime(final String isoLocalDate) {
+        final LocalDate parsedDate = LocalDate.parse(isoLocalDate, ISO_DATE_FORMATTER);
+        return HTTP_DATE_FORMATTER.format(parsedDate.atStartOfDay(GMT_ZONE));
     }
 }
