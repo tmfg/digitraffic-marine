@@ -22,11 +22,10 @@ public class DeprecationInterceptor implements HandlerInterceptor {
     private final static Logger log = LoggerFactory.getLogger(DeprecationInterceptor.class);
 
     @Override
-    public void postHandle(
+    public boolean preHandle(
         final HttpServletRequest request,
         final HttpServletResponse response,
-        final Object handler,
-        final ModelAndView modelAndView) throws Exception {
+        final Object handler) throws Exception {
 
         final HandlerMethod handlerMethod;
 
@@ -64,6 +63,7 @@ public class DeprecationInterceptor implements HandlerInterceptor {
             "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         httpDate.setTimeZone(TimeZone.getTimeZone("GMT"));
         return httpDate.format(yearMonthDayFormat.parse(yearMonthDayIso));
+        return true;
     }
 
 }
