@@ -7,8 +7,8 @@
 
     <suppress until="2022-12-01">
         <!-- We are not using the vulnerable http-invoker -->
-        <notes><![CDATA[file name: spring-core-5.3.22.jar]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-core@.*$</packageUrl>
+        <notes><![CDATA[file name: spring-*-5.3.22.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-.*@.*$</packageUrl>
         <cve>CVE-2016-1000027</cve>
     </suppress>
 
@@ -39,9 +39,7 @@
     </suppress>
 
     <suppress until="2022-09-15Z">
-        <notes><![CDATA[
-   file name: spring-*.jar
-   ]]></notes>
+        <notes><![CDATA[file name: spring-*.jar]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework.*$</packageUrl>
         <!-- RCE through deserialization vulnerability, not using vulnerable version of Spring -->
         <cve>CVE-2016-1000027</cve>
