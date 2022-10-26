@@ -4,3 +4,5 @@ ALTER TABLE vessel_location
 
 DROP TRIGGER IF EXISTS vessel_location_modified_t on vessel_location;
 CREATE TRIGGER vessel_location_modified_t BEFORE UPDATE ON vessel_location FOR EACH ROW EXECUTE PROCEDURE update_modified_column_always();
+
+create index if not exists vessel_location_modified_i on vessel_location USING btree(modified);
