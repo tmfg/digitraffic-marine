@@ -1,35 +1,43 @@
 package fi.livi.digitraffic.meri.controller.portcall;
 
-import fi.livi.digitraffic.meri.controller.MediaTypes;
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
-import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
-import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
-import fi.livi.digitraffic.meri.service.portcall.PortCallServiceV1;
-import fi.livi.digitraffic.meri.service.portnet.PortnetMetadataService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.API_PORT_CALL;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.PORT_CALL_V1_TAG;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOUND;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
-import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
-import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = PORT_CALL_V1_TAG, description = "Port Call Controller")
+import fi.livi.digitraffic.meri.controller.MediaTypes;
+import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
+import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
+import fi.livi.digitraffic.meri.service.portcall.PortCallServiceV1;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = PORT_CALL_V1_TAG, description = "Port Call APIs")
 @RestController
 @Validated
 @ConditionalOnWebApplication
@@ -38,20 +46,20 @@ public class PortcallControllerV1 {
         "In this case you should try to narrow down your search criteria.\n\n" +
         "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
-    private static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
+    public static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
+    public static final String PORT_CALLS = "/port-calls";
+    public static final String CODE_DESCRIPTIONS = "/code-descriptions";
+    public static final String LOCATIONS = "/locations";
+    public static final String VESSEL_DETAILS = "/vessel-details";
 
     private final PortCallServiceV1 portCallServiceV1;
 
-    private final PortnetMetadataService portnetMetadataService;
-
-    public PortcallControllerV1(final PortCallServiceV1 portCallServiceV1,
-                                final PortnetMetadataService portnetMetadataService) {
+    public PortcallControllerV1(final PortCallServiceV1 portCallServiceV1) {
         this.portCallServiceV1 = portCallServiceV1;
-        this.portnetMetadataService = portnetMetadataService;
     }
 
     @Operation(summary = "Find port calls", description = NOTE)
-    @GetMapping(path = API_PORT_CALL_V1 + "/port-calls", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + PORT_CALLS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
@@ -144,21 +152,22 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Return all code descriptions")
-    @GetMapping(path = API_PORT_CALL_V1 + "/code-descriptions", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptionsV1 listCodeDescriptions() {
         return portCallServiceV1.listCodeDescriptions();
     }
 
+    // TODO replace with three individual apis as this is not geojson
     @Operation(summary = "Return list of all berths, port areas and locations.")
-    @GetMapping(path = API_PORT_CALL_V1 + "/locations", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + LOCATIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollectionsV1 listAllMetadata() {
         return portCallServiceV1.listaAllMetadata();
     }
 
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
-    @GetMapping(path = API_PORT_CALL_V1 + "/locations/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + LOCATIONS + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
         @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -168,7 +177,7 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Return list of vessels details.")
-    @GetMapping(path = API_PORT_CALL_V1 + "/vessel-details", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + VESSEL_DETAILS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody

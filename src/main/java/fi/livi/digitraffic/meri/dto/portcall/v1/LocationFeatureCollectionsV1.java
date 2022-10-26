@@ -14,6 +14,7 @@ import java.time.Instant;
     "portAreaFeatureCollection",
     "berthFeature",
 })
+// TODO replace with three individual apis as this is not geojson
 public class LocationFeatureCollectionsV1 {
     @Schema(description = "Data last updated", required = true)
     public final Instant dataUpdatedTime;

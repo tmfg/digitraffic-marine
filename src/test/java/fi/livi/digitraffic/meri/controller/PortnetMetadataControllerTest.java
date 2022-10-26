@@ -7,12 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.controller.portnet.PortnetMetadataController;
-import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 
 public class PortnetMetadataControllerTest extends AbstractTestBase {
     @Test
@@ -21,7 +19,7 @@ public class PortnetMetadataControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
                 PortnetMetadataController.CODE_DESCRIPTIONS))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("agentTypes", Matchers.notNullValue()))
                 .andExpect(jsonPath("agentTypes[0].code", Matchers.notNullValue()))
                 .andExpect(jsonPath("agentTypes[0].description", Matchers.notNullValue()))
@@ -40,7 +38,7 @@ public class PortnetMetadataControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
                 PortnetMetadataController.SSN_LOCATIONS_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("ssnLocationFeatureCollection", Matchers.notNullValue()))
                 .andExpect(jsonPath("ssnLocationFeatureCollection.features[0]", Matchers.notNullValue()))
                 .andExpect(jsonPath("ssnLocationFeatureCollection.features[0].locode", Matchers.notNullValue()))
@@ -54,7 +52,7 @@ public class PortnetMetadataControllerTest extends AbstractTestBase {
                 PortnetMetadataController.SSN_LOCATIONS_PATH +
                 "/FIHKO"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("ssnLocationFeatureCollection", Matchers.notNullValue()))
                 .andExpect(jsonPath("ssnLocationFeatureCollection.features[0]", Matchers.notNullValue()))
                 .andExpect(jsonPath("ssnLocationFeatureCollection.features[0].locode", Matchers.notNullValue()))
@@ -78,7 +76,7 @@ public class PortnetMetadataControllerTest extends AbstractTestBase {
                 PortnetMetadataController.SSN_LOCATIONS_BY_COUNTRY_PATH +
                 "/Finland"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("ssnLocationFeatureCollection", Matchers.notNullValue()))
                 .andExpect(jsonPath("ssnLocationFeatureCollection.features[0]", Matchers.notNullValue()))
                 .andExpect(jsonPath("ssnLocationFeatureCollection.features[0].locode", Matchers.notNullValue()))
@@ -92,7 +90,7 @@ public class PortnetMetadataControllerTest extends AbstractTestBase {
             PortnetMetadataController.SSN_LOCATIONS_BY_COUNTRY_PATH +
             "/Sweden"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("ssnLocationFeatureCollection", Matchers.notNullValue()))
             .andExpect(jsonPath("ssnLocationFeatureCollection.features[0]", Matchers.notNullValue()))
             .andExpect(jsonPath("ssnLocationFeatureCollection.features[0].locode", Matchers.notNullValue()))
@@ -106,7 +104,7 @@ public class PortnetMetadataControllerTest extends AbstractTestBase {
             PortnetMetadataController.SSN_LOCATIONS_BY_COUNTRY_PATH +
             "/Alabama"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("ssnLocationFeatureCollection").exists())
             .andExpect(jsonPath("ssnLocationFeatureCollection.features").exists())
             .andExpect(jsonPath("ssnLocationFeatureCollection.features").isArray())
@@ -120,7 +118,7 @@ public class PortnetMetadataControllerTest extends AbstractTestBase {
             MarineApplicationConfiguration.API_METADATA_PART_PATH +
             PortnetMetadataController.VESSEL_DETAILS_PATH))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(content().string("[ ]"))
         ;
     }

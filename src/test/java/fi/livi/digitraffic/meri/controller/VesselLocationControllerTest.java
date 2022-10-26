@@ -13,7 +13,6 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
@@ -36,7 +35,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("$.features").isEmpty())
         ;
     }
@@ -49,7 +48,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("$.type", is("FeatureCollection")))
                 .andExpect(jsonPath("$.features").isNotEmpty())
                 .andExpect(jsonPath("$.features[0].mmsi", is(MMSI)))
@@ -64,7 +63,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("$.type", is("FeatureCollection")))
                 .andExpect(jsonPath("$.features").isEmpty())
         ;
@@ -78,7 +77,7 @@ public class VesselLocationControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_LOCATIONS_PATH +
                 VesselLocationController.LATEST_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("$.type", is("FeatureCollection")))
                 .andExpect(jsonPath("$.features").isNotEmpty())
                 .andExpect(jsonPath("$.features[0].mmsi", is(MMSI)))

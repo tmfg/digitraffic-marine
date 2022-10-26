@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
         "dateUpdatedTime",
         "features",
 })
-@Schema(description = "GeoJSON FeatureCollection object")
+@Schema(description = "GeoJSON FeatureCollection object") // TODO kuvaus
 public class PortAreaFeatureCollection extends FeatureCollection<PortAreaFeature> {
 
     public PortAreaFeatureCollection(final List<PortAreaFeature> features) {

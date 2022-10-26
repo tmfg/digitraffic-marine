@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
         "geometry",
         "properties"
 })
+//@Schema(description = "") // TODO
 public class PortAreaFeature extends Feature<Point, PortAreaProperties> {
 
     @Schema(description = "Maritime Mobile Service Identity", required = true)

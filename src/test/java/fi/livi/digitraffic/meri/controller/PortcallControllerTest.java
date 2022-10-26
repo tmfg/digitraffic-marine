@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
@@ -21,7 +20,7 @@ public class PortcallControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_PORT_CALLS_PATH +
                 "?vesselName=test"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }
@@ -32,7 +31,7 @@ public class PortcallControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_PORT_CALLS_PATH +
                 "/FIHEL?vesselName=test"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }
@@ -42,7 +41,7 @@ public class PortcallControllerTest extends AbstractTestBase {
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                 MarineApplicationConfiguration.API_PORT_CALLS_PATH + "/FIHEL"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
     }

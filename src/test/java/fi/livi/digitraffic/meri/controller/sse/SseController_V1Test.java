@@ -12,10 +12,10 @@ import java.time.ZonedDateTime;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
+import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.service.sse.SseFeatureCollectionBuilder;
 import fi.livi.digitraffic.meri.service.sse.SseService_V1;
 
@@ -33,7 +33,7 @@ public class SseController_V1Test extends AbstractTestBase {
         mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
                             MarineApplicationConfiguration.API_SSE_PATH + SseController_V1.LATEST_PATH))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate",
                                 Matchers.is(ZonedDateTime.parse(lastUpdate).toInstant().atZone(UTC).toString())))
@@ -52,7 +52,7 @@ public class SseController_V1Test extends AbstractTestBase {
                 .param("from", start)
                 .param("to", end))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
         ;
@@ -71,7 +71,7 @@ public class SseController_V1Test extends AbstractTestBase {
             .param("from", start)
             .param("to", end))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.features[0].siteNumber", Matchers.is(0)))
             .andExpect(jsonPath("$.features[0].properties.lastUpdate", Matchers.is(ZonedDateTime.parse(end).toInstant().atZone(UTC).toString())))
         ;

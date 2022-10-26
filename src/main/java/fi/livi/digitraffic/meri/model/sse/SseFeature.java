@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
         "geometry",
         "properties"
 })
+@Schema(description = "GeoJSON Feature object of sea state estimate (SSE)")
 public class SseFeature extends Feature<Point, SseProperties> {
 
     @Schema(description = "Identifier of the site")

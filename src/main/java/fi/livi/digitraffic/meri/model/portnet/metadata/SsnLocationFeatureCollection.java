@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
         "dateUpdatedTime",
         "features",
 })
-@Schema(description = "GeoJSON FeatureCollection object")
+@Schema(description = "GeoJSON FeatureCollection object") // TODO kuvaus
 public class SsnLocationFeatureCollection extends FeatureCollection<SsnLocationFeature> {
 
     public SsnLocationFeatureCollection(final List<SsnLocationFeature> ssnLocationFeatures) {

@@ -19,12 +19,13 @@ import java.time.Instant;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
 import static fi.livi.digitraffic.meri.model.Constants.*;
 
-@Tag(name = SSE_V1_TAG, description = "SSE Controller")
+@Tag(name = SSE_V1_TAG, description = "Sea State Estimate (SSE) APIs")
 @RestController
 @Validated
 @ConditionalOnWebApplication
 public class SseControllerV1 {
     public static final String API_SSE_V1 = API_SSE + V1;
+    public static final String MEASUREMENTS = "/measurements";
 
     private final SseServiceV1 sseServiceV1;
 
@@ -32,9 +33,9 @@ public class SseControllerV1 {
         this.sseServiceV1 = sseServiceV1;
     }
 
-    @Operation(summary = "Return SSE (Sea State Estimation) data as GeoJSON.  If from/to parameters are given, returs " +
-        "measurements from history, otherwise returns the latest measurements")
-    @GetMapping(path = API_SSE_V1 + "/measurements" , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
+    @Operation(summary = "Return Sea State Estimation (SSE) data as GeoJSON.  If from/to parameters are given, returs " +
+                         "measurements from history, otherwise returns the latest measurements")
+    @GetMapping(path = API_SSE_V1 + MEASUREMENTS , produces = { MediaTypes.MEDIA_TYPE_APPLICATION_JSON,
         MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
         MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody

@@ -13,6 +13,7 @@ import fi.livi.digitraffic.meri.model.geojson.Properties;
 import fi.livi.digitraffic.meri.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "GeoJSON Properties object of sea state estimate (SSE)")
 public class SseProperties extends Properties {
 
     // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
@@ -25,45 +26,45 @@ public class SseProperties extends Properties {
     public final String siteName;
 
     @Schema(description = "Type of the site. FLOATING is floating in the water and FIXED it is standing on the ground.", required = true)
-    private SiteType siteType;
+    private final SiteType siteType;
 
     /* SSE fields */
     @Schema(description = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
-    private Instant lastUpdate;
+    private final Instant lastUpdate;
 
     @Schema(description = "Sea state. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE)
-    private SeaState seaState;
+    private final SeaState seaState;
 
     @Schema(description = "Trend of condition change. " + FIELD_ONLY_FOR_FLOATING_SITE)
-    private Trend trend;
+    private final Trend trend;
 
     @Schema(description = "Wind and wave direction in degrees from north. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE, allowableValues = "range[0, 359]")
-    private Integer windWaveDir;
+    private final Integer windWaveDir;
 
     @Schema(description =
         "Provides information on estimated confidence of mainly the directional information based on the Horizontal Dilution of precision (HDOP) figure obtained from the GPS receiver:\n"+
         "* POOR: More than 10\n" +
         "* MODERATE: 2-10\n" +
         "* GOOD: Less than 2", required = true)
-    private Confidence confidence;
+    private final Confidence confidence;
 
     /* Extra fields / metadata */
 
     @Schema(description = "Heel angle of the buoy in degrees (°), 0 is upright and it´s unsigned. " + FIELD_ONLY_FOR_FLOATING_SITE, allowableValues = "range[0, 90]")
-    private BigDecimal heelAngle;
+    private final BigDecimal heelAngle;
 
     @Schema(description = "Status of the flashlight. Normally ON at nighttime and OFF at daytime. " +
                               "ON_D means that light characteristics are alternated (ie. intensity and frequency) " +
                               "compared to normal ON operation, used normally on daytime.")
-    private LightStatus lightStatus;
+    private final LightStatus lightStatus;
 
     @Schema(description = "Temperature of the air in celsius degree (°C). Since the sensor is inside of the buoy and sunlight can " +
                               "heat up the enclosure this can be used only as a reference measurement as it can " +
                               "show higher readings than the actual air temperature")
-    private Integer temperature;
+    private final Integer temperature;
 
     @JsonIgnore // For internal use
-    private Instant created;
+    private final Instant created;
 
     public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final Instant lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
                          final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature, final Instant created) {

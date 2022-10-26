@@ -1,8 +1,8 @@
 package fi.livi.digitraffic.meri.controller;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,7 +12,6 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.VesselMetadataBuilder;
@@ -33,7 +32,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
                 VesselMetadataController.VESSELS_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(content().string("[ ]"))
         ;
     }
@@ -46,7 +45,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
                 VesselMetadataController.VESSELS_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
                 ;
     }
@@ -59,7 +58,7 @@ public class VesselMetadataControllerTest extends AbstractTestBase {
                             MarineApplicationConfiguration.API_METADATA_PART_PATH +
                             VesselMetadataController.VESSELS_PATH + "?from=1"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$[0].mmsi", is(MMSI)))
         ;
     }

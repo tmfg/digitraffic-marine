@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.service.sse;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +15,6 @@ import fi.livi.digitraffic.meri.model.geojson.Point;
 import fi.livi.digitraffic.meri.model.sse.SseFeature;
 import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
 import fi.livi.digitraffic.meri.model.sse.SseProperties;
-import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
 public class SseConversionService {
@@ -28,11 +27,11 @@ public class SseConversionService {
 
     @Transactional
     public SseFeatureCollection createSseFeatureCollectionFrom(List<SseReport> sseReports) {
-        final ZonedDateTime updated = updatedTimestampRepository.findLastUpdated(SSE_DATA);
+        final Instant updated = updatedTimestampRepository.findLastUpdatedInstant(SSE_DATA);
 
         final List<SseFeature> features = sseReports.stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
 
-        return new SseFeatureCollection(TimeUtil.toInstant(updated), features);
+        return new SseFeatureCollection(updated, features);
     }
 
     public SseFeature createSseFeatureFrom(final SseReport sseReport) {
