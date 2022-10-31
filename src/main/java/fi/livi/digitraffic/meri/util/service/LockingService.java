@@ -2,9 +2,8 @@ package fi.livi.digitraffic.meri.util.service;
 
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.util.dao.LockingDao;
 
@@ -14,13 +13,12 @@ public class LockingService {
 
     private final String instanceId;
 
-    private static final Logger log = LoggerFactory.getLogger(LockingService.class);
-
     public LockingService(final LockingDao lockingDao) {
         this.lockingDao = lockingDao;
         this.instanceId = UUID.randomUUID().toString();
     }
 
+    @Transactional
     public boolean acquireLock(final String lockName, final int expirationSeconds) {
         return lockingDao.acquireLock(lockName, instanceId, expirationSeconds);
     }

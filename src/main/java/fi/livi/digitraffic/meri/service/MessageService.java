@@ -8,6 +8,8 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
+import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
+
 @Service
 public class MessageService {
     private final MessageSource messageSource;
@@ -17,26 +19,32 @@ public class MessageService {
         this.messageSource = messageSource;
     }
 
+    @NotTransactionalServiceMethod
     public String getMessage(final String code) {
         return getMessage(code, (Object[])null);
     }
 
+    @NotTransactionalServiceMethod
     public String getMessage(final String code, final Object[] args) {
         return getMessage(code, args, null, LocaleContextHolder.getLocale());
     }
 
+    @NotTransactionalServiceMethod
     public String getMessage(final String code, final String defaultMessage) {
         return getMessage(code, null, defaultMessage);
     }
 
+    @NotTransactionalServiceMethod
     public String getMessage(final String code, final Object[] args, final String defaultMessage) {
         return getMessage(code, args, defaultMessage, LocaleContextHolder.getLocale());
     }
 
+    @NotTransactionalServiceMethod
     public String getMessage(final MessageSourceResolvable resolvable) {
         return messageSource.getMessage(resolvable, LocaleContextHolder.getLocale());
     }
 
+    @NotTransactionalServiceMethod
     public Locale getLocale() {
         return LocaleContextHolder.getLocale();
     }

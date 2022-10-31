@@ -29,12 +29,12 @@ public class SseConversionService {
     public SseFeatureCollection createSseFeatureCollectionFrom(List<SseReport> sseReports) {
         final Instant updated = updatedTimestampRepository.findLastUpdatedInstant(SSE_DATA);
 
-        final List<SseFeature> features = sseReports.stream().map(r -> createSseFeatureFrom(r)).collect(Collectors.toList());
+        final List<SseFeature> features = sseReports.stream().map(this::createSseFeatureFrom).collect(Collectors.toList());
 
         return new SseFeatureCollection(updated, features);
     }
 
-    public SseFeature createSseFeatureFrom(final SseReport sseReport) {
+    private SseFeature createSseFeatureFrom(final SseReport sseReport) {
         // For fixed AtoNs, only the light status, last update, confidence and temperature fields are usable.
         final boolean floating = sseReport.isFloating();
         final SseProperties sseProperties = new SseProperties(
