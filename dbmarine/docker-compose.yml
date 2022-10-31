@@ -1,10 +1,5 @@
 version: '2.0' # docker-compose version
 
-networks:
-    db_network:
-        external:
-            name: dnet1
-
 services:
   db:
     build:
@@ -15,16 +10,12 @@ services:
       POSTGRES_USER: marine
       POSTGRES_PASSWORD: marine
       POSTGRES_DB: marine
-    networks:
-      - db_network
     ports:
       - 54321:5432
     command: -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.max=10000 -c track_activity_query_size=2048 -c pg_stat_statements.track=all
 
   db-init:
     image: flyway/flyway:9.3-alpine
-    networks:
-        - db_network
     volumes:
       - "./sql:/flyway/sql"
       - "./files:/flyway/conf"
@@ -37,11 +28,11 @@ services:
   pghero:
     image: ankane/pghero
     restart: always
-    networks:
-        - db_network
     environment:
         DATABASE_URL: postgres://marine:marine@db:5432/marine
     links:
-    - "db:database" # postgres is reachable for pghero from web at the hostnames db and database
+      - "db:database" # postgres is reachable for pghero from web at the hostnames db and database
     ports:
-    - 8081:8080
+      - 8081:8080
+    depends_on:
+      - db
