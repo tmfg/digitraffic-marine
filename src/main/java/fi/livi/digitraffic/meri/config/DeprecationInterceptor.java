@@ -51,7 +51,7 @@ public class DeprecationInterceptor implements HandlerInterceptor {
                 }
             }
         } catch (final Exception error) {
-            log.error(error.getMessage());
+            log.error(error.getMessage(), error);
         }
 
         return true;
