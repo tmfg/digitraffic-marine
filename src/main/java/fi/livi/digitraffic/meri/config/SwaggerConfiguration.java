@@ -1,34 +1,28 @@
 package fi.livi.digitraffic.meri.config;
 
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_BETA_BASE_PATH;
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V2_BASE_PATH;
-
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.Collections;
 
-import fi.livi.digitraffic.meri.controller.ApiConstants;
-import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
-import fi.livi.digitraffic.meri.service.MarineApiInfoService;
-
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.SwaggerUiConfigProperties;
 import org.springdoc.core.customizers.OpenApiCustomiser;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import fi.livi.digitraffic.meri.controller.ApiConstants;
+import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
+import fi.livi.digitraffic.meri.service.MarineApiInfoService;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+
 @ConditionalOnWebApplication
 @Configuration
 public class SwaggerConfiguration {
 
-    private final MarineApiInfoService marineApiInfoService;
     private final MarineApiInfo marineApiInfo;
     private final String host;
     private final String scheme;
@@ -39,10 +33,9 @@ public class SwaggerConfiguration {
     @Autowired
     public SwaggerConfiguration(final MarineApiInfoService marineApiInfoService,
                                 final @Value("${dt.domain.url}") String domainUrl) throws URISyntaxException {
-        this.marineApiInfoService = marineApiInfoService;
         this.marineApiInfo = marineApiInfoService.getApiInfo();
 
-        URI uri = new URI(domainUrl);
+        final URI uri = new URI(domainUrl);
 
         final int port = uri.getPort();
         if (port > -1) {
@@ -77,6 +70,9 @@ public class SwaggerConfiguration {
         SwaggerUiConfigProperties config = new SwaggerUiConfigProperties();
         config.setDocExpansion("none");
         config.setDefaultModelRendering("model");
+        config.setDefaultModelExpandDepth(6);
+        config.setTagsSorter("alpha");
+        config.setOperationsSorter("alpha");
         return config;
     }
 
@@ -95,7 +91,7 @@ public class SwaggerConfiguration {
             final String url = scheme + "://" + host;
             server.setUrl(url);
 
-            openApi.setServers(Arrays.asList(server));
+            openApi.setServers(Collections.singletonList(server));
         };
     }
 

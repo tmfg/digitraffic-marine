@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
         "portAreaFeatureCollection",
         "berthFeature",
 })
+//@Schema(description = "") // TODO
 public class LocationFeatureCollections_V1 {
     @Schema(description = "Data last updated", required = true)
     public final ZonedDateTime dataUpdatedTime;
@@ -19,10 +20,10 @@ public class LocationFeatureCollections_V1 {
     @Schema(description = "Ssn Locations in Feature Collection", required = true)
     public final SsnLocationFeatureCollection ssnLocationFeatureCollection;
 
-    @Schema(description = "Port Areas in Feature Collection", required = false)
+    @Schema(description = "Port Areas in Feature Collection")
     public final PortAreaFeatureCollection portAreaFeatureCollection;
 
-    @Schema(description = "Berths in Feature Collection", required = false)
+    @Schema(description = "Berths in Feature Collection")
     public final BerthFeatureCollection berthFeatureCollection;
 
     public LocationFeatureCollections_V1(final ZonedDateTime dataUpdatedTime,

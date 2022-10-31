@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.dao.ais;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,4 +27,10 @@ public interface VesselLocationRepository extends JpaRepository<VesselLocation, 
     List<VesselLocation> findAllVesselsWithinRadiusFromPoint(final double radius, final double latitude, final double longitude,
                                                              final Long from, final Long to,
                                                              final Collection<Integer> forbiddenShipTypes);
+
+
+    @Query(value =
+        "SELECT max(l.modified)\n" +
+        "FROM vessel_location l", nativeQuery = true)
+    Instant getLastModified();
 }

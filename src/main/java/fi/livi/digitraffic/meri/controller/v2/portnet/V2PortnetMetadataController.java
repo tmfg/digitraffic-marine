@@ -15,7 +15,6 @@ import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.annotation.Sunset;
 import fi.livi.digitraffic.meri.controller.ApiDeprecations;
+import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollections_V1;
 import fi.livi.digitraffic.meri.model.v2.portnet.metadata.V2CodeDescriptions;
@@ -55,7 +55,7 @@ public class V2PortnetMetadataController {
     @Deprecated(forRemoval = true)
     @Sunset(tbd = true)
     @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_FUTURE)
-    @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public V2CodeDescriptions listCodeDescriptions() {
         return portnetMetadataServiceV2.listCodeDescriptions();
@@ -64,7 +64,7 @@ public class V2PortnetMetadataController {
     @Deprecated(forRemoval = true)
     @Sunset(tbd = true)
     @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_FUTURE)
-    @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections_V1 listAllMetadata() {
         return portnetMetadataServiceV2.listaAllMetadata();
@@ -73,7 +73,7 @@ public class V2PortnetMetadataController {
     @Deprecated(forRemoval = true)
     @Sunset(tbd = true)
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code. " + ApiDeprecations.API_NOTE_FUTURE)
-    @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -85,7 +85,7 @@ public class V2PortnetMetadataController {
     @Deprecated(forRemoval = true)
     @Sunset(tbd = true)
     @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_FUTURE)
-    @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections_V1 findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
         return portnetMetadataServiceV2.findSsnLocationsByCountry(country);
@@ -94,7 +94,7 @@ public class V2PortnetMetadataController {
     @Deprecated(forRemoval = true)
     @Sunset(tbd = true)
     @Operation(summary = "Return list of vessels details. " + ApiDeprecations.API_NOTE_FUTURE)
-    @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody

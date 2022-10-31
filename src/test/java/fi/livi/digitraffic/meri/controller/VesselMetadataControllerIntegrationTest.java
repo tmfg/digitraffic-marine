@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.VesselMetadataBuilder;
@@ -42,7 +41,7 @@ public class VesselMetadataControllerIntegrationTest extends AbstractTestBase {
                 MarineApplicationConfiguration.API_METADATA_PART_PATH +
         VesselMetadataController.VESSELS_PATH + "/" + MMSI))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("$.mmsi", Matchers.is(MMSI)))
         ;
     }

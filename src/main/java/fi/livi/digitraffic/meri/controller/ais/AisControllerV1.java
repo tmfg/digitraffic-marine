@@ -22,12 +22,14 @@ import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.*;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.*;
 
-@Tag(name = AIS_V1_TAG, description = "AIS Controller")
+@Tag(name = AIS_V1_TAG, description = "Automatic Identification System (AIS) APIs")
 @RestController
 @Validated
 @ConditionalOnWebApplication
 public class AisControllerV1 {
     public static final String API_AIS_V1 = API_AIS + V1;
+    public static final String LOCATIONS = "/locations";
+    public static final String VESSELS = "/vessels";
 
     private final VesselLocationService vesselLocationService;
     private final VesselMetadataService vesselMetadataService;
@@ -39,9 +41,9 @@ public class AisControllerV1 {
     }
 
     @Operation(summary = "Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
-    @GetMapping(path = API_AIS_V1 + "/locations", produces = { MEDIA_TYPE_APPLICATION_JSON,
-        MEDIA_TYPE_APPLICATION_GEO_JSON,
-        MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
+    @GetMapping(path = API_AIS_V1 + LOCATIONS, produces = { MEDIA_TYPE_APPLICATION_JSON,
+                                                            MEDIA_TYPE_APPLICATION_GEO_JSON,
+                                                            MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
     public VesselLocationFeatureCollection vesselLocationsByMssiAndTimestamp(
         @Parameter(description = "Maritime Mobile Service Identity (MMSI)")
@@ -82,14 +84,14 @@ public class AisControllerV1 {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
         @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Vessel metadata not found", content = @Content),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
-    @GetMapping(path = API_AIS_V1 + "/vessels/{mmsi}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_AIS_V1 + VESSELS +"/{mmsi}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public VesselMetadataJson vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
     @Operation(summary = "Return latest vessel metadata for all known vessels.")
-    @GetMapping(path = API_AIS_V1 + "/vessels", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_AIS_V1 + VESSELS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
