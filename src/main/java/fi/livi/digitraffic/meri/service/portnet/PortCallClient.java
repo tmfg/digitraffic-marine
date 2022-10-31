@@ -17,6 +17,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 
 @Service
@@ -35,6 +36,7 @@ public class PortCallClient {
         this.restTemplate.setMessageConverters(Collections.singletonList(new Jaxb2RootElementHttpMessageConverter()));
     }
 
+    @NotTransactionalServiceMethod
     @Retryable
     public PortCallList getList(final ZonedDateTime lastUpdated, final ZonedDateTime now) {
         final String url = buildUrl(lastUpdated, now);

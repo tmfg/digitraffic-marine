@@ -10,7 +10,7 @@ import fi.livi.digitraffic.meri.util.service.LockingService;
 
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @Configuration
-public class CachedLockerConfig {
+public class CachedLockerConfiguration {
 
     @Bean
     @ConditionalOnExpression("'${ais.mqtt.enabled}' == 'true' or '${ais.reader.enabled}' == 'true'")

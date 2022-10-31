@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import fi.livi.digitraffic.meri.dto.info.v1.SourceInfoDtoV1;
+import fi.livi.digitraffic.meri.dto.info.v1.DataSourceInfoDtoV1;
 import fi.livi.digitraffic.meri.model.DataSource;
 import fi.livi.digitraffic.meri.util.dao.SqlRepository;
 
@@ -73,13 +73,13 @@ public interface UpdatedTimestampRepository extends SqlRepository {
 
     @Query(value =
         "select si.id, si.source, si.update_interval as updateInterval\n" +
-        "from source_info si\n" +
+        "from data_source_info si\n" +
         "WHERE id = :#{#dataSource.name()}", nativeQuery = true)
-    SourceInfoDtoV1 getSourceInfo(final DataSource dataSource);
+    DataSourceInfoDtoV1 getDataSourceInfo(final DataSource dataSource);
 
 
-    default Duration getSourceUpdateInterval(final DataSource dataSource) {
-        return Optional.ofNullable(getSourceInfo(dataSource))
+    default Duration getDataSourceUpdateInterval(final DataSource dataSource) {
+        return Optional.ofNullable(getDataSourceInfo(dataSource))
             .flatMap(sourceInfoDtoV1 -> Optional.ofNullable(sourceInfoDtoV1 != null ?
                                                             sourceInfoDtoV1.getUpdateInterval() :
                                                             null))

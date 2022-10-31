@@ -5,6 +5,7 @@ import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
 
 import java.time.ZonedDateTime;
 
+import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +30,10 @@ public class VesselDetailsClient {
         this.restTemplate = authenticatedRestTemplate;
     }
 
+    @NotTransactionalServiceMethod
     public VesselList getVesselList(final ZonedDateTime from) {
         final String url = buildUrl(from);
-        final VesselList vesselList = restTemplate.getForObject(url, VesselList.class);
-
-        return vesselList;
+        return restTemplate.getForObject(url, VesselList.class);
     }
 
     private static void logInfo(final VesselList vesselList) {

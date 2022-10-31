@@ -106,6 +106,7 @@ public class WinterNavigationService {
                 .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     public WinterNavigationShipFeature getWinterNavigationShipByVesselId(String vesselId) {
         final WinterNavigationShip ship = winterNavigationShipRepository.findById(vesselId).orElse(null);
 
@@ -117,6 +118,7 @@ public class WinterNavigationService {
         throw new ObjectNotFoundException(WinterNavigationShip.class, vesselId);
     }
 
+    @Transactional(readOnly = true)
     public WinterNavigationPortFeature getWinterNavigationPortByLocode(final String locode) {
         final WinterNavigationPort port = winterNavigationPortRepository.findById(locode).orElse(null);
 

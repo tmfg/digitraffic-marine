@@ -11,12 +11,10 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.ws.client.WebServiceClientException;
-import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
+import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import ibnet_baltice_ports.Ports;
 import ibnet_baltice_schema.ObjectFactory;
 import ibnet_baltice_schema.PortsRequestType;
@@ -48,6 +46,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setMessageSender(sender);
     }
 
+    @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public Ports getWinterNavigationPorts() {
         final JAXBElement<PortsResponseType> portsResponseTypeJAXBElement =
@@ -56,6 +55,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         return portsResponseTypeJAXBElement.getValue().getPorts();
     }
 
+    @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public WinterShips getWinterNavigationShips() {
         final JAXBElement<WinterShipsResponseType> winterShipsResponseTypeJAXBElement =
@@ -64,6 +64,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         return winterShipsResponseTypeJAXBElement.getValue().getWinterShips();
     }
 
+    @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public DirWaysType getWinterNavigationWaypoints() {
         final JAXBElement<WaypointsResponseType> waypointsResponseTypeJAXBElement =

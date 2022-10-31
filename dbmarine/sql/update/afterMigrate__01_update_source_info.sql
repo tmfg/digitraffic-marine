@@ -1,4 +1,4 @@
-INSERT INTO source_info (id, source, update_interval)
+INSERT INTO data_source_info (id, source, update_interval)
 VALUES
       ('SSE_DATA', null, 'PT30M')
 

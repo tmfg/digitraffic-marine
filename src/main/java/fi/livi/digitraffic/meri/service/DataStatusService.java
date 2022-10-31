@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +22,7 @@ import fi.livi.digitraffic.meri.controller.sse.SseControllerV1;
 import fi.livi.digitraffic.meri.controller.winternavigation.WinterNavigationControllerV1;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
+import fi.livi.digitraffic.meri.dto.info.v1.DataSourceInfoDtoV1;
 import fi.livi.digitraffic.meri.dto.info.v1.UpdateInfoDtoV1;
 import fi.livi.digitraffic.meri.dto.info.v1.UpdateInfosDtoV1;
 import fi.livi.digitraffic.meri.model.DataSource;
@@ -105,7 +107,7 @@ public class DataStatusService {
         return Collections.singletonList(
             new UpdateInfoDtoV1(SseControllerV1.API_SSE_V1 + SseControllerV1.MEASUREMENTS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.SSE_DATA),
-                 null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.SSE_DATA))
+                 null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.SSE_DATA))
         );
     }
 
@@ -115,19 +117,19 @@ public class DataStatusService {
             // /api/port-call/v1/vessel-details
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_CALLS),
-                 null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.PORT_CALL)),
+                 null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.PORT_CALL)),
             // /api/port-call/v1/port-calls
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.CODE_DESCRIPTIONS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_METADATA),
-                 null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.PORT_CALL_CODE_DESCRIPTIONS)),
+                 null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.PORT_CALL_CODE_DESCRIPTIONS)),
             // /api/port-call/v1/locations (ssnLocation, portArea, berthRepository)
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.LOCATIONS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_METADATA),
-                 null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.PORT_CALL_LOCATION)),
+                 null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.PORT_CALL_LOCATION)),
             // /api/port-call/v1/code-descriptions
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.VESSEL_DETAILS,
                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.VESSEL_DETAILS),
-                 null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.PORT_CALL_VESSEL_DETAIL))
+                 null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.PORT_CALL_VESSEL_DETAIL))
         );
     }
 
@@ -136,11 +138,11 @@ public class DataStatusService {
             // /api/ais/v1/vessels
             new UpdateInfoDtoV1(AisControllerV1.API_AIS_V1 + AisControllerV1.VESSELS,
                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.VESSEL_DETAILS),
-                null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.VESSEL_DETAIL)),
+                null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.VESSEL_DETAIL)),
             // /api/ais/v1/locations
             new UpdateInfoDtoV1(AisControllerV1.API_AIS_V1 + AisControllerV1.LOCATIONS,
                                 vesselLocationRepository.getLastModified(),
-                                null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.VESSEL_LOCATION))
+                                null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.VESSEL_LOCATION))
         );
     }
 
@@ -149,15 +151,15 @@ public class DataStatusService {
             // /api/winter-navigation/v1/ports
             new UpdateInfoDtoV1(WinterNavigationControllerV1.API_WINTER_NAVIGATION_V1 + WinterNavigationControllerV1.PORTS,
                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS),
-                null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.WINTER_NAVIGATION_PORT)),
+                null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.WINTER_NAVIGATION_PORT)),
             // /api/winter-navigation/v1/vessels
             new UpdateInfoDtoV1(WinterNavigationControllerV1.API_WINTER_NAVIGATION_V1 + WinterNavigationControllerV1.VESSELS,
                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS),
-                null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.WINTER_NAVIGATION_VESSEL)),
+                null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.WINTER_NAVIGATION_VESSEL)),
             // /api/winter-navigation/v1/dirways
             new UpdateInfoDtoV1(WinterNavigationControllerV1.API_WINTER_NAVIGATION_V1 + WinterNavigationControllerV1.DIRWAYS,
                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS),
-                null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.WINTER_NAVIGATION_DIRWAY))
+                null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.WINTER_NAVIGATION_DIRWAY))
         );
     }
 
@@ -168,7 +170,7 @@ public class DataStatusService {
             new UpdateInfoDtoV1(ApiConstants.API_NAUTICAL_WARNING_V1_WARNINGS,
                 updatedTimestampRepository.getNauticalWarningsLastUpdated(UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ACTIVE,
                                                                           UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ARCHIVED),
-                null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.NAUTICAL_WARNING))
+                null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.NAUTICAL_WARNING))
         );
     }
 
@@ -177,7 +179,7 @@ public class DataStatusService {
         return Collections.singletonList(
             new UpdateInfoDtoV1(ApiConstants.API_BRIDGE_LOCK_V1_DISRUPTIONS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.BRIDGE_LOCK_DISRUPTIONS),
-                 null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.BRIDGE_LOCK_DISRUPTION))
+                 null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.BRIDGE_LOCK_DISRUPTION))
         );
     }
 
@@ -186,8 +188,18 @@ public class DataStatusService {
         return Collections.singletonList(
             new UpdateInfoDtoV1(ApiConstants.API_ATON_V1_FAULTS,
                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.ATON_FAULTS),
-                null, updatedTimestampRepository.getSourceUpdateInterval(DataSource.ATON_FAULTS))
+                null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.ATON_FAULTS))
         );
+    }
+
+    @Transactional(readOnly = true)
+    public DataSourceInfoDtoV1 getDataSourceInfo(final DataSource dataSource) {
+        return updatedTimestampRepository.getDataSourceInfo(dataSource);
+    }
+
+    @Transactional(readOnly = true)
+    public Duration getDataSourceUpdateInterval(final DataSource dataSource) {
+        return updatedTimestampRepository.getDataSourceUpdateInterval(dataSource);
     }
 
 }

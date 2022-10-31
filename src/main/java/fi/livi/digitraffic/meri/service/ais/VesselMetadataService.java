@@ -36,6 +36,7 @@ public class VesselMetadataService {
         this.vesselMetadataRepository = vesselMetadataRepository;
     }
 
+    @Transactional(readOnly = true)
     public VesselMetadataJson findAllowedMetadataByMssi(final int mmsi) {
         final VesselMetadataJson metadata = vesselMetadataRepository.findByMmsi(mmsi);
 
@@ -46,6 +47,7 @@ public class VesselMetadataService {
         return metadata;
     }
 
+    @Transactional(readOnly = true)
     public List<VesselMetadataJson> findAllowedVesselMetadataFrom(final Long from, final Long to) {
         final QueryBuilder<VesselMetadataJson, VesselMetadata> qb = new QueryBuilder<>(entityManager, VesselMetadataJson.class, VesselMetadata.class);
 
@@ -62,6 +64,7 @@ public class VesselMetadataService {
         return qb.getResults();
     }
 
+    @Transactional(readOnly = true)
     @Cacheable(CACHE_ALLOWED_MMSI)
     public Collection<Integer> findAllowedMmsis() {
         final QueryBuilder<Integer, VesselMetadata> qb = new QueryBuilder<>(entityManager, Integer.class, VesselMetadata.class);

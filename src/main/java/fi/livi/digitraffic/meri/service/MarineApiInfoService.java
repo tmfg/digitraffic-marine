@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.service;
 
+import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class MarineApiInfoService {
         this.buildVersionService = buildVersionService;
     }
 
+    @NotTransactionalServiceMethod
     public MarineApiInfo getApiInfo() {
         return new MarineApiInfo(messageService, buildVersionService);
     }
