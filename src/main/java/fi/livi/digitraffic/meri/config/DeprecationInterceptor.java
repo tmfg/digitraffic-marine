@@ -24,10 +24,9 @@ public class DeprecationInterceptor implements HandlerInterceptor {
         final Object handler) {
 
         try {
-            final HandlerMethod handlerMethod = (HandlerMethod) handler;
+            final HandlerMethod handlerMethod = getHandlerMethod(handler);
 
-            if (handlerMethod.getMethod().isAnnotationPresent(Deprecated.class)
-                || handlerMethod.getMethod().isAnnotationPresent(Sunset.class)) {
+            if (handlerMethod != null) {
 
                 if (handlerMethod.getMethod().isAnnotationPresent(Deprecated.class)
                     && handlerMethod.getMethod().isAnnotationPresent(Sunset.class)) {
@@ -39,14 +38,25 @@ public class DeprecationInterceptor implements HandlerInterceptor {
                     response.addHeader("Deprecation", "true");
                     response.addHeader("Sunset", sunsetHeaderContent);
 
-                } else {
+                } else if (handlerMethod.getMethod().isAnnotationPresent(Deprecated.class)
+                    || handlerMethod.getMethod().isAnnotationPresent(Sunset.class)) {
+
                     log.error("Deprecated handler {} is missing either a @Deprecated or @Sunset annotation", handlerMethod.getMethod().getName());
                 }
+
             }
-        } catch (final ClassCastException error) {
-            log.error(error.getMessage());
+        } catch (final Exception error) {
+            log.error(error.getMessage(), error);
         }
+
         return true;
+    }
+
+    private HandlerMethod getHandlerMethod(final Object handler) {
+        if (handler instanceof HandlerMethod) {
+            return (HandlerMethod) handler;
+        }
+        return null;
     }
 
 }
