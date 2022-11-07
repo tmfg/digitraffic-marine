@@ -1,3 +1,3 @@
 #!/bin/sh
 cd ../..
-mvn flyway:migrate -Dflyway.configFile=dbmarine/flyway-dev/flyway-localhost.conf
+mvn flyway:migrate -Dflyway.configFiles=dbmarine/flyway-dev/flyway-localhost.conf

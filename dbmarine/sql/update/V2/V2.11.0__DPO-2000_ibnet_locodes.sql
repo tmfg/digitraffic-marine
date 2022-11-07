@@ -1,0 +1,1 @@
+ALTER TABLE winter_navigation_port ALTER COLUMN locode TYPE text;
