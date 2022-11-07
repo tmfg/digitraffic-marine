@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.controller.portcall;
 
 import static fi.livi.digitraffic.meri.controller.ApiConstants.API_PORT_CALL;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.BETA;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.PORT_CALL_V1_TAG;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
@@ -46,6 +47,7 @@ public class PortcallControllerV1 {
         "In this case you should try to narrow down your search criteria.\n\n" +
         "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
+    public static final String API_PORT_CALL_BETA = API_PORT_CALL + BETA;
     public static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
     public static final String PORT_CALLS = "/port-calls";
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";
@@ -160,14 +162,14 @@ public class PortcallControllerV1 {
 
     // TODO replace with three individual apis as this is not geojson
     @Operation(summary = "Return list of all berths, port areas and locations.")
-    @GetMapping(path = API_PORT_CALL_V1 + LOCATIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_BETA + LOCATIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollectionsV1 listAllMetadata() {
         return portCallServiceV1.listaAllMetadata();
     }
 
     @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
-    @GetMapping(path = API_PORT_CALL_V1 + LOCATIONS + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_BETA + LOCATIONS + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
         @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
