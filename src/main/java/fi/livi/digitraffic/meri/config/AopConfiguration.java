@@ -4,6 +4,7 @@ import fi.livi.digitraffic.meri.aop.TransactionLoggerAspect;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -23,5 +24,5 @@ public class AopConfiguration {
     }
 
     @Bean
-    public TransactionLoggerAspect transactionLoggerAspect() { return new TransactionLoggerAspect(); }
+    public TransactionLoggerAspect transactionLoggerAspect(@Value("${dt.logging.transaction.limit}") final int limit) { return new TransactionLoggerAspect(limit); }
 }
