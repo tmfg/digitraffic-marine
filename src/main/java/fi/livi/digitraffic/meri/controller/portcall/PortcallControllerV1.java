@@ -47,7 +47,7 @@ public class PortcallControllerV1 {
         "In this case you should try to narrow down your search criteria.\n\n" +
         "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
-    public static final String API_PORT_CALL_V1_BETA = API_PORT_CALL + BETA;
+    public static final String API_PORT_CALL_BETA = API_PORT_CALL + BETA;
     public static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
     public static final String PORT_CALLS = "/port-calls";
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";

@@ -74,7 +74,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
     @Test
     public void listPortsSucceeds() throws Exception {
         logInfoResponse(
-            mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_BETA + PortcallControllerV1.PORTS)))
+            mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.dataUpdatedTime", is(dataUpdatedTime)))
@@ -87,7 +87,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
     @Test
     public void listPortsWithLocodeSucceeds() throws Exception {
         logInfoResponse(
-            mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_BETA + PortcallControllerV1.PORTS + "/FIHEL")))
+            mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS + "/FIHEL")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.dataUpdatedTime", is(dataUpdatedTime)))
@@ -101,7 +101,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
     @Test
     public void listPortsWithUnknownLocodeFails() throws Exception {
         logInfoResponse(
-            mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_BETA + PortcallControllerV1.PORTS + "/" + UNKNOWN_LOCODE)))
+            mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS + "/" + UNKNOWN_LOCODE)))
             .andExpect(status().isNotFound())
         ;
     }
