@@ -12,7 +12,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Path;
 
-import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
+import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;

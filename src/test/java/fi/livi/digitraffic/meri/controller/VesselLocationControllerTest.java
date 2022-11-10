@@ -85,10 +85,10 @@ public class VesselLocationControllerTest extends AbstractTestBase {
     }
 
     private VesselLocationFeatureCollection generateFeatureCollection() {
-        return new VesselLocationFeatureCollection(Collections.singletonList(new VesselLocationFeature(MMSI, null, null)));
+        return new VesselLocationFeatureCollection(Collections.singletonList(new VesselLocationFeature(MMSI, null, null)), null);
     }
 
     private VesselLocationFeatureCollection emptyFeatureCollection() {
-        return new VesselLocationFeatureCollection(Collections.emptyList());
+        return new VesselLocationFeatureCollection(Collections.emptyList(), null);
     }
 }

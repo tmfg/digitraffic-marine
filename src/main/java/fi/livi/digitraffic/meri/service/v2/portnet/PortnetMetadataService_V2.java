@@ -3,7 +3,6 @@ package fi.livi.digitraffic.meri.service.v2.portnet;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -63,7 +62,7 @@ public class PortnetMetadataService_V2 {
     @Transactional(readOnly = true)
     public LocationFeatureCollections_V1 listaAllMetadata() {
         return SsnLocationConverter.convert_V1(
-                updatedTimestampRepository.findLastUpdated(PORT_METADATA),
+                updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
                 ssnLocationRepository.streamAllBy(),
                 portAreaRepository.streamAllBy(),
                 berthRepository.streamAllBy()
@@ -79,7 +78,7 @@ public class PortnetMetadataService_V2 {
         }
 
         return SsnLocationConverter.convert_V1(
-                updatedTimestampRepository.findLastUpdated(PORT_METADATA),
+                updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
                 Stream.of(location),
                 portAreaRepository.streamByPortAreaKeyLocode(locode),
                 berthRepository.streamByBerthKeyLocode(locode)
@@ -92,7 +91,7 @@ public class PortnetMetadataService_V2 {
         final boolean isFinland = StringUtils.equals(country, "Finland");
 
         return SsnLocationConverter.convert_V1(
-                updatedTimestampRepository.findLastUpdated(PORT_METADATA),
+                updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
                 ssnLocationRepository.streamByCountryIgnoreCase(country),
                 isFinland ? portAreaRepository.streamAllBy() : Stream.empty(),
                 isFinland ? berthRepository.streamAllBy() : Stream.empty());

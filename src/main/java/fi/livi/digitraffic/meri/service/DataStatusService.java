@@ -123,7 +123,7 @@ public class DataStatusService {
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_METADATA),
                  null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.PORT_CALL_CODE_DESCRIPTIONS)),
             // /api/port-call/v1/locations (ssnLocation, portArea, berthRepository)
-            new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.LOCATIONS,
+            new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_METADATA),
                  null, updatedTimestampRepository.getDataSourceUpdateInterval(DataSource.PORT_CALL_LOCATION)),
             // /api/port-call/v1/code-descriptions

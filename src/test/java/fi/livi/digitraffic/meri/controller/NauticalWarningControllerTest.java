@@ -80,6 +80,7 @@ public class NauticalWarningControllerTest extends AbstractTestBase {
             assertThat(body, containsString("\"type\" : \"FeatureCollection\""));
             assertThat(body, containsString("\"type\" : \"Feature\""));
             assertThat(body, containsString("\"type\" : \"Polygon\""));
+            assertThat(body, containsString("\"dataUpdatedTime\" : \"2016-11-28T22:00:00Z\""));
         }
         pookiMockServer.verify();
     }

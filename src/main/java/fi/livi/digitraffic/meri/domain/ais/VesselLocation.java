@@ -6,11 +6,12 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 
 @Entity
 @DynamicUpdate
-public class VesselLocation {
+public class VesselLocation extends ReadOnlyCreatedAndModifiedFields {
     @Id
     private int mmsi;
 

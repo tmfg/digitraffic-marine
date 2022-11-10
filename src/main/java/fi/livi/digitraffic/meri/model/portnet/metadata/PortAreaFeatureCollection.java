@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.model.portnet.metadata;
 
+import java.time.Instant;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -13,10 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
         "dateUpdatedTime",
         "features",
 })
-@Schema(description = "GeoJSON FeatureCollection object") // TODO kuvaus
+@Schema(description = "Port area GeoJSON feature collection")
 public class PortAreaFeatureCollection extends FeatureCollection<PortAreaFeature> {
 
-    public PortAreaFeatureCollection(final List<PortAreaFeature> features) {
-        super(features);
+    public PortAreaFeatureCollection(final List<PortAreaFeature> features, final Instant dataUpdatedTime) {
+        super(features, dataUpdatedTime);
     }
 }

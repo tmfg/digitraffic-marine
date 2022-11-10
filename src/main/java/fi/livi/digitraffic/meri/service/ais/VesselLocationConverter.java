@@ -1,8 +1,11 @@
 package fi.livi.digitraffic.meri.service.ais;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
 import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
 import fi.livi.digitraffic.meri.model.ais.AISMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
@@ -14,7 +17,8 @@ public final class VesselLocationConverter {
     private VesselLocationConverter() {}
 
     public static VesselLocationFeatureCollection createFeatureCollection(final List<VesselLocation> locations) {
-        return new VesselLocationFeatureCollection(features(locations));
+        final Instant dataUpdatedTime = locations.stream().map(ReadOnlyCreatedAndModifiedFields::getModified).filter(Objects::nonNull).max(Instant::compareTo).orElse(Instant.EPOCH);
+        return new VesselLocationFeatureCollection(features(locations), dataUpdatedTime);
     }
 
     public static List<VesselLocationFeature> features(final List<VesselLocation> locations) {

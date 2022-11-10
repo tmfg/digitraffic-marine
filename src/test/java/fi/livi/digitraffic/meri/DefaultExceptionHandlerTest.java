@@ -56,7 +56,7 @@ public class DefaultExceptionHandlerTest extends AbstractTestBase {
 
     @Test
     public void ok() throws Exception {
-        when(vesselLocationService.findAllowedLocations(anyInt(), nullable(Long.class), nullable(Long.class))).thenReturn(new VesselLocationFeatureCollection(null));
+        when(vesselLocationService.findAllowedLocations(anyInt(), nullable(Long.class), nullable(Long.class))).thenReturn(new VesselLocationFeatureCollection(null, null));
 
         performQuery()
             .andExpect(status().isOk());

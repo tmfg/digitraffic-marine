@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import fi.livi.digitraffic.meri.dto.info.v1.DataSourceInfoDtoV1;
@@ -48,19 +47,30 @@ public interface UpdatedTimestampRepository extends SqlRepository {
     }
 
     @Modifying
-    @Query(value = "insert into updated_timestamp(updated_name, updated_time, updated_by) values(:name, :time, :by)\n" +
+    @Query(value =
+        "insert into updated_timestamp(updated_name, updated_time, updated_by) values(:name, :time, :by)\n" +
         "on conflict (updated_name)\n" +
         "do update set\n" +
         "   updated_time = :time,\n" +
         "   updated_by = :by", nativeQuery = true)
-    void setUpdated(@Param("name")final String name, @Param("time")final ZonedDateTime time, @Param("by")final String by);
+    void setUpdated(final String name,
+                    final Instant time,
+                    final String by);
 
-    default void setUpdated(@Param("name")final UpdatedName name, @Param("time")final ZonedDateTime time, @Param("by")final String by) {
+    default void setUpdated(final UpdatedName name,
+                            final Instant time,
+                            final String by) {
         setUpdated(name.name(), time, by);
     }
 
+    default void setUpdated(final UpdatedName name,
+                            final ZonedDateTime time,
+                            final String by) {
+        setUpdated(name.name(), time.toInstant(), by);
+    }
+
     @Query(value = "select updated_time from updated_timestamp where updated_name = :name", nativeQuery = true)
-    Instant findLastUpdatedInstant(@Param("name") final String name);
+    Instant findLastUpdatedInstant(final String name);
 
     @Query(value = "select updated_time from updated_timestamp where updated_name = :#{#updatedName.name()}", nativeQuery = true)
     Instant findLastUpdatedInstant(final UpdatedName updatedName);

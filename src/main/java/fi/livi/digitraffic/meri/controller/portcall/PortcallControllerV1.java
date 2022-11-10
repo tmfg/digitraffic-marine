@@ -7,6 +7,7 @@ import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOUND;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -25,11 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
-import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
 import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.PortLocationDtoV1;
 import fi.livi.digitraffic.meri.service.portcall.PortCallServiceV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,8 +51,8 @@ public class PortcallControllerV1 {
     public static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
     public static final String PORT_CALLS = "/port-calls";
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";
-    public static final String LOCATIONS = "/locations";
     public static final String VESSEL_DETAILS = "/vessel-details";
+    public static final String PORTS = "/ports";
 
     private final PortCallServiceV1 portCallServiceV1;
 
@@ -61,7 +61,7 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Find port calls", description = NOTE)
-    @GetMapping(path = API_PORT_CALL_V1 + PORT_CALLS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + PORT_CALLS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
@@ -130,7 +130,7 @@ public class PortcallControllerV1 {
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
 
-        if(!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
+        if (!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
             from = Instant.now().minus(Duration.ofDays(1));
         }
 
@@ -154,32 +154,32 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Return all code descriptions")
-    @GetMapping(path = API_PORT_CALL_V1 + CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + CODE_DESCRIPTIONS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptionsV1 listCodeDescriptions() {
         return portCallServiceV1.listCodeDescriptions();
     }
 
-    // TODO replace with three individual apis as this is not geojson
-    @Operation(summary = "Return list of all berths, port areas and locations.")
-    @GetMapping(path = API_PORT_CALL_BETA + LOCATIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @Operation(summary = "Return all ports with port areas and berths.")
+    @GetMapping(path = API_PORT_CALL_BETA + PORTS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public LocationFeatureCollectionsV1 listAllMetadata() {
-        return portCallServiceV1.listaAllMetadata();
+    public PortLocationDtoV1 findPortsLocations() {
+        return portCallServiceV1.findPortsLocations();
     }
 
-    @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code.")
-    @GetMapping(path = API_PORT_CALL_BETA + LOCATIONS + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
-        @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
-        @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
+    @Operation(summary = "Return one port with port areas and berths by SafeSeaNet location code (locode).")
+    @GetMapping(path = API_PORT_CALL_BETA + PORTS + "/{locode}", produces = MEDIA_TYPE_APPLICATION_JSON)
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ports"),
+                    @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Location not found", content = @Content),
+                    @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public LocationFeatureCollectionsV1 findSsnLocationByLocode(@PathVariable(value = "locode") final String locode) {
-        return portCallServiceV1.findSsnLocationByLocode(locode);
+    public PortLocationDtoV1 findPortLocationByLocode(@PathVariable(value = "locode") final String locode) {
+        return portCallServiceV1.findPortLocationByLocode(locode);
     }
+
 
     @Operation(summary = "Return list of vessels details.")
-    @GetMapping(path = API_PORT_CALL_V1 + VESSEL_DETAILS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + VESSEL_DETAILS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody

@@ -1,15 +1,15 @@
 package fi.livi.digitraffic.meri.controller.portnet;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fi.livi.digitraffic.meri.domain.portnet.Berth;
 import fi.livi.digitraffic.meri.domain.portnet.PortArea;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
-import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.PortLocationDtoV1;
 import fi.livi.digitraffic.meri.model.geojson.Point;
+import fi.livi.digitraffic.meri.model.portnet.metadata.BerthCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthFeature;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthFeatureCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthProperties;
@@ -17,57 +17,64 @@ import fi.livi.digitraffic.meri.model.portnet.metadata.LocationFeatureCollection
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaFeature;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaFeatureCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaProperties;
-import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationFeature;
-import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationFeatureCollection;
-import fi.livi.digitraffic.meri.model.portnet.metadata.SsnLocationProperties;
+import fi.livi.digitraffic.meri.model.portnet.metadata.PortFeature;
+import fi.livi.digitraffic.meri.model.portnet.metadata.PortFeatureCollection;
+import fi.livi.digitraffic.meri.model.portnet.metadata.PortProperties;
 
 public final class SsnLocationConverter {
     private SsnLocationConverter() {}
 
-    public static LocationFeatureCollections_V1 convert_V1(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
+    public static LocationFeatureCollections_V1 convert_V1(final Instant timestamp, final Stream<SsnLocation> locations,
                                                            final Stream<PortArea> portAreas, final Stream<Berth> berths) {
         return new LocationFeatureCollections_V1(timestamp,
-                convertSsnLocations(locations),
-                convertPortAreas(portAreas),
-                convertBerths(berths));
+                convertSsnLocations(locations, timestamp),
+                convertPortAreas(portAreas, timestamp),
+                convertBerths(berths, timestamp));
     }
 
-    public static LocationFeatureCollectionsV1 convertV1(final ZonedDateTime timestamp, final Stream<SsnLocation> locations,
-                                                          final Stream<PortArea> portAreas, final Stream<Berth> berths) {
-        return new LocationFeatureCollectionsV1(timestamp.toInstant(),
-            convertSsnLocations(locations),
-            convertPortAreas(portAreas),
-            convertBerths(berths));
+    public static PortLocationDtoV1 convertV1(final Instant timestamp, final Stream<SsnLocation> locations,
+                                              final Stream<PortArea> portAreas, final Stream<Berth> berths) {
+        return new PortLocationDtoV1(timestamp,
+            convertSsnLocations(locations, timestamp),
+            convertPortAreas(portAreas, timestamp),
+            convertToBertCollection(berths, timestamp));
     }
 
-    private static BerthFeatureCollection convertBerths(final Stream<Berth> berths) {
-        return new BerthFeatureCollection(berths.map(SsnLocationConverter::convertBerth).collect(Collectors.toList()));
+    public static BerthCollection convertToBertCollection(final Stream<Berth> berths, final Instant dataUpdatedTime) {
+        return new BerthCollection(berths.map(SsnLocationConverter::convertBerthProperties).collect(Collectors.toList()), dataUpdatedTime);
+    }
+    public static BerthFeatureCollection convertBerths(final Stream<Berth> berths, final Instant dataUpdatedTime) {
+        return new BerthFeatureCollection(berths.map(SsnLocationConverter::convertBerth).collect(Collectors.toList()), dataUpdatedTime);
     }
 
     private static BerthFeature convertBerth(final Berth b) {
-        final BerthProperties p = new BerthProperties(b.getBerthKey().getLocode(), b.getBerthKey().getPortAreaCode(), b.getBerthKey().getBerthCode(), b.getBerthName());
+        final BerthProperties p = convertBerthProperties(b);
 
         return new BerthFeature(b.getBerthKey().getLocode(), b.getBerthKey().getPortAreaCode(), b.getBerthKey().getBerthCode(), p);
     }
 
-    private static PortAreaFeatureCollection convertPortAreas(final Stream<PortArea> portAreas) {
-        return new PortAreaFeatureCollection(portAreas.map(SsnLocationConverter::convertPortArea).collect(Collectors.toList()));
+    public static BerthProperties convertBerthProperties(final Berth b) {
+        return new BerthProperties(b.getBerthKey().getLocode(), b.getBerthKey().getPortAreaCode(), b.getBerthKey().getBerthCode(), b.getBerthName());
     }
 
-    private static PortAreaFeature convertPortArea(final PortArea pa) {
+    public static PortAreaFeatureCollection convertPortAreas(final Stream<PortArea> portAreas, final Instant dataUpdatedTime) {
+        return new PortAreaFeatureCollection(portAreas.map(SsnLocationConverter::convertPortArea).collect(Collectors.toList()), dataUpdatedTime);
+    }
+
+    public static PortAreaFeature convertPortArea(final PortArea pa) {
         final PortAreaProperties p = new PortAreaProperties(pa.getPortAreaKey().getLocode(), pa.getPortAreaName());
         final Point g = geometry(pa.getWgs84Long(), pa.getWgs84Lat());
         return new PortAreaFeature(pa.getPortAreaKey().getLocode(), pa.getPortAreaKey().getPortAreaCode(), p, g);
     }
 
-    private static SsnLocationFeatureCollection convertSsnLocations(final Stream<SsnLocation> locations) {
-        return new SsnLocationFeatureCollection(locations.map(SsnLocationConverter::convertLocation).collect(Collectors.toList()));
+    public static PortFeatureCollection convertSsnLocations(final Stream<SsnLocation> locations, final Instant dataUpdatedTime) {
+        return new PortFeatureCollection(locations.map(l -> convertSsnLocation(l, dataUpdatedTime)).collect(Collectors.toList()), dataUpdatedTime);
     }
 
-    private static SsnLocationFeature convertLocation(final SsnLocation l) {
-        final SsnLocationProperties p = new SsnLocationProperties(l.getLocode(), l.getLocationName(), l.getCountry());
+    public static PortFeature convertSsnLocation(final SsnLocation l, final Instant dataUpdatedTime) {
+        final PortProperties p = new PortProperties(l.getLocode(), l.getLocationName(), l.getCountry());
         final Point g = geometry(l.getWgs84Long(), l.getWgs84Lat());
-        return new SsnLocationFeature(l.getLocode(), p, g);
+        return new PortFeature(l.getLocode(), p, g, dataUpdatedTime);
     }
 
     private static Point geometry(final Double lon, final Double lat) {

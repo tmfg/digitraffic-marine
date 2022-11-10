@@ -1,5 +1,25 @@
 package fi.livi.digitraffic.meri.service.portcall;
 
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Stream;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.Path;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.livi.digitraffic.meri.controller.portnet.SsnLocationConverter;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
@@ -12,32 +32,14 @@ import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
-import fi.livi.digitraffic.meri.dto.portcall.v1.LocationFeatureCollectionsV1;
 import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.PortLocationDtoV1;
 import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.portnet.vesseldetails.VesselDetailsService;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.Path;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_METADATA;
-import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Service
 @ConditionalOnWebApplication
@@ -95,7 +97,7 @@ public class PortCallServiceV1 {
         final List<String> nationality,
         final Integer vesselTypeCode) {
 
-        final Instant lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS).toInstant();
+        final Instant lastUpdated = updatedTimestampRepository.findLastUpdatedInstant(PORT_CALLS);
 
         final List<Long> portCallIds = getPortCallIds(modifiedDate,
             modifiedFrom,
@@ -220,7 +222,7 @@ public class PortCallServiceV1 {
     @Transactional(readOnly = true)
     public CodeDescriptionsV1 listCodeDescriptions() {
         return new CodeDescriptionsV1(
-            updatedTimestampRepository.findLastUpdated(PORT_METADATA).toInstant(),
+            updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
             v2CodeDescriptionRepository.listAllCargoTypes(),
             v2CodeDescriptionRepository.listAllVesselTypes(),
             v2CodeDescriptionRepository.listAllAgentTypes()
@@ -228,9 +230,9 @@ public class PortCallServiceV1 {
     }
 
     @Transactional(readOnly = true)
-    public LocationFeatureCollectionsV1 listaAllMetadata() {
+    public PortLocationDtoV1 findPortsLocations() {
         return SsnLocationConverter.convertV1(
-            updatedTimestampRepository.findLastUpdated(PORT_METADATA),
+            updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
             ssnLocationRepository.streamAllBy(),
             portAreaRepository.streamAllBy(),
             berthRepository.streamAllBy()
@@ -238,24 +240,31 @@ public class PortCallServiceV1 {
     }
 
     @Transactional(readOnly = true)
-    public LocationFeatureCollectionsV1 findSsnLocationByLocode(final String locode) {
+    public PortLocationDtoV1 findPortLocationByLocode(final String locode) {
         final SsnLocation location = ssnLocationRepository.findByLocode(locode);
 
-        if(location == null) {
-            throw new ObjectNotFoundException("SsnLocation", locode);
+        if (location == null) {
+            throw new ObjectNotFoundException("PortLocation", locode);
         }
 
         return SsnLocationConverter.convertV1(
-            updatedTimestampRepository.findLastUpdated(PORT_METADATA),
+            updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
             Stream.of(location),
             portAreaRepository.streamByPortAreaKeyLocode(locode),
             berthRepository.streamByBerthKeyLocode(locode)
         );
     }
 
+//    If we would have locations for berths?
+//    @Transactional(readOnly = true)
+//    public BerthFeatureCollection findBerths() {
+//        return SsnLocationConverter.convertBerths(berthRepository.streamAllBy(), updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA));
+//    }
+
     @Transactional(readOnly = true)
     public List<VesselDetails> findVesselDetails(final Instant from, final String vesselName, final Integer mmsi, final Integer imo,
                                                  final List<String> nationalities, final Integer vesselTypeCode) {
         return vesselDetailsService.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
     }
+
 }

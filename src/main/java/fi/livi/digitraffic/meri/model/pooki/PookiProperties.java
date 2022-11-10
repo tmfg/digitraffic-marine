@@ -21,113 +21,113 @@ public class PookiProperties extends Properties {
 
     @Schema(required = true)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer id;
+    private final Integer id;
 
     // Merialueet suomeksi
     @Schema(description = "Area in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String areasFi;
+    private final String areasFi;
 
     @Schema(description = "Area in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String areasSv;
+    private final String areasSv;
 
     @Schema(description = "Area in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String areasEn;
+    private final String areasEn;
 
     // Numerointi alkaa jokaisen vuoden alussa aina ykkösestä ja annetaan vasta sitten kun varoituksen tila muuttuu julkaistuksi
     @Schema(description = "Nautical warning number. Starts with the digit 1 at the begining of the year. Set when warning was published.")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer number;
+    private final Integer number;
 
     // Sijainnin tarkennus suomeksi
     @Schema(description = "Location specifier in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String locationFi;
+    private final String locationFi;
 
     @Schema(description = "Location specifier in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String locationSv;
+    private final String locationSv;
 
     @Schema(description = "Location specifier in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String locationEn;
+    private final String locationEn;
 
     // Merivaroituksen sisältö suomeksi
     @Schema(description = "Nautical warning contents in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String contentsFi;
+    private final String contentsFi;
 
     @Schema(description = "Nautical warning contents in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String contentsSv;
+    private final String contentsSv;
 
     @Schema(description = "Nautical warning contents in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String contentsEn;
+    private final String contentsEn;
 
     // Päiväys ja aika
     @Schema(description = "Set when nautical warning was created")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private ZonedDateTime creationTime;
+    public final ZonedDateTime creationTime;
 
     // Merivaroitustyypin selite suomeksi
     @Schema(description = "Nautical warning type in Finnish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String typeFi;
+    private final String typeFi;
 
     @Schema(description = "Nautical warning type in Swedish")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String typeSv;
+    private final String typeSv;
 
     @Schema(description = "Nautical warning type in English")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String typeEn;
+    private final String typeEn;
 
     @Schema(description = "Beginning of validity time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private ZonedDateTime validityStartTime;
+    private final ZonedDateTime validityStartTime;
 
     @Schema(description = "End of validity time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private ZonedDateTime validityEndTime;
+    private final ZonedDateTime validityEndTime;
 
     // Should this be hidden?
     @Schema(description = "Nautical warning contents for tooltip")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String tooltip;
+    private final String tooltip;
 
     @Schema(description = "Are there virtual navaids related to this warning")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Boolean virtualNavaids;
+    private final Boolean virtualNavaids;
 
     @Schema(description = "Is navtex message")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Boolean navtex;
+    private final Boolean navtex;
 
     // Merivaroitukseen liittyvän turvalaitteen ominaisuustiedot  (rivinvaihdoilla eroteltuina)
     @Schema(description = "Aids to navigation related to the nautical warning")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String navaidInfo;
+    private final String navaidInfo;
 
     // Merivaroitukseen liittyvän väyläalueen ominaisuustiedot (rivinvaihdoilla eroteltuina)
     @Schema(description = "Fairway features related to the nautical warning (separated by line breaks)")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String fairwayInfo;
+    private final String fairwayInfo;
 
     // Merivaroitukseen liittyvän navigointilinjan ominaisuustiedot (rivinvaihdoilla eroteltuina)
     @Schema(description = "Navigation line features related to the nautical warning (separated by line breaks)")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String navigationLineInfo;
+    private final String navigationLineInfo;
 
     @Schema(description = "Nautical warning publishing time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private ZonedDateTime publishingTime;
+    public final ZonedDateTime publishingTime;
 
     @Schema(description = "Notificator")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String notificator;
+    private final String notificator;
 
     public PookiProperties(@JsonProperty(value = "ID", access = JsonProperty.Access.WRITE_ONLY) final Integer id,
                            @JsonProperty(value = "ALUEET_FI", access = JsonProperty.Access.WRITE_ONLY) final String areasFi,

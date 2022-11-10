@@ -33,5 +33,6 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new DeprecationInterceptor());
+        registry.addInterceptor(new AllowedParameterInterceptor());
     }
 }

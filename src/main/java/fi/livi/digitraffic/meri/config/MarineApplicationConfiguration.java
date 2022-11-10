@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.config;
 
+import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -83,5 +85,11 @@ public class MarineApplicationConfiguration {
         bean.afterPropertiesSet();
         ConversionService object = bean.getObject();
         return object;
+    }
+
+    /** Support for etag and conditional HTTP-requests */
+    @Bean
+    public Filter ShallowEtagHeaderFilter() {
+        return new ShallowEtagHeaderFilter();
     }
 }

@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
         "geometry",
         "properties"
 })
-//@Schema(description = "") // TODO
+@Schema(description = "Berth GeoJSON feature")
 public class BerthFeature extends Feature<Point, BerthProperties> {
 
     @Schema(description = "Maritime Mobile Service Identity", required = true)

@@ -1,26 +1,32 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
-import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
-import fi.livi.digitraffic.meri.domain.portnet.PortCall;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;
-import fi.livi.digitraffic.meri.service.BadRequestException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.IntStream;
+
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.transaction.Transactional;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
+import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
+import fi.livi.digitraffic.meri.domain.portnet.PortCall;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;
+import fi.livi.digitraffic.meri.service.BadRequestException;
 
 
 @Transactional
@@ -408,6 +414,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         assertEquals(StringUtils.EMPTY, json.portCalls.get(0).getShipMasterDeparture());
     }
 
+    private static final AtomicLong portCallId = new AtomicLong(1L);
+
     private void newPortCall(
         final Timestamp eta,
         final Timestamp etd,
@@ -435,7 +443,7 @@ public class PortCallServiceTest extends AbstractTestBase {
 
         final PortCall pc = new PortCall();
         pc.setPortAreaDetails(pads);
-        pc.setPortCallId(1L);
+        pc.setPortCallId(portCallId.getAndIncrement());
         pc.setRadioCallSign("a");
         pc.setRadioCallSignType("fake");
         pc.setVesselName(VESSEL_NAME);
