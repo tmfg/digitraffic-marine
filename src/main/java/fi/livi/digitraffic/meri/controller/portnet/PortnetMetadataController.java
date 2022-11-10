@@ -39,7 +39,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_METADATA_PART_PATH)
 @ConditionalOnWebApplication
-@Tag(name = "portnet-metadata-controller", description = "Portnet Metadata Controller. " + ApiDeprecations.API_NOTE_2023_04_01)
+@Tag(name = "portnet-metadata-controller", description = "Portnet Metadata Controller. " + ApiDeprecations.API_NOTE_2023_05_15)
 public class PortnetMetadataController {
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";
     public static final String SSN_LOCATIONS_PATH =  "/locations";
@@ -53,8 +53,8 @@ public class PortnetMetadataController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
-    @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_2023_04_01)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
+    @Operation(summary = "Return all code descriptions. " + ApiDeprecations.API_NOTE_2023_05_15)
     @GetMapping(path = CODE_DESCRIPTIONS, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptions_V1 listCodeDescriptions() {
@@ -62,8 +62,8 @@ public class PortnetMetadataController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
-    @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_2023_04_01)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
+    @Operation(summary = "Return list of all berths, port areas and locations. " + ApiDeprecations.API_NOTE_2023_05_15)
     @GetMapping(path = SSN_LOCATIONS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections_V1 listAllMetadata() {
@@ -71,8 +71,8 @@ public class PortnetMetadataController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
-    @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code. " + ApiDeprecations.API_NOTE_2023_04_01)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
+    @Operation(summary = "Return one location's berths, port areas and location by SafeSeaNet location code. " + ApiDeprecations.API_NOTE_2023_05_15)
     @GetMapping(path = SSN_LOCATIONS_PATH + "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ssn location"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Ssn location not found", content = @Content),
@@ -83,8 +83,8 @@ public class PortnetMetadataController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
-    @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_2023_04_01)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
+    @Operation(summary = "Return list of SafeSeaNet locations by country name. " + ApiDeprecations.API_NOTE_2023_05_15)
     @GetMapping(path = SSN_LOCATIONS_BY_COUNTRY_PATH + "/{country}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public LocationFeatureCollections_V1 findSsnLocationsByCountry(@PathVariable(value = "country", required = true) final String country) {
@@ -92,8 +92,8 @@ public class PortnetMetadataController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
-    @Operation(summary = "Return list of vessels details. " + ApiDeprecations.API_NOTE_2023_04_01)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
+    @Operation(summary = "Return list of vessels details. " + ApiDeprecations.API_NOTE_2023_05_15)
     @GetMapping(path = VESSEL_DETAILS_PATH, produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
