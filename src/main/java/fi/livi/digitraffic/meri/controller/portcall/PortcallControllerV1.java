@@ -47,7 +47,7 @@ public class PortcallControllerV1 {
         "In this case you should try to narrow down your search criteria.\n\n" +
         "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
-    public static final String API_PORT_CALL_BETA = API_PORT_CALL + BETA;
+    public static final String API_PORT_CALL_V1_BETA = API_PORT_CALL + BETA;
     public static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
     public static final String PORT_CALLS = "/port-calls";
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";
@@ -161,14 +161,14 @@ public class PortcallControllerV1 {
     }
 
     @Operation(summary = "Return all ports with port areas and berths.")
-    @GetMapping(path = API_PORT_CALL_BETA + PORTS, produces = MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + PORTS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public PortLocationDtoV1 findPortsLocations() {
         return portCallServiceV1.findPortsLocations();
     }
 
     @Operation(summary = "Return one port with port areas and berths by SafeSeaNet location code (locode).")
-    @GetMapping(path = API_PORT_CALL_BETA + PORTS + "/{locode}", produces = MEDIA_TYPE_APPLICATION_JSON)
+    @GetMapping(path = API_PORT_CALL_V1 + PORTS + "/{locode}", produces = MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ports"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Location not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
