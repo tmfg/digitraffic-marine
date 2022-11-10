@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
+    /** Support for etag and conditional HTTP-requests */
     @Bean
     @ConditionalOnProperty(value = "etags.enabled", havingValue = "true")
     public Filter ShallowEtagHeaderFilter() {

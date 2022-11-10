@@ -86,10 +86,4 @@ public class MarineApplicationConfiguration {
         ConversionService object = bean.getObject();
         return object;
     }
-
-    /** Support for etag and conditional HTTP-requests */
-    @Bean
-    public Filter ShallowEtagHeaderFilter() {
-        return new ShallowEtagHeaderFilter();
-    }
 }
