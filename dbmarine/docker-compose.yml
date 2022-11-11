@@ -13,6 +13,8 @@ services:
     ports:
       - 54321:5432
     command: -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.max=10000 -c track_activity_query_size=2048 -c pg_stat_statements.track=all
+    networks:
+      - default
 
   db-init:
     image: flyway/flyway:9.3-alpine
@@ -22,6 +24,8 @@ services:
     command: "migrate"
     depends_on:
       - db
+    networks:
+      - default
 
   pghero:
     image: ankane/pghero
@@ -32,3 +36,9 @@ services:
       - 8081:8080
     depends_on:
       - db
+    networks:
+      - default
+
+networks:
+  default:
+    name: dbmarine
