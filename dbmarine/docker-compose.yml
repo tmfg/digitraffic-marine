@@ -19,8 +19,6 @@ services:
     volumes:
       - "./sql:/flyway/sql"
       - "./files:/flyway/conf"
-    links:
-      - "db:db"
     command: "migrate"
     depends_on:
       - db
@@ -30,8 +28,6 @@ services:
     restart: always
     environment:
         DATABASE_URL: postgres://marine:marine@db:5432/marine
-    links:
-      - "db:database" # postgres is reachable for pghero from web at the hostnames db and database
     ports:
       - 8081:8080
     depends_on:
