@@ -41,7 +41,7 @@ public class InfoControllerV1 {
 
     @Operation(summary = "Infos about apis data update times")
     @RequestMapping(method = RequestMethod.GET,
-                    path = API_INFO_BETA + UPDATE_TIMES,
+                    path = API_INFO_V1 + UPDATE_TIMES,
                     produces = { APPLICATION_JSON_VALUE })
     @ApiResponses(@ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of weather Station Feature Collections"))
     public UpdateInfosDtoV1 dataUpdatedInfos() {
