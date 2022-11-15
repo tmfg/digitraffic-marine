@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.controller.info;
 
 import static fi.livi.digitraffic.meri.controller.ApiConstants.API_INFO;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.BETA;
-import static fi.livi.digitraffic.meri.controller.ApiConstants.INFO_BETA_TAG;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.INFO_TAG_V1;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
 import static fi.livi.digitraffic.meri.controller.DtMediaType.APPLICATION_JSON_VALUE;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = INFO_BETA_TAG, description = "Info APIs")
+@Tag(name = INFO_TAG_V1)
 @RestController
 @Validated
 @ConditionalOnWebApplication

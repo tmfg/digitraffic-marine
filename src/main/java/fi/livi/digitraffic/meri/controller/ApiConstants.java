@@ -27,7 +27,7 @@ public final class ApiConstants {
 
 
     /** Info api */
-    public static final String INFO_BETA_TAG = "Info (BETA)";
+    public static final String INFO_TAG_V1 = "Info V1";
     public static final String API_INFO = API + "/info";
 
     // Apis in AWS ApiGW with Lambda implementation
