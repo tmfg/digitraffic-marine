@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_PORT_CALLS_PATH)
 @ConditionalOnWebApplication
-@Tag(name="port-call-controller", description = "Port Call Controller. " + ApiDeprecations.API_NOTE_2023_05_15)
+@Tag(name="port-call-controller", description = "Port Call Controller. " + ApiDeprecations.API_NOTE_2023_06_01)
 public class PortCallController {
     private final PortCallService_V1 portCallServiceV1;
 
@@ -49,8 +49,8 @@ public class PortCallController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
-    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_05_15, description = NOTE)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_06_01)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_06_01, description = NOTE)
     @GetMapping(produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -135,8 +135,8 @@ public class PortCallController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
-    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_05_15, description = NOTE)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_06_01)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_06_01, description = NOTE)
     @GetMapping(path = "/{locode}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -224,8 +224,8 @@ public class PortCallController {
     }
 
     @Deprecated(forRemoval = true)
-    @Sunset(date = ApiDeprecations.SUNSET_2023_05_15)
-    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_05_15, description = NOTE)
+    @Sunset(date = ApiDeprecations.SUNSET_2023_06_01)
+    @Operation(summary = "Find port calls. " + ApiDeprecations.API_NOTE_2023_06_01, description = NOTE)
     @GetMapping(path = "/from/{from}/to/{to}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
