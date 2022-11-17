@@ -64,7 +64,7 @@ public class PortCallUpdater {
                            final Optional<PortcallEstimateUpdater> portcallEstimateUpdater,
                            @Value("${portCallUpdateJob.maxTimeFrameToFetch:0}") final int maxTimeFrameToFetch,
                            @Value("${portCallUpdateJob.overlapTimeFrame:0}") final int overlapTimeFrame,
-                           @Value("portcall.logging.debug") final boolean debugLogging) {
+                           @Value("${portcall.logging.debug}") final boolean debugLogging) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallClient = portCallClient;
