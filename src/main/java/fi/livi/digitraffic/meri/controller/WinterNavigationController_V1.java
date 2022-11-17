@@ -31,6 +31,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Deprecated(forRemoval = true)
+@Sunset(date = ApiDeprecations.SUNSET_2023_04_01)
 @RestController
 @RequestMapping(API_V1_BASE_PATH + API_WINTER_NAVIGATION_PATH)
 @ConditionalOnWebApplication
