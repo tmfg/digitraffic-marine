@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
+import fi.livi.digitraffic.meri.util.StringUtil;
 
 @Service
 @ConditionalOnNotWebApplication
@@ -46,6 +47,11 @@ public class PortCallClient {
         final PortCallList portCallList = restTemplate.getForObject(url, PortCallList.class);
 
         logInfo(portCallList);
+
+        if (log.isDebugEnabled()) {
+            log.debug("method=getList url={} portCallList={}",
+                url, StringUtil.toJsonStringLogSafe(portCallList));
+        }
 
         return portCallList;
     }

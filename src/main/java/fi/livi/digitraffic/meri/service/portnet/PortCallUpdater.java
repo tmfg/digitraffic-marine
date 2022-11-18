@@ -139,11 +139,6 @@ public class PortCallUpdater {
             final Timestamp now = new Timestamp(Instant.now().toEpochMilli());
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
-            if(debugLogging) {
-                log.info("method=checkTimestamps portCallId={} currentTimestamp={} portCallList={}",
-                    pcn.getPortCallId().longValue(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
-            }
-
             if(timestamp == null) {
                 log.warn("method=checkTimestamps portCallId={} currentTimestamp={} portCallList={}",
                          pcn.getPortCallId().longValue(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
