@@ -58,8 +58,7 @@ public class PortCallUpdaterTest extends AbstractTestBase {
             portCallClient,
             Optional.of(new NoOpPortcallEstimateUpdater()),
             42,
-            42,
-            false);
+            42);
         server = MockRestServiceServer.createServer(jax2bRestTemplate);
     }
 

@@ -48,8 +48,6 @@ public class PortCallUpdater {
     private final PortCallClient portCallClient;
     private final PortcallEstimateUpdater portcallEstimateUpdater;
 
-    private final boolean debugLogging;
-
     private static final Logger log = LoggerFactory.getLogger(PortCallUpdater.class);
 
     private final int maxTimeFrameToFetch;
@@ -63,15 +61,13 @@ public class PortCallUpdater {
                            final PortCallClient portCallClient,
                            final Optional<PortcallEstimateUpdater> portcallEstimateUpdater,
                            @Value("${portCallUpdateJob.maxTimeFrameToFetch:0}") final int maxTimeFrameToFetch,
-                           @Value("${portCallUpdateJob.overlapTimeFrame:0}") final int overlapTimeFrame,
-                           @Value("${portcall.logging.debug}") final boolean debugLogging) {
+                           @Value("${portCallUpdateJob.overlapTimeFrame:0}") final int overlapTimeFrame) {
         this.portCallRepository = portCallRepository;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallClient = portCallClient;
         this.portcallEstimateUpdater = portcallEstimateUpdater.orElse(null);
         this.maxTimeFrameToFetch = maxTimeFrameToFetch;
         this.overlapTimeFrame = overlapTimeFrame;
-        this.debugLogging = debugLogging;
     }
 
     @Transactional
