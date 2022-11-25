@@ -136,14 +136,16 @@ public class PortCallUpdater {
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
             if(timestamp == null) {
-                log.warn("method=checkTimestamps portCallId={} currentTimestamp={} portCallList={}",
-                         pcn.getPortCallId().longValue(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
+                log.warn("method=checkTimestamps portCallId={} currentTimestamp={} status={} portCallList={}",
+                         pcn.getPortCallId().longValue(), now.getTime(), "nullTimestamp", StringUtil.toJsonStringLogSafe(list));
+                // retry update after a null timestamp
+                return false;
             } else if(timestamp.after(now)) {
-                log.warn("method=checkTimestamps portCallId={} futureTimestamp={} currentTimestamp={} portCallList={}",
-                         pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
+                log.warn("method=checkTimestamps portCallId={} portCallTimestamp={} currentTimestamp={} status={} portCallList={}",
+                         pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), "timestampInFuture", StringUtil.toJsonStringLogSafe(list));
             } else if(timestamp.before(MIN_TIMESTAMP)) {
-                log.warn("method=checkTimestamps portCallId={} pastTimestamp={} portCallList={}",
-                         pcn.getPortCallId().longValue(), timestamp.getTime(), StringUtil.toJsonStringLogSafe(list));
+                log.warn("method=checkTimestamps portCallId={} portCallTimestamp={} status={} portCallList={}",
+                         pcn.getPortCallId().longValue(), timestamp.getTime(), "timestampInPast", StringUtil.toJsonStringLogSafe(list));
                 return false;
             }
         }
