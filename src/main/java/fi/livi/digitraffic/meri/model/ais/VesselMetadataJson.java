@@ -13,7 +13,7 @@ public interface VesselMetadataJson {
     @Schema(description = "Name of the vessel, maximum 20 characters using 6-bit ASCII", required = true)
     String getName();
 
-    @Schema(description = "Vessel type", allowableValues = "range[0,255]", required = true)
+    @Schema(description = "Vessel's AIS ship type", minimum = "0", maximum = "255", required = true)
     int getShipType();
 
     @Schema(description = "Reference point for reported position dimension A", required = true)
@@ -38,10 +38,10 @@ public interface VesselMetadataJson {
             + "7 = surveyed\n"
             + "8 = Galileo,\n"
             + "9-14 = not used\n"
-            + "15 = internal GNSS", allowableValues = "range[0,15]", required = true)
+            + "15 = internal GNSS", minimum = "0", maximum = "15", required = true)
     int getPosType();
 
-    @Schema(description = "Maximum present static draught in 1/10m, 255 = draught 25.5 m or greater, 0 = not available (default)", allowableValues = "range[0,255]", required = true)
+    @Schema(description = "Maximum present static draught in 1/10m, 255 = draught 25.5 m or greater, 0 = not available (default)", minimum = "0", maximum = "255", required = true)
     int getDraught();
 
     @Schema(description = "Vessel International Maritime Organization (IMO) number", required = true)
