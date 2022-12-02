@@ -18,3 +18,15 @@ BEGIN
   RETURN NEW;
 END;
 $$ language 'plpgsql';
+
+-- Updates modified column only when data in content column has changed
+CREATE OR REPLACE FUNCTION update_modified_column_when_content_updated()
+  RETURNS TRIGGER AS $$
+BEGIN
+  -- remove field from json with -
+  IF (to_jsonb(OLD.content)) <> (to_jsonb(NEW.content)) THEN
+    NEW.modified = now();
+  END IF;
+  RETURN NEW;
+END;
+$$ language 'plpgsql';

@@ -1,6 +1,8 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS_CHECK;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS_TO;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.math.BigInteger;
@@ -72,7 +74,7 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS);
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS_TO);
         final ZonedDateTime now = ZonedDateTime.now().minusMinutes(1); // be sure not to go into future
         final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus(overlapTimeFrame, MILLIS);
         final ZonedDateTime to = TimeUtil.millisBetween(now, from) > maxTimeFrameToFetch ? from.plus(maxTimeFrameToFetch, MILLIS) : now;
@@ -103,18 +105,21 @@ public class PortCallUpdater {
         final boolean timeStampsOk = checkTimestamps(list);
 
         if(timeStampsOk) {
-            updatePortCalls(list);
+            if (updatePortCalls(list)) {
+                updatedTimestampRepository.setUpdated(PORT_CALLS, to, getClass().getSimpleName());
+            }
         }
 
-        // set portcalls updated if timestamps were ok or tried second time
+        // set port calls checked if timestamps were ok or tried second time
         if(timeStampsOk || setUpdatedOnFail) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS, to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS_TO, to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS_CHECK, Instant.now(), getClass().getSimpleName());
         }
 
         return timeStampsOk;
     }
 
-    private void updatePortCalls(final PortCallList list) {
+    private boolean updatePortCalls(final PortCallList list) {
         final List<PortCall> added = new ArrayList<>();
         final List<PortCall> updated = new ArrayList<>();
 
@@ -128,6 +133,7 @@ public class PortCallUpdater {
         portCallRepository.saveAll(added);
 
         log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
+        return !added.isEmpty() || !updated.isEmpty();
     }
 
     private boolean checkTimestamps(final PortCallList list) {

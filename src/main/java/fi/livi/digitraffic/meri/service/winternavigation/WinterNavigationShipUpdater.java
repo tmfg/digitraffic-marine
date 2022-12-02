@@ -1,14 +1,17 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS_CHECK;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -72,7 +75,7 @@ public class WinterNavigationShipUpdater {
         final List<WinterNavigationShip> updated = new ArrayList<>();
 
         final Map<String, WinterNavigationShip> shipsByVesselPK =
-            winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toMap(s -> s.getVesselPK(), s -> s));
+            winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toMap(WinterNavigationShip::getVesselPK, s -> s));
 
         final StopWatch stopWatch = StopWatch.createStarted();
         data.getWinterShip().forEach(ship -> update(ship, added, updated, shipsByVesselPK));
@@ -81,9 +84,11 @@ public class WinterNavigationShipUpdater {
 
         log.info("method=updateWinterNavigationShips addedShips={} , updatedShips={} , tookMs={}", added.size(), updated.size(), stopWatch.getTime());
 
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_SHIPS,
-                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
-                                              getClass().getSimpleName());
+        final Instant now = Instant.now();
+        if (!added.isEmpty() || !updated.isEmpty()) {
+            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_VESSELS, now, getClass().getSimpleName());
+        }
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_VESSELS_CHECK, now, getClass().getSimpleName());
 
         return added.size() + updated.size();
     }

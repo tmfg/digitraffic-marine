@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_SHIPS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -84,7 +84,7 @@ public class WinterNavigationService {
     public WinterNavigationShipFeatureCollection getWinterNavigationShips() {
         final Stream<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_SHIPS);
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_VESSELS);
 
         final List<WinterNavigationShipFeature> shipFeatures =
             ships.map(s -> new WinterNavigationShipFeature(s.getVesselPK(),
@@ -129,16 +129,19 @@ public class WinterNavigationService {
         throw new ObjectNotFoundException(WinterNavigationPort.class, locode);
     }
 
-    private Geometry dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {
-        Geometry geometry;
+    private Geometry<?> dirwayGeometry(final List<WinterNavigationDirwayPoint> dirwayPoints) {
+        Geometry<?> geometry;
         if (dirwayPoints.size() == 1) {
             geometry = new Point(dirwayPoints.get(0).getLongitude(), dirwayPoints.get(0).getLatitude());
         } else {
             geometry = new LineString();
-            geometry.setCoordinates(dirwayPoints.stream().sorted(Comparator.comparing(WinterNavigationDirwayPoint::getOrderNumber))
-                                        .map(p -> Arrays.asList(p.getLongitude(), p.getLatitude())).collect(Collectors.toList()));
+            ((Geometry<List<List<Double>>>)geometry)
+                .setCoordinates(dirwayPoints.stream()
+                                            .sorted(Comparator.comparing(WinterNavigationDirwayPoint::getOrderNumber))
+                                            .map(p -> Arrays.asList(p.getLongitude(), p.getLatitude()))
+                                            .collect(Collectors.toList()));
         }
-        geometry.setAdditionalProperty("seaAreas", dirwayPoints.stream().map(d -> d.getSeaArea()).collect(Collectors.toList()));
+        geometry.setAdditionalProperty("seaAreas", dirwayPoints.stream().map(WinterNavigationDirwayPoint::getSeaArea).collect(Collectors.toList()));
         return geometry;
     }
 

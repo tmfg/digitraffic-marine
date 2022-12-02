@@ -42,7 +42,7 @@ public class DefaultExceptionHandler {
     private static final Set<Class<? extends Exception>> errorLoggableExceptions = Set.of(ConstraintViolationException.class, ResourceAccessException.class);
 
     // no need to log these exceptions at all
-    private static final Set<Class<? extends Exception>> nonLoggableExceptions = Set.of(ObjectNotFoundException.class);
+    private static final Set<Class<? extends Exception>> nonLoggableExceptions = Set.of(ObjectNotFoundException.class, BadRequestException.class);
 
     public DefaultExceptionHandler(final Logger exceptionHandlerLogger) {
         this.logger = exceptionHandlerLogger;

@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.dao;
 
 import static java.time.ZoneOffset.UTC;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -20,15 +19,24 @@ public interface UpdatedTimestampRepository extends SqlRepository {
 
     enum UpdatedName {
         PORT_CALLS,
+        PORT_CALLS_CHECK,
+        PORT_CALLS_TO,
         PORT_METADATA,
+        PORT_VESSEL_DETAILS,
+        PORT_VESSEL_DETAILS_CHECK,
         SSE_DATA,
-        VESSEL_DETAILS,
+        SSE_DATA_CHECK,
         WINTER_NAVIGATION_PORTS,
-        WINTER_NAVIGATION_SHIPS,
+        WINTER_NAVIGATION_PORTS_CHECK,
+        WINTER_NAVIGATION_VESSELS,
+        WINTER_NAVIGATION_VESSELS_CHECK,
         WINTER_NAVIGATION_DIRWAYS,
+        WINTER_NAVIGATION_DIRWAYS_CHECK,
 
         BRIDGE_LOCK_DISRUPTIONS,
-        ATON_FAULTS
+        BRIDGE_LOCK_DISRUPTIONS_CHECK,
+        ATON_FAULTS,
+        ATON_FAULTS_CHECK
     }
 
     enum JsonCacheKey {
@@ -82,13 +90,16 @@ public interface UpdatedTimestampRepository extends SqlRepository {
     }
 
     @Query(value =
-        "select si.id, si.source, si.update_interval as updateInterval\n" +
+        "select si.id" +
+        "     , si.source" +
+        "     , si.update_interval as updateInterval\n" +
+        "     , si.recommended_fetch_interval as recommendedFetchInterval\n" +
         "from data_source_info si\n" +
         "WHERE id = :#{#dataSource.name()}", nativeQuery = true)
     DataSourceInfoDtoV1 getDataSourceInfo(final DataSource dataSource);
 
 
-    default Duration getDataSourceUpdateInterval(final DataSource dataSource) {
+    default String getDataSourceUpdateInterval(final DataSource dataSource) {
         return Optional.ofNullable(getDataSourceInfo(dataSource))
             .flatMap(sourceInfoDtoV1 -> Optional.ofNullable(sourceInfoDtoV1 != null ?
                                                             sourceInfoDtoV1.getUpdateInterval() :
@@ -101,4 +112,10 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         "from cached_json j\n" +
         "where j.cache_id in (:#{#cacheKeys.![getKey()]})", nativeQuery = true)
     Instant getNauticalWarningsLastUpdated(final JsonCacheKey...cacheKeys);
+
+    @Query(value =
+               "select max(j.modified)\n" +
+               "from cached_json j\n" +
+               "where j.cache_id in (:#{#cacheKeys.![getKey()]})", nativeQuery = true)
+    Instant getNauticalWarningsLastModified(final JsonCacheKey...cacheKeys);
 }

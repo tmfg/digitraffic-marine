@@ -1,7 +1,9 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS_CHECK;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ws.soap.client.SoapFaultClientException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
@@ -64,7 +64,7 @@ public class WinterNavigationDirwayUpdater {
             return -1;
         }
 
-        final List<String> names = data.getDirWay().stream().map(d -> d.getName()).collect(Collectors.toList());
+        final List<String> names = data.getDirWay().stream().map(DirWayType::getName).collect(Collectors.toList());
         final long deletedCount;
 
         if(names.isEmpty()) {
@@ -89,6 +89,12 @@ public class WinterNavigationDirwayUpdater {
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS,
                                               data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
                                               getClass().getSimpleName());
+
+        final Instant now = Instant.now();
+        if (!added.isEmpty() || !updated.isEmpty()) {
+            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS, now, getClass().getSimpleName());
+        }
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS_CHECK, now, getClass().getSimpleName());
 
         return added.size() + updated.size();
     }
@@ -129,7 +135,7 @@ public class WinterNavigationDirwayUpdater {
 
     private void updateDirwayPoints(final WinterNavigationDirway d, final DirWayType.DirWayPoints dirwayPoints) {
         d.getDirwayPoints().clear();
-        winterNavigationDirwayPointRepository.deleteInBatch(d.getDirwayPoints());
+        winterNavigationDirwayPointRepository.deleteAllInBatch(d.getDirwayPoints());
         winterNavigationDirwayPointRepository.flush();
 
         if (dirwayPoints == null) {

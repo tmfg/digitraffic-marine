@@ -101,7 +101,7 @@ public class DefaultExceptionHandlerTest extends AbstractTestBase {
 
     @Test
     public void badRequestException() throws Exception {
-        testException(BadRequestException.class, 400, LogMode.INFO);
+        testException(BadRequestException.class, 400, LogMode.NONE);
     }
 
     @Test
