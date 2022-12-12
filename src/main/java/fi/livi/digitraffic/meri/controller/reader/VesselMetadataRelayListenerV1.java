@@ -27,7 +27,7 @@ import static fi.livi.digitraffic.meri.util.MqttUtil.getTopicForMessage;
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("ais.reader.enabled")
 public class VesselMetadataRelayListenerV1 implements AisMessageListener {
-    private final MqttMessageSender mqttMessageSender;
+//    private final MqttMessageSender mqttMessageSender;
 
     private static final String VESSELS_METADATA_V1_TOPIC = "vessels/%d/metadata";
     public static final String VESSEL_STATUS_V1_TOPIC ="vessels/status";
@@ -37,21 +37,21 @@ public class VesselMetadataRelayListenerV1 implements AisMessageListener {
     public VesselMetadataRelayListenerV1(final MqttRelayQueue mqttRelayQueue,
                                          final ObjectMapper objectMapper,
                                          final CachedLocker aisCachedLocker) {
-        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_METADATA, aisCachedLocker);
+//        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_METADATA, aisCachedLocker);
     }
 
     @Override
     public void receiveMessage(final AisRadioMsg message) {
-        if (message.isMmsiAllowed() && mqttMessageSender.hasLock()) {
-            final VesselMessage vm = AisMessageConverter.convertMetadata(message);
-
-            if (vm.validate()) {
-                final VesselMetadata mqttMessage = new VesselMetadata(vm.vesselAttributes);
-                final String topic = getTopicForMessage(VESSELS_METADATA_V1_TOPIC, vm.vesselAttributes.mmsi);
-                mqttMessageSender.sendMqttMessage(ZonedDateTime.now(), new MqttDataMessageV2(topic, mqttMessage));
-
-                VesselLoggingListener.sentAisMessagesStatistics(METADATA, true);
-            }
-        }
+//        if (message.isMmsiAllowed() && mqttMessageSender.hasLock()) {
+//            final VesselMessage vm = AisMessageConverter.convertMetadata(message);
+//
+//            if (vm.validate()) {
+//                final VesselMetadata mqttMessage = new VesselMetadata(vm.vesselAttributes);
+//                final String topic = getTopicForMessage(VESSELS_METADATA_V1_TOPIC, vm.vesselAttributes.mmsi);
+//                mqttMessageSender.sendMqttMessage(ZonedDateTime.now(), new MqttDataMessageV2(topic, mqttMessage));
+//
+//                VesselLoggingListener.sentAisMessagesStatistics(METADATA, true);
+//            }
+//        }
     }
 }
