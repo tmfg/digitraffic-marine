@@ -41,7 +41,7 @@ public class SseMqttSenderV1 {
         this.mqttMessageSender.setLastUpdated(ZonedDateTime.now());
     }
 
-    @Scheduled(fixedRate = 10000)
+//    @Scheduled(fixedRate = 10000)
     public void checkNewSseReports() {
         if (mqttMessageSender.hasLock()) {
             final List<SseFeature> features = sseServiceV1.findCreatedAfter(mqttMessageSender.getLastUpdated().toInstant()).getFeatures();

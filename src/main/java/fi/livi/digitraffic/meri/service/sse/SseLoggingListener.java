@@ -39,7 +39,7 @@ public class SseLoggingListener {
         this.sseCachedLocker = sseCachedLocker;
         this.sseMqttSenderV1 = sseMqttSenderV1;
 
-        executor.scheduleAtFixedRate(this::sendStatusAndLogSentStatistics, 30, 60, TimeUnit.SECONDS);
+//        executor.scheduleAtFixedRate(this::sendStatusAndLogSentStatistics, 30, 60, TimeUnit.SECONDS);
     }
 
     public enum SseLoggingType {
