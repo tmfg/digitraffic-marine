@@ -25,7 +25,6 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         PORT_VESSEL_DETAILS,
         PORT_VESSEL_DETAILS_CHECK,
         SSE_DATA,
-        SSE_DATA_CHECK,
         WINTER_NAVIGATION_PORTS,
         WINTER_NAVIGATION_PORTS_CHECK,
         WINTER_NAVIGATION_VESSELS,

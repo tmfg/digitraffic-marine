@@ -111,7 +111,7 @@ public class DataStatusService {
         return Collections.singletonList(
             new UpdateInfoDtoV1(SseControllerV1.API_SSE_V1 + SseControllerV1.MEASUREMENTS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.SSE_DATA),
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.SSE_DATA_CHECK),
+                                null, // Data is pushed to DT
                                 info.getUpdateInterval(), info.getRecommendedFetchInterval())
         );
     }
