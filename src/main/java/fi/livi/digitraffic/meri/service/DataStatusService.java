@@ -215,7 +215,7 @@ public class DataStatusService {
         final DataSourceInfoDtoV1 info = getDataSourceInfo(DataSource.ATON_FAULTS);
         return Collections.singletonList(
             new UpdateInfoDtoV1(ApiConstants.API_ATON_V1_FAULTS,
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.ATON_FAULTS),
+                                updatedTimestampRepository.getAtonVaultsLastModified(),
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.ATON_FAULTS_CHECK),
                                 info.getUpdateInterval(), info.getRecommendedFetchInterval())
         );

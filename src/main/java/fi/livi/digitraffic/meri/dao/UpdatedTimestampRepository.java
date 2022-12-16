@@ -117,4 +117,9 @@ public interface UpdatedTimestampRepository extends SqlRepository {
                "from cached_json j\n" +
                "where j.cache_id in (:#{#cacheKeys.![getKey()]})", nativeQuery = true)
     Instant getNauticalWarningsLastModified(final JsonCacheKey...cacheKeys);
+
+    @Query(value =
+               "select max(av.modified)\n" +
+               "from aton_fault av\n", nativeQuery = true)
+    Instant getAtonVaultsLastModified();
 }
