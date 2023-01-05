@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
@@ -30,6 +31,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.google.common.collect.Iterables;
+
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.util.StringUtil;
@@ -39,10 +41,15 @@ public class DefaultExceptionHandler {
     private final Logger logger;
 
     // log these exceptions with error
-    private static final Set<Class<? extends Exception>> errorLoggableExceptions = Set.of(ConstraintViolationException.class, ResourceAccessException.class);
+    private static final Set<Class<? extends Exception>> errorLoggableExceptions = Set.of(
+        ResourceAccessException.class
+    );
 
     // no need to log these exceptions at all
-    private static final Set<Class<? extends Exception>> nonLoggableExceptions = Set.of(ObjectNotFoundException.class, BadRequestException.class);
+    private static final Set<Class<? extends Exception>> nonLoggableExceptions = Set.of(
+        ObjectNotFoundException.class,
+        BadRequestException.class
+    );
 
     public DefaultExceptionHandler(final Logger exceptionHandlerLogger) {
         this.logger = exceptionHandlerLogger;
