@@ -29,7 +29,7 @@ public class SseMqttSenderV2 {
     private static final String SSE_V2_DATA_TOPIC = "sse-v2/site/%d";
     private static final String SSE_V2_STATUS_TOPIC ="sse-v2/status";
 
-    private static final Logger LOG = LoggerFactory.getLogger(SseMqttSenderV1.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SseMqttSenderV2.class);
 
     public SseMqttSenderV2(final MqttRelayQueue mqttRelayQueue,
                            final ObjectMapper objectMapper,
@@ -57,7 +57,7 @@ public class SseMqttSenderV2 {
         }
     }
 
-    private MqttDataMessageV2 createMqttDataMessage(final SseFeature feature) {
+    public static MqttDataMessageV2 createMqttDataMessage(final SseFeature feature) {
         final String topic = MqttUtil.getTopicForMessage(SSE_V2_DATA_TOPIC, feature.getProperties().siteNumber);
 
         return new MqttDataMessageV2(topic, new MqttSseMessageV2(feature));

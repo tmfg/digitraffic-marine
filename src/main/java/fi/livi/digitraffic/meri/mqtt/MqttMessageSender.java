@@ -94,18 +94,4 @@ public class MqttMessageSender {
 
         return true;
     }
-
-    public boolean sendStatusMessageV1(final String topic, final Object status) {
-        try {
-            final String statusAsString = objectMapper.writeValueAsString(status);
-
-            mqttRelayQueue.queueMqttMessage(topic, statusAsString, STATUS);
-        } catch (final Exception e) {
-            log.error("error sending status", e);
-
-            return false;
-        }
-
-        return true;
-    }
 }

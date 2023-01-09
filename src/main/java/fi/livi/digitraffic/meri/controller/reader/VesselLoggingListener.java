@@ -1,14 +1,9 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.livi.digitraffic.meri.controller.CachedLocker;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageReader;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisTcpSocketClient;
-import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
-import fi.livi.digitraffic.meri.mqtt.MqttStatusMessageV1;
-import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -23,8 +18,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static fi.livi.digitraffic.meri.controller.reader.VesselMetadataRelayListenerV1.VESSEL_STATUS_V1_TOPIC;
-
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("ais.reader.enabled")
@@ -35,22 +28,13 @@ public class VesselLoggingListener implements AisMessageListener {
     private static final Map<AISLoggingType, ReadStatistics> readStatisticsMap = new ConcurrentHashMap<>();
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
-    private final CachedLocker aisCachedLocker;
-    private final MqttMessageSender vesselSender;
     private final AisMessageReader messageReader;
 
-    public VesselLoggingListener(final MqttRelayQueue mqttRelayQueue,
-                                 final ObjectMapper objectMapper,
-                                 final CachedLocker aisCachedLocker,
-                                 final AisMessageReader messageReader) {
-        this.aisCachedLocker = aisCachedLocker;
-        this.vesselSender = new MqttMessageSender(log, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, aisCachedLocker);
+    public VesselLoggingListener(final AisMessageReader messageReader) {
         this.messageReader = messageReader;
 
         executor.scheduleAtFixedRate(this::logReadStatistics, 30, 60, TimeUnit.SECONDS);
         executor.scheduleAtFixedRate(this::logSentStatistics, 30, 60, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(this::readStatus, 30, 10, TimeUnit.SECONDS);
     }
 
     public enum AISLoggingType {
@@ -164,34 +148,6 @@ public class VesselLoggingListener implements AisMessageListener {
                 sentStatistics != null ? sentStatistics.failures : 0);
 
             sentStatisticsMap.put(aisMessageType, new SentStatistics(0, 0));
-        }
-    }
-
-    private synchronized void readStatus() {
-        if (aisCachedLocker.hasLock()) {
-            final ConnectionStatistics cs = (ConnectionStatistics)readStatisticsMap.get(AISLoggingType.CONNECTION);
-
-            int errorsCount = 0;
-
-            for (final AISLoggingType aisMessageType : Arrays.asList(AISLoggingType.POSITION, AISLoggingType.METADATA, AISLoggingType.STATUS)) {
-                final SentStatistics sentStatistics = sentStatisticsMap.get(aisMessageType);
-
-                if (sentStatistics != null) {
-                    errorsCount += sentStatistics.failures;
-                }
-            }
-
-            final MqttStatusMessageV1 statusMessage = new MqttStatusMessageV1(
-                (cs != null) ? cs.status.toString() : AisTcpSocketClient.ConnectionStatus.UNDEFINED.toString(),
-                (cs != null) ? cs.readProblems : 0,
-                errorsCount
-            );
-
-            try {
-                sentAisMessagesStatistics(AISLoggingType.STATUS, vesselSender.sendStatusMessageV1(VESSEL_STATUS_V1_TOPIC, statusMessage));
-            } catch (final Exception e) {
-                log.error("Json parse error", e);
-            }
         }
     }
 
