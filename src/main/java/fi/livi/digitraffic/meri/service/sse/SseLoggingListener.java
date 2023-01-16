@@ -12,14 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
-import fi.livi.digitraffic.meri.mqtt.MqttMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import fi.livi.digitraffic.meri.controller.CachedLocker;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -31,14 +28,7 @@ public class SseLoggingListener {
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-    private final CachedLocker sseCachedLocker;
-    private final SseMqttSenderV1 sseMqttSenderV1;
-
-    public SseLoggingListener(final CachedLocker sseCachedLocker,
-                              final SseMqttSenderV1 sseMqttSenderV1) {
-        this.sseCachedLocker = sseCachedLocker;
-        this.sseMqttSenderV1 = sseMqttSenderV1;
-
+    public SseLoggingListener() {
         executor.scheduleAtFixedRate(this::sendStatusAndLogSentStatistics, 30, 60, TimeUnit.SECONDS);
     }
 
@@ -72,7 +62,6 @@ public class SseLoggingListener {
     }
 
     private synchronized void sendStatusAndLogSentStatistics() {
-        sendStatus();
         logSentStatistics();
     }
 
@@ -86,34 +75,6 @@ public class SseLoggingListener {
                 sentStatistics != null ? sentStatistics.failures : 0);
 
             sentStatisticsMap.put(sseMessageType, new Statistics(0, 0));
-        }
-    }
-
-    private void sendStatus() {
-        if (sseCachedLocker.hasLock()) {
-
-            int sendCount = 0;
-            int errorCount = 0;
-
-            for (final SseLoggingType sseMessageType : Arrays.asList(SseLoggingType.DATA, SseLoggingType.STATUS)) {
-                final Statistics sentStatistics = sentStatisticsMap.get(sseMessageType);
-
-                if (sentStatistics != null) {
-                    sendCount += sentStatistics.messages;
-                }
-                if (sentStatistics != null) {
-                    errorCount += sentStatistics.failures;
-                }
-            }
-
-            final Statistics statusMessage = new StatusMessage(sendCount+1, errorCount);
-
-            try {
-                boolean sendStatus = sseMqttSenderV1.sendStatusMessage(statusMessage);
-                addSendStatusMessagesStatistics(sendStatus);
-            } catch (final Exception e) {
-                log.error("Json parse error", e);
-            }
         }
     }
 

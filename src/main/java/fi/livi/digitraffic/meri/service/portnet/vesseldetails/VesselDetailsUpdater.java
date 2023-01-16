@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.VESSEL_DETAILS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS_CHECK;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -42,7 +43,7 @@ public class VesselDetailsUpdater {
 
     @Transactional
     public void update() {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(VESSEL_DETAILS);
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_VESSEL_DETAILS);
 
         updateVesselDetails(lastUpdated);
     }
@@ -54,7 +55,7 @@ public class VesselDetailsUpdater {
         final VesselList vesselList = vesselDetailsClient.getVesselList(from);
 
         if (isListOk(vesselList)) {
-            updatedTimestampRepository.setUpdated(VESSEL_DETAILS, now, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_VESSEL_DETAILS, now, getClass().getSimpleName());
 
             final List<VesselDetails> added = new ArrayList<>();
             final List<VesselDetails> updated = new ArrayList<>();
@@ -67,6 +68,7 @@ public class VesselDetailsUpdater {
 
             log.info("vesselDetailAddedCount={} vesselDetailUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
         }
+        updatedTimestampRepository.setUpdated(PORT_VESSEL_DETAILS_CHECK, now, getClass().getSimpleName());
     }
 
     private void update(final fi.livi.digitraffic.meri.portnet.xsd.VesselDetails vd, final List<VesselDetails> added, final List<VesselDetails> updated) {

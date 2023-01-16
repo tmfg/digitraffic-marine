@@ -1,7 +1,9 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS_CHECK;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,9 +92,11 @@ public class WinterNavigationPortUpdater {
         log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
                  data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS,
-                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
-                                              getClass().getSimpleName());
+        final Instant now = Instant.now();
+        if (!added.isEmpty() || !updated.isEmpty()) {
+            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS, now, getClass().getSimpleName());
+        }
+        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS_CHECK, now, getClass().getSimpleName());
 
         return added.size() + updated.size();
     }

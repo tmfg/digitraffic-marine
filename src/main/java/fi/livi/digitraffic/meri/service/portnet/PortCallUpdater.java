@@ -1,6 +1,8 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS_CHECK;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS_TO;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.math.BigInteger;
@@ -72,7 +74,7 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS);
+        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS_TO);
         final ZonedDateTime now = ZonedDateTime.now().minusMinutes(1); // be sure not to go into future
         final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus(overlapTimeFrame, MILLIS);
         final ZonedDateTime to = TimeUtil.millisBetween(now, from) > maxTimeFrameToFetch ? from.plus(maxTimeFrameToFetch, MILLIS) : now;
@@ -103,18 +105,21 @@ public class PortCallUpdater {
         final boolean timeStampsOk = checkTimestamps(list);
 
         if(timeStampsOk) {
-            updatePortCalls(list);
+            if (updatePortCalls(list)) {
+                updatedTimestampRepository.setUpdated(PORT_CALLS, to, getClass().getSimpleName());
+            }
         }
 
-        // set portcalls updated if timestamps were ok or tried second time
+        // set port calls checked if timestamps were ok or tried second time
         if(timeStampsOk || setUpdatedOnFail) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS, to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS_TO, to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS_CHECK, Instant.now(), getClass().getSimpleName());
         }
 
         return timeStampsOk;
     }
 
-    private void updatePortCalls(final PortCallList list) {
+    private boolean updatePortCalls(final PortCallList list) {
         final List<PortCall> added = new ArrayList<>();
         final List<PortCall> updated = new ArrayList<>();
 
@@ -128,6 +133,7 @@ public class PortCallUpdater {
         portCallRepository.saveAll(added);
 
         log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
+        return !added.isEmpty() || !updated.isEmpty();
     }
 
     private boolean checkTimestamps(final PortCallList list) {
@@ -136,14 +142,16 @@ public class PortCallUpdater {
             final Timestamp timestamp = getTimestamp(pcn.getPortCallTimestamp());
 
             if(timestamp == null) {
-                log.warn("method=checkTimestamps portCallId={} currentTimestamp={} portCallList={}",
-                         pcn.getPortCallId().longValue(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
+                log.warn("method=checkTimestamps portCallId={} currentTimestamp={} status={} portCallList={}",
+                         pcn.getPortCallId().longValue(), now.getTime(), "nullTimestamp", StringUtil.toJsonStringLogSafe(list));
+                // retry update after a null timestamp
+                return false;
             } else if(timestamp.after(now)) {
-                log.warn("method=checkTimestamps portCallId={} futureTimestamp={} currentTimestamp={} portCallList={}",
-                         pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), StringUtil.toJsonStringLogSafe(list));
+                log.warn("method=checkTimestamps portCallId={} portCallTimestamp={} currentTimestamp={} status={} portCallList={}",
+                         pcn.getPortCallId().longValue(), timestamp.getTime(), now.getTime(), "timestampInFuture", StringUtil.toJsonStringLogSafe(list));
             } else if(timestamp.before(MIN_TIMESTAMP)) {
-                log.warn("method=checkTimestamps portCallId={} pastTimestamp={} portCallList={}",
-                         pcn.getPortCallId().longValue(), timestamp.getTime(), StringUtil.toJsonStringLogSafe(list));
+                log.warn("method=checkTimestamps portCallId={} portCallTimestamp={} status={} portCallList={}",
+                         pcn.getPortCallId().longValue(), timestamp.getTime(), "timestampInPast", StringUtil.toJsonStringLogSafe(list));
                 return false;
             }
         }

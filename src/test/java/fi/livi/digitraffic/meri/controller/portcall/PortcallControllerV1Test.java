@@ -43,7 +43,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listAllPortCalls() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS + "?vesselName=test")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
@@ -53,7 +53,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listPortCallsFromLocodeByVesselName() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS + "?locode=FIHEL&vesselName=test")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
@@ -63,7 +63,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listAllPortCallsFromLocodeSucceeds() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS + "?locode=FIHEL")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
@@ -73,7 +73,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listPortsSucceeds() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
@@ -86,7 +86,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listPortsWithLocodeSucceeds() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS + "/FIHEL")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
@@ -100,7 +100,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listPortsWithUnknownLocodeFails() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS + "/" + UNKNOWN_LOCODE)))
             .andExpect(status().isNotFound())
         ;
@@ -108,7 +108,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listCodeDescriptionsSucceeds() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.CODE_DESCRIPTIONS)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
@@ -121,7 +121,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
 
     @Test
     public void listVesselDetailsSucceeds() throws Exception {
-        logInfoResponse(
+        logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.VESSEL_DETAILS)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))

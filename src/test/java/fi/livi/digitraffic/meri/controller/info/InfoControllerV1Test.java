@@ -23,7 +23,7 @@ public class InfoControllerV1Test extends AbstractTestBase {
         final String portCallInterval = dataStatusService.getDataSourceUpdateInterval(DataSource.PORT_CALL).toString();
 
         final ResultActions response =
-            logInfoResponse(
+            logDebugResponse(
                 executeGet(InfoControllerV1.API_INFO_V1 + InfoControllerV1.UPDATE_TIMES));
         expectOk(response)
             .andExpect(jsonPath("updateTimes[*].api").exists())
