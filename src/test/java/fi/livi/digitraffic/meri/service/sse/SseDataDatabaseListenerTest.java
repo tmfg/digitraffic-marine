@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.sse;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.Confidence;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.LightStatus;
 import static fi.livi.digitraffic.meri.model.sse.SseProperties.Trend;
+import static fi.livi.digitraffic.meri.service.sse.SseMqttSenderV2.createMqttDataMessage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -18,17 +19,13 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import fi.livi.digitraffic.meri.mqtt.MqttDataMessageV2;
+
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -56,7 +53,7 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
     private MqttRelayQueue mqttRelayQueue;
 
     @SpyBean
-    private SseMqttSenderV1 sseMqttSenderV1;
+    private SseMqttSenderV2 sseMqttSenderV2;
 
     @Autowired
     private SseReportRepository sseReportRepository;
@@ -93,7 +90,7 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
         saveReports(sse2);
         saveReports(sse3);
         // Trigger scheduled run
-        ReflectionTestUtils.invokeMethod(sseMqttSenderV1,  "checkNewSseReports");
+        triggerSheduledTask();
         final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         // 3 times as 1. is counted also
         verify(mqttRelayQueue, Mockito.times(3)).queueMqttMessage(any(), argumentCaptor.capture(), any());
@@ -101,22 +98,17 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
         assertEquals(3, capturedValues.size());
 
         // Check the that reports are send to mqtt in right order and they equals with original data
-        assertSseFeaturesEquals(sse1.getFeatures().get(0), convertFromString(capturedValues.get(0)));
-        assertSseFeaturesEquals(sse2.getFeatures().get(0), convertFromString(capturedValues.get(1)));
-        assertSseFeaturesEquals(sse3.getFeatures().get(0), convertFromString(capturedValues.get(2)));
-    }
-
-    private SseFeature convertFromString(final String value) throws JsonProcessingException {
-        return objectMapper.readerFor(SseFeature.class).readValue(value);
+        assertSseFeaturesEquals(sse1.getFeatures().get(0), capturedValues.get(0));
+        assertSseFeaturesEquals(sse2.getFeatures().get(0), capturedValues.get(1));
+        assertSseFeaturesEquals(sse3.getFeatures().get(0), capturedValues.get(2));
     }
 
     private void triggerSheduledTask() {
-        ReflectionTestUtils.invokeMethod(sseMqttSenderV1,  "checkNewSseReports");
+        ReflectionTestUtils.invokeMethod(sseMqttSenderV2,  "checkNewSseReports");
     }
 
-    private void assertSseFeaturesEquals(final SseFeature expected, final SseFeature captured) {
-        final String expectedJson = StringUtil.toJsonString(expected);
-        final String capturedJson = StringUtil.toJsonString(captured);
+    private void assertSseFeaturesEquals(final SseFeature expected, final String capturedJson) {
+        final String expectedJson = StringUtil.toJsonString(createMqttDataMessage(expected).getData());
         assertEquals(expectedJson, capturedJson);
     }
 
