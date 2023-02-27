@@ -66,13 +66,13 @@ jobs:
           docker buildx build \
               --no-cache \
               --build-arg ENVIRONMENT=${{ github.event.inputs.env }} \
-              --build-arg APPNAME=road \
+              --build-arg APPNAME=marine \
               --platform linux/arm64 \
               --output type=docker \
-              --tag ${{ secrets.ECR_URL }}/dt-road-nginx-repository:latest \
+              --tag ${{ secrets.ECR_URL }}/dt-marine-nginx-repository:latest \
               --pull \
               --file=Dockerfile .
-          docker push ${{ secrets.ECR_URL }}/dt-road-nginx-repository:latest
+          docker push ${{ secrets.ECR_URL }}/dt-marine-nginx-repository:latest
       - name: Update nginx task-def
         id: update
         uses: tmfg/digitraffic-actions@update-task-def/v1
