@@ -25,7 +25,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
-import fi.livi.digitraffic.meri.controller.VesselLocationController;
+import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
 import fi.livi.digitraffic.meri.controller.exception.PookiException;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
@@ -49,9 +49,7 @@ public class DefaultExceptionHandlerTest extends AbstractTestBase {
     }
 
     private ResultActions performQuery() throws Exception {
-        return mockMvc.perform(get(MarineApplicationConfiguration.API_V1_BASE_PATH +
-            MarineApplicationConfiguration.API_LOCATIONS_PATH +
-            VesselLocationController.LATEST_PATH + "/1"));
+        return mockMvc.perform(get(AisControllerV1.API_AIS_V1 + AisControllerV1.LOCATIONS + "?mmsi=1"));
     }
 
     @Test
