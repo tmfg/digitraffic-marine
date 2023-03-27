@@ -15,41 +15,57 @@ import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
 import fi.livi.digitraffic.meri.controller.exception.PookiException;
+import fi.livi.digitraffic.meri.controller.exception.DefaultExceptionHandler;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
+import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
 @TestPropertySource(properties = {
     "marine.datasource.hikari.maximum-pool-size=1",
 })
 public class DefaultExceptionHandlerTest extends AbstractTestBase {
-    @MockBean
+    private MockMvc mockMvc;
+    @Mock
     private VesselLocationService vesselLocationService;
 
-    @MockBean
+    @Mock
+    private VesselMetadataService vesselMetadataService;
+
+    @Mock
     private Logger exceptionHandlerLogger;
+
+    @InjectMocks
+    private AisControllerV1 aisControllerV1;
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(aisControllerV1)
+            .setControllerAdvice(new DefaultExceptionHandler(exceptionHandlerLogger))
+            .build();
         when(exceptionHandlerLogger.isErrorEnabled()).thenReturn(true);
         when(exceptionHandlerLogger.isInfoEnabled()).thenReturn(true);
     }
 
     private ResultActions performQuery() throws Exception {
-        return mockMvc.perform(get(AisControllerV1.API_AIS_V1 + AisControllerV1.LOCATIONS + "?mmsi=1"));
+        return this.mockMvc.perform(get(AisControllerV1.API_AIS_V1 + AisControllerV1.LOCATIONS + "?mmsi=1"));
     }
 
     @Test
