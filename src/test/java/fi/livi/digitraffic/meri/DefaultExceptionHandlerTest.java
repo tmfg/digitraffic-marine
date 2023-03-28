@@ -57,6 +57,9 @@ public class DefaultExceptionHandlerTest extends AbstractTestBase {
 
     @BeforeEach
     public void setUp() {
+        // Mockito ei käsittele AisControllerV1 luokan @Validated tagia oikein, koska tuo tagi käyttää aspecteja.
+        // Sen takia luodaan AisControllerV1:stä itse mokkaus objekti ja annetaan sille vain tuo ExceptionHandler
+        // riippuvuus
         mockMvc = MockMvcBuilders.standaloneSetup(aisControllerV1)
             .setControllerAdvice(new DefaultExceptionHandler(exceptionHandlerLogger))
             .build();
