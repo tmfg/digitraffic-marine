@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.Random;
 
+import javax.persistence.EntityManager;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,10 @@ public abstract class AbstractTestBase {
 
     @Autowired(required = false) // not for daemon tests
     protected MockMvc mockMvc;
+
+    @Autowired(required = true) // not for daemon tests
+    protected EntityManager entityManager;
+
 
     protected String readFile(final String filename) throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();

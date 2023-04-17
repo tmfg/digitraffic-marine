@@ -253,7 +253,8 @@ public class PortCallServiceTest extends AbstractTestBase {
     @Test
     public void modifiedAt_found() {
         newPortCall(null, null, null, null);
-
+        entityManager.flush();
+        entityManager.clear();
         new PortcallQueryBuilder()
             .modifiedDate(Date.from(ZonedDateTime.now().minusDays(1).toInstant()))
             .assertCount(portCallServiceV1, 1);
