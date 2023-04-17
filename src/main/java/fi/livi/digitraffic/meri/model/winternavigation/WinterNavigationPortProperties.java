@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
+import java.time.Instant;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -26,7 +27,8 @@ public class WinterNavigationPortProperties extends Properties {
     public final List<PortRestrictionProperty> portRestrictions;
 
     public WinterNavigationPortProperties(final String locode, final String name, final String nationality, final String seaArea,
-                                          final List<PortRestrictionProperty> portRestrictions) {
+                                          final List<PortRestrictionProperty> portRestrictions, final Instant dataUpdatedTime) {
+        super(dataUpdatedTime);
         this.locode = locode;
         this.name = name;
         this.nationality = nationality;

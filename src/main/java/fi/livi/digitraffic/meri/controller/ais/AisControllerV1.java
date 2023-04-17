@@ -1,6 +1,31 @@
 package fi.livi.digitraffic.meri.controller.ais;
 
+import static fi.livi.digitraffic.meri.controller.ApiConstants.AIS_V1_TAG;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.API_AIS;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOUND;
+import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
+import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
+
+import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Function;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import fi.livi.digitraffic.meri.controller.MediaTypes;
+import fi.livi.digitraffic.meri.controller.ResponseEntityWithLastModifiedHeader;
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
 import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
@@ -12,15 +37,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
-import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.*;
-import static fi.livi.digitraffic.meri.controller.MediaTypes.*;
 
 @Tag(name = AIS_V1_TAG, description = "Automatic Identification System (AIS) APIs")
 @RestController
@@ -95,12 +111,14 @@ public class AisControllerV1 {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public List<VesselMetadataJson> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+    public ResponseEntityWithLastModifiedHeader<List<VesselMetadataJson>> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
                                                @RequestParam(value = "from", required = false)
                                                final Long from,
                                                @Parameter(description = "To timestamp")
                                                @RequestParam(value = "to", required = false)
                                                final Long to) {
-        return vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
+        List<VesselMetadataJson> vms = vesselMetadataService.findAllowedVesselMetadataFromWithLastModifiedHeader(from, to);
+        final Instant lastModified = vms.stream().map(LastModifiedSupport::getLastModified).max(Comparator.comparing(Function.identity())).orElse(null);
+        return ResponseEntityWithLastModifiedHeader.of(vms, lastModified);
     }
 }

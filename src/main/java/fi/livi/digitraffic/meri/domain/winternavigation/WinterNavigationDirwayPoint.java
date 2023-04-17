@@ -3,8 +3,10 @@ package fi.livi.digitraffic.meri.domain.winternavigation;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
+
 @Entity
-public class WinterNavigationDirwayPoint {
+public class WinterNavigationDirwayPoint extends ReadOnlyCreatedAndModifiedFields {
 
     @EmbeddedId
     private WinterNavigationDirwayPointPK winterNavigationDirwayPointPK;
@@ -15,6 +17,13 @@ public class WinterNavigationDirwayPoint {
 
     private String seaArea;
 
+    public WinterNavigationDirwayPoint() {
+        // Empty
+    }
+
+    public WinterNavigationDirwayPoint(final WinterNavigationDirwayPointPK pk) {
+        this.winterNavigationDirwayPointPK = pk;
+    }
     public WinterNavigationDirwayPointPK getWinterNavigationDirwayPointPK() {
         return winterNavigationDirwayPointPK;
     }

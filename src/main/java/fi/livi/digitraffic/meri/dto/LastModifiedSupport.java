@@ -11,4 +11,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public interface LastModifiedSupport {
     @JsonIgnore
     Instant getLastModified();
+
+    @JsonIgnore
+    default boolean shouldContainLastModified() {
+        return true;
+    }
 }

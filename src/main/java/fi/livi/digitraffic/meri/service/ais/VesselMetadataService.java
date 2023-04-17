@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,11 @@ public class VesselMetadataService {
         }
 
         return qb.getResults();
+    }
+
+    @Transactional(readOnly = true)
+    public List<VesselMetadataJson> findAllowedVesselMetadataFromWithLastModifiedHeader(final Long from, final Long to) {
+        return findAllowedVesselMetadataFrom(from, to);
     }
 
     @Transactional(readOnly = true)

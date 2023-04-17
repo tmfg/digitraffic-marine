@@ -2,16 +2,19 @@ package fi.livi.digitraffic.meri.model.geojson;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
 import fi.livi.digitraffic.meri.dto.data.v1.DataUpdatedSupportV1;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({ "type", "dataUpdatedTime", "features" })
-public class FeatureCollection<FeatureType> extends GeoJsonObject implements DataUpdatedSupportV1 {
+public class FeatureCollection<FeatureType extends LastModifiedSupport> extends GeoJsonObject implements DataUpdatedSupportV1 {
 
     @Schema(description = "Type of GeoJSON object", allowableValues = "FeatureCollection", required = true)
     private final String type = "FeatureCollection";
@@ -20,7 +23,7 @@ public class FeatureCollection<FeatureType> extends GeoJsonObject implements Dat
     @JsonProperty("features")
     private List<FeatureType> features = new ArrayList<>();
 
-    @Schema(description = "Data last updated timestamp in ISO 8601 format with time offsets Z (eg. 2022-11-09T09:41:09Z)")
+    @Schema(description = "Data last updated timestamp in ISO 8601 format with time offsets Z (eg. 2022-11-09T09:41:09Z)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Instant dataUpdatedTime;
 
     public FeatureCollection(final Instant dataUpdatedTime) {
@@ -41,16 +44,26 @@ public class FeatureCollection<FeatureType> extends GeoJsonObject implements Dat
         this.features = features;
     }
 
+    public void setDataUpdatedTime(final Instant dataUpdatedTime) {
+        this.dataUpdatedTime = dataUpdatedTime;
+    }
+
     public List<FeatureType> getFeatures() {
         return features;
     }
 
     @Override
-    public Instant getDataUpdatedTime() {
+    public Instant getDataUpdatedTime() { // I.e. PookiFeatureCollection don't have dataUpdatedTime, so get it from the features
+        if (dataUpdatedTime == null && features != null && !features.isEmpty()) {
+            try {
+                final Instant max =
+                    features.stream().filter(f -> f.getLastModified() != null).map(f -> f.getLastModified()).max(Comparator.comparing(
+                        Function.identity())).orElse(null);
+                return max;
+            } catch (final Exception e) {
+                return null;
+            }
+        }
         return dataUpdatedTime;
-    }
-
-    public void setDataUpdatedTime(final Instant dataUpdatedTime) {
-        this.dataUpdatedTime = dataUpdatedTime;
     }
 }

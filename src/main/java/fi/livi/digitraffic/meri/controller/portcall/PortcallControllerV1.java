@@ -13,8 +13,10 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.meri.controller.ResponseEntityWithLastModifiedHeader;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
 import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
@@ -183,7 +186,7 @@ public class PortcallControllerV1 {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public List<VesselDetails> findVesselDetails(
+    public ResponseEntityWithLastModifiedHeader<List<VesselDetails>> findVesselDetails(
         @Parameter(description = "Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z. " +
             "Default value is now minus 24 hours if all parameters are empty.")
         @RequestParam(value = "from", required = false)
@@ -208,6 +211,10 @@ public class PortcallControllerV1 {
             from = Instant.now().minus(Duration.ofDays(1));
         }
 
-        return portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        final List<VesselDetails> vds = portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        final Instant lastModified = vds.stream().filter(vd -> vd.getLastModified() != null).map(VesselDetails::getLastModified).max(
+            Comparator.comparing(Function.identity())).orElse(null);
+        return ResponseEntityWithLastModifiedHeader.of(vds, lastModified);
+
     }
 }

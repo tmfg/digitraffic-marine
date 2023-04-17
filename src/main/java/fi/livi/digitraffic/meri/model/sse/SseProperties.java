@@ -68,6 +68,7 @@ public class SseProperties extends Properties {
 
     public SseProperties(final int siteNumber, final String siteName, final SiteType siteType, final Instant lastUpdate, final SeaState seaState, final Trend trend, final Integer windWaveDir,
                          final Confidence confidence, final BigDecimal heelAngle, final LightStatus lightStatus, final Integer temperature, final Instant created) {
+        super(lastUpdate);
         this.siteNumber = siteNumber;
         this.siteName = siteName;
         this.siteType = siteType;

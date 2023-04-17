@@ -1,11 +1,5 @@
 package fi.livi.digitraffic.meri.service.nauticalwarning;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,20 +52,7 @@ public class NauticalWarningService {
     @Retryable(maxAttempts = 2)
     public PookiFeatureCollection getResponseFor(final Status status) {
         final String url = getUrlFor(status);
-        final PookiFeatureCollection featureCollection = getObjectFromUrl(url);
-        featureCollection.setDataUpdatedTime(findLastUpdatedTime(featureCollection));
-        return featureCollection;
-    }
-
-    private Instant findLastUpdatedTime(final PookiFeatureCollection fc) {
-        return fc.getFeatures()
-            .stream().map(f -> getMax(f.getProperties().creationTime, f.getProperties().publishingTime))
-            .max(Comparator.naturalOrder())
-            .orElse(Instant.EPOCH);
-    }
-
-    private Instant getMax(final ZonedDateTime...times) {
-        return Arrays.stream(times).filter(Objects::nonNull).map(ZonedDateTime::toInstant).max(Comparator.naturalOrder()).orElse(Instant.EPOCH);
+        return getObjectFromUrl(url);
     }
 
     @NotTransactionalServiceMethod

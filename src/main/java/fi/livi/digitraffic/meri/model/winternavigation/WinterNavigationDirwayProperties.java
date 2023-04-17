@@ -1,11 +1,11 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({ "issueTime", "issuerCode", "issuerName", "validUntil" })
@@ -30,7 +30,9 @@ public class WinterNavigationDirwayProperties extends Properties {
                                             final ZonedDateTime issueTime,
                                             final String issuerCode,
                                             final String issuerName,
-                                            final ZonedDateTime validUntil) {
+                                            final ZonedDateTime validUntil,
+                                            final Instant dataUpdatedTime) {
+        super(dataUpdatedTime);
         this.name = name;
         this.issueTime = issueTime;
         this.issuerCode = issuerCode;

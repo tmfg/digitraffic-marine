@@ -1,19 +1,19 @@
 package fi.livi.digitraffic.meri.model.pooki;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE;
+
+import java.time.ZonedDateTime;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import fi.livi.digitraffic.meri.model.geojson.Properties;
 import fi.livi.digitraffic.meri.model.pooki.converter.JsonDateTimeDeserializerToZonedDateTime;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.time.ZonedDateTime;
-
-import static org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE;
 
 @JsonPropertyOrder({"type", "id"})
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -155,6 +155,11 @@ public class PookiProperties extends Properties {
                            @JsonProperty(value = "NAVIGOINTILINJA_TXT", access = JsonProperty.Access.WRITE_ONLY) final String navigationLineInfo,
                            @JsonProperty(value = "ANTOPAIVA", access = JsonProperty.Access.WRITE_ONLY) @JsonDeserialize(using = JsonDateTimeDeserializerToZonedDateTime.class) final ZonedDateTime publishingTime,
                            @JsonProperty(value = "TIEDOKSIANTAJA", access = JsonProperty.Access.WRITE_ONLY) final String notificator) {
+        super(publishingTime != null ?
+                publishingTime.toInstant() :
+                creationTime != null ?
+                    creationTime.toInstant() :
+                    null);
         this.id = id;
         this.areasFi = areasFi;
         this.areasSv = areasSv;

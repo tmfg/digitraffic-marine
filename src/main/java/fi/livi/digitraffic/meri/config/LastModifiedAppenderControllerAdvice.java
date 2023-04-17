@@ -41,11 +41,13 @@ public class LastModifiedAppenderControllerAdvice implements ResponseBodyAdvice<
                                   final ServerHttpRequest request, final ServerHttpResponse response) {
 
         if (ALLOWED_METHODS.contains(request.getMethod()) && body instanceof LastModifiedSupport) {
-            final Instant lastModified = ((LastModifiedSupport) body).getLastModified();
+            final LastModifiedSupport lms = ((LastModifiedSupport) body);
+            final Instant lastModified = lms.getLastModified();
             if (lastModified != null) {
                 response.getHeaders().add(LAST_MODIFIED_HEADER, TimeUtil.getInLastModifiedHeaderFormat(lastModified));
-            } else {
-                log.error("Entity implementing LastModifiedSupport.getLastModified() should return non null value. Null value for request uri: " + request.getURI());
+            } else if (lms.shouldContainLastModified()) {
+                log.error(String.format("method=beforeBodyWrite lmsClass=%s. Entity implementing LastModifiedSupport.getLastModified() should return non null value. Null value for request uri: %s",
+                          lms.getClass().getSimpleName(), request.getURI()));
             }
         }
 

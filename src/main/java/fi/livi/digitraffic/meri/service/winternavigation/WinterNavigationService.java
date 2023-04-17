@@ -146,12 +146,12 @@ public class WinterNavigationService {
     }
 
     private WinterNavigationDirwayProperties dirwayProperties(final WinterNavigationDirway d) {
-        return new WinterNavigationDirwayProperties(d.getName(), d.getIssueTime(), d.getIssuerCode(), d.getIssuerName(), d.getValidUntil());
+        return new WinterNavigationDirwayProperties(d.getName(), d.getIssueTime(), d.getIssuerCode(), d.getIssuerName(), d.getValidUntil(), d.getModified());
     }
 
     private WinterNavigationPortFeature portFeature(final WinterNavigationPort p) {
         return new WinterNavigationPortFeature(p.getLocode(),
-                                               new WinterNavigationPortProperties(p.getLocode(), p.getName(), p.getNationality(), p.getSeaArea(), portRestrictions(p.getPortRestrictions())),
+                                               new WinterNavigationPortProperties(p.getLocode(), p.getName(), p.getNationality(), p.getSeaArea(), portRestrictions(p.getPortRestrictions()), p.getModified()),
                                                new Point(p.getLongitude(), p.getLatitude()));
     }
 
@@ -167,7 +167,7 @@ public class WinterNavigationService {
                                                   s.getLength(), s.getWidth(), s.getAisLength(), s.getAisWidth(), s.getDimensions(),
                                                   s.getNominalDraught(), s.getIceClass(), s.getNatCode(), s.getNationality(), s.getShipType(),
                                                   s.getAisShipType(), shipState(s.getShipState()), shipVoyage(s.getShipVoyage()),
-                                                  shipActivities(s.getShipActivities()), shipPlannedActivities(s.getShipPlannedActivities()));
+                                                  shipActivities(s.getShipActivities()), shipPlannedActivities(s.getShipPlannedActivities()), s.getModified());
     }
 
     private ShipStateProperty shipState(final ShipState st) {

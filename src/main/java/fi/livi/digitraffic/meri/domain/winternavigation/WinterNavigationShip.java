@@ -2,6 +2,7 @@ package fi.livi.digitraffic.meri.domain.winternavigation;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
+
 @Entity
-public class WinterNavigationShip {
+public class WinterNavigationShip extends ReadOnlyCreatedAndModifiedFields {
 
     @Id
     @Column(name = "vessel_pk", nullable = false)

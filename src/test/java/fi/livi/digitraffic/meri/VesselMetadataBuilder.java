@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri;
 
+import java.time.Instant;
+
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 
 public class VesselMetadataBuilder {
@@ -19,6 +21,11 @@ public class VesselMetadataBuilder {
 
     public VesselMetadataJson build() {
         return new VesselMetadataJson() {
+            @Override
+            public Instant getLastModified() {
+                return Instant.now();
+            }
+
             @Override public int getMmsi() {
                 return mmsi;
             }

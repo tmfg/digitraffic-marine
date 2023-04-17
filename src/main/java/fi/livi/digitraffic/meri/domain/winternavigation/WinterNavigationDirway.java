@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
+
 @Entity
-public class WinterNavigationDirway {
+public class WinterNavigationDirway extends ReadOnlyCreatedAndModifiedFields {
 
     @Id
     private String name;

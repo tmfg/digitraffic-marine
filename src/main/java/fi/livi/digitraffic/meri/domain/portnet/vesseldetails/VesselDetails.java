@@ -1,6 +1,7 @@
 package fi.livi.digitraffic.meri.domain.portnet.vesseldetails;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,13 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import fi.livi.digitraffic.meri.portnet.xsd.IdentificationData;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.meri.portnet.xsd.IdentificationData;
 import fi.livi.digitraffic.meri.util.TypeUtil;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Vessel details", name = "VesselDetails")
@@ -22,7 +24,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
                      "dataSource", "vesselConstruction", "vesselDimensions", "vesselRegistration", "vesselSystem" })
 @Entity
 @DynamicUpdate
-public class VesselDetails {
+public class VesselDetails extends ReadOnlyCreatedAndModifiedFields implements LastModifiedSupport {
 
     @Id
     private Long vesselId;
@@ -154,5 +156,10 @@ public class VesselDetails {
 
     public VesselSystem getVesselSystem() {
         return vesselSystem;
+    }
+
+    @Override
+    public Instant getLastModified() {
+        return getModified();
     }
 }

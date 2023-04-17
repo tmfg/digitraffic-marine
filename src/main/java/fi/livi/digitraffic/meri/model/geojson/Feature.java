@@ -1,20 +1,23 @@
 package fi.livi.digitraffic.meri.model.geojson;
 
+import java.time.Instant;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "GeoJSON Feature object")
-public abstract class Feature<G extends Geometry, P extends Properties>  extends GeoJsonObject {
+public abstract class Feature<G extends Geometry, P extends Properties>  extends GeoJsonObject implements LastModifiedSupport {
 
-    @Schema(description = "Type of GeoJSON object", allowableValues = "Feature", required = true, example = "Feature")
-    private final String type = "Feature";
+    @Schema(description = "Type of GeoJSON object", allowableValues = "Feature", requiredMode = Schema.RequiredMode.REQUIRED, example = "Feature")
+    public final String type = "Feature";
 
-    @Schema(description = "GeoJSON Geometry object", required = true)
+    @Schema(description = "GeoJSON Geometry object", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("geometry")
     private G geometry;
 
-    @Schema(description = "GeoJSON Properties object", required = true)
+    @Schema(description = "GeoJSON Properties object", requiredMode = Schema.RequiredMode.REQUIRED)
     private P properties;
 
     public Feature() {
@@ -48,5 +51,10 @@ public abstract class Feature<G extends Geometry, P extends Properties>  extends
 
     public void setProperties(final P properties) {
         this.properties = properties;
+    }
+
+    @Override
+    public Instant getLastModified() {
+        return properties != null ? properties.getLastModified() : null;
     }
 }

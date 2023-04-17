@@ -75,6 +75,28 @@ public class WinterNavigationDirwayUpdaterTest extends AbstractTestBase {
     @Test
     @Transactional
     @Rollback
+    public void updateWinterNavigationDirwaysChangedSucceeds() throws IOException {
+        when(winterNavigationClient.getWinterNavigationWaypoints()).thenReturn(getResponse("winterNavigationDirwaysResponse.xml"));
+        winterNavigationDirwayUpdater.updateWinterNavigationDirways();
+
+        when(winterNavigationClient.getWinterNavigationWaypoints()).thenReturn(getResponse("winterNavigationDirwaysResponse2.xml"));
+        winterNavigationDirwayUpdater.updateWinterNavigationDirways();
+
+        final List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
+        assertEquals(11, dirways.size());
+
+        final WinterNavigationDirway dirway = dirways.stream().filter(d -> d.getName().equals("VTS test dirway")).findFirst().get();
+        assertEquals(ZonedDateTime.parse("2017-12-08T08:28:51.342+00:00").toEpochSecond(), dirway.getIssueTime().toEpochSecond());
+        assertEquals("IBNEXT Center Issuer", dirway.getIssuerName());
+        assertEquals(4, dirway.getDirwayPoints().size());
+        assertEquals(4, dirway.getDirwayPoints().get(3).getWinterNavigationDirwayPointPK().getOrderNumber());
+        assertEquals(66.176112382, dirway.getDirwayPoints().get(3).getLatitude(), 0.00000001);
+        assertEquals(23.570617642, dirway.getDirwayPoints().get(3).getLongitude(), 0.00000001);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     public void updateWinterNavigationDirwaysEmpty() throws IOException {
         when(winterNavigationClient.getWinterNavigationWaypoints()).thenReturn(getResponse("winterNavigationDirwaysResponse_empty.xml"));
 

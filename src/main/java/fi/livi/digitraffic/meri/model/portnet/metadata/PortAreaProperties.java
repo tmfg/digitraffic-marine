@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.model.portnet.metadata;
 
+import java.time.Instant;
+
 import fi.livi.digitraffic.meri.model.geojson.Properties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -11,7 +13,8 @@ public class PortAreaProperties extends Properties {
     @Schema(description = "Port area name", required = true)
     public final String portAreaName;
 
-    public PortAreaProperties(final String locode, final String portAreaName) {
+    public PortAreaProperties(final String locode, final String portAreaName, final Instant dataUpdatedTime) {
+        super(dataUpdatedTime);
         this.locode = locode;
         this.portAreaName = portAreaName;
     }

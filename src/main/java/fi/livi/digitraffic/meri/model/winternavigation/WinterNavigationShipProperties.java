@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
+import java.time.Instant;
 import java.util.List;
 
 import fi.livi.digitraffic.meri.model.geojson.Properties;
@@ -105,7 +106,9 @@ public class WinterNavigationShipProperties extends Properties {
         final ShipStateProperty shipState,
         final ShipVoyageProperty shipVoyage,
         final List<ShipActivityProperty> shipActivities,
-        final List<ShipPlannedActivityProperty> shipPlannedActivities) {
+        final List<ShipPlannedActivityProperty> shipPlannedActivities,
+        final Instant dataUpdatedTime) {
+        super(dataUpdatedTime);
         this.vesselId = vesselId;
         this.vesselSource = vesselSource;
         this.mmsi = mmsi;

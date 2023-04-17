@@ -61,12 +61,13 @@ public class PortnetMetadataService {
 
     @Transactional(readOnly = true)
     public LocationFeatureCollections_V1 listaAllMetadata() {
-        return SsnLocationConverter.convert_V1(
-                updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
-                ssnLocationRepository.streamAllBy(),
-                portAreaRepository.streamAllBy(),
-                berthRepository.streamAllBy()
+        final LocationFeatureCollections_V1 mt = SsnLocationConverter.convert_V1(
+            updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
+            ssnLocationRepository.streamAllBy(),
+            portAreaRepository.streamAllBy(),
+            berthRepository.streamAllBy()
         );
+        return mt;
     }
 
     @Transactional(readOnly = true)

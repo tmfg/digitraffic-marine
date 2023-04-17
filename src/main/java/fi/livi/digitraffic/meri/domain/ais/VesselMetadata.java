@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.domain.ais;
 
+import java.time.Instant;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,12 +9,13 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
 import fi.livi.digitraffic.meri.model.ais.VesselMessage;
 import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
 
 @Entity(name = "vessel")
 @DynamicUpdate
-public class VesselMetadata implements VesselMetadataJson {
+public class VesselMetadata extends ReadOnlyCreatedAndModifiedFields implements VesselMetadataJson {
     @Id
     private int mmsi;
 
@@ -178,5 +181,10 @@ public class VesselMetadata implements VesselMetadataJson {
 
     public void setReferencePointD(final long referencePointD) {
         this.referencePointD = referencePointD;
+    }
+
+    @Override
+    public Instant getLastModified() {
+        return getModified();
     }
 }

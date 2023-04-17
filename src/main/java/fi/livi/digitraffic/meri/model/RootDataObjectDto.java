@@ -6,13 +6,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
 import fi.livi.digitraffic.meri.model.geojson.FeatureCollection;
 import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @JsonPropertyOrder({ "type",
                      "dataUpdatedTime",
                      "features" })
-public class RootDataObjectDto<FeatureType> extends FeatureCollection<FeatureType> {
+public class RootDataObjectDto<FeatureType extends LastModifiedSupport> extends FeatureCollection<FeatureType> {
 
     public RootDataObjectDto(final ZonedDateTime dataUpdatedTime,
                              final List<FeatureType> features) {

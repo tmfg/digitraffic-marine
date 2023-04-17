@@ -1,7 +1,8 @@
 package fi.livi.digitraffic.meri.model.ais;
 
-import fi.livi.digitraffic.meri.model.geojson.Properties;
+import java.time.Instant;
 
+import fi.livi.digitraffic.meri.model.geojson.Properties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class VesselLocationProperties extends Properties {
@@ -67,7 +68,9 @@ public class VesselLocationProperties extends Properties {
         final boolean raim,
         final Integer heading,
         final long timestamp,
-        final long timestampExternal) {
+        final long timestampExternal,
+        final Instant dataUpdatedTime) {
+        super(dataUpdatedTime);
         this.mmsi = mmsi;
         this.sog = sog;
         this.cog = cog;

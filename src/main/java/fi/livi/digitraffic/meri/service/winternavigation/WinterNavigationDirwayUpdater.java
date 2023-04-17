@@ -6,6 +6,7 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -134,8 +135,18 @@ public class WinterNavigationDirwayUpdater {
     }
 
     private void updateDirwayPoints(final WinterNavigationDirway d, final DirWayType.DirWayPoints dirwayPoints) {
-        d.getDirwayPoints().clear();
-        winterNavigationDirwayPointRepository.deleteAllInBatch(d.getDirwayPoints());
+
+        final List<WinterNavigationDirwayPointPK> primaryKeys = new ArrayList<>();
+        for (final DirWayPointType point : dirwayPoints.getDirWayPoint()) {
+            primaryKeys.add(new WinterNavigationDirwayPointPK(d.getName(), point.getId().longValue()));
+        }
+
+        final List<WinterNavigationDirwayPoint> toUpdate = d.getDirwayPoints().stream().filter(dp -> primaryKeys.contains(dp.getWinterNavigationDirwayPointPK())).collect(
+            Collectors.toList());
+        final List<WinterNavigationDirwayPoint> toDelete = d.getDirwayPoints().stream().filter(dp -> !primaryKeys.contains(dp.getWinterNavigationDirwayPointPK())).collect(
+            Collectors.toList());
+        d.getDirwayPoints().removeAll(toDelete);
+        winterNavigationDirwayPointRepository.deleteAllInBatch(toDelete);
         winterNavigationDirwayPointRepository.flush();
 
         if (dirwayPoints == null) {
@@ -143,12 +154,16 @@ public class WinterNavigationDirwayUpdater {
         }
 
         for (final DirWayPointType point : dirwayPoints.getDirWayPoint()) {
-            final WinterNavigationDirwayPoint p = new WinterNavigationDirwayPoint();
-            p.setWinterNavigationDirwayPointPK(new WinterNavigationDirwayPointPK(d.getName(), point.getId().longValue()));
+            final WinterNavigationDirwayPointPK newPK = new WinterNavigationDirwayPointPK(d.getName(), point.getId().longValue());
+            final Optional<WinterNavigationDirwayPoint> toUpdateMaybe =
+                toUpdate.stream().filter(dp -> dp.getWinterNavigationDirwayPointPK().equals(newPK)).findFirst();
+            final WinterNavigationDirwayPoint p = toUpdateMaybe.orElseGet(() ->  new WinterNavigationDirwayPoint(newPK));
             p.setLongitude(point.getLon().doubleValue());
             p.setLatitude(point.getLat().doubleValue());
             p.setSeaArea(point.getSeaArea());
-            d.getDirwayPoints().add(p);
+            if (!toUpdateMaybe.isPresent()) {
+                d.getDirwayPoints().add(p);
+            }
         }
     }
 }

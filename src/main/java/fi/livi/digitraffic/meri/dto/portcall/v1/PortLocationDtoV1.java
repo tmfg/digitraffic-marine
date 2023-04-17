@@ -1,13 +1,14 @@
 package fi.livi.digitraffic.meri.dto.portcall.v1;
 
+import java.time.Instant;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
 import fi.livi.digitraffic.meri.model.portnet.metadata.BerthCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortAreaFeatureCollection;
 import fi.livi.digitraffic.meri.model.portnet.metadata.PortFeatureCollection;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.time.Instant;
 
 @JsonPropertyOrder({
     "dataUpdatedTime",
@@ -16,7 +17,7 @@ import java.time.Instant;
     "berthFeature",
 })
 @Schema(description = "Ports, port areas and berths locations.")
-public class PortLocationDtoV1 {
+public class PortLocationDtoV1 implements LastModifiedSupport {
 
     @Schema(description = "Data last updated", required = true)
     public final Instant dataUpdatedTime;
@@ -40,4 +41,8 @@ public class PortLocationDtoV1 {
         this.berths = berths;
     }
 
+    @Override
+    public Instant getLastModified() {
+        return dataUpdatedTime;
+    }
 }

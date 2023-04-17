@@ -2,11 +2,12 @@ package fi.livi.digitraffic.meri.model.ais;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Vessel metadata model")
 @JsonSerialize(as = VesselMetadataJson.class)
-public interface VesselMetadataJson {
+public interface VesselMetadataJson extends LastModifiedSupport {
     @Schema(description = "Maritime Mobile Service Identity", required = true)
     int getMmsi();
 

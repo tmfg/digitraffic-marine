@@ -1,13 +1,14 @@
 package fi.livi.digitraffic.meri.dto.portcall.v1;
 
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.Instant;
 import java.util.List;
 
+import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.meri.model.portnet.data.PortCallJson;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Schema(description="Port call")
-public final class PortCallsV1 {
+public final class PortCallsV1 implements LastModifiedSupport {
     @Schema(description = "Timestamp when port calls were updated", required = true)
     public final Instant dataUpdatedTime;
 
@@ -19,4 +20,8 @@ public final class PortCallsV1 {
         this.portCalls = portCalls;
     }
 
+    @Override
+    public Instant getLastModified() {
+        return dataUpdatedTime;
+    }
 }

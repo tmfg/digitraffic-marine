@@ -13,9 +13,11 @@ import javax.persistence.OrderBy;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import fi.livi.digitraffic.meri.domain.ReadOnlyCreatedAndModifiedFields;
+
 @Entity
 @DynamicUpdate
-public class WinterNavigationPort {
+public class WinterNavigationPort extends ReadOnlyCreatedAndModifiedFields {
 
     @Id
     private String locode;
