@@ -3,11 +3,11 @@ package fi.livi.digitraffic.meri.model.portnet.data;
 import java.sql.Timestamp;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import org.springframework.beans.factory.annotation.Value;
 
 @Schema(description = "Port call")
 @JsonPropertyOrder({ "portCallId", "portCallTimestamp", "customsReference", "portToVisit", "prevPort", "nextPort", "domesticTrafficArrival",
@@ -43,7 +43,11 @@ public interface PortCallJson {
     Boolean getArrivalWithCargo();
     @Schema(description = "Does the ship load")
     Boolean getNotLoading();
-    @Schema(description = "Type of discharge", allowableValues = "range[1, 4]")
+    @Schema(description = "Type of discharge<br>" +
+                          "1: Unloads all cargo<br>" +
+                          "2: Unloads part of cargo<br>" +
+                          "3: Does not unload cargo<br>" +
+                          "4: Ship arriving in ballast cargo", allowableValues = {"1", "2", "3", "4"})
     Integer getDischarge();
 
     @Schema(description = "Ship master at the moment of arrival(deprecated)")

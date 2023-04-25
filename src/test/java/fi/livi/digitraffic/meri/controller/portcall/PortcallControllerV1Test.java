@@ -113,7 +113,7 @@ public class PortcallControllerV1Test extends AbstractTestBase {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.dataUpdatedTime", is(dataUpdatedTime)))
-            .andExpect(jsonPath("$.cargoTypes", hasSize(10)))
+            .andExpect(jsonPath("$.cargoTypes", hasSize(0)))
             .andExpect(jsonPath("$.vesselTypes", hasSize(20)))
             .andExpect(jsonPath("$.agentTypes", hasSize(3)))
         ;

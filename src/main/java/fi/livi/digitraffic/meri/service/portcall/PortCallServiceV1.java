@@ -223,7 +223,9 @@ public class PortCallServiceV1 {
     public CodeDescriptionsV1 listCodeDescriptions() {
         return new CodeDescriptionsV1(
             updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA),
-            v2CodeDescriptionRepository.listAllCargoTypes(),
+            // Cargo info is not published in PortAreaDetailsJson, so don't share metadata for it
+            // TODO remove in next api version
+            Collections.emptyList(), // v2CodeDescriptionRepository.listAllCargoTypes(),
             v2CodeDescriptionRepository.listAllVesselTypes(),
             v2CodeDescriptionRepository.listAllAgentTypes()
         );

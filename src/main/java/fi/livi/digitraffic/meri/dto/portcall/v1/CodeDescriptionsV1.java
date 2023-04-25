@@ -11,22 +11,22 @@ import fi.livi.digitraffic.meri.model.v2.V2CodeDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Code descriptions associated with port calls")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class CodeDescriptionsV1 implements LastModifiedSupport {
     @Schema(description = "Timestamp when metadata were last updated", required = true)
     public final Instant dataUpdatedTime;
 
-    @Schema(description = "All cargo type descriptions", required = true)
+    @Schema(description = "All cargo type descriptions", requiredMode = Schema.RequiredMode.REQUIRED)
     public final List<V2CodeDescription> cargoTypes;
-    @Schema(description = "All vessel type descriptions", required = true)
+    @Schema(description = "All vessel type descriptions", requiredMode = Schema.RequiredMode.REQUIRED)
     public final List<V2CodeDescription> vesselTypes;
-    @Schema(description = "All agent type descriptions", required = true)
+    @Schema(description = "All agent type descriptions", requiredMode = Schema.RequiredMode.REQUIRED)
     public final List<V2CodeDescription> agentTypes;
 
     public CodeDescriptionsV1(final Instant dataUpdatedTime,
-                               final List<V2CodeDescription> cargoTypes,
-                               final List<V2CodeDescription> vesselTypes,
-                               final List<V2CodeDescription> agentTypes) {
+                              final List<V2CodeDescription> cargoTypes,
+                              final List<V2CodeDescription> vesselTypes,
+                              final List<V2CodeDescription> agentTypes) {
         this.dataUpdatedTime = dataUpdatedTime;
         this.cargoTypes = ImmutableList.copyOf(cargoTypes);
         this.vesselTypes = ImmutableList.copyOf(vesselTypes);

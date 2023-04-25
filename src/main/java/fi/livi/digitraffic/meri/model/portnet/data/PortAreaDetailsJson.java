@@ -50,5 +50,5 @@ public interface PortAreaDetailsJson {
     @Schema(description = "Departure draught")
     BigDecimal getDepartureDraught();
 
-    // no cargo-info here
+    // no cargo-info (CargoInfoJson) here as it is not public info
 }
