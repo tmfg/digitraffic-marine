@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 
 import org.springdoc.core.GroupedOpenApi;
-import org.springdoc.core.SwaggerUiConfigProperties;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,18 +61,6 @@ public class SwaggerConfiguration {
             .pathsToMatch(BETA_PATHS)
             .addOpenApiCustomiser(openApiConfig())
             .build();
-    }
-
-    // https://springdoc.org/#swagger-ui-properties
-    @Bean
-    public SwaggerUiConfigProperties swaggerUiConfig() {
-        SwaggerUiConfigProperties config = new SwaggerUiConfigProperties();
-        config.setDocExpansion("none");
-        config.setDefaultModelRendering("model");
-        config.setDefaultModelExpandDepth(6);
-        config.setTagsSorter("alpha");
-        config.setOperationsSorter("alpha");
-        return config;
     }
 
     private OpenApiCustomiser openApiConfig() {
