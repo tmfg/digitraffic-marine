@@ -56,7 +56,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build mqtt image
         run: |
-          cd digitraffic-ci/aws/mqtt
+          cd digitraffic-ci/aws/mqtt          
 
           docker buildx build \
               --no-cache \
