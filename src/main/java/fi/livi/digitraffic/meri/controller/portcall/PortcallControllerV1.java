@@ -202,16 +202,16 @@ public class PortcallControllerV1 {
         @RequestParam(value = "imo", required = false) final Integer imo,
 
         @Parameter(description = "Return vessel details for vessels with given nationality or nationalities (e.g. FI)")
-        @RequestParam(value = "nationalities", required = false) final List<String> nationalities,
+        @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
         @Parameter(description = "Return vessel details for given vessel type code")
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode) {
 
-        if (!ObjectUtils.anyNotNull(from, vesselName, mmsi, imo, nationalities, vesselTypeCode)) {
+        if (!ObjectUtils.anyNotNull(from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
             from = Instant.now().minus(Duration.ofDays(1));
         }
 
-        final List<VesselDetails> vds = portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationalities, vesselTypeCode);
+        final List<VesselDetails> vds = portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationality, vesselTypeCode);
         final Instant lastModified = vds.stream().filter(vd -> vd.getLastModified() != null).map(VesselDetails::getLastModified).max(
             Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
         return ResponseEntityWithLastModifiedHeader.of(vds, lastModified);
