@@ -117,8 +117,8 @@ public class AisControllerV1 {
                                                @Parameter(description = "To timestamp")
                                                @RequestParam(value = "to", required = false)
                                                final Long to) {
-        List<VesselMetadataJson> vms = vesselMetadataService.findAllowedVesselMetadataFromWithLastModifiedHeader(from, to);
-        final Instant lastModified = vms.stream().map(LastModifiedSupport::getLastModified).max(Comparator.comparing(Function.identity())).orElse(null);
+        final List<VesselMetadataJson> vms = vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
+        final Instant lastModified = vms.stream().map(LastModifiedSupport::getLastModified).max(Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
         return ResponseEntityWithLastModifiedHeader.of(vms, lastModified);
     }
 }

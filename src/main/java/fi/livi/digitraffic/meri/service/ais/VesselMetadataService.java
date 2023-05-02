@@ -66,11 +66,6 @@ public class VesselMetadataService {
     }
 
     @Transactional(readOnly = true)
-    public List<VesselMetadataJson> findAllowedVesselMetadataFromWithLastModifiedHeader(final Long from, final Long to) {
-        return findAllowedVesselMetadataFrom(from, to);
-    }
-
-    @Transactional(readOnly = true)
     @Cacheable(CACHE_ALLOWED_MMSI)
     public Collection<Integer> findAllowedMmsis() {
         final QueryBuilder<Integer, VesselMetadata> qb = new QueryBuilder<>(entityManager, Integer.class, VesselMetadata.class);
