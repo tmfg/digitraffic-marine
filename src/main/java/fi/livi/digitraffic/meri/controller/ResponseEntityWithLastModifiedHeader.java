@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * Used as controller method return value to add LastModified header to responses.
  * Usefull when there is no root object that contains last modified information i.e. with plain array of data
- * and @{{@link fi.livi.digitraffic.meri.config.LastModifiedAppenderControllerAdvice} cannont be used.
+ * and @{{@link fi.livi.digitraffic.meri.config.LastModifiedAppenderControllerAdvice} cannot be used.
  */
 public class ResponseEntityWithLastModifiedHeader<T> extends ResponseEntity<T> {
     private static final Logger log = LoggerFactory.getLogger(ResponseEntityWithLastModifiedHeader.class);
