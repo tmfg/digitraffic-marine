@@ -214,7 +214,7 @@ public class PortcallControllerV1 {
         final List<VesselDetails> vds = portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationality, vesselTypeCode);
         final Instant lastModified = vds.stream().filter(vd -> vd.getLastModified() != null).map(VesselDetails::getLastModified).max(
             Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
-        return ResponseEntityWithLastModifiedHeader.of(vds, lastModified);
+        return ResponseEntityWithLastModifiedHeader.of(vds, lastModified, API_PORT_CALL_V1 + VESSEL_DETAILS);
 
     }
 }

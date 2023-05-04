@@ -16,23 +16,23 @@ import org.springframework.http.ResponseEntity;
 public class ResponseEntityWithLastModifiedHeader<T> extends ResponseEntity<T> {
     private static final Logger log = LoggerFactory.getLogger(ResponseEntityWithLastModifiedHeader.class);
 
-    private ResponseEntityWithLastModifiedHeader(final T object, final Instant lastModified) {
-        super(object, createHeaders(lastModified), HttpStatus.OK);
+    private ResponseEntityWithLastModifiedHeader(final T object, final Instant lastModified, final String apiUri) {
+        super(object, createHeaders(lastModified, apiUri), HttpStatus.OK);
     }
 
-    private static HttpHeaders createHeaders(final Instant lastModified) {
+    private static HttpHeaders createHeaders(final Instant lastModified, final String apiUri) {
+        final HttpHeaders responseHeaders = new HttpHeaders();
         if (lastModified != null) {
-            final HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.setLastModified(lastModified);
-            return responseHeaders;
+        } else {
+            log.error(String.format(
+                "method=createHeaders %s should set non null value for last-modified value. Null value for request uri: %s",
+                ResponseEntityWithLastModifiedHeader.class.getSimpleName(), apiUri));
         }
-        return null;
+        return responseHeaders;
     }
 
-    public static <T> ResponseEntityWithLastModifiedHeader<T> of(final T object, final Instant lastModified) {
-        if (lastModified == null) {
-            log.error("ResponseEntityWithLastModifiedHeader created with null lastModified value for " + object.getClass().getSimpleName());
-        }
-        return new ResponseEntityWithLastModifiedHeader<>(object, lastModified);
+    public static <T> ResponseEntityWithLastModifiedHeader<T> of(final T object, final Instant lastModified, final String apiUri) {
+        return new ResponseEntityWithLastModifiedHeader<>(object, lastModified, apiUri);
     }
 }

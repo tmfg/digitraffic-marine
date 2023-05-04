@@ -119,6 +119,6 @@ public class AisControllerV1 {
                                                final Long to) {
         final List<VesselMetadataJson> vms = vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
         final Instant lastModified = vms.stream().map(LastModifiedSupport::getLastModified).max(Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
-        return ResponseEntityWithLastModifiedHeader.of(vms, lastModified);
+        return ResponseEntityWithLastModifiedHeader.of(vms, lastModified, API_AIS_V1 + VESSELS);
     }
 }
