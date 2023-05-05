@@ -2,13 +2,10 @@ version: '2.1'
 
 services:
   db:
-    image: postgres:13.7-alpine
+    image: postgis/postgis:13-3.3-alpine
     restart: always
     environment:
       POSTGRES_USER: marine
       POSTGRES_PASSWORD: marine
       POSTGRES_DB: marine
     command: -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.max=10000 -c track_activity_query_size=2048 -c pg_stat_statements.track=all -c max_connections=200
-    build:
-      context: ./postgis
-      dockerfile: Dockerfile_postgis
