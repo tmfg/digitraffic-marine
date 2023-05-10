@@ -1,0 +1,1 @@
+GRANT SELECT,INSERT,UPDATE,DELETE ON public.vessel_location TO portactivity;
