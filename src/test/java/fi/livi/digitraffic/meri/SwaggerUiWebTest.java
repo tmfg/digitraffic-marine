@@ -1,6 +1,15 @@
 package fi.livi.digitraffic.meri;
 
-import fi.livi.digitraffic.meri.service.BuildVersionService;
+import static fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1.API_PORT_CALL_V1;
+import static fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1.PORT_CALLS;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_LOCATIONS_PATH;
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_METADATA_PART_PATH;
-import static fi.livi.digitraffic.meri.config.MarineApplicationConfiguration.API_V1_BASE_PATH;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import fi.livi.digitraffic.meri.service.BuildVersionService;
 
 public class SwaggerUiWebTest extends AbstractTestBase {
 
@@ -50,7 +50,7 @@ public class SwaggerUiWebTest extends AbstractTestBase {
             .andExpect(content().contentType(restContentType))
             .andExpect(jsonPath("$.openapi", is("3.0.1")))
             .andExpect(jsonPath("$.info.version", is(versionService.getAppFullVersion())))
-            .andExpect(jsonPath("$.paths." + API_V1_BASE_PATH + API_METADATA_PART_PATH + API_LOCATIONS_PATH, anything()));
+            .andExpect(jsonPath("$.paths." + API_PORT_CALL_V1 + PORT_CALLS, anything()));
     }
 
     @Test

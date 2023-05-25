@@ -20,13 +20,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.controller.portnet.SsnLocationConverter;
+import fi.livi.digitraffic.meri.controller.portcall.SsnLocationConverter;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
+import fi.livi.digitraffic.meri.dao.portnet.CodeDescriptionRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
-import fi.livi.digitraffic.meri.dao.v2.V2CodeDescriptionRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
 import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
@@ -49,7 +49,7 @@ public class PortCallServiceV1 {
     private final UpdatedTimestampRepository updatedTimestampRepository;
     private final PortCallRepository portCallRepository;
 
-    private final V2CodeDescriptionRepository v2CodeDescriptionRepository;
+    private final CodeDescriptionRepository codeDescriptionRepository;
 
     private final SsnLocationRepository ssnLocationRepository;
     private final PortAreaRepository portAreaRepository;
@@ -62,7 +62,7 @@ public class PortCallServiceV1 {
     public PortCallServiceV1(final VesselDetailsService vesselDetailsService,
                              final UpdatedTimestampRepository updatedTimestampRepository,
                              final PortCallRepository portCallRepository,
-                             final V2CodeDescriptionRepository v2CodeDescriptionRepository,
+                             final CodeDescriptionRepository codeDescriptionRepository,
                              final SsnLocationRepository ssnLocationRepository,
                              final PortAreaRepository portAreaRepository,
                              final BerthRepository berthRepository,
@@ -70,7 +70,7 @@ public class PortCallServiceV1 {
         this.vesselDetailsService = vesselDetailsService;
         this.updatedTimestampRepository = updatedTimestampRepository;
         this.portCallRepository = portCallRepository;
-        this.v2CodeDescriptionRepository = v2CodeDescriptionRepository;
+        this.codeDescriptionRepository = codeDescriptionRepository;
         this.ssnLocationRepository = ssnLocationRepository;
         this.portAreaRepository = portAreaRepository;
         this.berthRepository = berthRepository;
@@ -226,8 +226,8 @@ public class PortCallServiceV1 {
             // Cargo info is not published in PortAreaDetailsJson, so don't share metadata for it
             // TODO remove in next api version
             Collections.emptyList(), // v2CodeDescriptionRepository.listAllCargoTypes(),
-            v2CodeDescriptionRepository.listAllVesselTypes(),
-            v2CodeDescriptionRepository.listAllAgentTypes()
+            codeDescriptionRepository.listAllVesselTypes(),
+            codeDescriptionRepository.listAllAgentTypes()
         );
     }
 

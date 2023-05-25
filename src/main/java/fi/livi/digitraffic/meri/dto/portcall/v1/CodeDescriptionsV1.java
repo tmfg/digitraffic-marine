@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 
 import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
-import fi.livi.digitraffic.meri.model.v2.V2CodeDescription;
+import fi.livi.digitraffic.meri.model.portnet.data.CodeDescriptionJson;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Code descriptions associated with port calls")
@@ -17,16 +17,16 @@ public class CodeDescriptionsV1 implements LastModifiedSupport {
     public final Instant dataUpdatedTime;
 
     @Schema(description = "All cargo type descriptions", requiredMode = Schema.RequiredMode.REQUIRED)
-    public final List<V2CodeDescription> cargoTypes;
+    public final List<CodeDescriptionJson> cargoTypes;
     @Schema(description = "All vessel type descriptions", requiredMode = Schema.RequiredMode.REQUIRED)
-    public final List<V2CodeDescription> vesselTypes;
+    public final List<CodeDescriptionJson> vesselTypes;
     @Schema(description = "All agent type descriptions", requiredMode = Schema.RequiredMode.REQUIRED)
-    public final List<V2CodeDescription> agentTypes;
+    public final List<CodeDescriptionJson> agentTypes;
 
     public CodeDescriptionsV1(final Instant dataUpdatedTime,
-                              final List<V2CodeDescription> cargoTypes,
-                              final List<V2CodeDescription> vesselTypes,
-                              final List<V2CodeDescription> agentTypes) {
+                              final List<CodeDescriptionJson> cargoTypes,
+                              final List<CodeDescriptionJson> vesselTypes,
+                              final List<CodeDescriptionJson> agentTypes) {
         this.dataUpdatedTime = dataUpdatedTime;
         this.cargoTypes = ImmutableList.copyOf(cargoTypes);
         this.vesselTypes = ImmutableList.copyOf(vesselTypes);
