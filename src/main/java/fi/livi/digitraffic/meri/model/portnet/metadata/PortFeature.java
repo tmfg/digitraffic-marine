@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Port GeoJSON feature")
 public class PortFeature extends Feature<Point, PortProperties> implements LastModifiedSupport {
 
-    @Schema(description = "Maritime Mobile Service Identity", required = true)
+    @Schema(description = "Maritime Mobile Service Identity", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String locode;
 
     public PortFeature(final String locode, final PortProperties properties, final Point geometry) {

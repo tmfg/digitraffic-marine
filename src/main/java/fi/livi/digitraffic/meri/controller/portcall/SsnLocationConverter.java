@@ -1,4 +1,4 @@
-package fi.livi.digitraffic.meri.controller.portnet;
+package fi.livi.digitraffic.meri.controller.portcall;
 
 import java.time.Instant;
 import java.util.stream.Collectors;

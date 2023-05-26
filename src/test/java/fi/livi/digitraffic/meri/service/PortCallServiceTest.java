@@ -1,10 +1,9 @@
-package fi.livi.digitraffic.meri.service.portnet;
+package fi.livi.digitraffic.meri.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
@@ -25,15 +24,14 @@ import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortAreaDetails;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
-import fi.livi.digitraffic.meri.model.portnet.data.PortCallsJson_V1;
-import fi.livi.digitraffic.meri.service.BadRequestException;
-
+import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
+import fi.livi.digitraffic.meri.service.portcall.PortCallServiceV1;
 
 @Transactional
 public class PortCallServiceTest extends AbstractTestBase {
 
     @Autowired
-    private PortCallService_V1 portCallServiceV1;
+    private PortCallServiceV1 portCallServiceV1;
 
     @Autowired
     private PortCallRepository portCallRepository;
@@ -56,8 +54,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(Timestamp.from(Instant.now()), null, null, null);
 
         new PortcallQueryBuilder()
-            .etaFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .etaTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .etaFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .etaTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -66,7 +64,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(Timestamp.from(Instant.now()), null, null, null);
 
         new PortcallQueryBuilder()
-            .etaFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
+            .etaFrom(Instant.now().minus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -75,7 +73,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(Timestamp.from(Instant.now()), null, null, null);
 
         new PortcallQueryBuilder()
-            .etaTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .etaTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -84,8 +82,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(Timestamp.from(Instant.now()), null, null, null);
 
         new PortcallQueryBuilder()
-            .etaFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .etaTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
+            .etaFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .etaTo(Instant.now().minus(2, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 0);
     }
 
@@ -94,8 +92,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, Timestamp.from(Instant.now()), null, null);
 
         new PortcallQueryBuilder()
-            .etdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .etdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .etdFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .etdTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -104,7 +102,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, Timestamp.from(Instant.now()), null, null);
 
         new PortcallQueryBuilder()
-            .etdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
+            .etdFrom(Instant.now().minus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -113,7 +111,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, Timestamp.from(Instant.now()), null, null);
 
         new PortcallQueryBuilder()
-            .etdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .etdTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -122,8 +120,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, Timestamp.from(Instant.now()), null, null);
 
         new PortcallQueryBuilder()
-            .etdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .etdTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
+            .etdFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .etdTo(Instant.now().minus(2, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 0);
     }
 
@@ -132,8 +130,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, Timestamp.from(Instant.now()), null);
 
         new PortcallQueryBuilder()
-            .ataFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .ataTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .ataFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .ataTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -142,7 +140,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, Timestamp.from(Instant.now()), null);
 
         new PortcallQueryBuilder()
-            .ataFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
+            .ataFrom(Instant.now().minus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -151,7 +149,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, Timestamp.from(Instant.now()), null);
 
         new PortcallQueryBuilder()
-            .ataTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .ataTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -160,8 +158,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, Timestamp.from(Instant.now()), null);
 
         new PortcallQueryBuilder()
-            .ataFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .ataTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
+            .ataFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .ataTo(Instant.now().minus(2, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 0);
     }
 
@@ -170,8 +168,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, Timestamp.from(Instant.now()));
 
         new PortcallQueryBuilder()
-            .atdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .atdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .atdFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .atdTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -180,7 +178,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, Timestamp.from(Instant.now()));
 
         new PortcallQueryBuilder()
-            .atdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
+            .atdFrom(Instant.now().minus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -189,7 +187,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, Timestamp.from(Instant.now()));
 
         new PortcallQueryBuilder()
-            .atdTo(ZonedDateTime.now().plus(3, ChronoUnit.DAYS))
+            .atdTo(Instant.now().plus(3, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -198,8 +196,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, Timestamp.from(Instant.now()));
 
         new PortcallQueryBuilder()
-            .atdFrom(ZonedDateTime.now().minus(3, ChronoUnit.DAYS))
-            .atdTo(ZonedDateTime.now().minus(2, ChronoUnit.DAYS))
+            .atdFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .atdTo(Instant.now().minus(2, ChronoUnit.DAYS))
             .assertCount(portCallServiceV1, 0);
     }
 
@@ -208,8 +206,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, null);
 
         new PortcallQueryBuilder()
-            .modifiedFrom(ZonedDateTime.now().minus(3, ChronoUnit.HOURS))
-            .modifiedTo(ZonedDateTime.now().plus(3, ChronoUnit.HOURS))
+            .modifiedFrom(Instant.now().minus(3, ChronoUnit.HOURS))
+            .modifiedTo(Instant.now().plus(3, ChronoUnit.HOURS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -218,7 +216,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, null);
 
         new PortcallQueryBuilder()
-            .modifiedFrom(ZonedDateTime.now().minus(3, ChronoUnit.HOURS))
+            .modifiedFrom(Instant.now().minus(3, ChronoUnit.HOURS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -227,7 +225,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, null);
 
         new PortcallQueryBuilder()
-            .modifiedTo(ZonedDateTime.now().plus(3, ChronoUnit.HOURS))
+            .modifiedTo(Instant.now().plus(3, ChronoUnit.HOURS))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -236,8 +234,8 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, null);
 
         new PortcallQueryBuilder()
-            .modifiedFrom(ZonedDateTime.now().minus(3, ChronoUnit.HOURS))
-            .modifiedTo(ZonedDateTime.now().minus(2, ChronoUnit.HOURS))
+            .modifiedFrom(Instant.now().minus(3, ChronoUnit.HOURS))
+            .modifiedTo(Instant.now().minus(2, ChronoUnit.HOURS))
             .assertCount(portCallServiceV1, 0);
     }
 
@@ -246,7 +244,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         newPortCall(null, null, null, null);
 
         new PortcallQueryBuilder()
-            .modifiedDate(Date.from(ZonedDateTime.now().minusDays(3).toInstant()))
+            .modifiedDate(Date.from(Instant.now().minus(3, ChronoUnit.DAYS)))
             .assertCount(portCallServiceV1, 0);
     }
 
@@ -256,7 +254,7 @@ public class PortCallServiceTest extends AbstractTestBase {
         entityManager.flush();
         entityManager.clear();
         new PortcallQueryBuilder()
-            .modifiedDate(Date.from(ZonedDateTime.now().minusDays(1).toInstant()))
+            .modifiedDate(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)))
             .assertCount(portCallServiceV1, 1);
     }
 
@@ -407,7 +405,7 @@ public class PortCallServiceTest extends AbstractTestBase {
     public void master_is_empty() {
         newPortCall(null, null, null, null);
 
-        final PortCallsJson_V1 json = new PortcallQueryBuilder()
+        final PortCallsV1 json = new PortcallQueryBuilder()
             .imo(VESSEL_IMO)
             .assertCount(portCallServiceV1, 1);
 
@@ -461,26 +459,26 @@ public class PortCallServiceTest extends AbstractTestBase {
     }
 
     private static class PortcallQueryBuilder {
-        Date modifiedDate= null;
-        ZonedDateTime modifiedFrom= null;
-        ZonedDateTime modifiedTo= null;
-        ZonedDateTime etaFrom= null;
-        ZonedDateTime etaTo= null;
-        ZonedDateTime etdFrom= null;
-        ZonedDateTime etdTo= null;
-        ZonedDateTime ataFrom= null;
-        ZonedDateTime ataTo= null;
-        ZonedDateTime atdFrom= null;
-        ZonedDateTime atdTo= null;
-        String locode= null;
-        String vesselName= null;
-        Integer mmsi= null;
-        Integer imo= null;
-        List<String> nationality= null;
-        Integer vesselTypeCode= null;
+        Date modifiedDate = null;
+        Instant modifiedFrom = null;
+        Instant modifiedTo = null;
+        Instant etaFrom = null;
+        Instant etaTo = null;
+        Instant etdFrom = null;
+        Instant etdTo = null;
+        Instant ataFrom = null;
+        Instant ataTo = null;
+        Instant atdFrom = null;
+        Instant atdTo = null;
+        String locode = null;
+        String vesselName = null;
+        Integer mmsi = null;
+        Integer imo = null;
+        List<String> nationality = null;
+        Integer vesselTypeCode = null;
 
-        public PortCallsJson_V1 assertCount(final PortCallService_V1 portCallServiceV1, final int assertedCount) {
-            final PortCallsJson_V1 json = portCallServiceV1.findPortCalls(modifiedDate, modifiedFrom, modifiedTo, etaFrom, etaTo, etdFrom, etdTo,
+        public PortCallsV1 assertCount(final PortCallServiceV1 portCallServiceV1, final int assertedCount) {
+            final PortCallsV1 json = portCallServiceV1.findPortCalls(modifiedDate, modifiedFrom, modifiedTo, etaFrom, etaTo, etdFrom, etdTo,
                 ataFrom, ataTo, atdFrom, atdTo, locode, vesselName, mmsi, imo, nationality, vesselTypeCode);
 
             assertEquals(assertedCount, json.portCalls.size());
@@ -488,46 +486,46 @@ public class PortCallServiceTest extends AbstractTestBase {
             return json;
         }
 
-        public void assertException(final PortCallService_V1 portCallServiceV1) {
+        public void assertException(final PortCallServiceV1 portCallServiceV1) {
             Assertions.assertThrows(BadRequestException.class, () -> assertCount(portCallServiceV1, 0));
         }
 
-        public PortcallQueryBuilder atdFrom(final ZonedDateTime atdFrom) {
+        public PortcallQueryBuilder atdFrom(final Instant atdFrom) {
             this.atdFrom = atdFrom;
             return this;
         }
 
-        public PortcallQueryBuilder atdTo(final ZonedDateTime atdTo) {
+        public PortcallQueryBuilder atdTo(final Instant atdTo) {
             this.atdTo = atdTo;
             return this;
         }
 
-        public PortcallQueryBuilder modifiedFrom(final ZonedDateTime modifiedFrom) {
+        public PortcallQueryBuilder modifiedFrom(final Instant modifiedFrom) {
             this.modifiedFrom = modifiedFrom;
             return this;
         }
 
-        public PortcallQueryBuilder modifiedTo(final ZonedDateTime modifiedTo) {
+        public PortcallQueryBuilder modifiedTo(final Instant modifiedTo) {
             this.modifiedTo = modifiedTo;
             return this;
         }
 
-        public PortcallQueryBuilder ataFrom(final ZonedDateTime ataFrom) {
+        public PortcallQueryBuilder ataFrom(final Instant ataFrom) {
             this.ataFrom = ataFrom;
             return this;
         }
 
-        public PortcallQueryBuilder ataTo(final ZonedDateTime ataTo) {
+        public PortcallQueryBuilder ataTo(final Instant ataTo) {
             this.ataTo = ataTo;
             return this;
         }
 
-        public PortcallQueryBuilder etdFrom(final ZonedDateTime etdFrom) {
+        public PortcallQueryBuilder etdFrom(final Instant etdFrom) {
             this.etdFrom = etdFrom;
             return this;
         }
 
-        public PortcallQueryBuilder etdTo(final ZonedDateTime etdTo) {
+        public PortcallQueryBuilder etdTo(final Instant etdTo) {
             this.etdTo = etdTo;
             return this;
         }
@@ -537,12 +535,12 @@ public class PortCallServiceTest extends AbstractTestBase {
             return this;
         }
 
-        public PortcallQueryBuilder etaFrom(final ZonedDateTime etaFrom) {
+        public PortcallQueryBuilder etaFrom(final Instant etaFrom) {
             this.etaFrom = etaFrom;
             return this;
         }
 
-        public PortcallQueryBuilder etaTo(final ZonedDateTime etaTo) {
+        public PortcallQueryBuilder etaTo(final Instant etaTo) {
             this.etaTo = etaTo;
             return this;
         }

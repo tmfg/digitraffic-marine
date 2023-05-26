@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Port area GeoJSON Properties")
 public class PortAreaProperties extends Properties {
-    @Schema(description = "Maritime Mobile Service Identity", required = true)
+    @Schema(description = "Maritime Mobile Service Identity", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String locode;
 
-    @Schema(description = "Port area name", required = true)
+    @Schema(description = "Port area name", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String portAreaName;
 
     public PortAreaProperties(final String locode, final String portAreaName, final Instant dataUpdatedTime) {

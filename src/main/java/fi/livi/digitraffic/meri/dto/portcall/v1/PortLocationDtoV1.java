@@ -19,10 +19,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Ports, port areas and berths locations.")
 public class PortLocationDtoV1 implements LastModifiedSupport {
 
-    @Schema(description = "Data last updated", required = true)
+    @Schema(description = "Data last updated", requiredMode = Schema.RequiredMode.REQUIRED)
     public final Instant dataUpdatedTime;
 
-    @Schema(description = "Ssn Locations in Feature Collection", required = true)
+    @Schema(description = "Ssn Locations in Feature Collection", requiredMode = Schema.RequiredMode.REQUIRED)
     public final PortFeatureCollection ssnLocations;
 
     @Schema(description = "Port Areas in Feature Collection")

@@ -21,7 +21,7 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
 
     private GeometryType type;
 
-    @Schema(description = COORD_FORMAT_WGS84_LONG_INC_ALT, required = true)
+    @Schema(description = COORD_FORMAT_WGS84_LONG_INC_ALT, requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty(required = true)
     private T coordinates;
 
@@ -45,7 +45,7 @@ public class Geometry<T extends List<?>> extends GeoJsonObject {
         this.coordinates = coordinates;
     }
 
-    @Schema(description = "Type of GeoJSON Geometry object", allowableValues = "Point,MultiPoint,LineString,MultiLineString,Polygon,MultiPolygon", required = true)
+    @Schema(description = "Type of GeoJSON Geometry object", allowableValues = "Point,MultiPoint,LineString,MultiLineString,Polygon,MultiPolygon", requiredMode = Schema.RequiredMode.REQUIRED)
     @Override
     public String getType() {
         return type.name();

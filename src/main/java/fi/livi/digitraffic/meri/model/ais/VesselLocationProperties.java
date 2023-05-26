@@ -6,13 +6,13 @@ import fi.livi.digitraffic.meri.model.geojson.Properties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class VesselLocationProperties extends Properties {
-    @Schema(description = "Maritime Mobile Service Identity (nine digit identifier)", required = true)
+    @Schema(description = "Maritime Mobile Service Identity (nine digit identifier)", requiredMode = Schema.RequiredMode.REQUIRED)
     public final int mmsi;
 
-    @Schema(description = "Speed over ground in knots, 102.3 = not available", required = true)
+    @Schema(description = "Speed over ground in knots, 102.3 = not available", requiredMode = Schema.RequiredMode.REQUIRED)
     public final double sog;
 
-    @Schema(description = "Course over ground in degrees, 360 = not available (default)", minimum = "0", maximum = "360", required = true)
+    @Schema(description = "Course over ground in degrees, 360 = not available (default)", minimum = "0", maximum = "360", requiredMode = Schema.RequiredMode.REQUIRED)
     public final double cog;
 
     @Schema(description = "Navigational status. \n" +
@@ -26,7 +26,7 @@ public class VesselLocationProperties extends Properties {
         "13 = reserved for future use, \n" +
         "14 = AIS-SART (active), MOB-AIS, EPIRB-AIS, \n" +
         "15 = default",
-            minimum = "0", maximum = "15", required = true)
+            minimum = "0", maximum = "15", requiredMode = Schema.RequiredMode.REQUIRED)
     public final int navStat;
 
     @Schema(description = "Rate of turn, ROT[AIS]. \n" +
@@ -34,13 +34,13 @@ public class VesselLocationProperties extends Properties {
         "Coded by ROT[AIS] = 4.733 SQRT(ROT[IND]) where ROT[IND] is the Rate of Turn degrees per minute, as indicated by an external sensor. \n" +
         "+127 = turning right at 720 degrees per minute or higher\n" +
         "-127 = turning left at 720 degrees per minute or higher.",
-            minimum = "-128", maximum = "127", required = true)
+            minimum = "-128", maximum = "127", requiredMode = Schema.RequiredMode.REQUIRED)
     public final int rot;
 
-    @Schema(description = "Position accuracy, 1 = high, 0 = low", allowableValues = {"0", "1"}, required = true)
+    @Schema(description = "Position accuracy, 1 = high, 0 = low", allowableValues = {"0", "1"}, requiredMode = Schema.RequiredMode.REQUIRED)
     public final boolean posAcc;
 
-    @Schema(description = "Receiver autonomous integrity monitoring (RAIM) flag of electronic position fixing device", allowableValues = {"0", "1"}, required = true)
+    @Schema(description = "Receiver autonomous integrity monitoring (RAIM) flag of electronic position fixing device", allowableValues = {"0", "1"}, requiredMode = Schema.RequiredMode.REQUIRED)
     public final boolean raim;
 
     @Schema(description = "Degrees (0-359), 511 = not available (default)",  minimum = "0", maximum = "359")
@@ -52,10 +52,10 @@ public class VesselLocationProperties extends Properties {
         "60 if time stamp is not available, which should also be the default value, \n" +
         "61 if positioning system is in manual input mode, \n" +
         "62 if electronic position fixing system operates in estimated (dead reckoning) mode, \n" +
-        "63 if the positioning system is inoperative)",  minimum = "0", maximum = "63", required = true)
+        "63 if the positioning system is inoperative)",  minimum = "0", maximum = "63", requiredMode = Schema.RequiredMode.REQUIRED)
     public final long timestamp;
 
-    @Schema(description = "Location record timestamp in milliseconds from Unix epoch.", required = true)
+    @Schema(description = "Location record timestamp in milliseconds from Unix epoch.", requiredMode = Schema.RequiredMode.REQUIRED)
     public final long timestampExternal;
 
     public VesselLocationProperties(

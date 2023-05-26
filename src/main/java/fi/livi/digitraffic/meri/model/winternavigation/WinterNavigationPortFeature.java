@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 })
 public class WinterNavigationPortFeature extends Feature<Point, WinterNavigationPortProperties> {
 
-    @Schema(description = "Port SafeSeaNet location code", required = true)
+    @Schema(description = "Port SafeSeaNet location code", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String locode;
 
     public WinterNavigationPortFeature(final String locode, final WinterNavigationPortProperties properties, final Point geometry) {

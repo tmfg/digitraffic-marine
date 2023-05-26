@@ -18,7 +18,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     @ConditionalOnProperty(value = "etags.enabled", havingValue = "true")
     public Filter ShallowEtagHeaderFilter() {
         final ShallowEtagHeaderFilter shallowEtagHeaderFilter = new ShallowEtagHeaderFilter();
-        shallowEtagHeaderFilter.setWriteWeakETag(true);
+        shallowEtagHeaderFilter.setWriteWeakETag(false);
         return shallowEtagHeaderFilter;
     }
 

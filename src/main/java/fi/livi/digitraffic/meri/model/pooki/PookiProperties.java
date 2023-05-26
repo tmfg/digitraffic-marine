@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class PookiProperties extends Properties {
 
-    @Schema(required = true)
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private final Integer id;
 

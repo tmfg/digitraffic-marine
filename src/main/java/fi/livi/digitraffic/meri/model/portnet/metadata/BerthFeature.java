@@ -15,13 +15,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Berth GeoJSON feature")
 public class BerthFeature extends Feature<Point, BerthProperties> {
 
-    @Schema(description = "Maritime Mobile Service Identity", required = true)
+    @Schema(description = "Maritime Mobile Service Identity", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String locode;
 
-    @Schema(description = "Port area code", required = true)
+    @Schema(description = "Port area code", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String portAreaCode;
 
-    @Schema(description = "Berth code", required = true)
+    @Schema(description = "Berth code", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String berthCode;
 
     public BerthFeature(final String locode, final String portAreaCode, final String berthCode, final BerthProperties properties) {

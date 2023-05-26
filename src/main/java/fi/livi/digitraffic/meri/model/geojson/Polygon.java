@@ -11,13 +11,13 @@ public class Polygon extends Geometry<List<List<List<Double>>>> {
         super(GeometryType.Polygon);
     }
 
-    @Schema(required = true, allowableValues = "Polygon", example = "Polygon")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, allowableValues = "Polygon", example = "Polygon")
     @Override
     public String getType() {
         return super.getType();
     }
 
-    @Schema(required = true,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED,
                       example = "[ [ [100.00000000, 0.00000000], [101.00000000, 0.00000000], [101.00000000, 1.00000000], [100.00000000, 1.00000000], [100.00000000, 0.00000000] ], " +
                                   "[ [100.20000000, 0.20000000], [100.80000000, 0.20000000], [100.80000000, 0.80000000], [100.20000000, 0.80000000], [100.20000000, 0.20000000] ] ]",
                       description = "An array of LinearRing coordinates (LineString coordinates where the first and last points are equivalent). " +
