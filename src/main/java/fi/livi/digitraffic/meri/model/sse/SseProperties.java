@@ -22,14 +22,14 @@ public class SseProperties extends Properties {
     @Schema(description = "Identifier of the site")
     public final int siteNumber;
 
-    @Schema(description = "Site name of the buoy", required = true)
+    @Schema(description = "Site name of the buoy", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String siteName;
 
-    @Schema(description = "Type of the site. FLOATING is floating in the water and FIXED it is standing on the ground.", required = true)
+    @Schema(description = "Type of the site. FLOATING is floating in the water and FIXED it is standing on the ground.", requiredMode = Schema.RequiredMode.REQUIRED)
     private final SiteType siteType;
 
     /* SSE fields */
-    @Schema(description = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", required = true)
+    @Schema(description = "Data last updated timestamp in ISO 8601 format with time offsets from UTC (eg. 2016-04-20T12:38:16.328+03:00 or 2018-11-09T09:41:09Z)", requiredMode = Schema.RequiredMode.REQUIRED)
     private final Instant lastUpdate;
 
     @Schema(description = "Sea state. If seaState is CALM, the windWaveDir is not reliable. " + FIELD_ONLY_FOR_FLOATING_SITE)
@@ -45,7 +45,7 @@ public class SseProperties extends Properties {
         "Provides information on estimated confidence of mainly the directional information based on the Horizontal Dilution of precision (HDOP) figure obtained from the GPS receiver:\n"+
         "* POOR: More than 10\n" +
         "* MODERATE: 2-10\n" +
-        "* GOOD: Less than 2", required = true)
+        "* GOOD: Less than 2", requiredMode = Schema.RequiredMode.REQUIRED)
     private final Confidence confidence;
 
     /* Extra fields / metadata */

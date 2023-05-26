@@ -11,16 +11,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonPropertyOrder({ "name", "nationality", "seaArea", "portRestrictions" })
 public class WinterNavigationPortProperties extends Properties {
 
-    @Schema(description = "Port SafeSeaNet location code", required = true)
+    @Schema(description = "Port SafeSeaNet location code", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String locode;
 
-    @Schema(description = "Name", required = true)
+    @Schema(description = "Name", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String name;
 
-    @Schema(description = "Port nationality", required = true)
+    @Schema(description = "Port nationality", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String nationality;
 
-    @Schema(description = "Sea area where port is located", required = true)
+    @Schema(description = "Sea area where port is located", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String seaArea;
 
     @Schema(description = "Currently effective or announced traffic restrictions at the port")

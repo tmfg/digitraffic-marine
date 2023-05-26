@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
                      "properties" })
 public class WinterNavigationDirwayFeature extends Feature<Geometry, WinterNavigationDirwayProperties> {
 
-    @Schema(description = "Name of the dirway", required = true)
+    @Schema(description = "Name of the dirway", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String name;
 
     public WinterNavigationDirwayFeature(final String name,

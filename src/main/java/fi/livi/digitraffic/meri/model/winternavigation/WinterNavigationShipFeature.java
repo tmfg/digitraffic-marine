@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class WinterNavigationShipFeature extends Feature<Point, WinterNavigationShipProperties> {
 
     @Schema(description = "Vessel identification code. Equals IMO-{IMO-code} when vessel IMO is present. " +
-                              "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true)
+                              "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String vesselId;
 
     public WinterNavigationShipFeature(final String vesselId, final WinterNavigationShipProperties properties, final Point geometry) {

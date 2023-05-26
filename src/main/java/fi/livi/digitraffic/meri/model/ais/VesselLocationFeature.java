@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 })
 public class VesselLocationFeature extends Feature<Point, VesselLocationProperties> {
 
-    @Schema(description = "Maritime Mobile Service Identity (nine digit identifier)", required = true)
+    @Schema(description = "Maritime Mobile Service Identity (nine digit identifier)", requiredMode = Schema.RequiredMode.REQUIRED)
     public final int mmsi;
 
     public VesselLocationFeature(final int mmsi, final VesselLocationProperties properties, final Point geometry) {

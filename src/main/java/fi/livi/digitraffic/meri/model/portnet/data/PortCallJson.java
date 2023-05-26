@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
                      "certificateIssuer", "certificateStartDate", "certificateEndDate", "currentSecurityLevel", "agentInfo", "imoInformation",
                      "portAreaDetails" })
 public interface PortCallJson {
-    @Schema(description = "Unique identifier for port call", required = true)
+    @Schema(description = "Unique identifier for port call", requiredMode = Schema.RequiredMode.REQUIRED)
     Long getPortCallId();
 
     @Schema(description = "Port call information modification time")

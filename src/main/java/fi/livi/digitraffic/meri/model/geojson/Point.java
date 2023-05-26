@@ -22,13 +22,13 @@ public class Point extends Geometry<List<Double>> {
     }
 
 
-    @Schema(required = true, allowableValues = "Point", example = "Point")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, allowableValues = "Point", example = "Point")
     @Override
     public String getType() {
         return super.getType();
     }
 
-    @Schema(required = true, example = "[26.97677492, 65.34673850]",
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "[26.97677492, 65.34673850]",
                       description = "An array of coordinates. " + COORD_FORMAT_WGS84_LONG_INC_ALT)
     @Override
     public List<Double> getCoordinates() {

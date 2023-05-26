@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class WinterNavigationShipProperties extends Properties {
 
     @Schema(description = "Vessel identification code. Equals IMO-{IMO-code} when vessel IMO is present. " +
-        "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", required = true)
+        "Otherwise MMSI-{MMSI-code} (Maritime Mobile Service Identity).", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String vesselId;
 
     @Schema(description = "Data source identifier")

@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Info about API's data updates")
 public class UpdateInfoDtoV1 implements DataUpdatedSupportV1 {
 
-    @Schema(description = "Url of the API", required = true)
+    @Schema(description = "Url of the API", requiredMode = Schema.RequiredMode.REQUIRED)
     final public String api;
 
     @Schema(description = "More specific info about API. Ie. domain info.")

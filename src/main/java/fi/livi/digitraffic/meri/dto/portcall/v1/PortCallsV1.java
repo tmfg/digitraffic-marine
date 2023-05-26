@@ -9,10 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Port call")
 public final class PortCallsV1 implements LastModifiedSupport {
-    @Schema(description = "Timestamp when port calls were updated", required = true)
+    @Schema(description = "Timestamp when port calls were updated", requiredMode = Schema.RequiredMode.REQUIRED)
     public final Instant dataUpdatedTime;
 
-    @Schema(description = "Port calls", required = true)
+    @Schema(description = "Port calls", requiredMode = Schema.RequiredMode.REQUIRED)
     public final List<PortCallJson> portCalls;
 
     public PortCallsV1(final Instant dataUpdatedTime, final List<PortCallJson> portCalls) {

@@ -16,10 +16,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonPropertyOrder({ "type", "dataUpdatedTime", "features" })
 public class FeatureCollection<FeatureType extends LastModifiedSupport> extends GeoJsonObject implements DataUpdatedSupportV1 {
 
-    @Schema(description = "Type of GeoJSON object", allowableValues = "FeatureCollection", required = true)
+    @Schema(description = "Type of GeoJSON object", allowableValues = "FeatureCollection", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String type = "FeatureCollection";
 
-    @Schema(required = true)
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("features")
     private List<FeatureType> features = new ArrayList<>();
 

@@ -14,10 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 })
 @Schema(description = "SafeSeaNet (SSN) GeoJSON feature collection")
 public class LocationFeatureCollections_V1 {
-    @Schema(description = "Data last updated", required = true)
+    @Schema(description = "Data last updated", requiredMode = Schema.RequiredMode.REQUIRED)
     public final Instant dataUpdatedTime;
 
-    @Schema(description = "Ssn Locations in Feature Collection", required = true)
+    @Schema(description = "Ssn Locations in Feature Collection", requiredMode = Schema.RequiredMode.REQUIRED)
     public final PortFeatureCollection ssnLocationFeatureCollection;
 
     @Schema(description = "Port Areas in Feature Collection")

@@ -15,7 +15,7 @@ public class UpdateInfosDtoV1 implements DataUpdatedSupportV1 {
     @Schema(description = "Update times for APIs")
     public final List<UpdateInfoDtoV1> updateTimes;
 
-    @Schema(description = "Latest update of data", required = true)
+    @Schema(description = "Latest update of data", requiredMode = Schema.RequiredMode.REQUIRED)
     private final Instant dataUpdatedTime;
 
     public UpdateInfosDtoV1(final List<UpdateInfoDtoV1> updateTimes, final Instant dataUpdatedTime) {

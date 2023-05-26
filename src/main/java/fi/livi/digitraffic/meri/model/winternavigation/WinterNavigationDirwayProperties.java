@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonPropertyOrder({ "issueTime", "issuerCode", "issuerName", "validUntil" })
 public class WinterNavigationDirwayProperties extends Properties {
 
-    @Schema(description = "Name of the dirway", required = true)
+    @Schema(description = "Name of the dirway", requiredMode = Schema.RequiredMode.REQUIRED)
     public final String name;
 
     @Schema(description = "Time when the dirway was issued")
