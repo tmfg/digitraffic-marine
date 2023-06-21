@@ -13,6 +13,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,6 @@ public class PortcallControllerV1 {
         "In this case you should try to narrow down your search criteria.\n\n" +
         "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
 
-    public static final String API_PORT_CALL_BETA = API_PORT_CALL + BETA;
     public static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
     public static final String PORT_CALLS = "/port-calls";
     public static final String CODE_DESCRIPTIONS = "/code-descriptions";
@@ -76,43 +76,44 @@ public class PortcallControllerV1 {
         @Parameter(description = "Return port calls received after given time. " +
             "Default value is now minus 24 hours if all parameters are empty.")
         @RequestParam(value = "from", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant from,
+        @DateTimeFormat(iso = DATE_TIME) final Instant from,
 
-        @Parameter(description = "Return port calls received before given time.")
+        @Parameter(description = "Return port calls received before given time." +
+            "Default value is now plus 100 days, if parameter is empty.")
         @RequestParam(value = "to", required = false)
         @DateTimeFormat(iso = DATE_TIME) final Instant to,
 
         @Parameter(description = "Return port calls whose ETA time is after the given time")
         @RequestParam(value = "etaFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant etaFrom,
+        @DateTimeFormat(iso = DATE_TIME) final Instant etaFrom,
 
         @Parameter(description = "Return port calls whose ETD time is after the given time")
         @RequestParam(value = "etdFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant etdFrom,
+        @DateTimeFormat(iso = DATE_TIME) final Instant etdFrom,
 
         @Parameter(description = "Return port calls whose ATA time is after the given time")
         @RequestParam(value = "ataFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant ataFrom,
+        @DateTimeFormat(iso = DATE_TIME) final Instant ataFrom,
 
         @Parameter(description = "Return port calls whose ATD time is after the given time")
         @RequestParam(value = "atdFrom", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant atdFrom,
+        @DateTimeFormat(iso = DATE_TIME) final Instant atdFrom,
 
         @Parameter(description = "Return port calls whose ETA time is before the given time")
         @RequestParam(value = "etaTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant etaTo,
+        @DateTimeFormat(iso = DATE_TIME) final Instant etaTo,
 
         @Parameter(description = "Return port calls whose ETD time is before the given time")
         @RequestParam(value = "etdTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant etdTo,
+        @DateTimeFormat(iso = DATE_TIME) final Instant etdTo,
 
         @Parameter(description = "Return port calls whose ATA time is before the given time")
         @RequestParam(value = "ataTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant ataTo,
+        @DateTimeFormat(iso = DATE_TIME) final Instant ataTo,
 
         @Parameter(description = "Return port calls whose ATD time is before the given time")
         @RequestParam(value = "atdTo", required = false)
-        @DateTimeFormat(iso = DATE_TIME) Instant atdTo,
+        @DateTimeFormat(iso = DATE_TIME) final Instant atdTo,
 
         @Parameter(description = "Return port calls for given locode")
         @RequestParam(value = "locode", required = false) final String locode,
@@ -133,13 +134,19 @@ public class PortcallControllerV1 {
         @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
     ) {
 
-        if (!ObjectUtils.anyNotNull(date, from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
-            from = Instant.now().minus(Duration.ofDays(1));
+        // use default, if no other parameters given
+        final Instant actualFrom;
+        if (!ObjectUtils.anyNotNull(date, from, to, ataFrom, ataTo, atdFrom, atdTo, etaFrom, etaTo, etdFrom, etdTo, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
+            actualFrom = Instant.now().minus(Duration.ofDays(1));
+        } else {
+            actualFrom = from;
         }
 
+        final Instant actualTo = to != null ? to : Instant.now().plus(Duration.ofDays(100));
+
         return portCallServiceV1.findPortCalls(date,
-            from,
-            to,
+            actualFrom,
+            actualTo,
             etaFrom,
             etaTo,
             etdFrom,
@@ -212,8 +219,10 @@ public class PortcallControllerV1 {
         }
 
         final List<VesselDetails> vds = portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationality, vesselTypeCode);
-        final Instant lastModified = vds.stream().filter(vd -> vd.getLastModified() != null).map(VesselDetails::getLastModified).max(
-            Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
+        final Instant lastModified = vds.stream()
+            .map(VesselDetails::getLastModified)
+            .filter(ObjectUtils::isNotEmpty)
+            .max(Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
         return ResponseEntityWithLastModifiedHeader.of(vds, lastModified, API_PORT_CALL_V1 + VESSEL_DETAILS);
 
     }

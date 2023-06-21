@@ -31,12 +31,16 @@ public class QueryBuilder<T, K> {
         predicateList.add(equalPredicate(e, o));
     }
 
+    public void equals(final Expression<?> e1, final Expression<?> e2) {
+        predicateList.add(cb.equal(e1, e2));
+    }
+
     public Predicate equalPredicate(final Expression<?> e, final Object o) {
         return cb.equal(e, o);
     }
 
     public <E extends Comparable<? super E>> void gte(final Expression<? extends E> e, final E value) {
-        predicateList.add(cb.greaterThanOrEqualTo(e, value));
+        predicateList.add(gtePredicate(e, value));
     }
 
     public <E extends Comparable<? super E>> void lte(final Expression<? extends E> e, final E value) {
@@ -44,7 +48,15 @@ public class QueryBuilder<T, K> {
     }
 
     public <E extends Comparable<? super E>> void lt(final Expression<? extends E> e, final E value) {
-        predicateList.add(cb.lessThan(e, value));
+        predicateList.add(ltPredicate(e, value));
+    }
+
+    public <E extends Comparable<? super E>> Predicate gtePredicate(final Expression<? extends E> e, final E value) {
+        return cb.greaterThanOrEqualTo(e, value);
+    }
+
+    public <E extends Comparable<? super E>> Predicate ltPredicate(final Expression<? extends E> e, final E value) {
+        return cb.lessThan(e, value);
     }
 
     public <Z> void in(final String attribute, final List<Z> inList) {
@@ -75,6 +87,10 @@ public class QueryBuilder<T, K> {
         predicateList.add(cb.like(root.get(attribute), pattern));
     }
 
+    public void exists(final Subquery<?> subQuery) {
+        predicateList.add(cb.exists(subQuery));
+    }
+
     public <E> Expression<E> function(final String functionName, final Class<E> eClazz, final Expression<?>... expressions) {
         return cb.function(functionName, eClazz, expressions);
     }
@@ -92,15 +108,12 @@ public class QueryBuilder<T, K> {
     }
 
     public List<T> getResults(final String attribute) {
-        query.select(root.get(attribute))
-             .where(predicateList.toArray(new Predicate[] {}));
-
-        return entityManager.createQuery(query).getResultList();
+        return getResults(root.get(attribute));
     }
 
     public List<T> getResults(final Selection path) {
-        query.select(path)
-            .where(predicateList.toArray(new Predicate[] {}));
+        query.select(path);
+        query.where(predicateList.toArray(new Predicate[] {}));
 
         return entityManager.createQuery(query).getResultList();
     }

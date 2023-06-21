@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
+import javax.persistence.criteria.SetJoin;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -182,7 +184,7 @@ public class PortCallServiceV1 {
             qb.equals("vesselTypeCode", vesselTypeCode);
         }
 
-        final Path<PortAreaDetails> portAreaDetails = qb.join("portAreaDetails");
+        final Join<PortCall, PortAreaDetails> portAreaDetails = qb.join("portAreaDetails");
 
         if (etaFrom != null) {
             qb.gte(portAreaDetails.get("eta"), Date.from(etaFrom));

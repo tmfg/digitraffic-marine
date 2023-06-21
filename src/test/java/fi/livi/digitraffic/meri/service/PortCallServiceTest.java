@@ -136,6 +136,28 @@ public class PortCallServiceTest extends AbstractTestBase {
     }
 
     @Test
+    public void ataBetweenAndVesselName() {
+        newPortCall(null, null, Timestamp.from(Instant.now()), null);
+
+        new PortcallQueryBuilder()
+            .vesselName(VESSEL_NAME)
+            .ataFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .ataTo(Instant.now().plus(3, ChronoUnit.DAYS))
+            .assertCount(portCallServiceV1, 1);
+    }
+
+    @Test
+    public void ataBetweenAndPortToVisit() {
+        newPortCall(null, null, Timestamp.from(Instant.now()), null);
+
+        new PortcallQueryBuilder()
+            .locode(PORT_LOCODE)
+            .ataFrom(Instant.now().minus(3, ChronoUnit.DAYS))
+            .ataTo(Instant.now().plus(3, ChronoUnit.DAYS))
+            .assertCount(portCallServiceV1, 1);
+    }
+
+    @Test
     public void ataAfter_openEnd() {
         newPortCall(null, null, Timestamp.from(Instant.now()), null);
 
