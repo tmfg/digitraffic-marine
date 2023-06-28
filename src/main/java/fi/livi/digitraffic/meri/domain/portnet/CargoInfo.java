@@ -2,21 +2,19 @@ package fi.livi.digitraffic.meri.domain.portnet;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+import jakarta.persistence.SequenceGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 @Entity
 @DynamicInsert
 public class CargoInfo {
     @Id
-    @GenericGenerator(name = "SEQ_CARGO_INFO", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = @Parameter(name = "sequence_name", value = "SEQ_CARGO_INFO"))
+    @SequenceGenerator(name = "SEQ_CARGO_INFO", sequenceName = "SEQ_CARGO_INFO", allocationSize = 1)
     @GeneratedValue(generator = "SEQ_CARGO_INFO")
     private Long cargoInfoId;
 

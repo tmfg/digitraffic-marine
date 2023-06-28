@@ -3,10 +3,11 @@ package fi.livi.digitraffic.meri.domain.winternavigation;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+import jakarta.persistence.SequenceGenerator;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -16,8 +17,7 @@ import org.hibernate.annotations.Parameter;
 public class PortRestriction {
 
     @Id
-    @GenericGenerator(name = "SEQ_PORT_RESTRICTION", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-                      parameters = @Parameter(name = "sequence_name", value = "SEQ_PORT_RESTRICTION"))
+    @SequenceGenerator(name = "SEQ_PORT_RESTRICTION", sequenceName = "SEQ_PORT_RESTRICTION", allocationSize = 1)
     @GeneratedValue(generator = "SEQ_PORT_RESTRICTION")
     private Long id;
 

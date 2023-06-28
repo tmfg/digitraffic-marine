@@ -1,11 +1,10 @@
 package fi.livi.digitraffic.meri.dao.winternavigation;
 
-import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
-
 import java.util.List;
 import java.util.stream.Stream;
-import javax.persistence.QueryHint;
+import jakarta.persistence.QueryHint;
 
+import org.hibernate.jpa.AvailableHints;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,7 +22,7 @@ public interface WinterNavigationPortRepository extends JpaRepository<WinterNavi
     @Modifying
     void setRemovedPortsObsolete(@Param("locodes") final List<String> locodes);
 
-    @QueryHints({ @QueryHint(name = HINT_FETCH_SIZE, value = "1000") })
+    @QueryHints({ @QueryHint(name = AvailableHints.HINT_FETCH_SIZE, value = "1000") })
     @EntityGraph(attributePaths = { "portRestrictions" })
     Stream<WinterNavigationPort> findDistinctByObsoleteDateIsNullOrderByLocode();
 }

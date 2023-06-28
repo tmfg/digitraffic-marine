@@ -1,18 +1,16 @@
 package fi.livi.digitraffic.meri.domain.portnet;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+import jakarta.persistence.SequenceGenerator;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 @Entity
 @DynamicInsert
 public class ImoInformation {
-    @GenericGenerator(name = "SEQ_IMO_INFORMATION", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = @Parameter(name = "sequence_name", value = "SEQ_IMO_INFORMATION"))
+    @SequenceGenerator(name = "SEQ_IMO_INFORMATION", sequenceName = "SEQ_IMO_INFORMATION", allocationSize = 1)
     @GeneratedValue(generator = "SEQ_IMO_INFORMATION")
     @Id
     private Long imoInformationId;

@@ -5,23 +5,15 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 @Entity
 @DynamicInsert
 public class PortAreaDetails {
     @Id
-    @GenericGenerator(name = "SEQ_PORT_AREA_DETAILS", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = @Parameter(name = "sequence_name", value = "SEQ_PORT_AREA_DETAILS"))
+    @SequenceGenerator(name = "SEQ_PORT_AREA_DETAILS", sequenceName = "SEQ_PORT_AREA_DETAILS", allocationSize = 1)
     @GeneratedValue(generator = "SEQ_PORT_AREA_DETAILS")
     private Long portAreaDetailsId;
 

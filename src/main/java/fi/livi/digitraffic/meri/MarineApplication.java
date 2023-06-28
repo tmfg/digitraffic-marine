@@ -7,7 +7,6 @@ import org.springframework.boot.actuate.autoconfigure.cache.CachesEndpointAutoCo
 import org.springframework.boot.actuate.autoconfigure.metrics.export.appoptics.AppOpticsMetricsExportAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.metrics.export.atlas.AtlasMetricsExportAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.metrics.export.wavefront.WavefrontMetricsExportAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.metrics.web.reactive.WebFluxMetricsAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration;
 import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
@@ -16,7 +15,6 @@ import org.springframework.boot.autoconfigure.data.cassandra.CassandraReactiveDa
 import org.springframework.boot.autoconfigure.data.cassandra.CassandraReactiveRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.cassandra.CassandraRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration;
@@ -24,12 +22,10 @@ import org.springframework.boot.autoconfigure.web.reactive.function.client.WebCl
 import org.springframework.boot.autoconfigure.websocket.reactive.WebSocketReactiveAutoConfiguration;
 import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketMessagingAutoConfiguration;
 import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableRetry
 @SpringBootApplication(exclude = {
-    ActiveMQAutoConfiguration.class,
     AppOpticsMetricsExportAutoConfiguration.class,
     ArtemisAutoConfiguration.class,
     AtlasMetricsExportAutoConfiguration.class,
@@ -48,8 +44,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     WebSocketReactiveAutoConfiguration.class,
     WavefrontMetricsExportAutoConfiguration.class,
     WebClientAutoConfiguration.class,
-    WebFluxAutoConfiguration.class,
-    WebFluxMetricsAutoConfiguration.class})
+    WebFluxAutoConfiguration.class})
 @EnableTransactionManagement
 public class MarineApplication {
     public static void main(final String[] args) {

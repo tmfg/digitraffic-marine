@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
+import org.slf4j.event.KeyValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Import;
@@ -21,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -295,6 +297,11 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
             }
 
             @Override
+            public List<Marker> getMarkerList() {
+                return null;
+            }
+
+            @Override
             public Map<String, String> getMDCPropertyMap() {
                 return null;
             }
@@ -307,6 +314,21 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
             @Override
             public long getTimeStamp() {
                 return 0;
+            }
+
+            @Override
+            public int getNanoseconds() {
+                return 0;
+            }
+
+            @Override
+            public long getSequenceNumber() {
+                return 0;
+            }
+
+            @Override
+            public List<KeyValuePair> getKeyValuePairs() {
+                return null;
             }
 
             @Override

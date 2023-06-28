@@ -4,7 +4,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.criteria.Path;
+import jakarta.persistence.criteria.Path;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -3,15 +3,9 @@ package fi.livi.digitraffic.meri.domain.sse;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import fi.livi.digitraffic.meri.model.sse.SseProperties;
 import fi.livi.digitraffic.meri.model.sse.SseProperties.SiteType;
@@ -21,8 +15,7 @@ import fi.livi.digitraffic.meri.model.sse.SseProperties.SiteType;
 public class SseReport {
 
     @Id
-    @GenericGenerator(name = "SEQ_SSE_REPORT", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-                      parameters = @Parameter(name = "sequence_name", value = "SEQ_SSE_REPORT"))
+    @SequenceGenerator(name = "SEQ_SSE_REPORT", sequenceName = "SEQ_SSE_REPORT", allocationSize = 1)
     @GeneratedValue(generator = "SEQ_SSE_REPORT")
     private Long sseReportId;
     private Instant created;

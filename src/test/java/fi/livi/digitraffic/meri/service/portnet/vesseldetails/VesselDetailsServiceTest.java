@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import fi.livi.digitraffic.meri.AbstractTestBase;
 import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @Transactional
 public class VesselDetailsServiceTest extends AbstractTestBase {

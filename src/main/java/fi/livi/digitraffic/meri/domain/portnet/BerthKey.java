@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.domain.portnet;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class BerthKey implements Serializable{

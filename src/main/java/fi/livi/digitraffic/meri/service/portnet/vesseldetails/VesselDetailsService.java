@@ -5,8 +5,8 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.Join;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.Join;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

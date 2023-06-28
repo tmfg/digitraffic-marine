@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.domain.portnet;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 
 import org.hibernate.annotations.DynamicUpdate;
 

@@ -2,7 +2,6 @@ package fi.livi.digitraffic.meri.config;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -13,16 +12,20 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.Collections;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.URIScheme;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -71,10 +74,13 @@ public class RestTemplateConfiguration {
             .loadKeyMaterial(clientKeyStore, EMPTY_PASSWORD)
             .loadTrustMaterial((chain, authType) -> true);
 
-        final SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContextBuilder.build());
+        final Registry<ConnectionSocketFactory> socketRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+            .register(URIScheme.HTTPS.getId(), new SSLConnectionSocketFactory(sslContextBuilder.build()))
+            .register(URIScheme.HTTP.getId(), new PlainConnectionSocketFactory())
+            .build();
 
         final CloseableHttpClient httpClient = HttpClients.custom()
-            .setSSLSocketFactory(sslConnectionSocketFactory)
+            .setConnectionManager(new PoolingHttpClientConnectionManager(socketRegistry))
             .build();
 
         return new RestTemplate(clientHttpRequestFactory(httpClient));
@@ -89,7 +95,7 @@ public class RestTemplateConfiguration {
     }
 
     private ClientHttpRequestFactory clientHttpRequestFactory(final HttpClient client) {
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(client);
+        final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(client);
         factory.setConnectTimeout(30 * 1000);
         factory.setReadTimeout(60 * 1000);
         return factory;

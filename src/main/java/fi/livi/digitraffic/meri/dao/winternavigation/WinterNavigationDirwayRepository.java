@@ -2,8 +2,9 @@ package fi.livi.digitraffic.meri.dao.winternavigation;
 
 import java.util.List;
 
-import javax.persistence.QueryHint;
+import jakarta.persistence.QueryHint;
 
+import org.hibernate.jpa.AvailableHints;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,7 +18,7 @@ import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirway;
 @Repository
 public interface WinterNavigationDirwayRepository extends JpaRepository<WinterNavigationDirway, String> {
 
-    @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
+    @QueryHints({ @QueryHint(name = AvailableHints.HINT_FETCH_SIZE, value = "1000") })
     @EntityGraph(attributePaths = { "dirwayPoints" })
     List<WinterNavigationDirway> findDistinctByOrderByName();
 

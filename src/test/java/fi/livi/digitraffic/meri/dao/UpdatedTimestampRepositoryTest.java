@@ -23,6 +23,7 @@ public class UpdatedTimestampRepositoryTest extends AbstractTestBase {
 
         final ZonedDateTime response = updatedTimestampRepository.findLastUpdated(SSE_DATA);
 
-        assertTimesEqual(aika, response);
+        // might have different resolution
+        assertTimesEqual(aika.withNano(0), response.withNano(0));
     }
 }

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.ZonedDateTime;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 
 import fi.livi.digitraffic.meri.model.winternavigation.PortRestrictionProperty;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;

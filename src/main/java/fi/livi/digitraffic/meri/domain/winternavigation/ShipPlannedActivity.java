@@ -2,10 +2,7 @@ package fi.livi.digitraffic.meri.domain.winternavigation;
 
 import java.time.ZonedDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -14,8 +11,7 @@ import org.hibernate.annotations.Parameter;
 public class ShipPlannedActivity {
 
     @Id
-    @GenericGenerator(name = "SEQ_SHIP_PLANNED_ACTIVITY", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-                      parameters = @Parameter(name = "sequence_name", value = "SEQ_SHIP_PLANNED_ACTIVITY"))
+    @SequenceGenerator(name = "SEQ_SHIP_PLANNED_ACTIVITY", sequenceName = "SEQ_SHIP_PLANNED_ACTIVITY", allocationSize = 1)
     @GeneratedValue(generator = "SEQ_SHIP_PLANNED_ACTIVITY")
     private Long id;
 

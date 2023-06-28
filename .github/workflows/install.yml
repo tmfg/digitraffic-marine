@@ -79,7 +79,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
           distribution: corretto
           cache: maven
       - name: Build package
@@ -166,7 +166,7 @@ jobs:
             --output type=docker \
             --tag ${{ secrets.ECR_URL }}/dt-marine-${{ matrix.app }}-repository:${{ needs.build.outputs.git_sha }} \
             --pull=true \
-            --file=Dockerfile-marine .
+            --file=docker/Dockerfile-marine .
             
           docker push ${{ secrets.ECR_URL }}/dt-marine-${{ matrix.app }}-repository:${{ needs.build.outputs.git_sha }}
       - name: Build docker image for db

@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.util.dao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
