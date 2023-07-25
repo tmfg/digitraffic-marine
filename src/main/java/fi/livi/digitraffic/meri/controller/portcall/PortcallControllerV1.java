@@ -47,9 +47,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Validated
 @ConditionalOnWebApplication
 public class PortcallControllerV1 {
-    private static final String NOTE = "If the search result size exceeds 1000 items, the operation will return an error. " +
-        "In this case you should try to narrow down your search criteria.\n\n" +
-        "All dates/times are in ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z";
+    private static final String NOTE = "If the search result size exceeds 1000 items, the operation will return an error, and thus " +
+        "try to narrow down your search criteria to limit the result size below 1000 items.\n\n" +
+        "Data is provided as is and isn't moderated in any way. " +
+        "Timestamps are in valid ISO 8601 format, e.g. 2016-10-31 or 2016-10-31T06:30:00.000Z, but may still contain anomalies such as the timestamp being in distant future.";
 
     public static final String API_PORT_CALL_V1 = API_PORT_CALL + V1;
     public static final String PORT_CALLS = "/port-calls";
