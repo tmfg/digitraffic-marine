@@ -13,6 +13,7 @@ import jakarta.xml.bind.MarshalException;
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +43,8 @@ public class DefaultExceptionHandler {
 
     // log these exceptions with error
     private static final Set<Class<? extends Exception>> errorLoggableExceptions = Set.of(
+        NullPointerException.class,
+        DataAccessException.class,
         ResourceAccessException.class
     );
 

@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.7</version>
+        <version>3.0.9</version>
         <relativePath/>
     </parent>
 
@@ -24,7 +24,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <io.springfox.version>3.0.0</io.springfox.version>
         <aws.sdk.version>1.12.277</aws.sdk.version>
-        <spring.cloud.version>4.0.3</spring.cloud.version>
+        <spring.cloud.version>4.0.4</spring.cloud.version>
         <org.glassfish.metro.ws.version>4.0.2</org.glassfish.metro.ws.version>
     </properties>
     <profiles>
@@ -140,20 +140,20 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>32.0.1-jre</version>
+            <version>32.1.2-jre</version>
         </dependency>
 
         <!-- Static Reader of META-INF/MANIFEST.MF Files -->
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.1.0</version>
+            <version>2.2.0</version>
         </dependency>
 
         <dependency>
@@ -171,7 +171,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>3.13.0</version>
         </dependency>
 
         <dependency>
@@ -258,7 +258,7 @@
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>
-            <version>2.4.11</version>
+            <version>2.5.0</version>
         </dependency>
 
         <!-- Logging in JSON format for ELK-stack -->
@@ -284,7 +284,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.9.3</version>
+            <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -308,7 +308,7 @@
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
-            <version>1.0.1</version>
+            <version>1.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -379,7 +379,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>4.9.10</version>
 
                 <configuration>
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
