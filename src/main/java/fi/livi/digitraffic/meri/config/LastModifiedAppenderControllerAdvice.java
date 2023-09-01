@@ -15,8 +15,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import fi.livi.digitraffic.common.util.TimeUtil;
 import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
-import fi.livi.digitraffic.meri.util.TimeUtil;
 
 /**
  * Appends Last-Modified -header to response if supported by returned object

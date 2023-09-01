@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
+import static fi.livi.digitraffic.common.util.TimeUtil.FINLAND_ZONE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;

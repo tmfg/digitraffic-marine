@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.common.util.TimeUtil;
 import fi.livi.digitraffic.meri.controller.ApiConstants;
 import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
 import fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1;
@@ -26,7 +27,6 @@ import fi.livi.digitraffic.meri.dto.info.v1.DataSourceInfoDtoV1;
 import fi.livi.digitraffic.meri.dto.info.v1.UpdateInfoDtoV1;
 import fi.livi.digitraffic.meri.dto.info.v1.UpdateInfosDtoV1;
 import fi.livi.digitraffic.meri.model.DataSource;
-import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
 public class DataStatusService {
