@@ -1,0 +1,13 @@
+{
+    "name": "repo-setup",
+    "description": "scripts for setting up repo",
+    "version": "0.0.1",
+    "scripts": {
+        "init-submodules": "zx git-init-submodule.mjs"
+    },
+    "dependencies": {
+        "fs-extra": "^11.1.1",
+        "lodash": "^4.17.21",
+        "zx": "^7.2.3"
+    }
+}
