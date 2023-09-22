@@ -370,7 +370,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.digitraffic-common-java.directory}/src/main/java</source>
+                                <source>${project.digitraffic-common-java.directory}/src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
