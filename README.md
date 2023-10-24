@@ -3,11 +3,12 @@
 ## Development
 
 ### Preconditions
-1. Java 11 JDK
+1. Java 17 JDK
 2. Maven
 3. Git client
 4. Postgresql-database
-5. (optional) mqtt-server
+5. Node.js 18 (for initializing Git submodules during build)
+6. (optional) mqtt-server
 
 You can run postgresql and mqtt in docker.  See dbmarine/README.md and mqttmarine/README.md for details.
 

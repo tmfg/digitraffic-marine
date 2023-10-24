@@ -1,7 +1,13 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.livi.digitraffic.meri.portnet.xsd.*;
+import static fi.livi.digitraffic.common.util.TimeUtil.FINLAND_ZONE;
+
+import java.math.BigInteger;
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -19,13 +25,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.math.BigInteger;
-import java.time.Duration;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
+import fi.livi.digitraffic.meri.portnet.xsd.BerthDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.PortCallDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
+import fi.livi.digitraffic.meri.portnet.xsd.VesselDetails;
 
 class PortcallEstimate {
     public final EventType eventType;

@@ -9,8 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import fi.livi.digitraffic.common.util.TimeUtil;
 import fi.livi.digitraffic.meri.model.geojson.Properties;
-import fi.livi.digitraffic.meri.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "GeoJSON Properties object of sea state estimate (SSE)")

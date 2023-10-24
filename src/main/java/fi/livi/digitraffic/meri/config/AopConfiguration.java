@@ -1,6 +1,5 @@
 package fi.livi.digitraffic.meri.config;
 
-import fi.livi.digitraffic.meri.aop.TransactionLoggerAspect;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-import fi.livi.digitraffic.meri.aop.PerformanceMonitorAspect;
+import fi.livi.digitraffic.common.aop.PerformanceMonitorAspect;
+import fi.livi.digitraffic.common.aop.TransactionLoggerAspect;
+
+
 
 @Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)

@@ -1,7 +1,5 @@
 package fi.livi.digitraffic.meri.config;
 
-import jakarta.servlet.Filter;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +7,9 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import fi.livi.digitraffic.common.config.DeprecationInterceptor;
+import jakarta.servlet.Filter;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {

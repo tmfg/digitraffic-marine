@@ -24,6 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.common.util.TimeUtil;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.domain.portnet.PortCall;
@@ -39,7 +40,6 @@ import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
 import fi.livi.digitraffic.meri.portnet.xsd.TimeSource;
 import fi.livi.digitraffic.meri.util.StringUtil;
-import fi.livi.digitraffic.meri.util.TimeUtil;
 
 @Service
 @ConditionalOnNotWebApplication

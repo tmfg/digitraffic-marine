@@ -1,8 +1,8 @@
 package fi.livi.digitraffic.meri.service.portnet;
 
-import static fi.livi.digitraffic.meri.util.TimeUtil.FINLAND_ZONE;
-import static fi.livi.digitraffic.meri.util.TimeUtil.dateToString;
-import static fi.livi.digitraffic.meri.util.TimeUtil.timeToString;
+import static fi.livi.digitraffic.common.util.TimeUtil.FINLAND_ZONE;
+import static fi.livi.digitraffic.common.util.TimeUtil.dateToString;
+import static fi.livi.digitraffic.common.util.TimeUtil.timeToString;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
