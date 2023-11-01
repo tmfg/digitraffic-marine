@@ -4,11 +4,10 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import jakarta.persistence.criteria.Path;
 
 import org.apache.commons.lang3.StringUtils;
 
-import fi.livi.digitraffic.meri.domain.portnet.PortCall;
+import jakarta.persistence.criteria.Path;
 
 public final class ShortItemRestrictionUtil {
     private ShortItemRestrictionUtil() {}

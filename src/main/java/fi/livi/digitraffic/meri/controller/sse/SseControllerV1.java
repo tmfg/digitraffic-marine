@@ -1,11 +1,15 @@
 package fi.livi.digitraffic.meri.controller.sse;
 
-import fi.livi.digitraffic.meri.controller.MediaTypes;
-import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
-import fi.livi.digitraffic.meri.service.sse.SseServiceV1;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.API_SSE;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.SSE_V1_TAG;
+import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
+import static fi.livi.digitraffic.meri.controller.Constants.ISO_DATE_TIME_FROM_DOC;
+import static fi.livi.digitraffic.meri.controller.Constants.ISO_DATE_TIME_FROM_VALUE;
+import static fi.livi.digitraffic.meri.controller.Constants.ISO_DATE_TIME_TO_DOC;
+import static fi.livi.digitraffic.meri.controller.Constants.ISO_DATE_TIME_TO_VALUE;
+
+import java.time.Instant;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -14,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-
-import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
-import static fi.livi.digitraffic.meri.model.Constants.*;
+import fi.livi.digitraffic.meri.controller.MediaTypes;
+import fi.livi.digitraffic.meri.dto.sse.v1.SseFeatureCollectionV1;
+import fi.livi.digitraffic.meri.service.sse.v1.SseWebServiceV1;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = SSE_V1_TAG, description = "Sea State Estimate (SSE) APIs")
 @RestController
@@ -27,10 +33,10 @@ public class SseControllerV1 {
     public static final String API_SSE_V1 = API_SSE + V1;
     public static final String MEASUREMENTS = "/measurements";
 
-    private final SseServiceV1 sseServiceV1;
+    private final SseWebServiceV1 sseWebServiceV1;
 
-    public SseControllerV1(final SseServiceV1 sseServiceV1) {
-        this.sseServiceV1 = sseServiceV1;
+    public SseControllerV1(final SseWebServiceV1 sseWebServiceV1) {
+        this.sseWebServiceV1 = sseWebServiceV1;
     }
 
     @Operation(summary = "Return Sea State Estimation (SSE) data as GeoJSON.  If from/to parameters are given, returs " +
@@ -39,7 +45,7 @@ public class SseControllerV1 {
         MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON,
         MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
-    public SseFeatureCollection measurements(
+    public SseFeatureCollectionV1 measurements(
         @Parameter(description = "SSE site number")
         @RequestParam(value = "siteNumber", required = false)
         final Integer siteNumber,
@@ -54,9 +60,9 @@ public class SseControllerV1 {
         @RequestParam(value = "to", required = false)
         final Instant to) {
             if (from == null && to == null) {
-                return sseServiceV1.findMeasurements(siteNumber);
+                return sseWebServiceV1.findMeasurements(siteNumber);
             }
 
-            return sseServiceV1.findHistory(siteNumber, from, to);
+            return sseWebServiceV1.findHistory(siteNumber, from, to);
         }
 }

@@ -8,7 +8,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.Collections;
 
@@ -65,7 +64,7 @@ public class RestTemplateConfiguration {
     @Bean
 //    @ConditionalOnExpression("'${config.test}' != 'true' && ")
     @Profile("aws")
-    public RestTemplate authenticatedRestTemplate(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException, InvalidKeySpecException {
+    public RestTemplate authenticatedRestTemplate(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
         log.info("Init RestTemplate with authentication");
         final KeyStore clientKeyStore = openKeyStore(portnetPrivateKeyBase64);
 

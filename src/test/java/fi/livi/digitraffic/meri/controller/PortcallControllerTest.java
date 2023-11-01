@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractWebTestBase;
 import fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1;
 
-public class PortcallControllerTest extends AbstractTestBase {
+public class PortcallControllerTest extends AbstractWebTestBase {
 
     @Test
     public void listAllPortCalls() throws Exception {

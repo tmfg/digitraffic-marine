@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirwayPoint;
-import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirwayPointPK;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayPoint;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirwayPointPK;
 
 public interface WinterNavigationDirwayPointRepository extends JpaRepository<WinterNavigationDirwayPoint, WinterNavigationDirwayPointPK> {
 

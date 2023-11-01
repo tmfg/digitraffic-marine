@@ -3,49 +3,49 @@ package fi.livi.digitraffic.meri;
 import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Random;
-
-import jakarta.persistence.EntityManager;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.UnexpectedRollbackException;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = { "config.test=true", "logging.level.org.springframework.test.context.transaction.TransactionContext=WARN",
-                                   "quartz.enabled=false", "cache.allowedMmsis = 200", "dt.scheduled.annotation.enabled=false",
-                                   "marine.datasource.hikari.maximum-pool-size=2" })
-@AutoConfigureMockMvc
-public abstract class AbstractTestBase {
+import jakarta.persistence.EntityManager;
+
+@TestPropertySource(properties = {
+        "config.test=true",
+        "logging.level.org.springframework.test.context.transaction.TransactionContext=WARN",
+        "quartz.enabled=false",
+        "cache.allowedMmsis = 200",
+        "dt.scheduled.annotation.enabled=false",
+        "marine.datasource.hikari.maximum-pool-size=2"
+})
+abstract class AbstractTestBase {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractTestBase.class);
     @Autowired
     protected ResourceLoader resourceLoader;
 
-    @Autowired(required = false) // not for daemon tests
-    protected MockMvc mockMvc;
-
-    @Autowired(required = true) // not for daemon tests
+    @Autowired // not for daemon tests
     protected EntityManager entityManager;
 
+    @Autowired
+    protected ConfigurableListableBeanFactory beanFactory;
 
     protected String readFile(final String filename) throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();
@@ -54,7 +54,7 @@ public abstract class AbstractTestBase {
         return FileUtils.readFileToString(file, "UTF-8");
     }
 
-    protected Resource loadResource(final String pattern) throws IOException {
+    protected Resource loadResource(final String pattern) {
         return resourceLoader.getResource(pattern);
     }
 
@@ -85,13 +85,6 @@ public abstract class AbstractTestBase {
         return random.ints(minInclusive, maxExclusive).findFirst().orElseThrow();
     }
 
-    protected ResultActions logInfoResponse(final ResultActions result) throws UnsupportedEncodingException {
-        return logResponse(result, false);
-    }
-
-    protected ResultActions logDebugResponse(final ResultActions result) throws UnsupportedEncodingException {
-        return logResponse(result, true);
-    }
     private ResultActions logResponse(final ResultActions result, boolean debug) throws UnsupportedEncodingException {
         final String responseStr = result.andReturn().getResponse().getContentAsString();
         if (debug) {
@@ -102,13 +95,38 @@ public abstract class AbstractTestBase {
         return result;
     }
 
-    protected ResultActions executeGet(final String url) throws Exception {
-        final MockHttpServletRequestBuilder get = MockMvcRequestBuilders.get(url);
-        get.contentType(MediaType.APPLICATION_JSON);
-        return mockMvc.perform(get);
+    public Instant getTransactionTimestamp() {
+        return (Instant)entityManager.createNativeQuery("select now()").getSingleResult();
     }
 
-    protected ResultActions expectOk(final ResultActions rs) throws Exception {
-        return rs.andExpect(status().isOk());
+    public static void commitAndEndTransactionAndStartNew() {
+        if (!TestTransaction.isActive()) {
+            TestTransaction.start();
+        } else {
+            TestTransaction.flagForCommit();
+            try {
+                TestTransaction.end();
+            } catch (final UnexpectedRollbackException e) {
+                // Don't care as now transaction is rolled back and ended
+                // This sometimes happens in test cleanup as the transaction is marked as roll back only and is ok
+            }
+            TestTransaction.start();
+            TestTransaction.flagForCommit();
+        }
+    }
+
+    public <T> T loadBean(final Class<T> tClass) {
+        return isBeanRegistered(tClass) ?
+                    beanFactory.getBean(tClass) :
+                    beanFactory.createBean(tClass);
+    }
+
+
+    protected boolean isBeanRegistered(final Class<?> c) {
+        try {
+            return beanFactory.getBean(c) != null;
+        } catch (final NoSuchBeanDefinitionException e) {
+            return false;
+        }
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
+import fi.livi.digitraffic.meri.model.ais.VesselLocation;
 
 public interface VesselLocationRepository extends JpaRepository<VesselLocation, Integer> {
 

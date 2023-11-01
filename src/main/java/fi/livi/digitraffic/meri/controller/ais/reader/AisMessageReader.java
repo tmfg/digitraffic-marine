@@ -2,36 +2,38 @@
  * -----
  * Copyright (C) 2018 Digia
  * -----
- *
+ * <p>
  * Licensed under the EUPL, Version 1.2 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- *
+ * <p>
  * https://joinup.ec.europa.eu/software/page/eupl
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
- *
+ * <p>
  * 2019.02.14: Original work is used here as an base implementation
  */
 package fi.livi.digitraffic.meri.controller.ais.reader;
+
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import fi.livi.digitraffic.common.util.ThreadUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 @ConditionalOnProperty("ais.reader.enabled")
@@ -40,7 +42,7 @@ public class AisMessageReader implements Runnable {
 
     private final AisTcpSocketClient aisTcpSocketClient;
     private String cachedFirstPart = null;
-    private AtomicBoolean readingEnabled = new AtomicBoolean(false);
+    private final AtomicBoolean readingEnabled = new AtomicBoolean(false);
 
     private final LinkedBlockingQueue<AisRadioMsg> queue = new LinkedBlockingQueue<>(4096);
 
@@ -49,7 +51,7 @@ public class AisMessageReader implements Runnable {
 
         try {
             aisTcpSocketClient.connect();
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
             log.error("Failed to initialize AIS-connector", ioe);
         }
     }
@@ -82,7 +84,7 @@ public class AisMessageReader implements Runnable {
         try {
             readingEnabled.set(false);
             aisTcpSocketClient.close();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Failed to close connection", e);
         }
     }
@@ -98,7 +100,7 @@ public class AisMessageReader implements Runnable {
                         final boolean multipartMessage = AisRadioMsgParser.isMultipartRadioMessage(rawAisMessage);
 
                         if (cachedFirstPart != null && !(multipartMessage && AisRadioMsgParser.getPartNumber(rawAisMessage) == 2)) {
-                             cachedFirstPart = null;
+                            cachedFirstPart = null;
                         }
 
                         // TODO! no response, no execption
@@ -135,12 +137,8 @@ public class AisMessageReader implements Runnable {
                 // Connection failure -> let reconnection handler handle this
                 log.warn("Unable to establish connection to AIS-connector, waiting retry");
 
-                try {
-                    // Do small sleep and continue
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (final InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
+                // Do small sleep and continue
+                ThreadUtil.delayMs(5000);
             }
         }
 

@@ -26,8 +26,8 @@ public class SwaggerConfiguration {
     private final String host;
     private final String scheme;
 
-    private final String API_PATHS = ApiConstants.API + "/**";
-    private final String BETA_PATHS = "/**" + ApiConstants.BETA + "/**";
+    private final static String API_PATHS = ApiConstants.API + "/**";
+    private final static String BETA_PATHS = "/**" + ApiConstants.BETA + "/**";
 
     @Autowired
     public SwaggerConfiguration(final MarineApiInfoService marineApiInfoService,

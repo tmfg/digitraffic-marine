@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet.location;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
+import fi.livi.digitraffic.meri.model.portnet.SsnLocation;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
@@ -31,7 +31,7 @@ public class LocationCoordinateReader {
 
     public List<SsnLocation> readCoordinates() {
         try {
-            final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(ssnLocationCoordinatesUrl, Charset.forName("UTF-8")));
+            final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(ssnLocationCoordinatesUrl, StandardCharsets.UTF_8));
 
             return ((JSONArray)o.get("features")).stream().map(LocationCoordinateReader::convert).collect(Collectors.toList());
         } catch (final IOException e) {

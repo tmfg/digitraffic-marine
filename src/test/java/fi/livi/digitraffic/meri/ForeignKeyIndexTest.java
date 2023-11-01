@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -9,9 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class ForeignKeyIndexTest extends AbstractTestBase {
+public class ForeignKeyIndexTest extends AbstractDaemonTestBase {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -75,6 +75,6 @@ public class ForeignKeyIndexTest extends AbstractTestBase {
         }
 
         assertTrue(foreignKeysWithoutIndex.isEmpty(),
-            "Found foreign key(s) without index. Add to the ignore list or create indexes. Something like: \n\n" + sb.toString());
+            "Found foreign key(s) without index. Add to the ignore list or create indexes. Something like: \n\n" + sb);
     }
 }

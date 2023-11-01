@@ -44,41 +44,6 @@ public class DataStatusService {
         this.vesselMetadataRepository = vesselMetadataRepository;
     }
 
-//    @Transactional
-//    public void updateDataUpdated(final DataType dataType) {
-//        dataUpdatedRepository.upsertDataUpdated(dataType);
-//    }
-//
-//    @Transactional
-//    public void updateDataUpdated(final DataType dataType, final String subtype) {
-//        dataUpdatedRepository.upsertDataUpdated(dataType, subtype);
-//    }
-//
-//    @Transactional
-//    public void updateDataUpdated(final DataType dataType, final Instant updated) {
-//        dataUpdatedRepository.upsertDataUpdated(dataType, updated);
-//    }
-
-//    @Transactional(readOnly = true)
-//    public ZonedDateTime findDataUpdatedTime(final DataType dataType) {
-//        return DateHelper.toZonedDateTimeAtUtc(dataUpdatedRepository.findUpdatedTime(dataType));
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public Instant findDataUpdatedInstant(final DataType dataType) {
-//        return dataUpdatedRepository.findUpdatedTime(dataType);
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public Instant findDataUpdatedTime(final DataType dataType, final List<String> subtypes) {
-//        return dataUpdatedRepository.findUpdatedTime(dataType, subtypes);
-//    }
-
-//    @Transactional(readOnly = true)
-//    public Instant getTransactionStartTime() {
-//        return updatedTimestampRepository.getTransactionStartTime();
-//    }
-
     @Transactional(readOnly = true)
     public UpdateInfosDtoV1 getUpdatedInfos() {
 

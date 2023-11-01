@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -18,15 +20,13 @@ import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class VesselDetailsUpdaterTest extends AbstractTestBase {
-    private VesselDetailsClient vesselDetailsClient;
+public class VesselDetailsUpdaterTest extends AbstractDaemonTestBase {
+    
     private VesselDetailsUpdater vesselDetailsUpdater;
     private MockRestServiceServer server;
 
@@ -41,7 +41,7 @@ public class VesselDetailsUpdaterTest extends AbstractTestBase {
 
     @BeforeEach
     public void before() {
-        vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", authenticatedRestTemplate);
+        final VesselDetailsClient vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", authenticatedRestTemplate);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);
         server = MockRestServiceServer.createServer(authenticatedRestTemplate);
     }

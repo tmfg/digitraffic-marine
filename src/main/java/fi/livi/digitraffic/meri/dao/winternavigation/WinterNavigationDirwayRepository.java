@@ -2,8 +2,6 @@ package fi.livi.digitraffic.meri.dao.winternavigation;
 
 import java.util.List;
 
-import jakarta.persistence.QueryHint;
-
 import org.hibernate.jpa.AvailableHints;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +11,8 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationDirway;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationDirway;
+import jakarta.persistence.QueryHint;
 
 @Repository
 public interface WinterNavigationDirwayRepository extends JpaRepository<WinterNavigationDirway, String> {

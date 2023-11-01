@@ -1,23 +1,30 @@
 package fi.livi.digitraffic.meri;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import jakarta.persistence.EntityManager;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.context.ApplicationContext;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@TestPropertySource(properties = { "app.type=daemon", "spring.main.web-application-type=none" })
-public class ContextLoadsDaemonTest extends AbstractTestBase {
+import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
+import jakarta.persistence.EntityManager;
+
+public class ContextLoadsDaemonTest extends AbstractDaemonTestBase {
 
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired(required = false)
+    private AisControllerV1 aisControllerV1;
+
     @Test
     public void contextLoads() {
+        assertNotNull(applicationContext);
         assertNotNull(entityManager);
+        assertNull(aisControllerV1);
     }
 }

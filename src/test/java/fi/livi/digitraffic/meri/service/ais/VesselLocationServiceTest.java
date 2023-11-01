@@ -1,5 +1,8 @@
 package fi.livi.digitraffic.meri.service.ais;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -8,19 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractWebTestBase;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
-import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
-import fi.livi.digitraffic.meri.model.ais.VesselMessage;
+import fi.livi.digitraffic.meri.dto.ais.external.AISMessage;
+import fi.livi.digitraffic.meri.dto.ais.external.VesselMessage;
+import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
+import fi.livi.digitraffic.meri.model.ais.VesselLocation;
+import fi.livi.digitraffic.meri.model.ais.VesselMetadata;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class VesselLocationServiceTest extends AbstractTestBase {
+public class VesselLocationServiceTest extends AbstractWebTestBase {
 
     private class Point {
         public final double x;
@@ -74,12 +74,14 @@ public class VesselLocationServiceTest extends AbstractTestBase {
     @Transactional
     @Rollback
     public void findVesselsWithinRadiusSucceeds() {
-        final VesselLocationFeatureCollection featureCollection1 = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius1, p2.y, p2.x, now, null);
+        final VesselLocationFeatureCollectionV1
+                featureCollection1 = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius1, p2.y, p2.x, now, null);
 
         assertFalse(featureCollection1.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
             "Vessel should not be found withing radius " + radius1);
 
-        final VesselLocationFeatureCollection featureCollection2 = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius2, p2.y, p2.x, now, null);
+        final VesselLocationFeatureCollectionV1
+                featureCollection2 = vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius2, p2.y, p2.x, now, null);
 
         assertTrue(featureCollection2.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
             "Vessel should be found withing radius " + radius2);
@@ -105,7 +107,7 @@ public class VesselLocationServiceTest extends AbstractTestBase {
                                                             now)));
         vesselLocationRepository.save(vessel);
 
-        VesselLocationFeatureCollection featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius1, MMSI, now);
+        VesselLocationFeatureCollectionV1 featureCollection = vesselLocationService.findAllowedLocationsWithinRadiusFromMMSI(radius1, MMSI, now);
 
         assertFalse(featureCollection.getFeatures().stream().anyMatch(v -> v.mmsi == MMSItoBeFound),
             "Vessel should not be found withing radius " + radius1);

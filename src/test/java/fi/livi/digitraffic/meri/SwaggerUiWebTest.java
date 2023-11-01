@@ -20,7 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import fi.livi.digitraffic.meri.service.BuildVersionService;
 
-public class SwaggerUiWebTest extends AbstractTestBase {
+public class SwaggerUiWebTest extends AbstractWebTestBase {
 
     @Autowired
     private WebApplicationContext wac;

@@ -1,15 +1,14 @@
 package fi.livi.digitraffic.meri.service.sse;
 
-import static fi.livi.digitraffic.meri.model.sse.SseProperties.Confidence;
-import static fi.livi.digitraffic.meri.model.sse.SseProperties.LightStatus;
-import static fi.livi.digitraffic.meri.model.sse.SseProperties.Trend;
+import static fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1.Confidence;
+import static fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1.LightStatus;
+import static fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1.Trend;
 import static fi.livi.digitraffic.meri.service.sse.SseMqttSenderV2.createMqttDataMessage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -17,11 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -32,22 +26,26 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.controller.CachedLocker;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
-import fi.livi.digitraffic.meri.domain.sse.SseReport;
-import fi.livi.digitraffic.meri.model.geojson.Point;
-import fi.livi.digitraffic.meri.model.sse.SseFeature;
-import fi.livi.digitraffic.meri.model.sse.SseFeatureCollection;
-import fi.livi.digitraffic.meri.model.sse.SseProperties;
-import fi.livi.digitraffic.meri.model.sse.SseProperties.SeaState;
+import fi.livi.digitraffic.meri.dto.geojson.Point;
+import fi.livi.digitraffic.meri.dto.sse.v1.SseFeatureCollectionV1;
+import fi.livi.digitraffic.meri.dto.sse.v1.SseFeatureV1;
+import fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1;
+import fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1.SeaState;
+import fi.livi.digitraffic.meri.model.sse.SseReport;
+import fi.livi.digitraffic.meri.service.CachedLockerService;
+import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import fi.livi.digitraffic.meri.util.StringUtil;
+import jakarta.transaction.Transactional;
 
 @Transactional
 @TestPropertySource(properties = { "sse.mqtt.enabled=true" })
-public class SseDataDatabaseListenerTest extends AbstractTestBase {
+public class SseDataDatabaseListenerTest extends AbstractDaemonTestBase {
     @MockBean
-    private CachedLocker cachedLocker;
+    private CachedLockerService cachedLocker;
 
     @MockBean
     private MqttRelayQueue mqttRelayQueue;
@@ -67,7 +65,7 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
     }
 
     @Test
-    public void verifyMqttSendMessagesIsCalledFromScheduler() throws IOException {
+    public void verifyMqttSendMessagesIsCalledFromScheduler() {
         when(cachedLocker.hasLock()).thenReturn(true);
         final Instant first = Instant.now().plus(30, ChronoUnit.MINUTES);
         final Instant second = first.plus(10, ChronoUnit.MINUTES);
@@ -78,15 +76,15 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
         verify(mqttRelayQueue, Mockito.never()).queueMqttMessage(any(), any(), any());
 
         // One new report
-        final SseFeatureCollection sse1 = createFeatureCollection(1, first);
+        final SseFeatureCollectionV1 sse1 = createFeatureCollection(1, first);
         saveReports(sse1);
         // Trigger scheduled run and check the new report is send to mqtt
         triggerSheduledTask();
         verify(mqttRelayQueue, Mockito.times(1)).queueMqttMessage(any(), any(), any());
 
         // Create two more
-        final SseFeatureCollection sse2 = createFeatureCollection(2, second);
-        final SseFeatureCollection sse3 = createFeatureCollection(3, third);
+        final SseFeatureCollectionV1 sse2 = createFeatureCollection(2, second);
+        final SseFeatureCollectionV1 sse3 = createFeatureCollection(3, third);
         saveReports(sse2);
         saveReports(sse3);
         // Trigger scheduled run
@@ -107,16 +105,16 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
         ReflectionTestUtils.invokeMethod(sseMqttSenderV2,  "checkNewSseReports");
     }
 
-    private void assertSseFeaturesEquals(final SseFeature expected, final String capturedJson) {
+    private void assertSseFeaturesEquals(final SseFeatureV1 expected, final String capturedJson) {
         final String expectedJson = StringUtil.toJsonString(createMqttDataMessage(expected).getData());
         assertEquals(expectedJson, capturedJson);
     }
 
-    private SseFeatureCollection createFeatureCollection(final int siteNumber, final Instant created) {
-        final SseProperties properties = new SseProperties(
+    private SseFeatureCollectionV1 createFeatureCollection(final int siteNumber, final Instant created) {
+        final SsePropertiesV1 properties = new SsePropertiesV1(
             siteNumber,
             "siteName" + siteNumber,
-            SseProperties.SiteType.FLOATING,
+            SsePropertiesV1.SiteType.FLOATING,
             Instant.now().plusSeconds(getRandom(0, 60)),
             SeaState.STORM,
             Trend.NO_CHANGE,
@@ -127,23 +125,23 @@ public class SseDataDatabaseListenerTest extends AbstractTestBase {
             getRandom(-30, 30),
             created
         );
-        final SseFeature f = new SseFeature(new Point(21.33210, 54.55432), properties, siteNumber);
-        return new SseFeatureCollection(Instant.now(), Collections.singletonList(f));
+        final SseFeatureV1 f = new SseFeatureV1(new Point(21.33210, 54.55432), properties, siteNumber);
+        return new SseFeatureCollectionV1(Instant.now(), Collections.singletonList(f));
     }
 
-    private void saveReports(final SseFeatureCollection sseFeatureCollection) {
-        convertToSseReports(sseFeatureCollection).forEach(sseReport -> {
+    private void saveReports(final SseFeatureCollectionV1 sseFeatureCollectionV1) {
+        convertToSseReports(sseFeatureCollectionV1).forEach(sseReport -> {
             sseReportRepository.markSiteLatestReportAsNotLatest(sseReport.getSiteNumber());
             sseReportRepository.save(sseReport);
         });
     }
 
-    private List<SseReport> convertToSseReports(final SseFeatureCollection fc) {
+    private List<SseReport> convertToSseReports(final SseFeatureCollectionV1 fc) {
         return fc.getFeatures().stream().map(f -> convertToSseReport(f)).collect(Collectors.toList());
     }
 
-    private static SseReport convertToSseReport(final SseFeature f) {
-        final SseProperties p = f.getProperties();
+    private static SseReport convertToSseReport(final SseFeatureV1 f) {
+        final SsePropertiesV1 p = f.getProperties();
         return new SseReport(
             f.getProperties().getCreated(),
             true,

@@ -6,8 +6,8 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.License;
 
 public class MarineApiInfo {
-    private BuildVersionService buildVersionService;
-    protected MessageService messageService;
+    private final BuildVersionService buildVersionService;
+    private final MessageService messageService;
 
     public MarineApiInfo(final MessageService messageService, final BuildVersionService buildVersionService) {
         this.messageService = messageService;

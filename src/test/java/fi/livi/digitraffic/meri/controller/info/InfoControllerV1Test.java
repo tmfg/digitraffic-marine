@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractWebTestBase;
 import fi.livi.digitraffic.meri.model.DataSource;
 import fi.livi.digitraffic.meri.service.DataStatusService;
 
-public class InfoControllerV1Test extends AbstractTestBase {
+public class InfoControllerV1Test extends AbstractWebTestBase {
 
     @Autowired
     private DataStatusService dataStatusService;

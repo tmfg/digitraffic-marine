@@ -58,7 +58,7 @@ public class AisRadioMsg {
         add(USER_ID, getUnsignedInteger(30));
     }
 
-    protected final <T> void add(String name, T value) {
+    protected final <T> void add(final String name, final T value) {
         parameters.put(name, value);
     }
 
@@ -66,23 +66,23 @@ public class AisRadioMsg {
         return time;
     }
 
-    public final boolean containsParam(String name) {
+    public final boolean containsParam(final String name) {
         return parameters.containsKey(name);
     }
 
-    public final BigDecimal getDecimalParam(String name) {
+    public final BigDecimal getDecimalParam(final String name) {
         return (BigDecimal) parameters.get(name);
     }
 
-    public final int getIntParam(String name) {
+    public final int getIntParam(final String name) {
         return (int) parameters.get(name);
     }
 
-    public final String getStringParam(String name) {
+    public final String getStringParam(final String name) {
         return (String)parameters.get(name);
     }
 
-    public double getDoubleParam(String name) {
+    public double getDoubleParam(final String name) {
         final Object param = parameters.get(name);
 
         if (param instanceof BigDecimal) {
@@ -102,7 +102,7 @@ public class AisRadioMsg {
         return mmsiAllowed;
     }
 
-    public final void setMmsiAllowed(boolean mmsiAllowed) {
+    public final void setMmsiAllowed(final boolean mmsiAllowed) {
         this.mmsiAllowed = mmsiAllowed;
     }
 
@@ -114,39 +114,39 @@ public class AisRadioMsg {
         return messageType;
     }
 
-    private String getNextSubstring(int size) {
-        String ret = binaryMsg.substring(readOffset, readOffset + size);
+    private String getNextSubstring(final int size) {
+        final String ret = binaryMsg.substring(readOffset, readOffset + size);
         readOffset += size;
         return ret;
     }
 
-    protected int getUnsignedInteger(int size) {
+    protected int getUnsignedInteger(final int size) {
         return Integer.parseInt(getNextSubstring(size), 2);
     }
 
-    protected int getSignedInteger(int size) {
-        int UPPER_LIMIT = 2 << (size - 2);
-        int ret = getUnsignedInteger(size);
+    protected int getSignedInteger(final int size) {
+        final int UPPER_LIMIT = 2 << (size - 2);
+        final int ret = getUnsignedInteger(size);
         return ret >= UPPER_LIMIT ? ret - (UPPER_LIMIT << 1) : ret;
     }
 
-    protected BigDecimal getUnsignedDecimal(int size, long divisor, int scale) {
+    protected BigDecimal getUnsignedDecimal(final int size, final long divisor, final int scale) {
         return getDecimal(getUnsignedInteger(size), divisor, scale);
     }
 
-    protected BigDecimal getSignedDecimal(int size, long divisor, int scale) {
+    protected BigDecimal getSignedDecimal(final int size, final long divisor, final int scale) {
         return getDecimal(getSignedInteger(size), divisor, scale);
     }
 
-    private BigDecimal getDecimal(int intVal, long divisor, int scale) {
+    private BigDecimal getDecimal(final int intVal, final long divisor, final int scale) {
         return BigDecimal.valueOf(intVal).divide(BigDecimal.valueOf(divisor), scale, RoundingMode.HALF_UP);
     }
 
-    protected String getStringValue(int size) {
+    protected String getStringValue(final int size) {
         return Ais6BitConverter.to6BitEncodedString(getNextSubstring(size)).trim();
     }
 
-    protected String getHexString(int size) {
+    protected String getHexString(final int size) {
         return Long.toHexString(Long.parseLong(getNextSubstring(size), 2)).toUpperCase(); // long for the 42 bits of Vendor ID
     }
 
@@ -177,7 +177,7 @@ public class AisRadioMsg {
         return getEtaPart(4) + getEtaPart(5) + getEtaPart(5) + getEtaPart(6);
     }
 
-    private String getEtaPart(int size) {
+    private String getEtaPart(final int size) {
         return String.format("%02d", getUnsignedInteger(size));
     }
 }

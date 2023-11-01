@@ -67,7 +67,7 @@ public class BuildVersionService {
                 return prop;
             }
             return null;
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
             log.error("Failed to load git properties from file: " + GIT_PROPERTIES, ioe);
             return null;
         }

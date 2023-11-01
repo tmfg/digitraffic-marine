@@ -16,12 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractWebTestBase;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 
 @Transactional
-public class PortcallControllerV1Test extends AbstractTestBase {
+public class PortcallControllerV1Test extends AbstractWebTestBase {
 
     private final static int PORT_LOCATIONS = 19243;
     private final static int FIHEL_PORTS = 8;

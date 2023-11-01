@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet.berth;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 
-import fi.livi.digitraffic.meri.domain.portnet.PortArea;
-import fi.livi.digitraffic.meri.domain.portnet.PortAreaKey;
+import fi.livi.digitraffic.meri.model.portnet.PortArea;
+import fi.livi.digitraffic.meri.model.portnet.PortAreaKey;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
@@ -34,7 +34,7 @@ public class PortAreaCoordinateReader {
 
     public List<PortArea> readCoordinates() {
         try {
-            final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(portAreaCoordinatesUrl, Charset.forName("UTF-8")));
+            final JSONObject o = (JSONObject) JSONValue.parse(IOUtils.toString(portAreaCoordinatesUrl, StandardCharsets.UTF_8));
 
             return ((JSONArray)o.get("features")).stream().map(PortAreaCoordinateReader::convert).collect(Collectors.toList());
         } catch (final IOException e) {

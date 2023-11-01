@@ -14,14 +14,13 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractWebTestBase;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
-import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeature;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
+import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
+import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureV1;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
-public class AisControllerV1Test extends AbstractTestBase {
+public class AisControllerV1Test extends AbstractWebTestBase {
 
     @MockBean
     private VesselLocationService vesselLocationService;
@@ -81,11 +80,11 @@ public class AisControllerV1Test extends AbstractTestBase {
         ;
     }
 
-    private VesselLocationFeatureCollection generateFeatureCollection() {
-        return new VesselLocationFeatureCollection(Collections.singletonList(new VesselLocationFeature(MMSI, null, null)), null);
+    private VesselLocationFeatureCollectionV1 generateFeatureCollection() {
+        return new VesselLocationFeatureCollectionV1(Collections.singletonList(new VesselLocationFeatureV1(MMSI, null, null)), null);
     }
 
-    private VesselLocationFeatureCollection emptyFeatureCollection() {
-        return new VesselLocationFeatureCollection(Collections.emptyList(), null);
+    private VesselLocationFeatureCollectionV1 emptyFeatureCollection() {
+        return new VesselLocationFeatureCollectionV1(Collections.emptyList(), null);
     }
 }

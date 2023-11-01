@@ -13,7 +13,7 @@ public class WinterNavigationDirwayUpdateJob extends SimpleUpdateJob {
     private WinterNavigationDirwayUpdater winterNavigationDirwayUpdater;
 
     @Override
-    protected void doExecute(JobExecutionContext context) throws Exception {
+    protected void doExecute(final JobExecutionContext context) {
         winterNavigationDirwayUpdater.updateWinterNavigationDirways();
     }
 }

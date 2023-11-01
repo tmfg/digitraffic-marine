@@ -3,19 +3,19 @@ package fi.livi.digitraffic.meri.service.winternavigation;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
 import java.time.Instant;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
+import fi.livi.digitraffic.meri.service.winternavigation.v1.WinterNavigationWebServiceV1;
 import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
 
 @Disabled("For manual integration testing")
-public class WinterNavigationIntegrationTest extends AbstractTestBase {
+public class WinterNavigationIntegrationTest extends AbstractDaemonTestBase {
     @Autowired
     private WinterNavigationClient winterNavigationClient;
 
@@ -29,17 +29,17 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
     private WinterNavigationDirwayUpdater winterNavigationDirwayUpdater;
 
     @Autowired
-    private WinterNavigationService winterNavigationService;
+    private WinterNavigationWebServiceV1 winterNavigationWebServiceV1;
 
     @Test
     @Disabled("For manual integration testing")
-    public void getWinterNavigationPortsSucceeds() throws IOException {
+    public void getWinterNavigationPortsSucceeds() {
         final Instant start = Instant.now().minusSeconds(1);
 
         int count = winterNavigationPortUpdater.updateWinterNavigationPorts();
         assertTrue(count > 100, "Total count of added or updated ports is greater than 100");
 
-        final Instant dataUpdatedTime = winterNavigationService.getWinterNavigationPorts().getDataUpdatedTime();
+        final Instant dataUpdatedTime = winterNavigationWebServiceV1.getWinterNavigationPorts().getDataUpdatedTime();
 
         assertNotNull(dataUpdatedTime);
         assertTrue(dataUpdatedTime.isAfter(start));
@@ -47,7 +47,7 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
 
     @Test
     @Disabled("For manual integration testing")
-    public void getWinterNavigationShipsSucceeds() throws IOException {
+    public void getWinterNavigationShipsSucceeds() {
         final Instant start = Instant.now().minusSeconds(1);
 
         final WinterShips ships = winterNavigationClient.getWinterNavigationShips();
@@ -58,7 +58,7 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
         int count = winterNavigationShipUpdater.updateWinterNavigationShips();
         assertTrue(count > 100, "Total count of added or updated ships is greater than 100");
 
-        final Instant dataUpdatedTime = winterNavigationService.getWinterNavigationShips().getDataUpdatedTime();
+        final Instant dataUpdatedTime = winterNavigationWebServiceV1.getWinterNavigationShips().getDataUpdatedTime();
 
         assertNotNull(dataUpdatedTime);
         assertTrue(dataUpdatedTime.isAfter(start));
@@ -72,12 +72,12 @@ public class WinterNavigationIntegrationTest extends AbstractTestBase {
         final DirWaysType dirways = winterNavigationClient.getWinterNavigationWaypoints();
 
         assertNotNull(dirways);
-        assertTrue(dirways.getDirWay().size() > 0);
+        assertTrue(!dirways.getDirWay().isEmpty());
 
         int count = winterNavigationDirwayUpdater.updateWinterNavigationDirways();
         assertTrue(count > 0, "Total count of added or updated dirways is greater than 0");
 
-        Instant dataUpdatedTime = winterNavigationService.getWinterNavigationDirways().getDataUpdatedTime();
+        Instant dataUpdatedTime = winterNavigationWebServiceV1.getWinterNavigationDirways().getDataUpdatedTime();
 
         assertNotNull(dataUpdatedTime);
         assertTrue(dataUpdatedTime.isAfter(start));

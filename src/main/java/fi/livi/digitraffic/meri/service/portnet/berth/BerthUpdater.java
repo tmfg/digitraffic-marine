@@ -1,6 +1,5 @@
 package fi.livi.digitraffic.meri.service.portnet.berth;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.portnet.BerthRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortAreaRepository;
-import fi.livi.digitraffic.meri.domain.portnet.Berth;
-import fi.livi.digitraffic.meri.domain.portnet.BerthKey;
-import fi.livi.digitraffic.meri.domain.portnet.PortArea;
-import fi.livi.digitraffic.meri.domain.portnet.PortAreaKey;
+import fi.livi.digitraffic.meri.model.portnet.Berth;
+import fi.livi.digitraffic.meri.model.portnet.BerthKey;
+import fi.livi.digitraffic.meri.model.portnet.PortArea;
+import fi.livi.digitraffic.meri.model.portnet.PortAreaKey;
 
 @Service
 @ConditionalOnNotWebApplication
@@ -44,7 +43,7 @@ public class BerthUpdater {
     }
 
     @Transactional
-    public void updatePortsAreasAndBerths() throws IOException {
+    public void updatePortsAreasAndBerths() {
         final List<PortArea> oldPortAreas = portAreaRepository.findAll();
         final List<Berth> oldBerths = berthRepository.findAll();
         final List<BerthLine> berthLines = berthClient.getBerthLines();

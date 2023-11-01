@@ -8,7 +8,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -20,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
+import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 
 @Service
 @ConditionalOnNotWebApplication

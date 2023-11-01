@@ -1,9 +1,5 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
-import jakarta.xml.bind.JAXBElement;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
@@ -25,11 +21,11 @@ import ibnet_baltice_schema.WinterShipsRequestType;
 import ibnet_baltice_schema.WinterShipsResponseType;
 import ibnet_baltice_waypoints.DirWaysType;
 import ibnet_baltice_winterships.WinterShips;
+import jakarta.xml.bind.JAXBElement;
 
 @Service
 @ConditionalOnNotWebApplication
 public class WinterNavigationClient extends WebServiceGatewaySupport {
-    private static final Logger log = LoggerFactory.getLogger(WinterNavigationClient.class);
 
     private final ObjectFactory objectFactory = new ObjectFactory();
 
@@ -49,6 +45,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
     @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public Ports getWinterNavigationPorts() {
+        @SuppressWarnings("unchecked")
         final JAXBElement<PortsResponseType> portsResponseTypeJAXBElement =
             (JAXBElement<PortsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createPortsRequest(new PortsRequestType()));
 
@@ -58,6 +55,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
     @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public WinterShips getWinterNavigationShips() {
+        @SuppressWarnings("unchecked")
         final JAXBElement<WinterShipsResponseType> winterShipsResponseTypeJAXBElement =
             (JAXBElement<WinterShipsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createWinterShipsRequest(new WinterShipsRequestType()));
 
@@ -67,6 +65,7 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
     @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public DirWaysType getWinterNavigationWaypoints() {
+        @SuppressWarnings("unchecked")
         final JAXBElement<WaypointsResponseType> waypointsResponseTypeJAXBElement =
             (JAXBElement<WaypointsResponseType>) getWebServiceTemplate().marshalSendAndReceive(objectFactory.createWaypointsRequest(new WaypointsRequestType()));
 

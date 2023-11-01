@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.controller.ResponseEntityWithLastModifiedHeader;
 import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
-import fi.livi.digitraffic.meri.model.ais.VesselMetadataJson;
+import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
+import fi.livi.digitraffic.meri.dto.ais.v1.VesselMetadataJsonV1;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 import fi.livi.digitraffic.meri.util.NullUtil;
@@ -61,7 +61,7 @@ public class AisControllerV1 {
                                                             MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                             MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
     @ResponseBody
-    public VesselLocationFeatureCollection vesselLocationsByMssiAndTimestamp(
+    public VesselLocationFeatureCollectionV1 vesselLocationsByMssiAndTimestamp(
         @Parameter(description = "Maritime Mobile Service Identity (MMSI)")
         @RequestParam(value = "mmsi", required = false)
         final Integer mmsi,
@@ -102,7 +102,7 @@ public class AisControllerV1 {
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @GetMapping(path = API_AIS_V1 + VESSELS +"/{mmsi}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public VesselMetadataJson vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
+    public VesselMetadataJsonV1 vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
@@ -111,13 +111,13 @@ public class AisControllerV1 {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public ResponseEntityWithLastModifiedHeader<List<VesselMetadataJson>> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+    public ResponseEntityWithLastModifiedHeader<List<VesselMetadataJsonV1>> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
                                                @RequestParam(value = "from", required = false)
                                                final Long from,
-                                               @Parameter(description = "To timestamp")
+                                                                                       @Parameter(description = "To timestamp")
                                                @RequestParam(value = "to", required = false)
                                                final Long to) {
-        final List<VesselMetadataJson> vms = vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
+        final List<VesselMetadataJsonV1> vms = vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
         final Instant lastModified = vms.stream().map(LastModifiedSupport::getLastModified).max(Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
         return ResponseEntityWithLastModifiedHeader.of(vms, lastModified, API_AIS_V1 + VESSELS);
     }

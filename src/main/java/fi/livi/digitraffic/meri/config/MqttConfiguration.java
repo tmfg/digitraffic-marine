@@ -47,9 +47,7 @@ public class MqttConfiguration {
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel", async = "true")
     public MessageHandler mqttOutbound(final MqttPahoClientFactory mqttPahoClientFactory) {
-        final MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
-
-        return messageHandler;
+        return new MqttPahoMessageHandler(clientId, mqttPahoClientFactory);
     }
 
     @Bean

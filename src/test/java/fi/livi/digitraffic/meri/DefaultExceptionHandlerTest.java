@@ -11,14 +11,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import jakarta.validation.ConstraintViolationException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.slf4j.Logger;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.test.context.TestPropertySource;
@@ -28,26 +25,22 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import fi.livi.digitraffic.meri.config.MarineApplicationConfiguration;
 import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
-import fi.livi.digitraffic.meri.controller.exception.PookiException;
 import fi.livi.digitraffic.meri.controller.exception.DefaultExceptionHandler;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
+import fi.livi.digitraffic.meri.controller.exception.PookiException;
+import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
-import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
+import jakarta.validation.ConstraintViolationException;
 
 @TestPropertySource(properties = {
     "marine.datasource.hikari.maximum-pool-size=1",
 })
-public class DefaultExceptionHandlerTest extends AbstractTestBase {
+public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
     private MockMvc mockMvc;
     @Mock
     private VesselLocationService vesselLocationService;
-
-    @Mock
-    private VesselMetadataService vesselMetadataService;
 
     @Mock
     private Logger exceptionHandlerLogger;
@@ -73,7 +66,7 @@ public class DefaultExceptionHandlerTest extends AbstractTestBase {
 
     @Test
     public void ok() throws Exception {
-        when(vesselLocationService.findAllowedLocations(anyInt(), nullable(Long.class), nullable(Long.class))).thenReturn(new VesselLocationFeatureCollection(null, null));
+        when(vesselLocationService.findAllowedLocations(anyInt(), nullable(Long.class), nullable(Long.class))).thenReturn(new VesselLocationFeatureCollectionV1(null, null));
 
         performQuery()
             .andExpect(status().isOk());

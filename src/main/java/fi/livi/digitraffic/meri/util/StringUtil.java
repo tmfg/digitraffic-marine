@@ -21,7 +21,7 @@ public class StringUtil {
     public static String toJsonString(final Object o) {
         try {
             return jsonObjectWriter.writeValueAsString(o);
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             log.error("Failed to convert object to JSON-string", e);
         }
         return o.toString();

@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import fi.livi.digitraffic.meri.model.FlywayVersion;
-import fi.livi.digitraffic.meri.util.dao.SqlRepository;
 
 @Repository
 public interface FlywayRepository extends SqlRepository {

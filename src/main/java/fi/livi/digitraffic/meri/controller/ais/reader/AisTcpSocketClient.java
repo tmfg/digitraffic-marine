@@ -56,9 +56,9 @@ public class AisTcpSocketClient implements AutoCloseable {
     private final Integer socketTimeout;
     private final Integer keepAliveTimeout;
 
-    private final String keepAliveMessage = "$PSTT,01\\r\\n";
-    private final String keepAliveResponseMessage = "$PSTT,01*2E";
-    private final String logoffMessage = "$PSTT,FF\\r\\n";
+    private final static String keepAliveMessage = "$PSTT,01\\r\\n";
+    private final static String keepAliveResponseMessage = "$PSTT,01*2E";
+    private final static String logoffMessage = "$PSTT,FF\\r\\n";
 
     @Autowired
     public AisTcpSocketClient(@Value("${ais.connector.address}") final String aisAddress,
@@ -98,7 +98,7 @@ public class AisTcpSocketClient implements AutoCloseable {
     }
 
     protected Socket createSocket() throws IOException {
-        Socket socket = new Socket(aisAddress, aisPort);
+        final Socket socket = new Socket(aisAddress, aisPort);
 
         socket.setSoTimeout(socketTimeout);
         socket.setKeepAlive(true);
@@ -137,7 +137,7 @@ public class AisTcpSocketClient implements AutoCloseable {
 
             //log.debug("lineFromAisServer: {}", line);
             return line;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             isConnected.set(false); // trigger reconnect
             log.error("Unable to read from socket.");
         }
@@ -150,7 +150,7 @@ public class AisTcpSocketClient implements AutoCloseable {
             return null;
         }
 
-        int startIndex = line.indexOf("!");
+        final int startIndex = line.indexOf("!");
 
         if (startIndex > 0) {
             //log.info("Skipped: {}", line.substring(0, startIndex - 1));
@@ -180,7 +180,7 @@ public class AisTcpSocketClient implements AutoCloseable {
 
         try {
             close();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Failed to close connection", e);
         }
 
@@ -191,7 +191,7 @@ public class AisTcpSocketClient implements AutoCloseable {
     public void close() throws Exception {
         try {
             logoff();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Connection already lost", e);
         }
 
@@ -208,9 +208,9 @@ public class AisTcpSocketClient implements AutoCloseable {
         send(String.format("%c%s%c%s%c", 1, aisUser, 0, aisPassword, 0));
     }
 
-    private void send(String s) throws IOException {
+    private void send(final String s) throws IOException {
         synchronized (LOCK) {
-            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            final DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             dos.writeBytes(s);
             dos.flush();
         }

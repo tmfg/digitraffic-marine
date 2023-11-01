@@ -1,12 +1,8 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.Join;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +10,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselConstruction;
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselRegistration;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselConstruction;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselRegistration;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
 import fi.livi.digitraffic.meri.util.dao.ShortItemRestrictionUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.Join;
 
 @Service
 @ConditionalOnWebApplication

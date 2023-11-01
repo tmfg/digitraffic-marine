@@ -1,11 +1,33 @@
 package fi.livi.digitraffic.meri.controller.ais.reader;
 
-import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
-import fi.livi.digitraffic.meri.model.ais.VesselMessage;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.A_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.B_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.CALL_SIGN;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.COG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.C_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.DESTINATION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.D_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.ETA;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.IMO_NUMBER;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.LATITUDE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.LONGITUDE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.MAXIMUM_PRESENT_STATIC_DRAUGHT;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.NAME;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.NAVIGATIONAL_STATUS;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.POSITION_ACCURACY;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.RAIM_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.RATE_OF_TURN;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.SOG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TIME_STAMP;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TRUE_HEADING;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TYPE_OF_ELECTRONIC_POSITION_FIXING_DEVICE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TYPE_OF_SHIP_AND_CARGO_TYPE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.USER_ID;
 
-import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.*;
 import java.math.BigDecimal;
+
+import fi.livi.digitraffic.meri.dto.ais.external.AISMessage;
+import fi.livi.digitraffic.meri.dto.ais.external.VesselMessage;
 
 public final class AisMessageConverter {
     private AisMessageConverter() {}
@@ -16,12 +38,12 @@ public final class AisMessageConverter {
      * @return
      */
     public static AISMessage convertLocation(final AisRadioMsg aisRadioMsg) {
-        AISMessage.Geometry geometry = new AISMessage.Geometry(
+        final AISMessage.Geometry geometry = new AISMessage.Geometry(
             aisRadioMsg.getDoubleParam(LONGITUDE),
             aisRadioMsg.getDoubleParam(LATITUDE),
             new AISMessage.Geometry.SpatialReference(0));
 
-        AISMessage.AISAttributes attributes = new AISMessage.AISAttributes(
+        final AISMessage.AISAttributes attributes = new AISMessage.AISAttributes(
             aisRadioMsg.getIntParam(USER_ID),
             aisRadioMsg.getTimestamp(),
             getDoubleValue(aisRadioMsg, SOG, 1023), // BigDecimal or int
@@ -34,8 +56,7 @@ public final class AisMessageConverter {
             getIntValue(aisRadioMsg, TIME_STAMP, 60)
         );
 
-        final AISMessage msg = new AISMessage(geometry, attributes);
-        return msg;
+        return new AISMessage(geometry, attributes);
     }
 
     /**
@@ -61,8 +82,7 @@ public final class AisMessageConverter {
             getTrimmedStringValue(aisRadioMsg, DESTINATION) //aisRadioMsg.getStringParam(DESTINATION) // String
         );
 
-        final VesselMessage msg = new VesselMessage(attributes);
-        return msg;
+        return new VesselMessage(attributes);
     }
 
     public static int getShipType(final AisRadioMsg aisRadioMsg) {
@@ -98,7 +118,7 @@ public final class AisMessageConverter {
     }
 
     private static String getTrimmedStringValue(final AisRadioMsg aisRadioMsg, final String name) {
-        String value = getStringValue(aisRadioMsg, name, "");
+        final String value = getStringValue(aisRadioMsg, name, "");
 
         return value.replaceAll("@*$", "");
     }
@@ -128,12 +148,12 @@ public final class AisMessageConverter {
      * @param shipType
      * @return
      */
-    private static int getMaskedShipAndCargoType(int shipType) {
+    private static int getMaskedShipAndCargoType(final int shipType) {
         if (shipType < 20 || shipType > 99) {
             return shipType;
         }
 
-        int tenth = shipType / 10;
+        final int tenth = shipType / 10;
         return (tenth == 3 || tenth == 5) ? shipType : tenth * 10;
     }
 }

@@ -10,11 +10,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.ZonedDateTime;
 
-import jakarta.xml.bind.JAXBElement;
-
-import fi.livi.digitraffic.meri.model.winternavigation.PortRestrictionProperty;
-import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeature;
-import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPortFeatureCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
@@ -25,14 +20,18 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
-import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
+import fi.livi.digitraffic.meri.dto.winternavigation.v1.WinterNavigationPortFeatureCollectionV1;
+import fi.livi.digitraffic.meri.dto.winternavigation.v1.WinterNavigationPortFeatureV1;
+import fi.livi.digitraffic.meri.dto.winternavigation.v1.WinterNavigationPortRestrictionV1;
+import fi.livi.digitraffic.meri.service.winternavigation.v1.WinterNavigationWebServiceV1;
 import ibnet_baltice_ports.Ports;
 import ibnet_baltice_schema.PortsResponseType;
+import jakarta.xml.bind.JAXBElement;
 
-public class WinterNavigationPortUpdaterTest extends AbstractTestBase {
+public class WinterNavigationPortUpdaterTest extends AbstractDaemonTestBase {
 
     @MockBean
     private WinterNavigationClient winterNavigationClient;
@@ -44,18 +43,18 @@ public class WinterNavigationPortUpdaterTest extends AbstractTestBase {
     private WinterNavigationPortRepository winterNavigationPortRepository;
 
     @Autowired
-    private WinterNavigationService winterNavigationService;
-
-    @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
     private Jaxb2Marshaller jaxb2Marshaller;
 
+    private WinterNavigationWebServiceV1 winterNavigationWebServiceV1;
+
     private static final String LOCODE_PUHOS = "FIPUH";
 
     @BeforeEach
     public void before() {
+        winterNavigationWebServiceV1 = loadBean(WinterNavigationWebServiceV1.class);
         winterNavigationPortUpdater = new WinterNavigationPortUpdater(winterNavigationClient, winterNavigationPortRepository, updatedTimestampRepository);
         winterNavigationPortRepository.deleteAll();
     }
@@ -64,13 +63,13 @@ public class WinterNavigationPortUpdaterTest extends AbstractTestBase {
     @Transactional
     @Rollback
     public void updateWinterNavigationPortsSucceeds() throws IOException {
-        when(winterNavigationClient.getWinterNavigationPorts()).thenReturn(getResponse("winterNavigationPortsResponse.xml"));
+        when(winterNavigationClient.getWinterNavigationPorts()).thenReturn(getResponse("winternavigation/winterNavigationPortsResponse.xml"));
 
         winterNavigationPortUpdater.updateWinterNavigationPorts();
 
-        final WinterNavigationPortFeatureCollection collection = winterNavigationService.getWinterNavigationPorts();
+        final WinterNavigationPortFeatureCollectionV1 collection = winterNavigationWebServiceV1.getWinterNavigationPorts();
         assertEquals(156, collection.getFeatures().size());
-        final WinterNavigationPortFeature feature = getPort(collection, LOCODE_PUHOS);
+        final WinterNavigationPortFeatureV1 feature = getPort(collection, LOCODE_PUHOS);
         assertEquals(LOCODE_PUHOS, feature.getProperties().locode);
         assertEquals("PUHOS", feature.getProperties().name);
         assertEquals("FI", feature.getProperties().nationality);
@@ -79,7 +78,7 @@ public class WinterNavigationPortUpdaterTest extends AbstractTestBase {
         assertEquals("Baltic Sea", feature.getProperties().seaArea);
         assertEquals(1, feature.getProperties().portRestrictions.size());
 
-        final PortRestrictionProperty restriction = feature.getProperties().portRestrictions.get(0);
+        final WinterNavigationPortRestrictionV1 restriction = feature.getProperties().portRestrictions.get(0);
         assertFalse(restriction.isCurrent);
         assertTrue(restriction.portRestricted);
         assertFalse(restriction.portClosed);
@@ -91,7 +90,7 @@ public class WinterNavigationPortUpdaterTest extends AbstractTestBase {
         assertEquals("I,II 2000", restriction.formattedText);
     }
 
-    private WinterNavigationPortFeature getPort(final WinterNavigationPortFeatureCollection collection, final String locode) {
+    private WinterNavigationPortFeatureV1 getPort(final WinterNavigationPortFeatureCollectionV1 collection, final String locode) {
         return collection.getFeatures().stream().filter(f -> f.locode.equals(locode)).findFirst().get();
     }
 

@@ -13,7 +13,7 @@ public class WinterNavigationShipUpdateJob extends SimpleUpdateJob {
     public WinterNavigationShipUpdater winterNavigationShipUpdater;
 
     @Override
-    protected void doExecute(final JobExecutionContext context) throws Exception {
+    protected void doExecute(final JobExecutionContext context) {
         winterNavigationShipUpdater.updateWinterNavigationShips();
     }
 }

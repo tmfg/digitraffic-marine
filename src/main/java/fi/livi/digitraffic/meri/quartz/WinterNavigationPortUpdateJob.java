@@ -13,7 +13,7 @@ public class WinterNavigationPortUpdateJob extends SimpleUpdateJob {
     public WinterNavigationPortUpdater winterNavigationPortUpdater;
 
     @Override
-    protected void doExecute(final JobExecutionContext context) throws Exception {
+    protected void doExecute(final JobExecutionContext context) {
         winterNavigationPortUpdater.updateWinterNavigationPorts();
     }
 }

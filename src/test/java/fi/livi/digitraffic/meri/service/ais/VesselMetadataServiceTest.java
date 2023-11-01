@@ -1,13 +1,11 @@
 package fi.livi.digitraffic.meri.service.ais;
 
-import static fi.livi.digitraffic.meri.model.ais.VesselMessage.VesselAttributes;
+import static fi.livi.digitraffic.meri.dto.ais.external.VesselMessage.VesselAttributes;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.UUID;
-
-import jakarta.transaction.Transactional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,15 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.controller.MessageConverter;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
-import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
+import fi.livi.digitraffic.meri.model.ais.VesselMetadata;
+import jakarta.transaction.Transactional;
 
 @Transactional
-public class VesselMetadataServiceTest extends AbstractTestBase {
+public class VesselMetadataServiceTest extends AbstractDaemonTestBase {
 
-    private static final Logger log = LoggerFactory.getLogger(MessageConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(VesselMetadataServiceTest.class);
 
     @SpyBean
     private VesselMetadataService vesselMetadataService;

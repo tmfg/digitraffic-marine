@@ -5,24 +5,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 
-import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-
+import fi.livi.digitraffic.meri.AbstractWebTestBase;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 @Transactional
-public class VesselDetailsServiceTest extends AbstractTestBase {
+public class VesselDetailsServiceTest extends AbstractWebTestBase {
     @Autowired
     private VesselDetailsService vesselDetailsService;
 

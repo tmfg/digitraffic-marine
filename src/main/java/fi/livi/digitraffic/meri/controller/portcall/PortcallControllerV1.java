@@ -1,7 +1,6 @@
 package fi.livi.digitraffic.meri.controller.portcall;
 
 import static fi.livi.digitraffic.meri.controller.ApiConstants.API_PORT_CALL;
-import static fi.livi.digitraffic.meri.controller.ApiConstants.BETA;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.PORT_CALL_V1_TAG;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
@@ -13,7 +12,6 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -30,11 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.controller.ResponseEntityWithLastModifiedHeader;
-import fi.livi.digitraffic.meri.domain.portnet.vesseldetails.VesselDetails;
-import fi.livi.digitraffic.meri.dto.portcall.v1.CodeDescriptionsV1;
-import fi.livi.digitraffic.meri.dto.portcall.v1.PortCallsV1;
-import fi.livi.digitraffic.meri.dto.portcall.v1.PortLocationDtoV1;
-import fi.livi.digitraffic.meri.service.portcall.PortCallServiceV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.call.PortCallsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.code.CodeDescriptionsV1;
+import fi.livi.digitraffic.meri.dto.portcall.v1.port.PortLocationDtoV1;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
+import fi.livi.digitraffic.meri.service.portcall.v1.PortCallWebServiceV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,10 +56,10 @@ public class PortcallControllerV1 {
     public static final String VESSEL_DETAILS = "/vessel-details";
     public static final String PORTS = "/ports";
 
-    private final PortCallServiceV1 portCallServiceV1;
+    private final PortCallWebServiceV1 portCallWebServiceV1;
 
-    public PortcallControllerV1(final PortCallServiceV1 portCallServiceV1) {
-        this.portCallServiceV1 = portCallServiceV1;
+    public PortcallControllerV1(final PortCallWebServiceV1 portCallWebServiceV1) {
+        this.portCallWebServiceV1 = portCallWebServiceV1;
     }
 
     @Operation(summary = "Find port calls", description = NOTE)
@@ -145,7 +143,7 @@ public class PortcallControllerV1 {
 
         final Instant actualTo = to != null ? to : Instant.now().plus(Duration.ofDays(100));
 
-        return portCallServiceV1.findPortCalls(date,
+        return portCallWebServiceV1.findPortCalls(date,
             actualFrom,
             actualTo,
             etaFrom,
@@ -168,14 +166,14 @@ public class PortcallControllerV1 {
     @GetMapping(path = API_PORT_CALL_V1 + CODE_DESCRIPTIONS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptionsV1 listCodeDescriptions() {
-        return portCallServiceV1.listCodeDescriptions();
+        return portCallWebServiceV1.listCodeDescriptions();
     }
 
     @Operation(summary = "Return all ports with port areas and berths.")
     @GetMapping(path = API_PORT_CALL_V1 + PORTS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public PortLocationDtoV1 findPortsLocations() {
-        return portCallServiceV1.findPortsLocations();
+        return portCallWebServiceV1.findPortsLocations();
     }
 
     @Operation(summary = "Return one port with port areas and berths by SafeSeaNet location code (locode).")
@@ -185,7 +183,7 @@ public class PortcallControllerV1 {
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public PortLocationDtoV1 findPortLocationByLocode(@PathVariable(value = "locode") final String locode) {
-        return portCallServiceV1.findPortLocationByLocode(locode);
+        return portCallWebServiceV1.findPortLocationByLocode(locode);
     }
 
 
@@ -219,7 +217,7 @@ public class PortcallControllerV1 {
             from = Instant.now().minus(Duration.ofDays(1));
         }
 
-        final List<VesselDetails> vds = portCallServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationality, vesselTypeCode);
+        final List<VesselDetails> vds = portCallWebServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationality, vesselTypeCode);
         final Instant lastModified = vds.stream()
             .map(VesselDetails::getLastModified)
             .filter(ObjectUtils::isNotEmpty)

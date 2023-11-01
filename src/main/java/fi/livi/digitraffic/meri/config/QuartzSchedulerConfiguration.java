@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 import org.quartz.CronTrigger;
+import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -116,7 +117,7 @@ public class QuartzSchedulerConfiguration {
                             try {
                                 log.warn("method=createScheduler Deleting job={}", jobKey);
                                 scheduler.deleteJob(jobKey);
-                            } catch (SchedulerException e) {
+                            } catch (final SchedulerException e) {
                                 log.error("method=createScheduler Deleting job=" + jobKey + " failed", e);
                             }
                         }
@@ -223,7 +224,7 @@ public class QuartzSchedulerConfiguration {
         return createTrigger(winterNavigationDirwayUpdateJobDetail);
     }
 
-    private static JobDetailFactoryBean createJobDetail(final Class jobClass) {
+    private static JobDetailFactoryBean createJobDetail(final Class<? extends Job> jobClass) {
         final JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
         factoryBean.setJobClass(jobClass);
         // job has to be durable to be stored in DB:
@@ -242,9 +243,9 @@ public class QuartzSchedulerConfiguration {
         }
         try {
             // Try first to create interval trigger and fallback to cron
-            long intervalMs = Long.parseLong(jobScheduleExpression);
+            final long intervalMs = Long.parseLong(jobScheduleExpression);
             return  createRepeatingTrigger(jobDetail, intervalMs);
-        } catch (NumberFormatException nfe) { // cron expression
+        } catch (final NumberFormatException nfe) { // cron expression
             return createCronTrigger(jobDetail, jobScheduleExpression);
         }
     }
@@ -288,7 +289,7 @@ public class QuartzSchedulerConfiguration {
         return factoryBean;
     }
 
-    private static String getJobName(JobDetail jobDetail) {
+    private static String getJobName(final JobDetail jobDetail) {
         return jobDetail.getJobClass().getSimpleName();
     }
 }

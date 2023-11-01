@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ConversionServiceFactoryBean;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
@@ -71,9 +70,8 @@ public class MarineApplicationConfiguration {
 
     @Bean("conversionService")
     public org.springframework.core.convert.ConversionService getConversionService() {
-        ConversionServiceFactoryBean bean = new ConversionServiceFactoryBean();
+        final ConversionServiceFactoryBean bean = new ConversionServiceFactoryBean();
         bean.afterPropertiesSet();
-        ConversionService object = bean.getObject();
-        return object;
+        return bean.getObject();
     }
 }

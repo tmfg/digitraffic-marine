@@ -11,11 +11,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.common.util.ThreadUtil;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 
 @TestPropertySource(properties = { "dt.scheduled.annotation.enabled=true" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS) // Kill all scheduled jobs after the test
-public class ScheduledAnnotationThreadTest extends AbstractTestBase {
+public class ScheduledAnnotationThreadTest extends AbstractDaemonTestBase {
 
     private static final Logger log = getLogger(ScheduledAnnotationThreadTest.class);
 
@@ -35,11 +36,7 @@ public class ScheduledAnnotationThreadTest extends AbstractTestBase {
         while ( ( (count1 <= (job1StartErrorsAfter + poolSize + 1)) ||
             (count2 <= (job2StartErrorsAfter + poolSize + 1)) )  &&
             start.getTime() < 500) {
-            try {
-                Thread.sleep(10);
-            } catch (final InterruptedException e) {
-                e.printStackTrace();
-            }
+            ThreadUtil.delayMs(10);
         }
 
         // Assert that scheduledServices has been running even when there has been errors

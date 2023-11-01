@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 
-public class UpdatedTimestampRepositoryTest extends AbstractTestBase {
+public class UpdatedTimestampRepositoryTest extends AbstractDaemonTestBase {
     @Autowired
     private UpdatedTimestampRepository updatedTimestampRepository;
 

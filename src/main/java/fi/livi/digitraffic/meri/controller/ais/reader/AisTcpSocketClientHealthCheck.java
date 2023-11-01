@@ -22,13 +22,14 @@ package fi.livi.digitraffic.meri.controller.ais.reader;
 
 import java.io.IOException;
 
-import fi.livi.digitraffic.meri.controller.reader.VesselLoggingListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import fi.livi.digitraffic.meri.controller.reader.VesselLoggingListener;
 
 @Component
 @ConditionalOnProperty("ais.reader.enabled")
@@ -53,7 +54,7 @@ public class AisTcpSocketClientHealthCheck {
 
             try {
                 aisTcpSocketClient.sendKeepAlive();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 log.error("Failed to send Keep-Alive", e);
 
                 connectionStatus(AisTcpSocketClient.ConnectionStatus.CONNECT_FAILURE);
@@ -64,7 +65,7 @@ public class AisTcpSocketClientHealthCheck {
 
             try {
                 aisTcpSocketClient.reconnect();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.error("Failed to reconnect", e);
             }
         }

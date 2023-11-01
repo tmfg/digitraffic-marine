@@ -12,7 +12,7 @@ public class VesselDetailsUpdateJob extends SimpleUpdateJob {
     public VesselDetailsUpdater vesselDetailsUpdater;
 
     @Override
-    protected void doExecute(final JobExecutionContext context) throws Exception {
+    protected void doExecute(final JobExecutionContext context) {
         vesselDetailsUpdater.update();
     }
 }

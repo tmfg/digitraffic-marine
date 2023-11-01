@@ -8,7 +8,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import jakarta.xml.bind.JAXBElement;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,14 +19,15 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
-import fi.livi.digitraffic.meri.AbstractTestBase;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
-import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationShip;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShip;
 import ibnet_baltice_schema.WinterShipsResponseType;
 import ibnet_baltice_winterships.WinterShips;
+import jakarta.xml.bind.JAXBElement;
 
-public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
+public class WinterNavigationShipUpdaterTest extends AbstractDaemonTestBase {
 
     @MockBean
     private WinterNavigationClient winterNavigationClient;
@@ -55,8 +55,8 @@ public class WinterNavigationShipUpdaterTest extends AbstractTestBase {
     @Rollback
     public void updateWinterNavigationShipsSucceeds() throws IOException {
         when(winterNavigationClient.getWinterNavigationShips())
-            .thenReturn(getResponse("winterNavigationShipsResponse1.xml"))
-            .thenReturn(getResponse("winterNavigationShipsResponse2.xml"));
+            .thenReturn(getResponse("winternavigation/winterNavigationShipsResponse1.xml"))
+            .thenReturn(getResponse("winternavigation/winterNavigationShipsResponse2.xml"));
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
 

@@ -10,13 +10,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.annotation.PreDestroy;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import jakarta.annotation.PreDestroy;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -51,8 +51,8 @@ public class SseLoggingListener {
 
     private static synchronized void addStatistics(final SseLoggingType loggingType, final boolean sendSuccessful) {
         final Statistics statistics = sentStatisticsMap.get(loggingType);
-        int messages = sendSuccessful ? 1 : 0;
-        int failures = sendSuccessful ? 0 : 1;
+        final int messages = sendSuccessful ? 1 : 0;
+        final int failures = sendSuccessful ? 0 : 1;
 
         final Statistics newStat = (statistics == null) ?
             new Statistics(messages, failures) :

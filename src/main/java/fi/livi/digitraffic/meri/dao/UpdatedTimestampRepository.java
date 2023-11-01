@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import fi.livi.digitraffic.meri.dto.info.v1.DataSourceInfoDtoV1;
 import fi.livi.digitraffic.meri.model.DataSource;
-import fi.livi.digitraffic.meri.util.dao.SqlRepository;
 
 @Repository
 public interface UpdatedTimestampRepository extends SqlRepository {

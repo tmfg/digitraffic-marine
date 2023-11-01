@@ -20,6 +20,48 @@
  */
 package fi.livi.digitraffic.meri.controller.ais.reader;
 
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.AIS_VERSION_INDICATOR;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.ALTITUDE_GNSS;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.ALTITUDE_SENSOR;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.ASSIGNED_MODE_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.A_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.B_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.CALL_SIGN;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.CLASS_B_BAND_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.CLASS_B_DISPLAY_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.CLASS_B_DSC_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.CLASS_B_MESSAGE_22_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.CLASS_B_UNIT_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.COG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.COMMUNICATION_STATE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.COMMUNICATION_STATE_SELECTOR_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.C_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.DESTINATION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.DTE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.D_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.ETA;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.IMO_NUMBER;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.LATITUDE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.LONGITUDE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.MAXIMUM_PRESENT_STATIC_DRAUGHT;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.NAME;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.NAVIGATIONAL_STATUS;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.PART_NUMBER;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.POSITION_ACCURACY;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.POSITION_LATENCY;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.RAIM_FLAG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.RATE_OF_TURN;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.SOG;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.SPARE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.SPARE2;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.SPARE3;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.SPECIAL_MANOEUVRE_INDICATOR;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TIME_STAMP;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TRUE_HEADING;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TYPE_OF_ELECTRONIC_POSITION_FIXING_DEVICE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.TYPE_OF_SHIP_AND_CARGO_TYPE;
+import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.VENDOR_ID;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,8 +70,6 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsgParameters.*;
 
 public class AisRadioMsgParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(AisRadioMsgParser.class);
@@ -45,9 +85,9 @@ public class AisRadioMsgParser {
         NUMBER_OF_FILL_BITS_AND_CHECK_VALUE
     }
 
-    public static boolean isSupportedMessageType(String data) {
+    public static boolean isSupportedMessageType(final String data) {
         try {
-            String msgType = getColumnValue(RAW_LINE_COLUMN.MESSAGE_TYPE, data);
+            final String msgType = getColumnValue(RAW_LINE_COLUMN.MESSAGE_TYPE, data);
 
             if (!msgType.matches(SUPPORTED_MESSAGE_TYPE_REGEX)) {
                 LOGGER.info("Unsupported message type: {}", msgType);
@@ -60,22 +100,22 @@ public class AisRadioMsgParser {
             }
 
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOGGER.info("Unsupported message structure: {}", data);
             return false;
         }
     }
 
-    public static AisRadioMsg parseToAisRadioMessage(String rawLine) {
+    public static AisRadioMsg parseToAisRadioMessage(final String rawLine) {
         return parseToAisRadioMessage(Collections.singletonList(rawLine), getBinaryMsg(rawLine));
     }
 
-    public static AisRadioMsg parseToAisRadioMessage(String firstRawLine, String secondRawLine) {
+    public static AisRadioMsg parseToAisRadioMessage(final String firstRawLine, final String secondRawLine) {
         return parseToAisRadioMessage(Arrays.asList(firstRawLine, secondRawLine), getBinaryMsg(firstRawLine).concat(getBinaryMsg(secondRawLine)));
     }
 
-    private static AisRadioMsg parseToAisRadioMessage(List<String> rawLines, String binaryMsg) {
-        String msgClassSuffix = getMessageClassSuffix(binaryMsg);
+    private static AisRadioMsg parseToAisRadioMessage(final List<String> rawLines, final String binaryMsg) {
+        final String msgClassSuffix = getMessageClassSuffix(binaryMsg);
 
         if (!SUPPORTED_MESSAGE_CLASS_SUFFIXES.contains(msgClassSuffix)) {
             //LOGGER.info("Unsupported message: {}", msgClassSuffix);
@@ -226,29 +266,29 @@ public class AisRadioMsgParser {
         return msg;
     }
 
-    public static boolean isMultipartRadioMessage(String rawLine) {
+    public static boolean isMultipartRadioMessage(final String rawLine) {
         return Integer.parseInt(getColumnValue(RAW_LINE_COLUMN.TOTAL_NUMBER_OF_SENTENCES_NEEDED, rawLine)) > 1;
     }
 
-    public static int getPartNumber(String rawLine) {
+    public static int getPartNumber(final String rawLine) {
         return Integer.parseInt(getColumnValue(RAW_LINE_COLUMN.SENTENCE_NUMBER, rawLine));
     }
 
-    public static void validateChecksum(String rawLine) {
-        String calculated = calculateChecksum(rawLine);
-        String received = getColumnValue(RAW_LINE_COLUMN.NUMBER_OF_FILL_BITS_AND_CHECK_VALUE, rawLine).split("\\*")[1];
+    public static void validateChecksum(final String rawLine) {
+        final String calculated = calculateChecksum(rawLine);
+        final String received = getColumnValue(RAW_LINE_COLUMN.NUMBER_OF_FILL_BITS_AND_CHECK_VALUE, rawLine).split("\\*")[1];
 
-        String info = "[calculated=" + calculated + ", received=" + received + ", sentence=" + rawLine + "]";
+        final String info = "[calculated=" + calculated + ", received=" + received + ", sentence=" + rawLine + "]";
 
         if (!calculated.equals(received)) {
             LOGGER.warn("Wrong checksum {}", info);
         }
     }
 
-    private static String calculateChecksum(String rawLine) {
+    private static String calculateChecksum(final String rawLine) {
         int sum = 0;
         for (int i = 1; i < rawLine.length(); i++) {
-            char ch = rawLine.charAt(i);
+            final char ch = rawLine.charAt(i);
             if (ch == '*') {
                 break;
             }
@@ -258,32 +298,32 @@ public class AisRadioMsgParser {
         return String.format("%02X", sum);
     }
 
-    private static String getColumnValue(RAW_LINE_COLUMN column, String rawLine) {
+    private static String getColumnValue(final RAW_LINE_COLUMN column, final String rawLine) {
         return rawLine.split(",")[column.ordinal()];
     }
 
-    private static String getBinaryMsg(String rawLine) {
+    private static String getBinaryMsg(final String rawLine) {
         return Ais6BitConverter.to6Bit(getColumnValue(RAW_LINE_COLUMN.RADIO_MSG, rawLine));
     }
 
-    private static String getMessageClassSuffix(String binaryMsg) {
-        int msgId = Integer.parseInt(binaryMsg.substring(0, 6), 2);
-        String partStr = getPartIdString(binaryMsg, msgId);
-        return Integer.toString(msgId) + partStr;
+    private static String getMessageClassSuffix(final String binaryMsg) {
+        final int msgId = Integer.parseInt(binaryMsg.substring(0, 6), 2);
+        final String partStr = getPartIdString(binaryMsg, msgId);
+        return msgId + partStr;
     }
 
-    private static String getPartIdString(String binaryMsg, int msgId) {
+    private static String getPartIdString(final String binaryMsg, final int msgId) {
         if (msgId == 24) {
             return Integer.parseInt(binaryMsg.substring(38, 40), 2) == 1 ? "B" : "A";
         }
         return "";
     }
 
-    private static AisRadioMsg.MessageType getMessageType(String msgClassSuffix) {
+    private static AisRadioMsg.MessageType getMessageType(final String msgClassSuffix) {
         return SUPPORTED_METADATA_CLASS_SUFFIXES.contains(msgClassSuffix) ? AisRadioMsg.MessageType.METADATA : AisRadioMsg.MessageType.POSITION;
     }
 
-    private static AisRadioMsg.MessageClass getMessageClass(String msgClassSuffix) {
+    private static AisRadioMsg.MessageClass getMessageClass(final String msgClassSuffix) {
         return CLASS_B_MESSAGE_SUFFIXES.contains(msgClassSuffix) ? AisRadioMsg.MessageClass.CLASS_B : AisRadioMsg.MessageClass.CLASS_A;
     }
 }

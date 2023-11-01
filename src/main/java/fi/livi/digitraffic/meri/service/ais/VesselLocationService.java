@@ -5,23 +5,22 @@ import static fi.livi.digitraffic.meri.service.ais.VesselMetadataService.FORBIDD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
-import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
-import fi.livi.digitraffic.meri.domain.ais.VesselLocation;
-import fi.livi.digitraffic.meri.domain.ais.VesselMetadata;
-import fi.livi.digitraffic.meri.model.ais.AISMessage;
-import fi.livi.digitraffic.meri.model.ais.VesselLocationFeatureCollection;
+import fi.livi.digitraffic.meri.dto.ais.external.AISMessage;
+import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
+import fi.livi.digitraffic.meri.model.ais.VesselLocation;
+import fi.livi.digitraffic.meri.model.ais.VesselMetadata;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.util.dao.QueryBuilder;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,19 +36,19 @@ public class VesselLocationService {
     }
 
     @Transactional(readOnly = true)
-    public VesselLocationFeatureCollection findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
+    public VesselLocationFeatureCollectionV1 findAllowedLocations(final Integer mmsi, final Long from, final Long to) {
         return VesselLocationConverter.createFeatureCollection(findLocations(mmsi, from, to));
     }
 
     @Transactional(readOnly = true)
-    public VesselLocationFeatureCollection findAllowedLocationsWithinRadiusFromPoint(final double radius, final double latitude,
-                                                                                     final double longitude, final Long from, final Long to) {
+    public VesselLocationFeatureCollectionV1 findAllowedLocationsWithinRadiusFromPoint(final double radius, final double latitude,
+                                                                                       final double longitude, final Long from, final Long to) {
         return VesselLocationConverter.createFeatureCollection(
                 vesselLocationRepository.findAllVesselsWithinRadiusFromPoint(radius, latitude, longitude, from, to, FORBIDDEN_SHIP_TYPES));
     }
 
     @Transactional(readOnly = true)
-    public VesselLocationFeatureCollection findAllowedLocationsWithinRadiusFromMMSI(final double radius, final int mmsi, final long from) {
+    public VesselLocationFeatureCollectionV1 findAllowedLocationsWithinRadiusFromMMSI(final double radius, final int mmsi, final long from) {
         final VesselLocation location = vesselLocationRepository.findByMmsi(mmsi);
         if (location == null) {
             throw new ObjectNotFoundException(VesselLocation.class, mmsi);

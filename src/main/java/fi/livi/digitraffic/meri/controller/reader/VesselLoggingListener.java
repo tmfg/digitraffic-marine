@@ -1,22 +1,23 @@
 package fi.livi.digitraffic.meri.controller.reader;
 
-import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
-import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageReader;
-import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
-import fi.livi.digitraffic.meri.controller.ais.reader.AisTcpSocketClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
-import jakarta.annotation.PreDestroy;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageReader;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
+import fi.livi.digitraffic.meri.controller.ais.reader.AisTcpSocketClient;
+import jakarta.annotation.PreDestroy;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -155,7 +156,7 @@ public class VesselLoggingListener implements AisMessageListener {
         final int messages;
         final int failures;
 
-        private SentStatistics(int messages, int failures) {
+        private SentStatistics(final int messages, final int failures) {
             this.messages = messages;
             this.failures = failures;
         }
@@ -165,7 +166,7 @@ public class VesselLoggingListener implements AisMessageListener {
         final int messages;
         final int filtered;
 
-        private ReadStatistics(int messages, int filtered) {
+        private ReadStatistics(final int messages, final int filtered) {
             this.messages = messages;
             this.filtered = filtered;
         }
@@ -177,7 +178,7 @@ public class VesselLoggingListener implements AisMessageListener {
         final int messageQueue;
         final int messageQueueMax;
 
-        private ConnectionStatistics(int messages, AisTcpSocketClient.ConnectionStatus status, int readProblems, int messageQueue, int messageQueueMax) {
+        private ConnectionStatistics(final int messages, final AisTcpSocketClient.ConnectionStatus status, final int readProblems, final int messageQueue, final int messageQueueMax) {
             super(messages, 0);
 
             this.status = status;

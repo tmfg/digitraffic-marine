@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
-import fi.livi.digitraffic.meri.domain.winternavigation.PortRestriction;
-import fi.livi.digitraffic.meri.domain.winternavigation.WinterNavigationPort;
+import fi.livi.digitraffic.meri.model.winternavigation.PortRestriction;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationPort;
 import ibnet_baltice_ports.Port;
 import ibnet_baltice_ports.Ports;
 import ibnet_baltice_ports.Restriction;
@@ -84,7 +84,7 @@ public class WinterNavigationPortUpdater {
         final List<WinterNavigationPort> added = new ArrayList<>();
         final List<WinterNavigationPort> updated = new ArrayList<>();
 
-        StopWatch stopWatch = StopWatch.createStarted();
+        final StopWatch stopWatch = StopWatch.createStarted();
         portsWithLocode.forEach(p -> update(p, added, updated));
         winterNavigationRepository.saveAll(added);
         stopWatch.stop();
@@ -146,7 +146,7 @@ public class WinterNavigationPortUpdater {
 
         int orderNumber = 1;
         for (final Restriction restriction : restrictions.getRestriction()) {
-            PortRestriction pr = new PortRestriction();
+            final PortRestriction pr = new PortRestriction();
             pr.setLocode(p.getLocode());
             pr.setOrderNumber(orderNumber);
             pr.setCurrent(restriction.isIsCurrent());

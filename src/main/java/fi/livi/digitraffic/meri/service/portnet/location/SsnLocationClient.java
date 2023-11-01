@@ -11,7 +11,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
+import fi.livi.digitraffic.meri.model.portnet.SsnLocation;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")

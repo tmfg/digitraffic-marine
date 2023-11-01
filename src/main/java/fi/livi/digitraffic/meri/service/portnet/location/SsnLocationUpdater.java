@@ -1,6 +1,5 @@
 package fi.livi.digitraffic.meri.service.portnet.location;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.livi.digitraffic.meri.dao.portnet.SsnLocationRepository;
-import fi.livi.digitraffic.meri.domain.portnet.SsnLocation;
+import fi.livi.digitraffic.meri.model.portnet.SsnLocation;
 
 @Service
 @ConditionalOnExpression("'${config.test}' != 'true'")
@@ -39,7 +38,7 @@ public class SsnLocationUpdater {
     }
 
     @Transactional
-    public void updateSsnLocations() throws IOException {
+    public void updateSsnLocations() {
         final List<SsnLocation> oldLocations = ssnLocationRepository.findAll();
         final List<SsnLocation> newLocations = ssnLocationReader.getSsnLocations();
 
