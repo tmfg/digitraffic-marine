@@ -14,7 +14,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.9</version>
+        <!-- check hibernate-core dependency when updating! -->
+        <version>3.1.6</version>
         <relativePath/>
     </parent>
 
@@ -22,7 +23,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <maven.compiler.release>17</maven.compiler.release>
-        <io.springfox.version>3.0.0</io.springfox.version>
         <aws.sdk.version>1.12.277</aws.sdk.version>
         <spring.cloud.version>4.0.4</spring.cloud.version>
         <org.glassfish.metro.ws.version>4.0.2</org.glassfish.metro.ws.version>
@@ -82,6 +82,8 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- remove this when spring boot is updated to use this! -->
+        <dependency><groupId>org.hibernate.orm</groupId><artifactId>hibernate-core</artifactId><version>6.3.1.Final</version></dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>

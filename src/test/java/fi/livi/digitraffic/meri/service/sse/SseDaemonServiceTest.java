@@ -50,7 +50,7 @@ public class SseDaemonServiceTest extends AbstractDaemonTestBase {
         // Data contains 3 sites
         saveNewTlscReports("example-sse-report1.json");
         final Instant firstUpdate = TimeUtil.roundInstantSeconds(getTransactionTimestamp());
-        ThreadUtil.delayMs(1100);
+        ThreadUtil.delayMs(2100);
         commitAndEndTransactionAndStartNew();
         // Data contains 2 sites
         saveNewTlscReports("example-sse-report2.json");
@@ -90,7 +90,7 @@ public class SseDaemonServiceTest extends AbstractDaemonTestBase {
     }
 
     private List<SseReport> convertToSseReports(final JsonNode json) {
-        List<SseReport> sseReports = new ArrayList<>();
+        final List<SseReport> sseReports = new ArrayList<>();
         final JsonNode sseReportsNode = json.get("SSE_Reports");
         for(int i = 0; i < sseReportsNode.size(); i++) {
             final JsonNode reportNode = sseReportsNode.get(i);
