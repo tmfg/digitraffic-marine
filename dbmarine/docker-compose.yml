@@ -2,7 +2,7 @@ version: '2.0' # docker-compose version
 
 services:
   db:
-    image: postgis/postgis:13-3.3-alpine
+    image: postgis/postgis:13-3.4-alpine
     restart: always
     environment:
       POSTGRES_USER: marine
@@ -15,7 +15,7 @@ services:
       - default
 
   db-init:
-    image: flyway/flyway:9.3-alpine
+    image: flyway/flyway:10.8.1-alpine
     volumes:
       - "./sql:/flyway/sql"
       - "./files:/flyway/conf"
