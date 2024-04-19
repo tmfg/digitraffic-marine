@@ -342,6 +342,16 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>schemaspy</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${basedir}/dbmarine/schemaspy</workingDirectory>
+                            <executable>./get-deps-and-run-schemaspy.sh</executable>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -569,23 +579,6 @@
                         </wsdlOption>
                     </wsdlOptions>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.1</version>
-                <executions>
-                    <execution>
-                        <id>schemaspy</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${basedir}/dbmarine/schemaspy</workingDirectory>
-                            <executable>./get-deps-and-run-schemaspy.sh</executable>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
