@@ -158,8 +158,7 @@ public class DataStatusService {
             new UpdateInfoDtoV1(ApiConstants.API_NAUTICAL_WARNING_V1_WARNINGS,
                                 updatedTimestampRepository.getNauticalWarningsLastModified(UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ACTIVE,
                                                                                            UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ARCHIVED),
-                                updatedTimestampRepository.getNauticalWarningsLastUpdated(UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ACTIVE,
-                                                                                          UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ARCHIVED),
+                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.NAUTICAL_WARNINGS_CHECK),
                                 info.getUpdateInterval(), info.getRecommendedFetchInterval())
         );
     }
