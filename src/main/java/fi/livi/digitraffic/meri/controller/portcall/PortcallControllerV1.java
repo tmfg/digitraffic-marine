@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.meri.controller.ResponseEntityWithLastModifiedHeader;
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dto.portcall.v1.call.PortCallsV1;
 import fi.livi.digitraffic.meri.dto.portcall.v1.code.CodeDescriptionsV1;
 import fi.livi.digitraffic.meri.dto.portcall.v1.port.PortLocationDtoV1;
@@ -57,9 +58,11 @@ public class PortcallControllerV1 {
     public static final String PORTS = "/ports";
 
     private final PortCallWebServiceV1 portCallWebServiceV1;
+    private final UpdatedTimestampRepository updatedTimestampRepository;
 
-    public PortcallControllerV1(final PortCallWebServiceV1 portCallWebServiceV1) {
+    public PortcallControllerV1(final PortCallWebServiceV1 portCallWebServiceV1, final UpdatedTimestampRepository updatedTimestampRepository) {
         this.portCallWebServiceV1 = portCallWebServiceV1;
+        this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
     @Operation(summary = "Find port calls", description = NOTE)
@@ -221,8 +224,8 @@ public class PortcallControllerV1 {
         final Instant lastModified = vds.stream()
             .map(VesselDetails::getLastModified)
             .filter(ObjectUtils::isNotEmpty)
-            .max(Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
-        return ResponseEntityWithLastModifiedHeader.of(vds, lastModified, API_PORT_CALL_V1 + VESSEL_DETAILS);
+            .max(Comparator.comparing(Function.identity())).orElse(updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS));
+        return ResponseEntityWithLastModifiedHeader.of(vds, lastModified != null ? lastModified : Instant.EPOCH, API_PORT_CALL_V1 + VESSEL_DETAILS);
 
     }
 }
