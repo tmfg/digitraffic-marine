@@ -4,7 +4,7 @@ import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder({

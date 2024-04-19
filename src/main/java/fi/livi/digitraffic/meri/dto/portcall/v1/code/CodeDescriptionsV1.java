@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 
-import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Code descriptions associated with port calls")

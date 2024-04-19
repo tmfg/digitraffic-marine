@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import fi.livi.digitraffic.meri.dto.info.v1.UpdateInfosDtoV1;
+import fi.livi.digitraffic.common.dto.info.v1.UpdateInfosDtoV1;
 import fi.livi.digitraffic.meri.service.DataStatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

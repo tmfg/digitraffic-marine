@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import fi.livi.digitraffic.common.util.TimeUtil;
 import fi.livi.digitraffic.meri.dto.geojson.FeatureCollection;
 
