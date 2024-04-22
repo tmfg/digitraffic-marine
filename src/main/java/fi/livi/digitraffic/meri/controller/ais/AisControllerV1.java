@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.controller.ResponseEntityWithLastModifiedHeader;
-import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
 import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
 import fi.livi.digitraffic.meri.dto.ais.v1.VesselMetadataJsonV1;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;

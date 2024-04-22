@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.dto.portcall.v1.call;
 import java.time.Instant;
 import java.util.List;
 
-import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Port call")

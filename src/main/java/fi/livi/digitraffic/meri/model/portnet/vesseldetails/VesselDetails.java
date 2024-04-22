@@ -7,7 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import fi.livi.digitraffic.meri.model.ReadOnlyCreatedAndModifiedFields;
 import fi.livi.digitraffic.meri.portnet.xsd.IdentificationData;
 import fi.livi.digitraffic.meri.util.TypeUtil;

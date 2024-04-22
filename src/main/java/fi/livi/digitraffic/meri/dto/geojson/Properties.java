@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.dto.geojson;
 import java.io.Serializable;
 import java.time.Instant;
 
-import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "GeoJSON Properties object")

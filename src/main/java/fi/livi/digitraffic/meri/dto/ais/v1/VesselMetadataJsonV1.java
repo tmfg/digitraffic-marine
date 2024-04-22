@@ -2,7 +2,7 @@ package fi.livi.digitraffic.meri.dto.ais.v1;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import fi.livi.digitraffic.meri.dto.LastModifiedSupport;
+import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Vessel metadata model")

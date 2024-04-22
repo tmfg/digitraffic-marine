@@ -30,11 +30,11 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         WINTER_NAVIGATION_VESSELS_CHECK,
         WINTER_NAVIGATION_DIRWAYS,
         WINTER_NAVIGATION_DIRWAYS_CHECK,
-
         BRIDGE_LOCK_DISRUPTIONS,
         BRIDGE_LOCK_DISRUPTIONS_CHECK,
         ATON_FAULTS,
-        ATON_FAULTS_CHECK
+        ATON_FAULTS_CHECK,
+        NAUTICAL_WARNINGS_CHECK
     }
 
     enum JsonCacheKey {
