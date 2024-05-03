@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,6 +39,7 @@ import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
 import fi.livi.digitraffic.meri.dto.portcall.v1.call.PortCallJsonV1;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
+import org.springframework.web.reactive.function.client.WebClient;
 
 public class PortCallUpdaterTest extends AbstractDaemonTestBase {
     @Autowired
@@ -43,15 +49,16 @@ public class PortCallUpdaterTest extends AbstractDaemonTestBase {
     private PortCallRepository portCallRepository;
 
     @Autowired
-    private RestTemplate jax2bRestTemplate;
+    private WebClient portnetWebClient;
 
     private PortCallClient portCallClient;
     private PortCallUpdater portCallUpdater;
-    private MockRestServiceServer server;
+    private MockWebServer server;
 
     @BeforeEach
     public void before() {
-        portCallClient = Mockito.spy(new PortCallClient("portCallUrl/", jax2bRestTemplate));
+        server = new MockWebServer();
+        portCallClient = Mockito.spy(new PortCallClient(server.url("/portCallUrl/").toString(), portnetWebClient));
         portCallUpdater = new PortCallUpdater(
             portCallRepository,
             updatedTimestampRepository,
@@ -59,52 +66,50 @@ public class PortCallUpdaterTest extends AbstractDaemonTestBase {
             Optional.of(new NoOpPortcallEstimateUpdater()),
             42,
             42);
-        server = MockRestServiceServer.createServer(jax2bRestTemplate);
+    }
+
+    @AfterEach
+    public void after() throws IOException {
+        server.close();
     }
 
     @Test
     @Transactional
     @Rollback
-    public void updatePortCallsSucceeds() throws IOException {
-        String response = readFile("portcalls/portCallResponse1.xml");
-
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
-            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
-
-        response = readFile("portcalls/portCallResponse2.xml");
-
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
-            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
+    public void updatePortCallsSucceeds() throws IOException, InterruptedException {
+        addXmlResponseFromFile(server, "portcalls/portCallResponse1.xml");
+        addXmlResponseFromFile(server, "portcalls/portCallResponse2.xml");
 
         final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, FINLAND_ZONE);
         final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, FINLAND_ZONE);
 
         portCallUpdater.updatePortCalls(from, to);
 
-        List<PortCallJsonV1> portCalls = portCallRepository.findByPortCallIdIn(Arrays.asList(1975743L, 1975010L)).stream()
+        expectResponse(server, "/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630");
+
+        final List<PortCallJsonV1> portCalls = portCallRepository.findByPortCallIdIn(Arrays.asList(1975743L, 1975010L)).stream()
             .sorted(Comparator.comparing(PortCallJsonV1::getPortCallId))
             .collect(Collectors.toList());
 
         assertTrue(portCalls.size() >= 2);
 
-        PortCallJsonV1 portCall1 = portCalls.stream().filter(portCall ->
+        final PortCallJsonV1 portCall1 = portCalls.stream().filter(portCall ->
             portCall.getPortCallId().equals(1975743L) &&
                 portCall.getPortCallTimestamp().equals(new Timestamp(1479904755000L))).collect(Collectors.toList()).get(0);
         assertEquals("FIVAA", portCall1.getPortToVisit());
         assertEquals("Wasa Express", portCall1.getVesselName());
 
-        PortCallJsonV1 portCall2 = portCalls.stream().filter(portCall ->
+        final PortCallJsonV1 portCall2 = portCalls.stream().filter(portCall ->
             portCall.getPortCallId().equals(1975010L) &&
                 portCall.getPortCallTimestamp().equals(new Timestamp(1479904750000L))).collect(Collectors.toList()).get(0);
         assertEquals("FIRAU", portCall2.getPortToVisit());
         assertEquals("Mons", portCall2.getVesselName());
 
         portCallUpdater.updatePortCalls(from, to);
-        server.verify();
 
-        PortCallJsonV1 updatedPortCall = portCallRepository.findByPortCallIdIn(Arrays.asList(1975743L)).get(0);
+        expectResponse(server, "/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630");
+
+        final PortCallJsonV1 updatedPortCall = portCallRepository.findByPortCallIdIn(Arrays.asList(1975743L)).get(0);
 
         assertEquals("FOO", updatedPortCall.getPortToVisit());
         assertEquals("Vessel name", updatedPortCall.getVesselName());
@@ -113,28 +118,24 @@ public class PortCallUpdaterTest extends AbstractDaemonTestBase {
     @Test
     @Transactional
     @Rollback
-    public void timestampCheck() throws IOException {
-        String response = readFile("portcalls/portCallResponse_timestamp.xml");
-
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
-            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
-
-        server.expect(MockRestRequestMatchers.requestTo("/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630"))
-            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-            .andRespond(MockRestResponseCreators.withSuccess(response, MediaType.APPLICATION_XML));
+    public void timestampCheck() throws IOException, InterruptedException {
+        addXmlResponseFromFile(server, "portcalls/portCallResponse_timestamp.xml");
+        addXmlResponseFromFile(server, "portcalls/portCallResponse_timestamp.xml");
 
         final ZonedDateTime from = ZonedDateTime.of(2016, 1, 30, 6, 30, 59, 0, FINLAND_ZONE);
         final ZonedDateTime to = ZonedDateTime.of(2016, 1, 30, 6, 36, 30, 0, FINLAND_ZONE);
 
         portCallUpdater.updatePortCalls(from, to);
 
+        expectResponse(server, "/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630");
+        expectResponse(server, "/portCallUrl/startDte=20160130&endDte=20160130&startTme=063059&endTme=063630");
+
         verify(portCallClient, times(2)).getList(any(), any());
     }
 
     private static class NoOpPortcallEstimateUpdater implements PortcallEstimateUpdater {
         @Override
-        public void updatePortcallEstimate(PortCallNotification pcn) {}
+        public void updatePortcallEstimate(final PortCallNotification pcn) {}
     }
 
 }

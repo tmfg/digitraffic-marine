@@ -1,6 +1,20 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.time.ZoneOffset;
@@ -8,27 +22,12 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
-import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
-import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VesselDetailsUpdaterTest extends AbstractDaemonTestBase {
     
     private VesselDetailsUpdater vesselDetailsUpdater;
-    private MockRestServiceServer server;
+    private MockWebServer server;
 
     @Autowired
     private VesselDetailsRepository vesselDetailsRepository;
@@ -37,33 +36,26 @@ public class VesselDetailsUpdaterTest extends AbstractDaemonTestBase {
     private UpdatedTimestampRepository updatedTimestampRepository;
 
     @Autowired
-    private RestTemplate authenticatedRestTemplate;
+    private WebClient portnetWebClient;
 
     @BeforeEach
     public void before() {
-        final VesselDetailsClient vesselDetailsClient = new VesselDetailsClient("vesselDetailsUrl/", authenticatedRestTemplate);
+        server = new MockWebServer();
+        final VesselDetailsClient vesselDetailsClient = new VesselDetailsClient(server.url("/vesselDetailsUrl/").toString(), portnetWebClient);
         vesselDetailsUpdater = new VesselDetailsUpdater(vesselDetailsRepository, vesselDetailsClient, updatedTimestampRepository);
-        server = MockRestServiceServer.createServer(authenticatedRestTemplate);
     }
 
     @Test
     @Transactional
     @Rollback
-    public void updateVesselDetailsSucceeds() throws IOException {
-        final String response1 = readFile("vesselDetails/vesselDetailsResponse1.xml");
-        final String response2 = readFile("vesselDetails/vesselDetailsResponse2.xml");
-
-        server.expect(MockRestRequestMatchers.requestTo("/vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
-                .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-                .andRespond(MockRestResponseCreators.withSuccess(response1, MediaType.APPLICATION_XML));
-
-        server.expect(MockRestRequestMatchers.requestTo("/vesselDetailsUrl/fromDte=20160129&fromTme=063059"))
-            .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
-            .andRespond(MockRestResponseCreators.withSuccess(response2, MediaType.APPLICATION_XML));
+    public void updateVesselDetailsSucceeds() throws IOException, InterruptedException {
+        addXmlResponseFromFile(server, "vesselDetails/vesselDetailsResponse1.xml");
+        addXmlResponseFromFile(server, "vesselDetails/vesselDetailsResponse2.xml");
 
         final ZonedDateTime from = ZonedDateTime.of(2016, 1, 29, 6, 30, 59, 0, ZoneOffset.UTC);
 
         vesselDetailsUpdater.updateVesselDetails(from);
+        expectResponse(server, "/vesselDetailsUrl/fromDte=20160129&fromTme=063059");
 
         final List<VesselDetails> vessels1 = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L,
             99995524L,
@@ -77,7 +69,7 @@ public class VesselDetailsUpdaterTest extends AbstractDaemonTestBase {
         assertEquals(1042, vessels1.get(0).getVesselDimensions().getGrossTonnage().intValue());
 
         vesselDetailsUpdater.updateVesselDetails(from);
-        server.verify();
+        expectResponse(server, "/vesselDetailsUrl/fromDte=20160129&fromTme=063059");
 
         final List<VesselDetails> vessels2 = vesselDetailsRepository.findByVesselIdInOrderByVesselIdAsc(Arrays.asList(358L, 4637L,
             99995524L, 99995388L));

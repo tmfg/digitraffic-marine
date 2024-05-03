@@ -12,7 +12,11 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Random;
 
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -46,6 +50,19 @@ abstract class AbstractTestBase {
 
     @Autowired
     protected ConfigurableListableBeanFactory beanFactory;
+
+    protected void addXmlResponseFromFile(final MockWebServer server, final String fileName) throws IOException {
+        final String response = readFile(fileName);
+
+        server.enqueue(new MockResponse().setBody(response).setHeader("Content-Type", "application/xml"));
+    }
+
+    protected void expectResponse(final MockWebServer server, final String urlPath) throws InterruptedException {
+        final RecordedRequest request = server.takeRequest();
+
+        Assertions.assertEquals(urlPath, request.getRequestUrl().encodedPath());
+    }
+
 
     protected String readFile(final String filename) throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();
@@ -85,7 +102,7 @@ abstract class AbstractTestBase {
         return random.ints(minInclusive, maxExclusive).findFirst().orElseThrow();
     }
 
-    private ResultActions logResponse(final ResultActions result, boolean debug) throws UnsupportedEncodingException {
+    private ResultActions logResponse(final ResultActions result, final boolean debug) throws UnsupportedEncodingException {
         final String responseStr = result.andReturn().getResponse().getContentAsString();
         if (debug) {
             log.debug("\n" + responseStr);

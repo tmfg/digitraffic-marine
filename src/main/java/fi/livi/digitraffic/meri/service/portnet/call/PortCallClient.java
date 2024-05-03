@@ -1,40 +1,32 @@
 package fi.livi.digitraffic.meri.service.portnet.call;
 
-import static fi.livi.digitraffic.common.util.TimeUtil.FINLAND_ZONE;
-import static fi.livi.digitraffic.common.util.TimeUtil.dateToString;
-import static fi.livi.digitraffic.common.util.TimeUtil.timeToString;
-
-import java.time.ZonedDateTime;
-import java.util.Collections;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
-import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.portnet.xsd.PortCallList;
 import fi.livi.digitraffic.meri.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.time.ZonedDateTime;
+
+import static fi.livi.digitraffic.common.util.TimeUtil.*;
 
 @Service
 @ConditionalOnNotWebApplication
 public class PortCallClient {
     private final String portCallUrl;
-    private final RestTemplate restTemplate;
+    private final WebClient portnetWebClient;
 
     private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
-    @Autowired
     public PortCallClient(@Value("${dt.portnet.portcall.url}") final String portCallUrl,
-                          final RestTemplate authenticatedRestTemplate) {
+                          final WebClient portnetWebClient) {
         this.portCallUrl = portCallUrl;
-        this.restTemplate = authenticatedRestTemplate;
-        this.restTemplate.setMessageConverters(Collections.singletonList(new Jaxb2RootElementHttpMessageConverter()));
+        this.portnetWebClient = portnetWebClient;
     }
 
     @NotTransactionalServiceMethod
@@ -44,7 +36,10 @@ public class PortCallClient {
 
         log.info("Fetching port calls from url={}", url);
 
-        final PortCallList portCallList = restTemplate.getForObject(url, PortCallList.class);
+        final PortCallList portCallList = portnetWebClient
+            .mutate().baseUrl(url).build()
+            .get().retrieve()
+            .bodyToMono(PortCallList.class).block();
 
         logInfo(portCallList);
 

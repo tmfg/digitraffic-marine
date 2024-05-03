@@ -15,25 +15,28 @@ import org.springframework.web.client.RestTemplate;
 import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 import fi.livi.digitraffic.meri.util.StringUtil;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @ConditionalOnNotWebApplication
 public class VesselDetailsClient {
     private final String vesselDetailsUrl;
-    private final RestTemplate restTemplate;
+    private final WebClient portnetWebclient;
 
     private static final Logger log = LoggerFactory.getLogger(VesselDetailsClient.class);
 
     public VesselDetailsClient(@Value("${dt.portnet.vesselDetails.url}") final String vesselDetailsUrl,
-                               final RestTemplate authenticatedRestTemplate) {
+                               final WebClient portnetWebClient) {
         this.vesselDetailsUrl = vesselDetailsUrl;
-        this.restTemplate = authenticatedRestTemplate;
+        this.portnetWebclient = portnetWebClient;
     }
 
     @NotTransactionalServiceMethod
     public VesselList getVesselList(final ZonedDateTime from) {
         final String url = buildUrl(from);
-        return restTemplate.getForObject(url, VesselList.class);
+
+        return portnetWebclient.mutate().baseUrl(url).build()
+            .get().retrieve().bodyToMono(VesselList.class).block();
     }
 
     private static void logInfo(final VesselList vesselList) {
