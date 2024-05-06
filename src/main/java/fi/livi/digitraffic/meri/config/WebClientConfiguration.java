@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.xml.Jaxb2XmlDecoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
@@ -18,7 +16,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
 import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.*;
@@ -34,7 +31,14 @@ public class WebClientConfiguration {
 
     @Bean
     public WebClient webClient() {
-        return WebClient.create();
+        // more memory for default web-client
+        return WebClient.builder()
+            .exchangeStrategies(ExchangeStrategies.builder()
+                .codecs(codecs -> codecs
+                    .defaultCodecs()
+                    .maxInMemorySize(10 * 1024 * 1024))
+                .build())
+            .build();
     }
 
     @Bean("portnetWebClient")
