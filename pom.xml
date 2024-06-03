@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.2.6</version>
         <relativePath/>
     </parent>
 
@@ -302,7 +302,9 @@
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.wiremock</groupId>
             <artifactId>wiremock-standalone</artifactId>
