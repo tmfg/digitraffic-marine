@@ -21,10 +21,12 @@ import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfigurat
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.websocket.reactive.WebSocketReactiveAutoConfiguration;
 import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketMessagingAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableRetry
+@ComponentScan(basePackages = { "fi.livi.digitraffic.meri", "fi.livi.digitraffic.common"})
 @SpringBootApplication(exclude = {
     AppOpticsMetricsExportAutoConfiguration.class,
     ArtemisAutoConfiguration.class,

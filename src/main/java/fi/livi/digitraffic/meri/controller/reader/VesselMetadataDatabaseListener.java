@@ -12,11 +12,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
 import fi.livi.digitraffic.meri.dto.ais.external.VesselMessage;
-import fi.livi.digitraffic.meri.service.CachedLockerService;
 import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 
 @Component
@@ -24,16 +24,16 @@ import fi.livi.digitraffic.meri.service.ais.VesselMetadataService;
 @ConditionalOnProperty("ais.reader.enabled")
 public class VesselMetadataDatabaseListener implements AisMessageListener {
     private final VesselMetadataService vesselMetadataService;
-    private final CachedLockerService aisCachedLocker;
+    private final CachedLockingService aisCachedLockingService;
 
     private final Map<Integer, VesselMessage> messageMap = new HashMap<>();
 
     private static final Logger log = LoggerFactory.getLogger(VesselMetadataDatabaseListener.class);
 
     public VesselMetadataDatabaseListener(final VesselMetadataService vesselMetadataService,
-        final CachedLockerService aisCachedLocker) {
+                                          final CachedLockingService aisCachedLockingService) {
         this.vesselMetadataService = vesselMetadataService;
-        this.aisCachedLocker = aisCachedLocker;
+        this.aisCachedLockingService = aisCachedLockingService;
     }
 
     @Scheduled(fixedRate = 1000)
@@ -41,7 +41,7 @@ public class VesselMetadataDatabaseListener implements AisMessageListener {
         try {
             final List<VesselMessage> messages = removeAllMessages();
 
-            if (aisCachedLocker.hasLock()) {
+            if (aisCachedLockingService.hasLock()) {
                 vesselMetadataService.saveVessels(messages);
             }
         } catch(final Exception e) {

@@ -12,28 +12,28 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisRadioMsg;
 import fi.livi.digitraffic.meri.dto.ais.external.AISMessage;
-import fi.livi.digitraffic.meri.service.CachedLockerService;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")
 @ConditionalOnProperty("ais.reader.enabled")
 public class VesselLocationDatabaseListener implements AisMessageListener {
+    private static final Logger log = LoggerFactory.getLogger(VesselLocationDatabaseListener.class);
+
     private final VesselLocationService vesselLocationService;
-    private final CachedLockerService aisCachedLocker;
+    private final CachedLockingService aisCachedLockingService;
 
     private final Map<Integer, AISMessage> messageMap = new HashMap<>();
 
-    private static final Logger log = LoggerFactory.getLogger(VesselLocationDatabaseListener.class);
-
     public VesselLocationDatabaseListener(final VesselLocationService vesselLocationService,
-        final CachedLockerService aisCachedLocker) {
+                                          final CachedLockingService aisCachedLockingService) {
         this.vesselLocationService = vesselLocationService;
-        this.aisCachedLocker = aisCachedLocker;
+        this.aisCachedLockingService = aisCachedLockingService;
     }
 
     @Scheduled(fixedRate = 1000)
@@ -41,7 +41,7 @@ public class VesselLocationDatabaseListener implements AisMessageListener {
         try {
             final List<AISMessage> messages = removeAllMessages();
 
-            if (aisCachedLocker.hasLock()) {
+            if (aisCachedLockingService.hasLock()) {
                 vesselLocationService.saveLocations(messages);
             }
         } catch(final Exception e) {
