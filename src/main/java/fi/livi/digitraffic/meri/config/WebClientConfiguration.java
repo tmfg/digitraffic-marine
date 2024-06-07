@@ -1,8 +1,18 @@
 package fi.livi.digitraffic.meri.config;
 
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.time.Duration;
+import java.util.Base64;
+
+import javax.net.ssl.KeyManagerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,18 +20,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.http.codec.ClientCodecConfigurer;
 import org.springframework.http.codec.xml.Jaxb2XmlDecoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
 
-import javax.net.ssl.KeyManagerFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.time.Duration;
-import java.util.Base64;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import reactor.netty.http.client.HttpClient;
 
 @Configuration
 public class WebClientConfiguration {
@@ -34,7 +41,7 @@ public class WebClientConfiguration {
         // more memory for default web-client
         return WebClient.builder()
             .exchangeStrategies(ExchangeStrategies.builder()
-                .codecs(codecs -> codecs
+                .codecs(configurer -> configurer
                     .defaultCodecs()
                     .maxInMemorySize(10 * 1024 * 1024))
                 .build())
@@ -70,10 +77,14 @@ public class WebClientConfiguration {
             .responseTimeout(Duration.ofSeconds(30))
             .secure(sslSpec -> sslSpec.sslContext(sslContext));
 
-        return WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()
-                .codecs(configurer ->
-                    configurer.defaultCodecs().jaxb2Decoder(new Jaxb2XmlDecoder())
-                )
+        return WebClient.builder()
+            .exchangeStrategies(ExchangeStrategies.builder()
+                .codecs(configurer -> {
+                    final ClientCodecConfigurer.ClientDefaultCodecs dc = configurer.defaultCodecs();
+                    // more memory for default web-client
+                    dc.maxInMemorySize(10 * 1024 * 1024);
+                    dc.jaxb2Decoder(new Jaxb2XmlDecoder());
+                })
                 .build())
             .clientConnector(new ReactorClientHttpConnector(httpClient))
             .build();
