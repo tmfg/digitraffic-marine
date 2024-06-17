@@ -28,6 +28,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
 import fi.livi.digitraffic.meri.dto.geojson.Point;
@@ -36,7 +37,6 @@ import fi.livi.digitraffic.meri.dto.sse.v1.SseFeatureV1;
 import fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1;
 import fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1.SeaState;
 import fi.livi.digitraffic.meri.model.sse.SseReport;
-import fi.livi.digitraffic.meri.service.CachedLockerService;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 import fi.livi.digitraffic.meri.util.StringUtil;
 import jakarta.transaction.Transactional;
@@ -45,7 +45,7 @@ import jakarta.transaction.Transactional;
 @TestPropertySource(properties = { "sse.mqtt.enabled=true" })
 public class SseDataDatabaseListenerTest extends AbstractDaemonTestBase {
     @MockBean
-    private CachedLockerService cachedLocker;
+    private CachedLockingService cachedLocker;
 
     @MockBean
     private MqttRelayQueue mqttRelayQueue;

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.common.util.MqttUtil;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageConverter;
 import fi.livi.digitraffic.meri.controller.ais.reader.AisMessageListener;
@@ -22,7 +23,6 @@ import fi.livi.digitraffic.meri.dto.ais.external.VesselMessage;
 import fi.livi.digitraffic.meri.dto.mqtt.MqttDataMessageV2;
 import fi.livi.digitraffic.meri.dto.mqtt.MqttMessageSender;
 import fi.livi.digitraffic.meri.dto.mqtt.MqttVesselMetadataMessageV2;
-import fi.livi.digitraffic.meri.service.CachedLockerService;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 
 @Component
@@ -38,8 +38,8 @@ public class VesselMetadataRelayListenerV2 implements AisMessageListener {
 
     public VesselMetadataRelayListenerV2(final MqttRelayQueue mqttRelayQueue,
                                          final ObjectMapper objectMapper,
-                                         final CachedLockerService aisCachedLocker) {
-        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_METADATA, aisCachedLocker);
+                                         final CachedLockingService aisCachedLockingService) {
+        this.mqttMessageSender = new MqttMessageSender(LOGGER, mqttRelayQueue, objectMapper, AIS_METADATA, aisCachedLockingService);
     }
 
     @Override

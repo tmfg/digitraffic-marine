@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fi.livi.digitraffic.common.service.locking.CachedLockingService;
+import fi.livi.digitraffic.common.service.locking.LockingService;
 import fi.livi.digitraffic.common.util.MqttUtil;
 import fi.livi.digitraffic.meri.dto.mqtt.MqttDataMessageV2;
 import fi.livi.digitraffic.meri.dto.mqtt.MqttMessageSender;
 import fi.livi.digitraffic.meri.dto.mqtt.MqttSseMessageV2;
 import fi.livi.digitraffic.meri.dto.sse.v1.SseFeatureV1;
-import fi.livi.digitraffic.meri.service.CachedLockerService;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 
 @ConditionalOnProperty("sse.mqtt.enabled")
@@ -34,9 +35,11 @@ public class SseMqttSenderV2 {
 
     public SseMqttSenderV2(final MqttRelayQueue mqttRelayQueue,
                            final ObjectMapper objectMapper,
-                           final CachedLockerService sseCachedLocker,
+                           final LockingService lockingService,
                            final SseDaemonService sseWebServiceV1) {
-        this.mqttMessageSender = new MqttMessageSender(LOG, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, sseCachedLocker);
+        final CachedLockingService sseCachedLockingService =
+            lockingService.createCachedLockingService("SSE_LOCK");
+        this.mqttMessageSender = new MqttMessageSender(LOG, mqttRelayQueue, objectMapper, MqttRelayQueue.StatisticsType.SSE, sseCachedLockingService);
         this.sseWebServiceV1 = sseWebServiceV1;
 
         this.mqttMessageSender.setLastUpdated(Instant.now());

@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.common.util.TimeUtil;
-import fi.livi.digitraffic.meri.service.CachedLockerService;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
 
 public class MqttMessageSender {
@@ -21,7 +21,7 @@ public class MqttMessageSender {
     private final MqttRelayQueue mqttRelayQueue;
     private final ObjectMapper objectMapper;
 
-    private final CachedLockerService cachedLocker;
+    private final CachedLockingService cachedLockingService;
 
     private final AtomicReference<Instant> lastUpdated = new AtomicReference<>();
     private final AtomicReference<Instant> lastError = new AtomicReference<>();
@@ -31,13 +31,13 @@ public class MqttMessageSender {
                              final MqttRelayQueue mqttRelayQueue,
                              final ObjectMapper objectMapper,
                              final MqttRelayQueue.StatisticsType statisticsType,
-                             final CachedLockerService cachedLocker) {
+                             final CachedLockingService cachedLockingService) {
         this.log = log;
         this.mqttRelayQueue = mqttRelayQueue;
         this.objectMapper = objectMapper;
         this.statisticsType = statisticsType;
 
-        this.cachedLocker = cachedLocker;
+        this.cachedLockingService = cachedLockingService;
     }
 
     public boolean sendMqttMessage(final Instant lastUpdated, final MqttDataMessageV2 message) {
@@ -55,7 +55,7 @@ public class MqttMessageSender {
     }
 
     public boolean hasLock() {
-        return cachedLocker.hasLock();
+        return cachedLockingService.hasLock();
     }
 
     private boolean doSendMqttMessage(final MqttDataMessageV2 message) {
