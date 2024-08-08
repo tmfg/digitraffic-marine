@@ -17,9 +17,9 @@ jobs:
         run: mvn install -T1.5C git-commit-id:revision install -e -U -DskipTests=true
       - name: Create Docker network
         working-directory: dbmarine
-        run: docker-compose rm db && docker-compose up -d
+        run: docker compose rm db && docker compose up -d
       - name: Get database IP
-        run: echo "db_addr=$(docker inspect dbmarine_db_1 -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}')" >> $GITHUB_ENV
+        run: echo "db_addr=$(docker inspect dbmarine-db-1 -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}')" >> $GITHUB_ENV
       - name: Prepare test run
         run: cp src/test/resources/application-default.properties.template target/test-classes/application-ci.properties
       - name: Run tests

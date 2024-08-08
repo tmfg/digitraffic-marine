@@ -4,7 +4,7 @@
 ## ;TL;TR
 
 ````bash
-docker-compose rm db && docker-compose build && docker-compose up
+docker compose rm db && docker compose build && docker compose up
 ````
 ## Hakemistorakenne
 
@@ -21,17 +21,17 @@ docker-compose rm db && docker-compose build && docker-compose up
 ## Running db instance
 
 ````bash
-docker-compose build && docker-compose up
+docker compose build && docker compose up
 ````
 
 PostgreSql db is running at localhost:54321 and adminer at localhost:8081
 
 List containers
 ``````bash
-docker-compose ps
+docker compose ps
 ``````
 
 Removing containers
 ``````bash
-docker-compose rm db
+docker compose rm db
 ``````
