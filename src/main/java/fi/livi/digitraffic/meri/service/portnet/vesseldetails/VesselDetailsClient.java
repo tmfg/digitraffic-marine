@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import fi.livi.digitraffic.common.util.StringUtil;
 import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
-import fi.livi.digitraffic.meri.util.StringUtil;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @ConditionalOnNotWebApplication

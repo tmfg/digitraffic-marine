@@ -29,6 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.common.service.locking.CachedLockingService;
+import fi.livi.digitraffic.common.util.StringUtil;
 import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.sse.SseReportRepository;
 import fi.livi.digitraffic.meri.dto.geojson.Point;
@@ -38,7 +39,6 @@ import fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1;
 import fi.livi.digitraffic.meri.dto.sse.v1.SsePropertiesV1.SeaState;
 import fi.livi.digitraffic.meri.model.sse.SseReport;
 import fi.livi.digitraffic.meri.service.MqttRelayQueue;
-import fi.livi.digitraffic.meri.util.StringUtil;
 import jakarta.transaction.Transactional;
 
 @Transactional
