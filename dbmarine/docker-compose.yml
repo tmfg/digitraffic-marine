@@ -13,7 +13,7 @@ services:
       - default
 
   db-init:
-    image: flyway/flyway:10.18-alpine
+    image: flyway/flyway:10.19-alpine
     volumes:
       - "./sql:/flyway/sql"
       - "./files:/flyway/conf"
@@ -27,7 +27,7 @@ services:
     image: ankane/pghero
     restart: always
     environment:
-        DATABASE_URL: postgres://marine:marine@db:5432/marine
+      DATABASE_URL: postgres://marine:marine@db:5432/marine
     ports:
       - 8081:8080
     depends_on:
