@@ -64,7 +64,7 @@ public class ScheduledAnnotationThreadTest extends AbstractDaemonTestBase {
         // Ensure errors of pool size
         if (count2 > job2StartErrorsAfter && count2 <= job2StartErrorsAfter + poolSize) {
             scheduledJob2ErrorCount++;
-            Assertions.assertTrue(false, "scheduledJob2 expected error at run " + count2);
+            Assertions.fail("scheduledJob2 expected error at run " + count2);
         }
         log.info("scheduledJob2: {}", count2);
     }

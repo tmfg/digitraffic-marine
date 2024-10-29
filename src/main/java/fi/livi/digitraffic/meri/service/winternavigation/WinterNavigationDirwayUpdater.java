@@ -161,7 +161,7 @@ public class WinterNavigationDirwayUpdater {
             p.setLongitude(point.getLon().doubleValue());
             p.setLatitude(point.getLat().doubleValue());
             p.setSeaArea(point.getSeaArea());
-            if (!toUpdateMaybe.isPresent()) {
+            if (toUpdateMaybe.isEmpty()) {
                 d.getDirwayPoints().add(p);
             }
         }

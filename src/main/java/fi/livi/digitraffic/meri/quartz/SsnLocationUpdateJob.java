@@ -12,7 +12,7 @@ public class SsnLocationUpdateJob extends SimpleUpdateJob {
     private SsnLocationUpdater ssnLocationUpdater;
 
     @Override
-    protected void doExecute(final JobExecutionContext context) throws Exception {
+    protected void doExecute(final JobExecutionContext context) {
         ssnLocationUpdater.updateSsnLocations();
     }
 }

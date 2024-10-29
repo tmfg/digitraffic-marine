@@ -102,7 +102,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
 
     @Test
     public void allowedKeys() throws IOException {
-        for (String allowedKey : ALLOWED_KEYS) {
+        for (final String allowedKey : ALLOWED_KEYS) {
             log.info("Test key {}", allowedKey);
             final String result = sendEventWithFormatedMessageAndReturnResultJson(allowedKey + "=bar");
             assertEquals(String.format("{\"%s\":\"bar\"}", allowedKey), result);
@@ -112,7 +112,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
 
     @Test
     public void notAllowedKeys() throws IOException {
-        for (String notAllowedKey : NOT_ALLOWED_KEYS) {
+        for (final String notAllowedKey : NOT_ALLOWED_KEYS) {
             log.info("Test key {}", notAllowedKey);
             final String result = sendEventWithFormatedMessageAndReturnResultJson(notAllowedKey + "=bar");
             assertEquals("{}", result);
@@ -236,7 +236,7 @@ public class LoggerMessageKeyValuePairJsonProviderTest {
         provider.writeTo(jsonGenerator, createEvent(formattedMessage));
         jsonGenerator.writeEndObject();
         jsonGenerator.close();
-        final String result = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String result = out.toString(StandardCharsets.UTF_8);
         log.info("Result: {}", result);
         return result;
     }

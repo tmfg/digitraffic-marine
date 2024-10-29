@@ -26,13 +26,12 @@ public class AllowedParameterInterceptor implements HandlerInterceptor {
         final HttpServletResponse response,
         final Object handler) {
 
-        if (handler instanceof HandlerMethod) {
+        if (handler instanceof final HandlerMethod handlerMethod) {
             // Check only new api patterns
             if (OLD_API_PATTERN.matcher(request.getRequestURI()).matches()) {
                 return true;
             }
 
-            final HandlerMethod handlerMethod = (HandlerMethod) handler;
             // Collect all possible parameters defined in controller method
             final Set<String> allowedParams =
                 Arrays.stream(handlerMethod.getMethodParameters()).map(p -> p.getParameter().getName()).collect(Collectors.toSet());

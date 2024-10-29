@@ -77,7 +77,7 @@ public final class LocationParser {
         }
 
         // no sign, when 0.0
-        if(Math.abs(dValue.doubleValue()) - 0 < 0.0001) {
+        if(Math.abs(dValue) - 0 < 0.0001) {
             return 0.0;
         }
 
