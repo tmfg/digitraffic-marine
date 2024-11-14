@@ -107,7 +107,7 @@ public class VesselLoggingListener implements AisMessageListener {
             if (readStatistics instanceof ConnectionStatistics) {
                 final AisTcpSocketClient.ConnectionStatus status = ((ConnectionStatistics)readStatistics).status;
 
-                log.info("Ais-message statistics for loggerType={} messageType={} status={} connectionProblems={} maxQueue={}",
+                log.info("method=logReadStatistics Ais-message statistics for loggerType={} messageType={} status={} connectionProblems={} maxQueue={}",
                     LoggerType.READ,
                     aisLoggingType,
                     status,
@@ -118,7 +118,7 @@ public class VesselLoggingListener implements AisMessageListener {
 
                 readStatisticsMap.put(aisLoggingType, new ConnectionStatistics(0, status, 0, 0,0));
             } else {
-                log.info("Ais-message statistics for loggerType={} messageType={} read={} filtered={}",
+                log.info("method=logReadStatistics Ais-message statistics for loggerType={} messageType={} messages={} filtered={}",
                     LoggerType.READ,
                     aisLoggingType,
                     readStatistics != null ? readStatistics.messages : 0,
@@ -142,7 +142,7 @@ public class VesselLoggingListener implements AisMessageListener {
         for (final AISLoggingType aisMessageType : Arrays.asList(AISLoggingType.POSITION, AISLoggingType.METADATA, AISLoggingType.STATUS)) {
             final SentStatistics sentStatistics = sentStatisticsMap.get(aisMessageType);
 
-            log.info("Ais-message statistics for loggerType={} messageType={} messages={} failures={}",
+            log.info("method=logSentStatistics Ais-message statistics for loggerType={} messageType={} messages={} failures={}",
                 LoggerType.SEND,
                 aisMessageType,
                 sentStatistics != null ? sentStatistics.messages : 0,
