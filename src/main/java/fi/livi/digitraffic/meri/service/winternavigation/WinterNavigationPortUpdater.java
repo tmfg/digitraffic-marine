@@ -50,6 +50,7 @@ public class WinterNavigationPortUpdater {
     /**
      * 1. Get winter navigation ports from an external source
      * 2. Insert / update database
+     *
      * @return total number of added or updated ports
      */
     @Transactional
@@ -58,7 +59,7 @@ public class WinterNavigationPortUpdater {
 
         try {
             data = winterNavigationClient.getWinterNavigationPorts();
-        } catch(final Exception e) {
+        } catch (final Exception e) {
             SoapFaultLogger.logException(log, e);
 
             return -1;
@@ -72,7 +73,7 @@ public class WinterNavigationPortUpdater {
 
         if (!portsWithoutLocode.isEmpty()) {
             log.warn("method=updateWinterNavigationPorts Received invalidPortCount={} with missing locode. PortIds={}",
-                     portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.getPortInfo().getPortId()).collect(Collectors.joining(", ")));
+                portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.getPortInfo().getPortId()).collect(Collectors.joining(", ")));
         }
 
         // Make all ports obsolete before update
@@ -86,11 +87,12 @@ public class WinterNavigationPortUpdater {
 
         final StopWatch stopWatch = StopWatch.createStarted();
         portsWithLocode.forEach(p -> update(p, added, updated));
+
         winterNavigationRepository.saveAll(added);
         stopWatch.stop();
 
         log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
-                 data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
+            data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
 
         final Instant now = Instant.now();
         if (!added.isEmpty() || !updated.isEmpty()) {
@@ -102,6 +104,11 @@ public class WinterNavigationPortUpdater {
     }
 
     private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
+        // filter out ports with invalid LOCODEs
+        if (port.getPortInfo().getLocode().length() > 7) {
+            log.warn("method=updateWinterNavigationPorts received invalid (reason: over 7 characters) LOCODE: {}", port.getPortInfo().getLocode());
+            return;
+        }
         final WinterNavigationPort old = winterNavigationRepository.findById(port.getPortInfo().getLocode()).orElse(null);
 
         if (old == null) {
