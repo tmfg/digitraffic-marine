@@ -137,8 +137,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(HttpMessageNotWritableException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleHttpMessageNotWritableException(final Exception exception, final ServletWebRequest request) {
-        if (exception.getCause() instanceof MarshalException) {
-            final MarshalException cause = (MarshalException) exception.getCause();
+        if (exception.getCause() instanceof final MarshalException cause) {
 
             if (isClientAbortException(cause.getLinkedException())) {
                 logger.warn("500 Internal Server Error: exceptionClass={} exceptionMessage={}", exception.getClass().getName(),

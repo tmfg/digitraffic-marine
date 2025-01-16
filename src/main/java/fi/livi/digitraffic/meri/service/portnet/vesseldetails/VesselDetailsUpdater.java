@@ -87,16 +87,14 @@ public class VesselDetailsUpdater {
     private static boolean isListOk(final VesselList list) {
         final String status = getStatusFromResponse(list);
 
-        switch(status) {
-        case "OK":
-            log.info("vesselDetailFetchedCount={} vessel details", CollectionUtils.size(list.getVesselDetails()));
-            break;
-        case "NOT_FOUND":
-            log.info("No vessel details from server");
-            break;
-        default:
-            log.error("error with status={}", status);
-            return false;
+        switch (status) {
+            case "OK" ->
+                log.info("vesselDetailFetchedCount={} vessel details", CollectionUtils.size(list.getVesselDetails()));
+            case "NOT_FOUND" -> log.info("No vessel details from server");
+            default -> {
+                log.error("error with status={}", status);
+                return false;
+            }
         }
 
         return true;

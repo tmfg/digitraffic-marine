@@ -137,7 +137,7 @@ public class SseDataDatabaseListenerTest extends AbstractDaemonTestBase {
     }
 
     private List<SseReport> convertToSseReports(final SseFeatureCollectionV1 fc) {
-        return fc.getFeatures().stream().map(f -> convertToSseReport(f)).collect(Collectors.toList());
+        return fc.getFeatures().stream().map(SseDataDatabaseListenerTest::convertToSseReport).collect(Collectors.toList());
     }
 
     private static SseReport convertToSseReport(final SseFeatureV1 f) {

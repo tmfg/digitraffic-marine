@@ -12,7 +12,7 @@ public class BerthUpdateJob extends SimpleUpdateJob {
     private BerthUpdater berthUpdater;
 
     @Override
-    protected void doExecute(final JobExecutionContext context) throws Exception {
+    protected void doExecute(final JobExecutionContext context) {
         berthUpdater.updatePortsAreasAndBerths();
     }
 }

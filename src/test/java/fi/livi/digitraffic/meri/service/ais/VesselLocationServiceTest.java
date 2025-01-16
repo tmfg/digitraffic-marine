@@ -22,10 +22,10 @@ import fi.livi.digitraffic.meri.model.ais.VesselMetadata;
 
 public class VesselLocationServiceTest extends AbstractWebTestBase {
 
-    private class Point {
+    private static class Point {
         public final double x;
         public final double y;
-        public Point(double x, double y) {
+        public Point(final double x, final double y) {
             this.x = x;
             this.y = y;
         }

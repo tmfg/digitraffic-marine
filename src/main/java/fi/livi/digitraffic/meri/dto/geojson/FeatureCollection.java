@@ -56,7 +56,7 @@ public class FeatureCollection<FeatureType extends LastModifiedSupport> extends 
     public Instant getDataUpdatedTime() { // I.e. PookiFeatureCollection don't have dataUpdatedTime, so get it from the features
         if (dataUpdatedTime == null && features != null && !features.isEmpty()) {
             try {
-                return features.stream().filter(f -> f.getLastModified() != null).map(f -> f.getLastModified()).max(Comparator.comparing(
+                return features.stream().filter(f -> f.getLastModified() != null).map(LastModifiedSupport::getLastModified).max(Comparator.comparing(
                         Function.identity())).orElse(null);
             } catch (final Exception e) {
                 return null;

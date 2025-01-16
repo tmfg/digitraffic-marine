@@ -2,20 +2,20 @@
  * -----
  * Copyright (C) 2018 Digia
  * -----
- *
+ * <p>
  * Licensed under the EUPL, Version 1.2 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- *
+ * <p>
  * https://joinup.ec.europa.eu/software/page/eupl
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
- *
+ * <p>
  * 2019.02.14: Original work is used here as an base implementation
  */
 package fi.livi.digitraffic.meri.controller.ais.reader;
@@ -129,9 +129,7 @@ public class AisRadioMsgParser {
             getMessageClass(msgClassSuffix));
 
         switch (msgClassSuffix) {
-            case "1":
-            case "2":
-            case "3": //  Position message (class A)
+            case "1", "2", "3" -> { //  Position message (class A)
                 msg.add(NAVIGATIONAL_STATUS, msg.getUnsignedInteger(4));
                 msg.add(RATE_OF_TURN, msg.getSignedInteger(8));
                 msg.add(SOG, msg.getUnsignedDecimal(10, 10, 1));
@@ -145,9 +143,8 @@ public class AisRadioMsgParser {
                 msg.add(SPARE, msg.getUnsignedInteger(3));
                 msg.add(RAIM_FLAG, msg.getUnsignedInteger(1));
                 msg.add(COMMUNICATION_STATE, msg.getHexString(19));
-
-                break;
-            case "5": // Metadata message (class A)
+            }
+            case "5" -> { // Metadata message (class A)
                 msg.add(AIS_VERSION_INDICATOR, msg.getUnsignedInteger(2));
                 msg.add(IMO_NUMBER, msg.getUnsignedInteger(30));
                 msg.add(CALL_SIGN, msg.getStringValue(42));
@@ -165,9 +162,8 @@ public class AisRadioMsgParser {
                 msg.add(DESTINATION, msg.getStringValue(120));
                 msg.add(DTE, msg.getUnsignedInteger(1));
                 msg.add(SPARE, msg.getUnsignedInteger(1));
-
-                break;
-            case "9": // Standard Search and Rescue Aircraft Position Report
+            }
+            case "9" -> { // Standard Search and Rescue Aircraft Position Report
                 msg.add(ALTITUDE_GNSS, msg.getUnsignedInteger(12));
                 msg.add(SOG, msg.getUnsignedInteger(10));
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
@@ -183,9 +179,8 @@ public class AisRadioMsgParser {
                 msg.add(RAIM_FLAG, msg.getUnsignedInteger(1));
                 msg.add(COMMUNICATION_STATE_SELECTOR_FLAG, msg.getUnsignedInteger(1));
                 msg.add(COMMUNICATION_STATE, msg.getHexString(19));
-
-                break;
-            case "18": // Position message (class B)
+            }
+            case "18" -> { // Position message (class B)
                 msg.add(SPARE, msg.getUnsignedInteger(8));
                 msg.add(SOG, msg.getUnsignedDecimal(10, 10, 1));
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
@@ -204,9 +199,8 @@ public class AisRadioMsgParser {
                 msg.add(RAIM_FLAG, msg.getUnsignedInteger(1));
                 msg.add(COMMUNICATION_STATE_SELECTOR_FLAG, msg.getUnsignedInteger(1));
                 msg.add(COMMUNICATION_STATE, msg.getHexString(19));
-
-                break;
-            case "19": // Position message extended (class B)
+            }
+            case "19" -> { // Position message extended (class B)
                 msg.add(SPARE, msg.getUnsignedInteger(8));
                 msg.add(SOG, msg.getUnsignedDecimal(10, 10, 1));
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
@@ -228,14 +222,12 @@ public class AisRadioMsgParser {
                 msg.add(DTE, msg.getUnsignedInteger(1));
                 msg.add(ASSIGNED_MODE_FLAG, msg.getUnsignedInteger(1));
                 msg.add(SPARE3, msg.getUnsignedInteger(4));
-
-                break;
-            case "24A": // Metadata part A (class B)
+            }
+            case "24A" -> { // Metadata part A (class B)
                 msg.add(PART_NUMBER, msg.getUnsignedInteger(2));
                 msg.add(NAME, msg.getStringValue(120));
-
-                break;
-            case "24B": // Metadata part B (class B)
+            }
+            case "24B" -> { // Metadata part B (class B)
                 msg.add(PART_NUMBER, msg.getUnsignedInteger(2));
                 msg.add(TYPE_OF_SHIP_AND_CARGO_TYPE, msg.getUnsignedInteger(8));
                 msg.add(VENDOR_ID, msg.getHexString(42));
@@ -247,9 +239,8 @@ public class AisRadioMsgParser {
                 msg.add(D_DIMENSION_OF_SHIP_REFERENCE_FOR_POSITION, msg.getD_DimensionOfShip());
                 msg.add(TYPE_OF_ELECTRONIC_POSITION_FIXING_DEVICE, msg.getUnsignedInteger(4));
                 msg.add(SPARE, msg.getUnsignedInteger(2));
-
-                break;
-            case "27": // Long-range automatic identification system broadcast message (class A & B)
+            }
+            case "27" -> { // Long-range automatic identification system broadcast message (class A & B)
                 msg.add(POSITION_ACCURACY, msg.getUnsignedInteger(1));
                 msg.add(RAIM_FLAG, msg.getUnsignedInteger(1));
                 msg.add(NAVIGATIONAL_STATUS, msg.getUnsignedInteger(4));
@@ -259,8 +250,7 @@ public class AisRadioMsgParser {
                 msg.add(COG, msg.getUnsignedInteger(9));
                 msg.add(POSITION_LATENCY, msg.getUnsignedInteger(1));
                 msg.add(SPARE, msg.getUnsignedInteger(1));
-
-                break;
+            }
         }
 
         return msg;

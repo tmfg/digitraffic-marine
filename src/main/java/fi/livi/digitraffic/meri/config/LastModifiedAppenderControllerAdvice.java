@@ -40,8 +40,7 @@ public class LastModifiedAppenderControllerAdvice implements ResponseBodyAdvice<
                                   final Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   final ServerHttpRequest request, final ServerHttpResponse response) {
 
-        if (ALLOWED_METHODS.contains(request.getMethod()) && body instanceof LastModifiedSupport) {
-            final LastModifiedSupport lms = ((LastModifiedSupport) body);
+        if (ALLOWED_METHODS.contains(request.getMethod()) && body instanceof final LastModifiedSupport lms) {
             final Instant lastModified = lms.getLastModified();
             if (lastModified != null) {
                 response.getHeaders().add(LAST_MODIFIED_HEADER, TimeUtil.getInLastModifiedHeaderFormat(lastModified));

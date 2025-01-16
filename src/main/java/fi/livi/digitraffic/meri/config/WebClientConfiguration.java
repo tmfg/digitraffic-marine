@@ -62,7 +62,7 @@ public class WebClientConfiguration {
     }
     @Bean
     @Profile("aws")
-    public WebClient portnetWebClient(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
+    public WebClient portnetWebClient(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException {
         log.info("Init WebClient with authentication");
         final KeyStore clientKeyStore = openKeyStore(portnetPrivateKeyBase64);
         final KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");

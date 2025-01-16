@@ -19,8 +19,8 @@ public class InfoControllerV1Test extends AbstractWebTestBase {
     @Test
     public void updateTimes() throws Exception {
 
-        final String sseInterval = dataStatusService.getDataSourceUpdateInterval(DataSource.SSE_DATA).toString();
-        final String portCallInterval = dataStatusService.getDataSourceUpdateInterval(DataSource.PORT_CALL).toString();
+        final String sseInterval = dataStatusService.getDataSourceUpdateInterval(DataSource.SSE_DATA);
+        final String portCallInterval = dataStatusService.getDataSourceUpdateInterval(DataSource.PORT_CALL);
 
         final ResultActions response =
             logDebugResponse(

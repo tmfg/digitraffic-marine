@@ -163,16 +163,13 @@ public class PortCallUpdater {
     private static boolean isListOk(final PortCallList list) {
         final String status = getStatusFromResponse(list);
 
-        switch(status) {
-        case "OK":
-            log.info("notificationsFetchedCount={}", CollectionUtils.size(list.getPortCallNotification()));
-            break;
-        case "NOT_FOUND":
-            log.info("No port calls from server");
-            break;
-        default:
-            log.error("error status={}", status);
-            return false;
+        switch (status) {
+            case "OK" -> log.info("notificationsFetchedCount={}", CollectionUtils.size(list.getPortCallNotification()));
+            case "NOT_FOUND" -> log.info("No port calls from server");
+            default -> {
+                log.error("error status={}", status);
+                return false;
+            }
         }
 
         return true;

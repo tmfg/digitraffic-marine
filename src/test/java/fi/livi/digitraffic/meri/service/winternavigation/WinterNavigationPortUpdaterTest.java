@@ -73,8 +73,8 @@ public class WinterNavigationPortUpdaterTest extends AbstractDaemonTestBase {
         assertEquals(LOCODE_PUHOS, feature.getProperties().locode);
         assertEquals("PUHOS", feature.getProperties().name);
         assertEquals("FI", feature.getProperties().nationality);
-        assertEquals(Double.valueOf("29.9167"), feature.getGeometry().getCoordinates().get(0), 0.00001);
-        assertEquals(Double.valueOf("62.1"), feature.getGeometry().getCoordinates().get(1), 0.01);
+        assertEquals(Double.parseDouble("29.9167"), feature.getGeometry().getCoordinates().get(0), 0.00001);
+        assertEquals(Double.parseDouble("62.1"), feature.getGeometry().getCoordinates().get(1), 0.01);
         assertEquals("Baltic Sea", feature.getProperties().seaArea);
         assertEquals(1, feature.getProperties().portRestrictions.size());
 

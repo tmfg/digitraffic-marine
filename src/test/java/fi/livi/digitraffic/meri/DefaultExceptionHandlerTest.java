@@ -90,17 +90,18 @@ public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
             .andExpect(status().is(statuscode));
 
         switch (logMode) {
-            case ERROR:
+            case ERROR -> {
                 verify(exceptionHandlerLogger).error(anyString(), any(Throwable.class));
                 verify(exceptionHandlerLogger, times(0)).info(anyString(), any(Throwable.class));
-                break;
-            case INFO:
+            }
+            case INFO -> {
                 verify(exceptionHandlerLogger).info(anyString(), any(Throwable.class));
                 verify(exceptionHandlerLogger, times(0)).error(anyString(), any(Throwable.class));
-                break;
-            case NONE:
+            }
+            case NONE -> {
                 verify(exceptionHandlerLogger, times(0)).error(anyString(), any(Throwable.class));
                 verify(exceptionHandlerLogger, times(0)).info(anyString(), any(Throwable.class));
+            }
         }
     }
 

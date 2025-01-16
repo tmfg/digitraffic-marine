@@ -10,7 +10,7 @@ import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Code descriptions associated with port calls")
-@JsonInclude(JsonInclude.Include.ALWAYS)
+@JsonInclude
 public class CodeDescriptionsV1 implements LastModifiedSupport {
     @Schema(description = "Timestamp when metadata were last updated", requiredMode = Schema.RequiredMode.REQUIRED)
     public final Instant dataUpdatedTime;

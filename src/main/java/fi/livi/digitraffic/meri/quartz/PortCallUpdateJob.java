@@ -11,7 +11,7 @@ public class PortCallUpdateJob extends SimpleUpdateJob {
     public PortCallUpdater portCallUpdater;
 
     @Override
-    protected void doExecute(final JobExecutionContext context) throws Exception {
+    protected void doExecute(final JobExecutionContext context) {
         portCallUpdater.update();
     }
 }
