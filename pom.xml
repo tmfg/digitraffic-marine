@@ -278,12 +278,7 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
 
-        <!-- gzipped http response -->
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>5.3.1</version>
-        </dependency>
+
 
         <!-- Test dependencies, in groupId alphabethic order -->
         <dependency>

@@ -35,7 +35,7 @@ See [dbmarine/README.md](dbmarine/README.md).
     $ ssh user@server -L18080:remote.server.ip:80
 
     # Start application
-	$ mvn spring-boot:run -Dspring.profiles.active=localhost
+	$ mvn spring-boot:run -Dspring-boot.run.profiles=localhost=localhost
 
 	Some errors will show on the console, because of some integrations are not reachable. The
 	integrations are configured
