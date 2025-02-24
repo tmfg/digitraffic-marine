@@ -87,8 +87,7 @@ public class VesselDimensions {
     @JsonIgnore
     private Timestamp keelDate;
 
-    public void setAll(final BigInteger vesselId, final Dimensions dimensions) {
-        this.vesselId = vesselId.longValue();
+    public void setAll(final Dimensions dimensions) {
         this.tonnageCertificateIssuer = dimensions.getTonnageCertificateIssuer();
         this.dateOfIssue = TypeUtil.getTimestamp(dimensions.getDateOfIssue());
         this.grossTonnage = TypeUtil.getInteger(dimensions.getGrossTonnage());

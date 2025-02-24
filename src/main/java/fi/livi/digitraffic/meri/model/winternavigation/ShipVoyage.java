@@ -13,11 +13,10 @@ import jakarta.persistence.OneToOne;
 public class ShipVoyage {
 
     @Id
-    @Column(name = "vessel_pk", nullable = false)
-    private String vesselPK;
+    private String id;
 
+    @JoinColumn(name = "vessel_pk")
     @OneToOne
-    @JoinColumn(name = "vessel_pk", nullable = false)
     @MapsId
     private WinterNavigationShip winterNavigationShip;
 
@@ -123,6 +122,5 @@ public class ShipVoyage {
 
     public void setWinterNavigationShip(final WinterNavigationShip winterNavigationShip) {
         this.winterNavigationShip = winterNavigationShip;
-        this.vesselPK = winterNavigationShip.getVesselPK();
     }
 }

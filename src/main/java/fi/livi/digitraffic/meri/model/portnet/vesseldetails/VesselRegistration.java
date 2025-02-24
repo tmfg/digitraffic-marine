@@ -41,8 +41,7 @@ public class VesselRegistration {
     @JsonIgnore
     private String domicile;
 
-    public void setAll(final BigInteger vesselId, final RegistrationData registrationData) {
-        this.vesselId = vesselId.longValue();
+    public void setAll(final RegistrationData registrationData) {
         this.nationality = registrationData.getNationality();
         this.portOfRegistry = registrationData.getPortOfRegistry();
         this.domicile = registrationData.getDomicile();

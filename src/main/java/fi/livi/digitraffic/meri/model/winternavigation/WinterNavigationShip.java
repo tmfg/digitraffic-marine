@@ -55,11 +55,9 @@ public class WinterNavigationShip extends ReadOnlyCreatedAndModifiedFields {
     private Integer aisShipType;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "winterNavigationShip")
-    @JoinColumn(name = "vessel_pk", nullable = false)
     private ShipState shipState;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "winterNavigationShip")
-    @JoinColumn(name = "vessel_pk", nullable = false)
     private ShipVoyage shipVoyage;
 
     @OneToMany(mappedBy = "vesselPK", cascade = CascadeType.ALL, orphanRemoval = true)

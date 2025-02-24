@@ -51,8 +51,7 @@ public class VesselSystem {
     @Schema(description = "Ship verifier")
     private String shipVerifier;
 
-    public void setAll(final BigInteger vesselId, final System system) {
-        this.vesselId = vesselId.longValue();
+    public void setAll(final System system) {
         this.shipOwner = system.getShipOwner();
         this.shipTelephone1 = system.getShipTelephone1();
         this.shipTelephone2 = system.getShipTelephone2();

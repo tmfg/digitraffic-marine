@@ -48,7 +48,7 @@ public class SwaggerUiWebTest extends AbstractWebTestBase {
         mockMvc.perform(get("/v3/api-docs/marine-api"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(restContentType))
-            .andExpect(jsonPath("$.openapi", is("3.0.1")))
+            .andExpect(jsonPath("$.openapi", is("3.1.0")))
             .andExpect(jsonPath("$.info.version", is(versionService.getAppFullVersion())))
             .andExpect(jsonPath("$.paths." + API_PORT_CALL_V1 + PORT_CALLS, anything()));
     }
@@ -58,7 +58,7 @@ public class SwaggerUiWebTest extends AbstractWebTestBase {
         mockMvc.perform(get("/v3/api-docs/marine-api-beta"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(restContentType))
-            .andExpect(jsonPath("$.openapi", is("3.0.1")))
+            .andExpect(jsonPath("$.openapi", is("3.1.0")))
             .andExpect(jsonPath("$.info.version", is(versionService.getAppFullVersion())))
         //            .andExpect(content().string(containsString(API_BETA_BASE_PATH + "/")))
         ;

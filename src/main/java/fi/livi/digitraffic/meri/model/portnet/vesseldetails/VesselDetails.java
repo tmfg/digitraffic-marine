@@ -54,12 +54,10 @@ public class VesselDetails extends ReadOnlyCreatedAndModifiedFields implements L
 
     @Schema(description = "Vessel construction information")
     @OneToOne(targetEntity = VesselConstruction.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
-    @JoinColumn(name = "vessel_id", nullable = false)
     private VesselConstruction vesselConstruction;
 
     @Schema(description = "Vessel dimension information")
     @OneToOne(targetEntity = VesselDimensions.class, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vesselDetails")
-    @JoinColumn(name = "vessel_id", nullable = false)
     private VesselDimensions vesselDimensions;
 
     @Schema(description = "Vessel registration information")
@@ -83,26 +81,27 @@ public class VesselDetails extends ReadOnlyCreatedAndModifiedFields implements L
         this.radioCallSignType = TypeUtil.getEnum(idData.getRadioCallSignType());
         this.updateTimestamp = TypeUtil.getTimestamp(idData.getUpdateTimeStamp());
         this.dataSource = idData.getDataSource();
+        
         if (this.vesselConstruction == null) {
             this.vesselConstruction = new VesselConstruction();
             vesselConstruction.setVesselDetails(this);
         }
-        this.vesselConstruction.setAll(idData.getVesselId(), vd.getConstructionData());
+        this.vesselConstruction.setAll(vd.getConstructionData());
         if (this.vesselDimensions == null) {
             this.vesselDimensions = new VesselDimensions();
             vesselDimensions.setVesselDetails(this);
         }
-        this.vesselDimensions.setAll(idData.getVesselId(), vd.getDimensions());
+        this.vesselDimensions.setAll(vd.getDimensions());
         if (this.vesselRegistration == null) {
             this.vesselRegistration = new VesselRegistration();
             vesselRegistration.setVesselDetails(this);
         }
-        this.vesselRegistration.setAll(idData.getVesselId(), vd.getRegistrationData());
+        this.vesselRegistration.setAll(vd.getRegistrationData());
         if (this.vesselSystem == null) {
             this.vesselSystem = new VesselSystem();
             vesselSystem.setVesselDetails(this);
         }
-        this.vesselSystem.setAll(idData.getVesselId(), vd.getSystem());
+        this.vesselSystem.setAll(vd.getSystem());
     }
 
     public Long getVesselId() {

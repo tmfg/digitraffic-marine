@@ -113,7 +113,6 @@ public class WinterNavigationShipUpdater {
     }
 
     private static WinterNavigationShip updateData(final WinterNavigationShip s, final WinterShip ship) {
-
         s.setVesselPK(ship.getVesselPk());
         s.setVesselSource(ship.getVesselSource());
         s.setMmsi(ship.getShipData().getMmsi());
@@ -141,8 +140,14 @@ public class WinterNavigationShipUpdater {
     }
 
     private static void updateShipState(final WinterNavigationShip s, final WinterShip ship) {
-        final ShipState shipState = s.getShipState() != null ? s.getShipState() : new ShipState();
-        shipState.setWinterNavigationShip(s);
+        if(s.getShipState() == null) {
+            final var state = new ShipState();
+
+            s.setShipState(state);
+            state.setWinterNavigationShip(s);
+        }
+
+        final ShipState shipState = s.getShipState();
 
         if (ship.getShipState() != null) {
             shipState.setTimestamp(ship.getShipState().getTimestamp().toGregorianCalendar().toZonedDateTime());
@@ -163,7 +168,6 @@ public class WinterNavigationShipUpdater {
             shipState.setStoppedSince(findZonedDateTime(ship.getShipState().getStoppedSince()));
             shipState.setInactiveSince(findZonedDateTime(ship.getShipState().getInactiveSince()));
         }
-        s.setShipState(shipState);
     }
 
     private static void updateShipVoyage(final WinterNavigationShip s, final WinterShip ship) {

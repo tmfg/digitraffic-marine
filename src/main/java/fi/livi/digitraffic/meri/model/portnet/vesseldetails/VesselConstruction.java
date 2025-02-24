@@ -65,8 +65,7 @@ public class VesselConstruction {
     @Schema(description = "Tells whether vessel has a ballast tank")
     private Boolean ballastTank;
 
-    public void setAll(final BigInteger vesselId, final ConstructionData cd) {
-        this.vesselId = vesselId.longValue();
+    public void setAll(final ConstructionData cd) {
         this.vesselTypeCode = TypeUtil.getInteger(cd.getVesselTypeCode());
         this.vesselTypeName = cd.getVesselTypeName();
         this.iceClassCode = TypeUtil.getEnum(cd.getIceClassCode());

@@ -443,7 +443,6 @@ public class PortCallWebServiceV1Test extends AbstractWebTestBase {
         final Timestamp atd
     ) {
         final PortAreaDetails pad = new PortAreaDetails();
-        pad.setPortAreaDetailsId(1L);
 
         if (eta != null) {
             pad.setEta(eta);
