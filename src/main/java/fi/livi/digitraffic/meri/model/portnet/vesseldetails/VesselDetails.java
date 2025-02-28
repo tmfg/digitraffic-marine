@@ -5,6 +5,7 @@ import java.time.Instant;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fi.livi.digitraffic.common.dto.LastModifiedSupport;
@@ -70,6 +71,7 @@ public class VesselDetails extends ReadOnlyCreatedAndModifiedFields implements L
     @JoinColumn(name = "vessel_id", nullable = false)
     private VesselSystem vesselSystem;
 
+    @JsonIgnore
     public void setAll(final fi.livi.digitraffic.meri.portnet.xsd.VesselDetails vd) {
         final IdentificationData idData = vd.getIdentificationData();
         this.vesselId = idData.getVesselId().longValue();

@@ -37,6 +37,7 @@ import fi.livi.digitraffic.meri.service.portcall.v1.PortCallWebServiceV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -192,8 +193,8 @@ public class PortcallControllerV1 {
 
     @Operation(summary = "Return list of vessels details.")
     @GetMapping(path = API_PORT_CALL_V1 + VESSEL_DETAILS, produces = MEDIA_TYPE_APPLICATION_JSON)
-    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details"),
-        @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel details", content = @Content(schema = @Schema(implementation = VesselDetails.class))),
+        @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content)})
     @ResponseBody
     public ResponseEntityWithLastModifiedHeader<List<VesselDetails>> findVesselDetails(
         @Parameter(description = "Return details of vessels whose metadata has changed after given time in ISO date format {yyyy-MM-dd'T'HH:mm:ss.SSSZ} e.g. 2016-10-31T06:30:00.000Z. " +
