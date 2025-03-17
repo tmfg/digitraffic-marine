@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,9 @@ public class ForeignKeyIndexTest extends AbstractDaemonTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static final String IGNORED_CONSTRAINT_NAMES_REGEX =
-//            ".*ABC.*" +
-//            "|CDE" +
-            "";
+    private static final String[] IGNORED_CONSTRAINT_NAMES = new String[] {
+        "QRTZ_TRIGGERS_SCHED_NAME_JOB_NAME_JOB_GROUP_FKEY"
+    };
 
     @Test
     public void testForeignKeysHaveIndex() {
@@ -51,14 +49,17 @@ public class ForeignKeyIndexTest extends AbstractDaemonTestBase {
                 "order by\n" + "    t.relname,\n" + "    i.relname\n" +
                 ")\n" +
                 "select * from constraints\n" +
-                "where not exists(select * from indexes where indexes.cols like '' || constraints.cols || '%');\n";
-
+                "where not exists(" +
+                "   select * " +
+                "   from indexes where indexes.table_name = constraints.table_name " +
+                "    AND indexes.cols like '' || constraints.cols || '%');\n";
 
         final List<Map<String, Object>> foreignKeysWithoutIndex =
             jdbcTemplate.queryForList(sql)
                 .stream()
-                .filter(fk -> !fk.get("CONSTRAINT_NAME").toString().matches(IGNORED_CONSTRAINT_NAMES_REGEX))
-                .collect(Collectors.toList());
+                .filter(fk -> !StringUtils.containsAny(fk.get("CONSTRAINT_NAME").toString().toUpperCase(),
+                    IGNORED_CONSTRAINT_NAMES))
+                .toList();
 
         final StringBuilder sb = new StringBuilder();
 
