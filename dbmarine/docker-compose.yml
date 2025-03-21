@@ -13,7 +13,7 @@ services:
       - default
 
   db-init:
-    image: flyway/flyway:11.3.1-alpine
+    image: flyway/flyway:11.4.0-alpine
     volumes:
       - "./sql:/flyway/sql"
       - "./files:/flyway/conf"
