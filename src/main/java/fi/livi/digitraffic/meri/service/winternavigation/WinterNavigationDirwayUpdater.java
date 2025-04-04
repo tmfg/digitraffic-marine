@@ -128,8 +128,8 @@ public class WinterNavigationDirwayUpdater {
         d.setName(dirway.getName());
         d.setIssuerCode(dirway.getIssuerCode());
         d.setIssuerName(dirway.getIssuerName());
-        d.setIssueTime(WinterNavigationShipUpdater.findZonedDateTime(dirway.getIssueTime()));
-        d.setValidUntil(WinterNavigationShipUpdater.findZonedDateTime(dirway.getValidUntil()));
+        d.setIssueTime(UpdaterService.findZonedDateTime(dirway.getIssueTime()));
+        d.setValidUntil(UpdaterService.findZonedDateTime(dirway.getValidUntil()));
 
         updateDirwayPoints(d, dirway.getDirWayPoints());
     }

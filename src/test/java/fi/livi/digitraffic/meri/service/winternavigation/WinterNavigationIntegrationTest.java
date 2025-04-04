@@ -46,25 +46,6 @@ public class WinterNavigationIntegrationTest extends AbstractDaemonTestBase {
 
     @Test
     @Disabled("For manual integration testing")
-    public void getWinterNavigationShipsSucceeds() {
-        final Instant start = Instant.now().minusSeconds(1);
-
-        final WinterShips ships = winterNavigationClient.getWinterNavigationShips();
-
-        assertNotNull(ships);
-        assertTrue(ships.getWinterShip().size() > 100);
-
-        final int count = winterNavigationShipUpdater.updateWinterNavigationShips();
-        assertTrue(count > 100, "Total count of added or updated ships is greater than 100");
-
-        final Instant dataUpdatedTime = winterNavigationWebServiceV1.getWinterNavigationShips().getDataUpdatedTime();
-
-        assertNotNull(dataUpdatedTime);
-        assertTrue(dataUpdatedTime.isAfter(start));
-    }
-
-    @Test
-    @Disabled("For manual integration testing")
     public void getWinterNavigationWaypointsSucceeds() {
         final Instant start = Instant.now().minusSeconds(1);
 

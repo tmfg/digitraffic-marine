@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
@@ -29,24 +30,24 @@ import jakarta.xml.bind.JAXBElement;
 
 public class WinterNavigationShipUpdaterTest extends AbstractDaemonTestBase {
 
-    @MockBean
+    @MockitoBean
     private WinterNavigationClient winterNavigationClient;
 
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
+    @MockitoBean(answers = Answers.CALLS_REAL_METHODS)
     private WinterNavigationShipUpdater winterNavigationShipUpdater;
 
     @Autowired
     private WinterNavigationShipRepository winterNavigationShipRepository;
 
     @Autowired
-    private UpdatedTimestampRepository updatedTimestampRepository;
+    private UpdaterService updaterService;
 
     @Autowired
     private Jaxb2Marshaller jaxb2Marshaller;
 
     @BeforeEach
     public void before() {
-        winterNavigationShipUpdater = new WinterNavigationShipUpdater(winterNavigationClient, winterNavigationShipRepository, updatedTimestampRepository);
+        winterNavigationShipUpdater = new WinterNavigationShipUpdater(winterNavigationClient, updaterService);
         winterNavigationShipRepository.deleteAll();
     }
 

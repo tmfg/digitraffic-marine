@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
+import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
-import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 import ibnet_baltice_ports.Ports;
 import ibnet_baltice_schema.ObjectFactory;
 import ibnet_baltice_schema.PortsRequestType;

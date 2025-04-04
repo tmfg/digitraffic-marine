@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.service;
 
-import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
+import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri;
 
+import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
-
-import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 
 /**
  * <a href="https://www.archunit.org/userguide/html/000_Index.html">ArchUnit User Guide</a>

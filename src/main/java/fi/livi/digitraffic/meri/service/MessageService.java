@@ -2,13 +2,12 @@ package fi.livi.digitraffic.meri.service;
 
 import java.util.Locale;
 
+import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
-
-import fi.livi.digitraffic.meri.annotation.NotTransactionalServiceMethod;
 
 @Service
 public class MessageService {
