@@ -60,7 +60,7 @@ public class WinterNavigationPortUpdater {
         try {
             data = winterNavigationClient.getWinterNavigationPorts();
         } catch (final Exception e) {
-            SoapFaultLogger.logException(log, e);
+            SoapFaultLogger.logException(log, e, "updateWinterNavigationPorts");
 
             return -1;
         }

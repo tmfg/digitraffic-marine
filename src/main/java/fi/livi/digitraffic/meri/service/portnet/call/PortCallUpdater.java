@@ -87,7 +87,7 @@ public class PortCallUpdater {
     public void updatePortCalls(final ZonedDateTime from, final ZonedDateTime to) {
         // if timestampcheck failed, try again!
         if(!getAndUpdate(from, to, false)) {
-            log.error("retrying port calls");
+            log.error("method=updatePortCalls retrying port calls");
 
             // second time, set portcalls updated anyway
             getAndUpdate(from, to, true);
@@ -133,7 +133,7 @@ public class PortCallUpdater {
         });
         portCallRepository.saveAll(added);
 
-        log.info("portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
+        log.info("method=updatePortCalls portCallAddedCount={} portCallUpdatedCount={} tookMs={} .", added.size(), updated.size(), watch.getTime());
         return !added.isEmpty() || !updated.isEmpty();
     }
 

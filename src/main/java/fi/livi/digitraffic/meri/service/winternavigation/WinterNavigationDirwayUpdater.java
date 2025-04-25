@@ -60,7 +60,7 @@ public class WinterNavigationDirwayUpdater {
         try {
             data = winterNavigationClient.getWinterNavigationWaypoints();
         } catch(final Exception e) {
-            SoapFaultLogger.logException(log, e);
+            SoapFaultLogger.logException(log, e, "updateWinterNavigationDirways");
 
             return -1;
         }

@@ -1,18 +1,8 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
-import fi.livi.digitraffic.meri.model.winternavigation.*;
-import ibnet_baltice_winterships.PlannedActivity;
-import ibnet_baltice_winterships.WinterShip;
-import ibnet_baltice_winterships.WinterShips;
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS;
+import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS_CHECK;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
@@ -22,8 +12,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS;
-import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS_CHECK;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
+import fi.livi.digitraffic.meri.model.winternavigation.PositionAccuracy;
+import fi.livi.digitraffic.meri.model.winternavigation.PositionSource;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipActivity;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipPlannedActivity;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipState;
+import fi.livi.digitraffic.meri.model.winternavigation.ShipVoyage;
+import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShip;
+import ibnet_baltice_winterships.PlannedActivity;
+import ibnet_baltice_winterships.WinterShip;
+import ibnet_baltice_winterships.WinterShips;
 
 @Service
 public class UpdaterService {
@@ -42,20 +50,28 @@ public class UpdaterService {
         final List<WinterNavigationShip> added = new ArrayList<>();
         final List<WinterNavigationShip> updated = new ArrayList<>();
 
+        final StopWatch stopWatch = StopWatch.createStarted();
         final Map<String, WinterNavigationShip> shipsByVesselPK =
             winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toMap(WinterNavigationShip::getVesselPK, s -> s));
 
-        final StopWatch stopWatch = StopWatch.createStarted();
+        final long tookMsShipsByVessel = stopWatch.getDuration().toMillis();
+        stopWatch.reset();
+
         data.getWinterShip().forEach(ship -> update(ship, added, updated, shipsByVesselPK));
         winterNavigationShipRepository.saveAll(added);
 
-        log.info("method=updateWinterNavigationShips addedShips={} updatedShips={} tookMs={}", added.size(), updated.size(), stopWatch.getDuration().toMillis());
+        final long tookMsUpdate = stopWatch.getDuration().toMillis();
+        stopWatch.reset();
 
         final Instant now = Instant.now();
         if (!added.isEmpty() || !updated.isEmpty()) {
             updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_VESSELS, now, getClass().getSimpleName());
         }
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_VESSELS_CHECK, now, getClass().getSimpleName());
+        final long tookMsTimestampsUpdate = stopWatch.getDuration().toMillis();
+
+        log.info("method=updateWinterNavigationShips addedShips={} updatedShips={} tookMs={} tookMsShipsByVessel: {}, tookMsUpdate: {}, tookMsTimestampsUpdate: {}",
+            added.size(), updated.size(), tookMsShipsByVessel + tookMsUpdate + tookMsTimestampsUpdate, tookMsShipsByVessel, tookMsUpdate, tookMsTimestampsUpdate);
 
         return added.size() + updated.size();
     }

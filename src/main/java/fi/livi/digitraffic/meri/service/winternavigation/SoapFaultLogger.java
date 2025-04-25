@@ -6,11 +6,11 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 import fi.livi.digitraffic.common.util.StringUtil;
 
 public final class SoapFaultLogger {
-    public static void logException(final Logger logger, final Exception e) {
+    public static void logException(final Logger logger, final Exception e, final String methodName) {
         if(e instanceof SoapFaultClientException) {
-            logger.error("soapfault={}", getSoapFaultAsString((SoapFaultClientException) e));
+            logger.error("method={} failed, soapfault={}", methodName, getSoapFaultAsString((SoapFaultClientException) e));
         } else {
-            logger.error("exception from soap", e);
+            logger.error(StringUtil.format("method={} failed, exception from soap", methodName), e);
         }
     }
 

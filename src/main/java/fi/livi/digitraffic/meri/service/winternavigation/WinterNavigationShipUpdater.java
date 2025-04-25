@@ -1,13 +1,14 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
-import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
-import ibnet_baltice_winterships.WinterShips;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Service;
+
+import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
+import ibnet_baltice_winterships.WinterShips;
 
 @Service
 @ConditionalOnNotWebApplication
@@ -30,20 +31,27 @@ public class WinterNavigationShipUpdater {
      */
     @NotTransactionalServiceMethod
     public void updateWinterNavigationShips() {
-        final StopWatch stopWatch = new StopWatch();
+        final StopWatch stopWatch = StopWatch.createStarted();
         final WinterShips data;
 
         try {
             data = winterNavigationClient.getWinterNavigationShips();
         } catch(final Exception e) {
-            SoapFaultLogger.logException(log, e);
-
-            return;
+            SoapFaultLogger.logException(log, e, "updateWinterNavigationShips getWinterNavigationShips");
+            throw e;
         } finally {
-            log.info("getting winter navigation ships tookMs={}", stopWatch.getDuration().toMillis());
+            log.info("method=updateWinterNavigationShips getting winter navigation ships tookMs={}", stopWatch.getDuration().toMillis());
         }
 
-        updaterService.updateWinterNavigationShips(data);
+        final StopWatch stopWatchUpdate = StopWatch.createStarted();
+        try {
+            updaterService.updateWinterNavigationShips(data);
+        } catch (final Exception e) {
+            log.error("method=updateWinterNavigationShips update failed", e);
+            throw e;
+        } finally {
+            log.info("method=updateWinterNavigationShips update tookMs={}", stopWatchUpdate.getDuration().toMillis());
+        }
     }
 
 }
