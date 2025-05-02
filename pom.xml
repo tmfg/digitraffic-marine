@@ -27,6 +27,7 @@
         <org.glassfish.metro.ws.version>4.0.4</org.glassfish.metro.ws.version>
         <project.digitraffic-common-java.directory>lib/digitraffic-common-java</project.digitraffic-common-java.directory>
     </properties>
+
     <profiles>
         <profile>
             <id>depcheck</id>
@@ -94,13 +95,22 @@
             <version>${spring.cloud.version}</version>
         </dependency>
 
+        <!-- TEMPORARY DEPS TO MITIGATE SECURITY VULNERABILITIES STARTS -->
         <!-- TODO: Temporary patch for CVE-2025-22228 in spring-security-crypto 6.4.3 -->
         <!-- Remove this dependency once spring-cloud-starter-bootstrap is updated -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
-            <version>6.4.4</version>
+            <version>6.4.5</version>
         </dependency>
+        <!-- TODO: Temporary patch for CVE-2025-27820 in spring-cloud-starter-config:4.2.1:httpclient5 -->
+        <!-- Remove this dependency once spring-cloud-starter-config is updated -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.4.4</version>
+        </dependency>
+        <!-- TEMPORARY DEPS TO MITIGATE SECURITY VULNERABILITIES ENDS -->
 
         <dependency>
             <groupId>io.awspring.cloud</groupId>
@@ -266,6 +276,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.5.0</version>
         </dependency>
 
         <dependency>
