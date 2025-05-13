@@ -20,7 +20,8 @@ public class WinterNavigationShipUpdater {
     private final UpdaterService updaterService;
 
     @Autowired
-    public WinterNavigationShipUpdater(final WinterNavigationClient winterNavigationClient, final UpdaterService updaterService) {
+    public WinterNavigationShipUpdater(final WinterNavigationClient winterNavigationClient,
+                                       final UpdaterService updaterService) {
         this.winterNavigationClient = winterNavigationClient;
         this.updaterService = updaterService;
     }
@@ -31,26 +32,37 @@ public class WinterNavigationShipUpdater {
      */
     @NotTransactionalServiceMethod
     public void updateWinterNavigationShips() {
-        final StopWatch stopWatch = StopWatch.createStarted();
         final WinterShips data;
 
+        final StopWatch stopWatchGet = StopWatch.createStarted();
+        final StopWatch stopWatchUpdate = StopWatch.create();
         try {
-            data = winterNavigationClient.getWinterNavigationShips();
-        } catch(final Exception e) {
-            SoapFaultLogger.logException(log, e, "updateWinterNavigationShips getWinterNavigationShips");
-            throw e;
-        } finally {
-            log.info("method=updateWinterNavigationShips getting winter navigation ships tookMs={}", stopWatch.getDuration().toMillis());
-        }
+            try {
+                data = winterNavigationClient.getWinterNavigationShips();
+            } catch (final Exception e) {
+                SoapFaultLogger.logException(log, e, "updateWinterNavigationShips getWinterNavigationShips");
+                throw e;
+            } finally {
+                stopWatchGet.stop();
+                log.info("method=updateWinterNavigationShips getting winter navigation ships tookMs={}",
+                    stopWatchGet.getDuration().toMillis());
+            }
 
-        final StopWatch stopWatchUpdate = StopWatch.createStarted();
-        try {
-            updaterService.updateWinterNavigationShips(data);
-        } catch (final Exception e) {
-            log.error("method=updateWinterNavigationShips update failed", e);
-            throw e;
+            try {
+                stopWatchUpdate.stop();
+                updaterService.updateWinterNavigationShips(data);
+            } catch (final Exception e) {
+                log.error("method=updateWinterNavigationShips update failed", e);
+                throw e;
+            } finally {
+                stopWatchUpdate.stop();
+                log.info("method=updateWinterNavigationShips update tookMs={}",
+                    stopWatchUpdate.getDuration().toMillis());
+            }
         } finally {
-            log.info("method=updateWinterNavigationShips update tookMs={}", stopWatchUpdate.getDuration().toMillis());
+            log.info("method=updateWinterNavigationShips summary getTookMs={}  updateTookMs={} tookMs={}",
+                stopWatchGet.getDuration().toMillis(), stopWatchUpdate.getDuration().toMillis(),
+                stopWatchGet.getDuration().toMillis() + stopWatchUpdate.getDuration().toMillis());
         }
     }
 
