@@ -49,13 +49,13 @@ public class WinterNavigationShipUpdater {
             }
 
             try {
-                stopWatchUpdate.stop();
+                stopWatchUpdate.start();
                 updaterService.updateWinterNavigationShips(data);
             } catch (final Exception e) {
                 log.error("method=updateWinterNavigationShips update failed", e);
                 throw e;
             } finally {
-                stopWatchUpdate.stop();
+                v.stop();
                 log.info("method=updateWinterNavigationShips update tookMs={}",
                     stopWatchUpdate.getDuration().toMillis());
             }
