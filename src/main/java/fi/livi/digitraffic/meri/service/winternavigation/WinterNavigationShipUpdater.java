@@ -55,7 +55,7 @@ public class WinterNavigationShipUpdater {
                 log.error("method=updateWinterNavigationShips update failed", e);
                 throw e;
             } finally {
-                v.stop();
+                stopWatchUpdate.stop();
                 log.info("method=updateWinterNavigationShips update tookMs={}",
                     stopWatchUpdate.getDuration().toMillis());
             }
