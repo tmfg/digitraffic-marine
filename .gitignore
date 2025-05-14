@@ -56,8 +56,8 @@ crashlytics-build.properties
 buildNumber.properties
 *.log.gz
 **/application-localhost.properties
-**/application-localhost-web.properties
-**/application-localhost-daemon.properties
+**/application-*-web.properties
+**/application-*-daemon.properties
 
 # SchemaSpyn generoimat schemat ja kirjastot
 /dbmarine/schemaspy/schema
@@ -72,3 +72,4 @@ buildNumber.properties
 **/sse_export_test_6.json.gz
 /build
 .gitmodules
+.DS_Store
