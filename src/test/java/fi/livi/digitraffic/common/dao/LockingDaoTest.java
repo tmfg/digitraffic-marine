@@ -17,8 +17,6 @@ import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import jakarta.transaction.Transactional;
 
 public class LockingDaoTest extends AbstractDaemonTestBase {
-    private static final Logger log = LoggerFactory.getLogger(LockingDao.class);
-
     private static final String LOCKNAME1 = "testLock_1";
     private static final String LOCKNAME2 = "testLock_2";
     private static final String ID1 = "test_id_1";
@@ -92,15 +90,15 @@ public class LockingDaoTest extends AbstractDaemonTestBase {
         assertFalse(lockingDao.acquireLock(LOCKNAME1, ID2, expirationSeconds));
 
         // Wait for ID2 to get the lock or expiration to pass by second
-        while (!lockingDao.acquireLock(LOCKNAME1, ID2, expirationSeconds) && locked1Time.getTime() < expirationMs+1000) {
+        while (!lockingDao.acquireLock(LOCKNAME1, ID2, expirationSeconds) && locked1Time.getDuration().toMillis() < expirationMs+1000) {
             ThreadUtil.delayMs(100);
         }
 
         final boolean locked = lockingDao.acquireLock(LOCKNAME1, ID2, expirationSeconds);
-        if (locked && locked1Time.getTime() < expirationMs) {
-            fail("Locked before expiration. Lock has been locked for " + locked1Time.getTime() + " ms and expiration is " + expirationMs + " ms");
-        } else if (!locked && locked1Time.getTime() > expirationMs) {
-            fail("Failed to lock after expiration. Lock has been locked for " + locked1Time.getTime() + " ms and expiration is " + expirationMs + " ms");
+        if (locked && locked1Time.getDuration().toMillis() < expirationMs) {
+            fail("Locked before expiration. Lock has been locked for " + locked1Time.getDuration().toMillis() + " ms and expiration is " + expirationMs + " ms");
+        } else if (!locked && locked1Time.getDuration().toMillis() > expirationMs) {
+            fail("Failed to lock after expiration. Lock has been locked for " + locked1Time.getDuration().toMillis() + " ms and expiration is " + expirationMs + " ms");
         }
         assertTrue(locked, "Failed to lock after expiration");
     }
