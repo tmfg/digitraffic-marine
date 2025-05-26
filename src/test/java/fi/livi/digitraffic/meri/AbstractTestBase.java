@@ -1,20 +1,12 @@
 package fi.livi.digitraffic.meri;
 
-import static java.time.ZoneOffset.UTC;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Random;
 
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
@@ -30,6 +22,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.UnexpectedRollbackException;
 
 import jakarta.persistence.EntityManager;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 
 @TestPropertySource(properties = {
         "config.test=true",
@@ -78,23 +73,6 @@ abstract class AbstractTestBase {
     protected String readResourceContent(final String resourcePattern) throws IOException {
         final Resource datex2Resource = loadResource(resourcePattern);
         return FileUtils.readFileToString(datex2Resource.getFile(), StandardCharsets.UTF_8);
-    }
-
-    protected void assertTimesEqual(final ZonedDateTime t1, final ZonedDateTime t2) {
-        if(t1 == null && t2 == null) return;
-
-        if(t1 == null && t2 != null) {
-            fail("was asserted to be null, was not");
-        }
-
-        if(t1 != null && t2 == null) {
-            fail("given value was null");
-        }
-
-        final ZonedDateTime tz1 = t1.withZoneSameInstant(UTC);
-        final ZonedDateTime tz2 = t2.withZoneSameInstant(UTC);
-
-        assertEquals(tz1, tz2);
     }
 
     protected static int getRandom(final int minInclusive, final int maxExclusive) {

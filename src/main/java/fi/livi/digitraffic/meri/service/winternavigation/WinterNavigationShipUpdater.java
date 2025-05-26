@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 import org.springframework.stereotype.Service;
 
 import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
+import fi.livi.digitraffic.common.annotation.PerformanceMonitor;
 import ibnet_baltice_winterships.WinterShips;
 
 @Service
@@ -31,6 +32,8 @@ public class WinterNavigationShipUpdater {
      * 2. Insert / update database
      */
     @NotTransactionalServiceMethod
+    // Get varies between 2–150s and update to db 2–10 s so total time is 4–120s
+    @PerformanceMonitor(maxWarnExcecutionTime = 70000, maxErrorExcecutionTime = 160000)
     public void updateWinterNavigationShips() {
         final WinterShips data;
 
@@ -44,8 +47,6 @@ public class WinterNavigationShipUpdater {
                 throw e;
             } finally {
                 stopWatchGet.stop();
-                log.info("method=updateWinterNavigationShips getting winter navigation ships tookMs={}",
-                    stopWatchGet.getDuration().toMillis());
             }
 
             try {
@@ -56,8 +57,6 @@ public class WinterNavigationShipUpdater {
                 throw e;
             } finally {
                 stopWatchUpdate.stop();
-                log.info("method=updateWinterNavigationShips update tookMs={}",
-                    stopWatchUpdate.getDuration().toMillis());
             }
         } finally {
             log.info("method=updateWinterNavigationShips summary getTookMs={}  updateTookMs={} tookMs={}",

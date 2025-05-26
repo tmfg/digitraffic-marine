@@ -7,16 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
@@ -33,10 +33,10 @@ import jakarta.xml.bind.JAXBElement;
 
 public class WinterNavigationPortUpdaterTest extends AbstractDaemonTestBase {
 
-    @MockBean
+    @MockitoBean
     private WinterNavigationClient winterNavigationClient;
 
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
+    @MockitoBean(answers = Answers.CALLS_REAL_METHODS)
     private WinterNavigationPortUpdater winterNavigationPortUpdater;
 
     @Autowired
@@ -78,13 +78,13 @@ public class WinterNavigationPortUpdaterTest extends AbstractDaemonTestBase {
         assertEquals("Baltic Sea", feature.getProperties().seaArea);
         assertEquals(1, feature.getProperties().portRestrictions.size());
 
-        final WinterNavigationPortRestrictionV1 restriction = feature.getProperties().portRestrictions.get(0);
+        final WinterNavigationPortRestrictionV1 restriction = feature.getProperties().portRestrictions.getFirst();
         assertFalse(restriction.isCurrent);
         assertTrue(restriction.portRestricted);
         assertFalse(restriction.portClosed);
-        assertEquals(ZonedDateTime.parse("2017-12-11T08:10:28.217+00:00").toEpochSecond(), restriction.issueTime.toEpochSecond());
-        assertEquals(ZonedDateTime.parse("2017-12-11T09:10:28.217+00:00").toEpochSecond(), restriction.lastModified.toEpochSecond());
-        assertEquals(Date.valueOf("2017-12-16"), restriction.validFrom);
+        assertEquals(Instant.parse("2017-12-11T08:10:28.217+00:00").getEpochSecond(), restriction.issueTime.getEpochSecond());
+        assertEquals(Instant.parse("2017-12-11T09:10:28.217+00:00").getEpochSecond(), restriction.lastModified.getEpochSecond());
+        assertEquals(LocalDate.parse("2017-12-16"), restriction.validFrom);
         assertNull(restriction.validUntil);
         assertEquals("I,II 2000", restriction.rawText);
         assertEquals("I,II 2000", restriction.formattedText);

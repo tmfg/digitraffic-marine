@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import fi.livi.digitraffic.meri.AbstractWebTestBase;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
@@ -22,7 +22,7 @@ import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 
 public class AisControllerV1Test extends AbstractWebTestBase {
 
-    @MockBean
+    @MockitoBean
     private VesselLocationService vesselLocationService;
 
     private static final int MMSI = 12345;

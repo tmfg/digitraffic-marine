@@ -4,16 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
@@ -28,10 +28,10 @@ import jakarta.xml.bind.JAXBElement;
 
 public class WinterNavigationDirwayUpdaterTest extends AbstractDaemonTestBase {
 
-    @MockBean
+    @MockitoBean
     private WinterNavigationClient winterNavigationClient;
 
-    @MockBean(answer = Answers.CALLS_REAL_METHODS)
+    @MockitoBean(answers = Answers.CALLS_REAL_METHODS)
     private WinterNavigationDirwayUpdater winterNavigationDirwayUpdater;
 
     @Autowired
@@ -61,11 +61,11 @@ public class WinterNavigationDirwayUpdaterTest extends AbstractDaemonTestBase {
 
         winterNavigationDirwayUpdater.updateWinterNavigationDirways();
 
-        List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
+        final List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
         assertEquals(12, dirways.size());
 
         final WinterNavigationDirway dirway = dirways.stream().filter(d -> d.getName().equals("VTS test dirway")).findFirst().orElseThrow();
-        assertEquals(ZonedDateTime.parse("2017-12-08T07:28:51.342+00:00").toEpochSecond(), dirway.getIssueTime().toEpochSecond());
+        assertEquals(Instant.parse("2017-12-08T07:28:51.342Z").getEpochSecond(), dirway.getIssueTime().getEpochSecond());
         assertEquals(4, dirway.getDirwayPoints().size());
         assertEquals(64.967740173, dirway.getDirwayPoints().get(2).getLatitude(), 0.00000001);
         assertEquals(23.131164517, dirway.getDirwayPoints().get(2).getLongitude(), 0.00000001);
@@ -85,7 +85,7 @@ public class WinterNavigationDirwayUpdaterTest extends AbstractDaemonTestBase {
         assertEquals(11, dirways.size());
 
         final WinterNavigationDirway dirway = dirways.stream().filter(d -> d.getName().equals("VTS test dirway")).findFirst().orElseThrow();
-        assertEquals(ZonedDateTime.parse("2017-12-08T08:28:51.342+00:00").toEpochSecond(), dirway.getIssueTime().toEpochSecond());
+        assertEquals(Instant.parse("2017-12-08T08:28:51.342Z").getEpochSecond(), dirway.getIssueTime().getEpochSecond());
         assertEquals("IBNEXT Center Issuer", dirway.getIssuerName());
         assertEquals(4, dirway.getDirwayPoints().size());
         assertEquals(4, dirway.getDirwayPoints().get(3).getWinterNavigationDirwayPointPK().getOrderNumber());

@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
@@ -24,7 +24,7 @@ public class VesselMetadataServiceTest extends AbstractDaemonTestBase {
 
     private static final Logger log = LoggerFactory.getLogger(VesselMetadataServiceTest.class);
 
-    @SpyBean
+    @MockitoSpyBean
     private VesselMetadataService vesselMetadataService;
 
     @Autowired
@@ -36,7 +36,7 @@ public class VesselMetadataServiceTest extends AbstractDaemonTestBase {
         vesselMetadataRepository.save(createNewVesselMetadata(-2, 40));
 
         Mockito.verify(vesselMetadataService, Mockito.times(0)).findAllowedMmsis();
-        Collection<Integer> initial = vesselMetadataService.findAllowedMmsis();
+        final Collection<Integer> initial = vesselMetadataService.findAllowedMmsis();
         Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
         assertFalse(initial.contains(-1));
         assertTrue(initial.contains(-2));
@@ -47,7 +47,7 @@ public class VesselMetadataServiceTest extends AbstractDaemonTestBase {
         Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
 
         // from cache
-        Collection<Integer> cache = vesselMetadataService.findAllowedMmsis();
+        final Collection<Integer> cache = vesselMetadataService.findAllowedMmsis();
         Mockito.verify(vesselMetadataService, Mockito.times(1)).findAllowedMmsis();
         assertFalse(cache.contains(-1));
         assertTrue(cache.contains(-2));
@@ -58,7 +58,7 @@ public class VesselMetadataServiceTest extends AbstractDaemonTestBase {
         Thread.sleep(400);
 
         // from cache
-        Collection<Integer> cache2 = vesselMetadataService.findAllowedMmsis();
+        final Collection<Integer> cache2 = vesselMetadataService.findAllowedMmsis();
         Mockito.verify(vesselMetadataService, Mockito.times(2)).findAllowedMmsis();
         assertFalse(cache2.contains(-1));
         assertTrue(cache2.contains(-2));
@@ -66,7 +66,7 @@ public class VesselMetadataServiceTest extends AbstractDaemonTestBase {
         assertTrue(cache2.contains(-4));
     }
 
-    private static VesselMetadata createNewVesselMetadata(final int mmsi, int type) {
+    private static VesselMetadata createNewVesselMetadata(final int mmsi, final int type) {
         return new VesselMetadata(
                 new VesselAttributes(
                 mmsi,

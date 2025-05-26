@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.service.portnet.call;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS_CHECK;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.PORT_CALLS_TO;
+import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.math.BigInteger;
@@ -75,9 +76,9 @@ public class PortCallUpdater {
 
     @Transactional
     public void update() {
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS_TO);
+        final Instant lastUpdated = updatedTimestampRepository.findLastUpdated(PORT_CALLS_TO);
         final ZonedDateTime now = ZonedDateTime.now().minusMinutes(1); // be sure not to go into future
-        final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.minus(overlapTimeFrame, MILLIS);
+        final ZonedDateTime from = lastUpdated == null ? now.minus(maxTimeFrameToFetch, MILLIS) : lastUpdated.atZone(UTC).minus(overlapTimeFrame, MILLIS);
         final ZonedDateTime to = TimeUtil.millisBetween(from, now) > maxTimeFrameToFetch ? from.plus(maxTimeFrameToFetch, MILLIS) : now;
 
         updatePortCalls(from, to);
@@ -107,13 +108,13 @@ public class PortCallUpdater {
 
         if(timeStampsOk) {
             if (updatePortCalls(list)) {
-                updatedTimestampRepository.setUpdated(PORT_CALLS, to, getClass().getSimpleName());
+                updatedTimestampRepository.setUpdated(PORT_CALLS, to.toInstant(), getClass().getSimpleName());
             }
         }
 
         // set port calls checked if timestamps were ok or tried second time
         if(timeStampsOk || setUpdatedOnFail) {
-            updatedTimestampRepository.setUpdated(PORT_CALLS_TO, to, getClass().getSimpleName());
+            updatedTimestampRepository.setUpdated(PORT_CALLS_TO, to.toInstant(), getClass().getSimpleName());
             updatedTimestampRepository.setUpdated(PORT_CALLS_CHECK, Instant.now(), getClass().getSimpleName());
         }
 

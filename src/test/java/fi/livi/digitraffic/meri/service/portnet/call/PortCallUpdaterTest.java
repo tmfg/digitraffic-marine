@@ -1,19 +1,11 @@
 package fi.livi.digitraffic.meri.service.portnet.call;
 
-import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
-import fi.livi.digitraffic.meri.dto.portcall.v1.call.PortCallJsonV1;
-import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
-import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
+import static fi.livi.digitraffic.common.util.TimeUtil.FINLAND_ZONE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -24,12 +16,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static fi.livi.digitraffic.common.util.TimeUtil.FINLAND_ZONE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.portnet.PortCallRepository;
+import fi.livi.digitraffic.meri.dto.portcall.v1.call.PortCallJsonV1;
+import fi.livi.digitraffic.meri.portnet.xsd.PortCallNotification;
+import okhttp3.mockwebserver.MockWebServer;
 
 public class PortCallUpdaterTest extends AbstractDaemonTestBase {
     @Autowired

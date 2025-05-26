@@ -1,14 +1,14 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
-import jakarta.persistence.Column;
+import org.hibernate.annotations.DynamicUpdate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @DynamicUpdate
@@ -26,21 +26,21 @@ public class ShipVoyage {
 
     private String fromName;
 
-    private ZonedDateTime fromAtd;
+    private Instant fromAtd;
 
     private String inLocode;
 
     private String inName;
 
-    private ZonedDateTime inAta;
+    private Instant inAta;
 
-    private ZonedDateTime inEtd;
+    private Instant inEtd;
 
     private String destLocode;
 
     private String destName;
 
-    private ZonedDateTime destEta;
+    private Instant destEta;
 
     public String getFromLocode() {
         return fromLocode;
@@ -58,11 +58,11 @@ public class ShipVoyage {
         this.fromName = fromName;
     }
 
-    public ZonedDateTime getFromAtd() {
+    public Instant getFromAtd() {
         return fromAtd;
     }
 
-    public void setFromAtd(final ZonedDateTime fromAtd) {
+    public void setFromAtd(final Instant fromAtd) {
         this.fromAtd = fromAtd;
     }
 
@@ -82,19 +82,19 @@ public class ShipVoyage {
         this.inName = inName;
     }
 
-    public ZonedDateTime getInAta() {
+    public Instant getInAta() {
         return inAta;
     }
 
-    public void setInAta(final ZonedDateTime inAta) {
+    public void setInAta(final Instant inAta) {
         this.inAta = inAta;
     }
 
-    public ZonedDateTime getInEtd() {
+    public Instant getInEtd() {
         return inEtd;
     }
 
-    public void setInEtd(final ZonedDateTime inEtd) {
+    public void setInEtd(final Instant inEtd) {
         this.inEtd = inEtd;
     }
 
@@ -114,11 +114,11 @@ public class ShipVoyage {
         this.destName = destName;
     }
 
-    public ZonedDateTime getDestEta() {
+    public Instant getDestEta() {
         return destEta;
     }
 
-    public void setDestEta(final ZonedDateTime destEta) {
+    public void setDestEta(final Instant destEta) {
         this.destEta = destEta;
     }
 

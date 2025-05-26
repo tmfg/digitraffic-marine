@@ -12,7 +12,7 @@ import java.time.Instant;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import fi.livi.digitraffic.meri.AbstractWebTestBase;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
@@ -21,7 +21,7 @@ import fi.livi.digitraffic.meri.service.sse.v1.SseWebServiceV1;
 
 public class SseControllerV1Test extends AbstractWebTestBase {
 
-    @MockBean
+    @MockitoBean
     private SseWebServiceV1 sseWebServiceV1;
 
     private static final String SSE_MEASUREMENTS_PATH = API_SSE_V1 + "/measurements";

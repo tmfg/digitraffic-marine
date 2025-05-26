@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dto.winternavigation.v1;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import fi.livi.digitraffic.meri.model.winternavigation.PositionAccuracy;
 import fi.livi.digitraffic.meri.model.winternavigation.PositionSource;
@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class WinterNavigationShipStateV1 {
 
     @Schema(description = "Timestamp of position observation")
-    public final ZonedDateTime timestamp;
+    public final Instant timestamp;
 
     @Schema(description = "Pre-formatted friendly output")
     public final String posPrintable;
@@ -45,18 +45,18 @@ public class WinterNavigationShipStateV1 {
     public final String aisDestination;
 
     @Schema(description = "When the ship was observed to start moving")
-    public final ZonedDateTime movingSince;
+    public final Instant movingSince;
 
     @Schema(description = "When the ship was observed to having been stopped")
-    public final ZonedDateTime stoppedSince;
+    public final Instant stoppedSince;
 
     @Schema(description = "When the ship was no more observed / was deactivated from the system")
-    public final ZonedDateTime inactiveSince;
+    public final Instant inactiveSince;
 
-    public WinterNavigationShipStateV1(final ZonedDateTime timestamp, final String posPrintable, final PositionAccuracy posAccuracy,
+    public WinterNavigationShipStateV1(final Instant timestamp, final String posPrintable, final PositionAccuracy posAccuracy,
                                        final PositionSource posSource, final String posArea, final Double speed, final Double course, final Double heading, final Double aisDraught,
-                                       final Integer aisState, final String aisStateText, final String aisDestination, final ZonedDateTime movingSince, final ZonedDateTime stoppedSince,
-                                       final ZonedDateTime inactiveSince) {
+                                       final Integer aisState, final String aisStateText, final String aisDestination, final Instant movingSince, final Instant stoppedSince,
+                                       final Instant inactiveSince) {
         this.timestamp = timestamp;
         this.posPrintable = posPrintable;
         this.posAccuracy = posAccuracy;

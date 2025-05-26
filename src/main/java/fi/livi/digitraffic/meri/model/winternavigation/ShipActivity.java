@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -30,15 +30,15 @@ public class ShipActivity {
 
     private String activityComment;
 
-    private ZonedDateTime beginTime;
+    private Instant beginTime;
 
-    private ZonedDateTime endTime;
+    private Instant endTime;
 
-    private ZonedDateTime timestampBegin;
+    private Instant timestampBegin;
 
-    private ZonedDateTime timestampEnd;
+    private Instant timestampEnd;
 
-    private ZonedDateTime timestampCanceled;
+    private Instant timestampCanceled;
 
     @Column(name = "operating_icebreaker_pk")
     private String operatingIcebreakerPK;
@@ -96,43 +96,43 @@ public class ShipActivity {
         this.activityComment = activityComment;
     }
 
-    public ZonedDateTime getBeginTime() {
+    public Instant getBeginTime() {
         return beginTime;
     }
 
-    public void setBeginTime(final ZonedDateTime beginTime) {
+    public void setBeginTime(final Instant beginTime) {
         this.beginTime = beginTime;
     }
 
-    public ZonedDateTime getEndTime() {
+    public Instant getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(final ZonedDateTime endTime) {
+    public void setEndTime(final Instant endTime) {
         this.endTime = endTime;
     }
 
-    public ZonedDateTime getTimestampBegin() {
+    public Instant getTimestampBegin() {
         return timestampBegin;
     }
 
-    public void setTimestampBegin(final ZonedDateTime timestampBegin) {
+    public void setTimestampBegin(final Instant timestampBegin) {
         this.timestampBegin = timestampBegin;
     }
 
-    public ZonedDateTime getTimestampEnd() {
+    public Instant getTimestampEnd() {
         return timestampEnd;
     }
 
-    public void setTimestampEnd(final ZonedDateTime timestampEnd) {
+    public void setTimestampEnd(final Instant timestampEnd) {
         this.timestampEnd = timestampEnd;
     }
 
-    public ZonedDateTime getTimestampCanceled() {
+    public Instant getTimestampCanceled() {
         return timestampCanceled;
     }
 
-    public void setTimestampCanceled(final ZonedDateTime timestampCanceled) {
+    public void setTimestampCanceled(final Instant timestampCanceled) {
         this.timestampCanceled = timestampCanceled;
     }
 

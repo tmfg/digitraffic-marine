@@ -1,20 +1,6 @@
 package fi.livi.digitraffic.meri.service.portnet.vesseldetails;
 
-import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
-import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
-import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
-import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.time.ZoneOffset;
@@ -22,7 +8,18 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
+import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
+import fi.livi.digitraffic.meri.dao.portnet.VesselDetailsRepository;
+import fi.livi.digitraffic.meri.model.portnet.vesseldetails.VesselDetails;
+import okhttp3.mockwebserver.MockWebServer;
 
 public class VesselDetailsUpdaterTest extends AbstractDaemonTestBase {
     

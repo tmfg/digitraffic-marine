@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.xml.transform.StringSource;
 
 import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
-import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationShipRepository;
 import fi.livi.digitraffic.meri.model.winternavigation.WinterNavigationShip;
 import ibnet_baltice_schema.WinterShipsResponseType;
@@ -61,8 +59,10 @@ public class WinterNavigationShipUpdaterTest extends AbstractDaemonTestBase {
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
 
-        final List<WinterNavigationShip> shipsList = winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toList());
-        WinterNavigationShip ship = shipsList.stream().filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
+        final List<WinterNavigationShip> shipsList =
+            winterNavigationShipRepository.findDistinctByOrderByVesselPK().collect(Collectors.toList());
+        WinterNavigationShip ship =
+            shipsList.stream().filter(s -> s.getVesselPK().equals("IMO-9386524")).findFirst().get();
 
         assertEquals(1802, shipsList.size());
         assertEquals("9386524", ship.getImo());
@@ -70,13 +70,15 @@ public class WinterNavigationShipUpdaterTest extends AbstractDaemonTestBase {
         assertEquals("HK", ship.getNatCode());
         assertEquals(171.0, ship.getAisLength(), 0.1);
         assertEquals("moored", ship.getShipState().getAisStateText());
-        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipState().getTimestamp().toEpochSecond());
+        assertEquals(Instant.parse("2017-12-13T12:50:03.000+00:00").getEpochSecond(),
+            ship.getShipState().getTimestamp().getEpochSecond());
         assertEquals(0.00, ship.getShipState().getSpeed(), 0.1);
 
         assertEquals(1, ship.getShipActivities().size());
         assertEquals("PORT", ship.getShipActivities().iterator().next().getActivityType());
         assertEquals("In port", ship.getShipActivities().iterator().next().getActivityText());
-        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().iterator().next().getBeginTime().toEpochSecond());
+        assertEquals(Instant.parse("2017-12-13T12:50:03.000+00:00").getEpochSecond(),
+            ship.getShipActivities().iterator().next().getBeginTime().getEpochSecond());
         assertEquals(0, ship.getShipPlannedActivities().size());
 
         winterNavigationShipUpdater.updateWinterNavigationShips();
@@ -91,7 +93,8 @@ public class WinterNavigationShipUpdaterTest extends AbstractDaemonTestBase {
         assertEquals(1, ship.getShipActivities().size());
         assertEquals("FREE", ship.getShipActivities().iterator().next().getActivityType());
         assertEquals("Moving freely", ship.getShipActivities().iterator().next().getActivityText());
-        assertEquals(ZonedDateTime.parse("2017-12-13T12:50:03.000+00:00").toEpochSecond(), ship.getShipActivities().iterator().next().getBeginTime().toEpochSecond());
+        assertEquals(Instant.parse("2017-12-13T12:50:03.000+00:00").getEpochSecond(),
+            ship.getShipActivities().iterator().next().getBeginTime().getEpochSecond());
     }
 
     private WinterShips getResponse(final String filename) throws IOException {

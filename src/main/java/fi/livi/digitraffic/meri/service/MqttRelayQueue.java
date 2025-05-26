@@ -1,6 +1,11 @@
 package fi.livi.digitraffic.meri.service;
 
-import fi.livi.digitraffic.meri.config.MqttConfiguration;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.LongAccumulator;
+
 import org.apache.commons.lang3.tuple.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.LongAccumulator;
+import fi.livi.digitraffic.meri.config.MqttConfiguration;
 
 @Component
 @ConditionalOnExpression("'${app.type}' == 'daemon' and '${config.test}' != 'true'")

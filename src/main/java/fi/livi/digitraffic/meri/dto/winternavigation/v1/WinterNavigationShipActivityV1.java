@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dto.winternavigation.v1;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -32,19 +32,19 @@ public class WinterNavigationShipActivityV1 {
     public final String activityComment;
 
     @Schema(description = "When the activity was started; the start of the validity period of the activity")
-    public final ZonedDateTime beginTime;
+    public final Instant beginTime;
 
     @Schema(description = "When activity was ended (available only when querying past events); the end of the validity period of the activity")
-    public final ZonedDateTime endTime;
+    public final Instant endTime;
 
     @Schema(description = "When the begintime was entered into the source system")
-    public final ZonedDateTime timestampBegin;
+    public final Instant timestampBegin;
 
     @Schema(description = "When the endtime was entered into the source system")
-    public final ZonedDateTime timestampEnd;
+    public final Instant timestampEnd;
 
     @Schema(description = "When an erroneous activity was canceled (if ever)")
-    public final ZonedDateTime timestampCanceled;
+    public final Instant timestampCanceled;
 
     @Schema(description = "Key of icebreaker that is giving assistance (or supervising)")
     public final String operatingIcebreakerPK;
@@ -61,8 +61,8 @@ public class WinterNavigationShipActivityV1 {
     @Schema(description = "Position in icebreaker convoy, if any (with 0 reserved for a towed ship); results should be given in this order")
     public final Integer convoyOrder;
 
-    public WinterNavigationShipActivityV1(final String activityType, final String activityText, final String activityComment, final ZonedDateTime beginTime, final ZonedDateTime endTime,
-                                          final ZonedDateTime timestampBegin, final ZonedDateTime timestampEnd, final ZonedDateTime timestampCanceled, final String operatingIcebreakerPK,
+    public WinterNavigationShipActivityV1(final String activityType, final String activityText, final String activityComment, final Instant beginTime, final Instant endTime,
+                                          final Instant timestampBegin, final Instant timestampEnd, final Instant timestampCanceled, final String operatingIcebreakerPK,
                                           final String operatingIcebreakerName, final String operatedVesselPK, final String operatedVesselName, final Integer convoyOrder) {
         this.activityType = activityType;
         this.activityText = activityText;

@@ -1,16 +1,16 @@
 package fi.livi.digitraffic.meri.service.portnet.location;
 
-import fi.livi.digitraffic.meri.model.portnet.SsnLocation;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
+import fi.livi.digitraffic.meri.model.portnet.SsnLocation;
 
 @Component
 @ConditionalOnExpression("'${config.test}' != 'true'")

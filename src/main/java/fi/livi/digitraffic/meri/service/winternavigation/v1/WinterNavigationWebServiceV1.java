@@ -4,7 +4,7 @@ import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedNam
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -76,7 +76,7 @@ public class WinterNavigationWebServiceV1 {
     public WinterNavigationPortFeatureCollectionV1 getWinterNavigationPorts() {
         final Stream<WinterNavigationPort> ports = winterNavigationPortRepository.findDistinctByObsoleteDateIsNullOrderByLocode();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_PORTS);
+        final Instant lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_PORTS);
 
         return new WinterNavigationPortFeatureCollectionV1(lastUpdated,
             ports.map(this::portFeature).collect(Collectors.toList()));
@@ -86,7 +86,7 @@ public class WinterNavigationWebServiceV1 {
     public WinterNavigationShipFeatureCollectionV1 getWinterNavigationShips() {
         final Stream<WinterNavigationShip> ships = winterNavigationShipRepository.findDistinctByOrderByVesselPK();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_VESSELS);
+        final Instant lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_VESSELS);
 
         final List<WinterNavigationShipFeatureV1> shipFeatures =
             ships.map(s -> new WinterNavigationShipFeatureV1(s.getVesselPK(),
@@ -101,7 +101,7 @@ public class WinterNavigationWebServiceV1 {
     public WinterNavigationDirwayFeatureCollectionV1 getWinterNavigationDirways() {
         final List<WinterNavigationDirway> dirways = winterNavigationDirwayRepository.findDistinctByOrderByName();
 
-        final ZonedDateTime lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_DIRWAYS);
+        final Instant lastUpdated = updatedTimestampRepository.findLastUpdated(WINTER_NAVIGATION_DIRWAYS);
 
         return new WinterNavigationDirwayFeatureCollectionV1(lastUpdated,
             dirways.stream().map(d -> new WinterNavigationDirwayFeatureV1(d.getName(), dirwayProperties(d), dirwayGeometry(d.getDirwayPoints())))

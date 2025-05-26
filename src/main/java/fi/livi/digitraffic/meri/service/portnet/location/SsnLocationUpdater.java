@@ -24,23 +24,23 @@ import fi.livi.digitraffic.meri.model.portnet.SsnLocation;
 @ConditionalOnNotWebApplication
 public class SsnLocationUpdater {
     private final SsnLocationRepository ssnLocationRepository;
-    private final SsnLocationClient ssnLocationReader;
+    private final SsnLocationClient ssnLocationClient;
     private final LocationCoordinateReader locationCoordinateReader;
 
     private static final Logger log = LoggerFactory.getLogger(SsnLocationUpdater.class);
 
     public SsnLocationUpdater(final SsnLocationRepository ssnLocationRepository,
-                              final SsnLocationClient ssnLocationReader,
+                              final SsnLocationClient ssnLocationClient,
                               final LocationCoordinateReader locationCoordinateReader) {
         this.ssnLocationRepository = ssnLocationRepository;
-        this.ssnLocationReader = ssnLocationReader;
+        this.ssnLocationClient = ssnLocationClient;
         this.locationCoordinateReader = locationCoordinateReader;
     }
 
     @Transactional
     public void updateSsnLocations() {
         final List<SsnLocation> oldLocations = ssnLocationRepository.findAll();
-        final List<SsnLocation> newLocations = ssnLocationReader.getSsnLocations();
+        final List<SsnLocation> newLocations = ssnLocationClient.getSsnLocations();
 
         if(mergeLocations(oldLocations, newLocations)) {
             updateCoordinates(oldLocations);

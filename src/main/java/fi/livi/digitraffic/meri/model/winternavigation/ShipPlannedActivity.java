@@ -1,13 +1,14 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
+
+import org.hibernate.annotations.DynamicUpdate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @DynamicUpdate
@@ -41,11 +42,11 @@ public class ShipPlannedActivity {
 
     private String planComment;
 
-    private ZonedDateTime planTimestamp;
+    private Instant planTimestamp;
 
-    private ZonedDateTime planTimestampRealized;
+    private Instant planTimestampRealized;
 
-    private ZonedDateTime planTimestampCanceled;
+    private Instant planTimestampCanceled;
 
     public Long getId() {
         return id;
@@ -131,27 +132,27 @@ public class ShipPlannedActivity {
         this.planComment = planComment;
     }
 
-    public ZonedDateTime getPlanTimestamp() {
+    public Instant getPlanTimestamp() {
         return planTimestamp;
     }
 
-    public void setPlanTimestamp(final ZonedDateTime planTimestamp) {
+    public void setPlanTimestamp(final Instant planTimestamp) {
         this.planTimestamp = planTimestamp;
     }
 
-    public ZonedDateTime getPlanTimestampRealized() {
+    public Instant getPlanTimestampRealized() {
         return planTimestampRealized;
     }
 
-    public void setPlanTimestampRealized(final ZonedDateTime planTimestampRealized) {
+    public void setPlanTimestampRealized(final Instant planTimestampRealized) {
         this.planTimestampRealized = planTimestampRealized;
     }
 
-    public ZonedDateTime getPlanTimestampCanceled() {
+    public Instant getPlanTimestampCanceled() {
         return planTimestampCanceled;
     }
 
-    public void setPlanTimestampCanceled(final ZonedDateTime planTimestampCanceled) {
+    public void setPlanTimestampCanceled(final Instant planTimestampCanceled) {
         this.planTimestampCanceled = planTimestampCanceled;
     }
 }

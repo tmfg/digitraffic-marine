@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +18,13 @@ public class WinterNavigationDirway extends ReadOnlyCreatedAndModifiedFields {
     @Id
     private String name;
 
-    private ZonedDateTime issueTime;
+    private Instant issueTime;
 
     private String issuerCode;
 
     private String issuerName;
 
-    private ZonedDateTime validUntil;
+    private Instant validUntil;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "winterNavigationDirwayPointPK.dirwayName", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy(value = "winterNavigationDirwayPointPK.orderNumber")
@@ -38,11 +38,11 @@ public class WinterNavigationDirway extends ReadOnlyCreatedAndModifiedFields {
         this.name = name;
     }
 
-    public ZonedDateTime getIssueTime() {
+    public Instant getIssueTime() {
         return issueTime;
     }
 
-    public void setIssueTime(final ZonedDateTime issueTime) {
+    public void setIssueTime(final Instant issueTime) {
         this.issueTime = issueTime;
     }
 
@@ -62,11 +62,11 @@ public class WinterNavigationDirway extends ReadOnlyCreatedAndModifiedFields {
         this.issuerName = issuerName;
     }
 
-    public ZonedDateTime getValidUntil() {
+    public Instant getValidUntil() {
         return validUntil;
     }
 
-    public void setValidUntil(final ZonedDateTime validUntil) {
+    public void setValidUntil(final Instant validUntil) {
         this.validUntil = validUntil;
     }
 

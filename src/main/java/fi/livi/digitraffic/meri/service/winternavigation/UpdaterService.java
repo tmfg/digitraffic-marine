@@ -1,12 +1,12 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
+import static fi.livi.digitraffic.common.util.TimeUtil.toInstant;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS_CHECK;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +133,7 @@ public class UpdaterService {
         final ShipState shipState = s.getShipState();
 
         if (ship.getShipState() != null) {
-            shipState.setTimestamp(ship.getShipState().getTimestamp().toGregorianCalendar().toZonedDateTime());
+            shipState.setTimestamp(toInstant(ship.getShipState().getTimestamp()));
             shipState.setLongitude(ship.getShipState().getLon().doubleValue());
             shipState.setLatitude(ship.getShipState().getLat().doubleValue());
             shipState.setPosPrintable(ship.getShipState().getPosPrintable());
@@ -147,9 +147,9 @@ public class UpdaterService {
             shipState.setAisState(findInteger(ship.getShipState().getAisState()));
             shipState.setAisStateText(ship.getShipState().getAisStateText());
             shipState.setAisDestination(ship.getShipState().getAisDestination());
-            shipState.setMovingSince(findZonedDateTime(ship.getShipState().getMovingSince()));
-            shipState.setStoppedSince(findZonedDateTime(ship.getShipState().getStoppedSince()));
-            shipState.setInactiveSince(findZonedDateTime(ship.getShipState().getInactiveSince()));
+            shipState.setMovingSince(toInstant(ship.getShipState().getMovingSince()));
+            shipState.setStoppedSince(toInstant(ship.getShipState().getStoppedSince()));
+            shipState.setInactiveSince(toInstant(ship.getShipState().getInactiveSince()));
         }
     }
 
@@ -160,14 +160,14 @@ public class UpdaterService {
         if (ship.getShipVoyage() != null) {
             shipVoyage.setInLocode(ship.getShipVoyage().getInLocode());
             shipVoyage.setInName(ship.getShipVoyage().getInName());
-            shipVoyage.setInAta(findZonedDateTime(ship.getShipVoyage().getInAta()));
-            shipVoyage.setInEtd(findZonedDateTime(ship.getShipVoyage().getInEtd()));
+            shipVoyage.setInAta(toInstant(ship.getShipVoyage().getInAta()));
+            shipVoyage.setInEtd(toInstant(ship.getShipVoyage().getInEtd()));
             shipVoyage.setFromLocode(ship.getShipVoyage().getFromLocode());
             shipVoyage.setFromName(ship.getShipVoyage().getFromName());
-            shipVoyage.setFromAtd(findZonedDateTime(ship.getShipVoyage().getFromAtd()));
+            shipVoyage.setFromAtd(toInstant(ship.getShipVoyage().getFromAtd()));
             shipVoyage.setDestLocode(ship.getShipVoyage().getDestLocode());
             shipVoyage.setDestName(ship.getShipVoyage().getDestName());
-            shipVoyage.setDestEta(findZonedDateTime(ship.getShipVoyage().getDestEta()));
+            shipVoyage.setDestEta(toInstant(ship.getShipVoyage().getDestEta()));
         }
         s.setShipVoyage(shipVoyage);
     }
@@ -186,12 +186,12 @@ public class UpdaterService {
             activity.setOrderNumber(orderNumber);
             activity.setActivityType(shipActivity.getActivityType());
             activity.setActivityText(shipActivity.getActivityText());
-            activity.setBeginTime(findZonedDateTime(shipActivity.getBegintime()));
-            activity.setEndTime(findZonedDateTime(shipActivity.getEndtime()));
+            activity.setBeginTime(toInstant(shipActivity.getBegintime()));
+            activity.setEndTime(toInstant(shipActivity.getEndtime()));
             activity.setActivityComment(shipActivity.getComment());
-            activity.setTimestampBegin(shipActivity.getTimestampBegin().toGregorianCalendar().toZonedDateTime());
-            activity.setTimestampEnd(findZonedDateTime(shipActivity.getTimestampEnd()));
-            activity.setTimestampCanceled(findZonedDateTime(shipActivity.getTimestampCanceled()));
+            activity.setTimestampBegin(toInstant(shipActivity.getTimestampBegin()));
+            activity.setTimestampEnd(toInstant(shipActivity.getTimestampEnd()));
+            activity.setTimestampCanceled(toInstant(shipActivity.getTimestampCanceled()));
             activity.setConvoyOrder(findInteger(shipActivity.getConvoyOrder()));
             activity.setOperatedVesselPK(shipActivity.getOperatedVesselPk());
             activity.setOperatedVesselName(shipActivity.getOperatedVesselName());
@@ -222,9 +222,9 @@ public class UpdaterService {
             activity.setOrdering(findInteger(plannedActivity.getOrdering()));
             activity.setPlannedVesselPK(plannedActivity.getPlannedVesselPk());
             activity.setPlanningVesselPK(plannedActivity.getPlanningVesselPk());
-            activity.setPlanTimestamp(findZonedDateTime(plannedActivity.getPlanTimestamp()));
-            activity.setPlanTimestampCanceled(findZonedDateTime(plannedActivity.getPlanTimestampCanceled()));
-            activity.setPlanTimestampRealized(findZonedDateTime(plannedActivity.getPlanTimestampRealized()));
+            activity.setPlanTimestamp(toInstant(plannedActivity.getPlanTimestamp()));
+            activity.setPlanTimestampCanceled(toInstant(plannedActivity.getPlanTimestampCanceled()));
+            activity.setPlanTimestampRealized(toInstant(plannedActivity.getPlanTimestampRealized()));
             s.getShipPlannedActivities().add(activity);
             orderNumber++;
         }
@@ -238,9 +238,6 @@ public class UpdaterService {
         return value == null ? null : value.intValue();
     }
 
-    static ZonedDateTime findZonedDateTime(final XMLGregorianCalendar cal) {
-        return cal == null ? null : cal.toGregorianCalendar().toZonedDateTime();
-    }
 
     static java.util.Date findDate(final XMLGregorianCalendar cal) {
         return cal == null ? null : java.util.Date.from(cal.toGregorianCalendar().toInstant());

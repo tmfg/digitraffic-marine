@@ -2,13 +2,15 @@ package fi.livi.digitraffic.meri.dao;
 
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.SSE_DATA;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.common.util.TimeUtil;
 import fi.livi.digitraffic.meri.AbstractDaemonTestBase;
+import fi.livi.digitraffic.test.util.AssertUtil;
 
 public class UpdatedTimestampRepositoryTest extends AbstractDaemonTestBase {
     @Autowired
@@ -17,13 +19,13 @@ public class UpdatedTimestampRepositoryTest extends AbstractDaemonTestBase {
     @Test
     @Transactional
     public void testUpdate() {
-        final ZonedDateTime aika = ZonedDateTime.now();
+        final Instant aika = Instant.now();
 
         updatedTimestampRepository.setUpdated(SSE_DATA, aika, "testi");
 
-        final ZonedDateTime response = updatedTimestampRepository.findLastUpdated(SSE_DATA);
+        final Instant response = updatedTimestampRepository.findLastUpdated(SSE_DATA);
 
         // might have different resolution
-        assertTimesEqual(aika.withNano(0), response.withNano(0));
+        AssertUtil.assertTimesEqual(TimeUtil.withoutMillis(aika), TimeUtil.withoutMillis(response));
     }
 }

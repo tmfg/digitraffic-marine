@@ -1,8 +1,6 @@
 package fi.livi.digitraffic.meri.service.sse;
 
 import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,14 +95,14 @@ public class SseLoggingListener {
     }
 
     protected static class StatusMessage extends Statistics {
-        private final ZonedDateTime timeStamp;
+        private final Instant timeStamp;
 
         public StatusMessage(final int messages, final int failures) {
             super(messages, failures);
-            this.timeStamp = Instant.now().atZone(ZoneOffset.UTC);
+            this.timeStamp = Instant.now();
         }
 
-        public ZonedDateTime getTimeStamp() {
+        public Instant getTimeStamp() {
             return timeStamp;
         }
     }

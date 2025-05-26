@@ -1,5 +1,6 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
+import static fi.livi.digitraffic.common.util.TimeUtil.toInstant;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS_CHECK;
 
@@ -88,7 +89,7 @@ public class WinterNavigationDirwayUpdater {
             .size(), updated.size(), deletedCount, stopWatch.getTime());
 
         updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS,
-                                              data.getDataValidTime().toGregorianCalendar().toZonedDateTime(),
+                                              data.getDataValidTime().toGregorianCalendar().toInstant(),
                                               getClass().getSimpleName());
 
         final Instant now = Instant.now();
@@ -128,8 +129,8 @@ public class WinterNavigationDirwayUpdater {
         d.setName(dirway.getName());
         d.setIssuerCode(dirway.getIssuerCode());
         d.setIssuerName(dirway.getIssuerName());
-        d.setIssueTime(UpdaterService.findZonedDateTime(dirway.getIssueTime()));
-        d.setValidUntil(UpdaterService.findZonedDateTime(dirway.getValidUntil()));
+        d.setIssueTime(toInstant(dirway.getIssueTime()));
+        d.setValidUntil(toInstant(dirway.getValidUntil()));
 
         updateDirwayPoints(d, dirway.getDirWayPoints());
     }

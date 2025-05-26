@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service.winternavigation;
 
+import static fi.livi.digitraffic.common.util.TimeUtil.toInstant;
+import static fi.livi.digitraffic.common.util.TimeUtil.toLocalDate;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS;
 import static fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS_CHECK;
 
@@ -159,10 +161,10 @@ public class WinterNavigationPortUpdater {
             pr.setCurrent(restriction.isIsCurrent());
             pr.setPortRestricted(restriction.isPortRestricted());
             pr.setPortClosed(restriction.isPortClosed());
-            pr.setIssueTime(UpdaterService.findZonedDateTime(restriction.getIssueTime()));
-            pr.setLastModified(UpdaterService.findZonedDateTime(restriction.getTimeStamp()));
-            pr.setValidFrom(UpdaterService.findDate(restriction.getValidFrom()));
-            pr.setValidUntil(UpdaterService.findDate(restriction.getValidUntil()));
+            pr.setIssueTime(toInstant(restriction.getIssueTime()));
+            pr.setLastModified(toInstant(restriction.getTimeStamp()));
+            pr.setValidFrom(toLocalDate(restriction.getValidFrom()));
+            pr.setValidUntil(toLocalDate(restriction.getValidUntil()));
             pr.setRawText(restriction.getRawText());
             pr.setFormattedText(restriction.getFormattedText());
             p.getPortRestrictions().add(pr);

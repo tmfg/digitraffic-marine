@@ -1,6 +1,5 @@
 package fi.livi.digitraffic.meri.model.portnet.vesseldetails;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.DynamicUpdate;

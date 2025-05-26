@@ -28,6 +28,12 @@ public final class TypeUtil {
         return tc == null ? null : tc.value();
     }
 
+    /**
+     * Use LocalDate instead of TimeStamp
+     * @param cal
+     * @return
+     */
+    @Deprecated(forRemoval = true)
     public static Timestamp getTimestamp(final XMLGregorianCalendar cal) {
         return cal == null ? null : new Timestamp(cal.toGregorianCalendar().getTimeInMillis());
     }

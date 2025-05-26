@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dto.winternavigation.v1;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "GeoJSON FeatureCollection object")
 public class WinterNavigationShipFeatureCollectionV1 extends RootDataObjectDto<WinterNavigationShipFeatureV1> {
 
-    public WinterNavigationShipFeatureCollectionV1(final ZonedDateTime dataLastUpdated, final List<WinterNavigationShipFeatureV1> features) {
+    public WinterNavigationShipFeatureCollectionV1(final Instant dataLastUpdated, final List<WinterNavigationShipFeatureV1> features) {
         super(dataLastUpdated, features);
     }
 }

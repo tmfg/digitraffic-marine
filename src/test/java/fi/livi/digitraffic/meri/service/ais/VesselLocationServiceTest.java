@@ -3,7 +3,7 @@ package fi.livi.digitraffic.meri.service.ais;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class VesselLocationServiceTest extends AbstractWebTestBase {
     @Autowired
     private VesselLocationService vesselLocationService;
 
-    private static final long now = ZonedDateTime.now().toEpochSecond();
+    private static final long now = Instant.now().getEpochSecond();
 
     private static final int MMSItoBeFound = 666;
     private static final int MMSI = 696;

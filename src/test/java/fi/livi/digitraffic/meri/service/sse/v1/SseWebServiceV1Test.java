@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +32,7 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
 
     private static final Logger log = LoggerFactory.getLogger(SseWebServiceV1Test.class);
 
-    @SpyBean
+    @MockitoSpyBean
     private SseWebServiceV1 sseWebServiceV1;
 
     @Autowired
@@ -52,7 +51,7 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
 
         // First update
         saveNewTlscReports("example-sse-report1.json");
-        SseFeatureCollectionV1 latestFirst = sseWebServiceV1.findMeasurements(null);
+        final SseFeatureCollectionV1 latestFirst = sseWebServiceV1.findMeasurements(null);
         log.info("{}", latestFirst);
 
         assertEquals(2, latestFirst.getFeatures().size());
@@ -60,7 +59,7 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
 
         // Second update
         saveNewTlscReports("example-sse-report2.json");
-        SseFeatureCollectionV1 latestSecond = sseWebServiceV1.findMeasurements(null);
+        final SseFeatureCollectionV1 latestSecond = sseWebServiceV1.findMeasurements(null);
 
         assertEquals(2, latestSecond.getFeatures().size());
         assertEquals("Hattukari", latestSecond.getFeatures().get(0).getProperties().getSiteName());
@@ -140,7 +139,7 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
 
         // Should include all of site 20243 and none of site 20169
         final List<SseFeatureV1> history =
-            sseWebServiceV1.findHistory(null, ZonedDateTime.parse(SITE_20243_1).toInstant(), ZonedDateTime.parse(SITE_20243_3).toInstant()).getFeatures();
+            sseWebServiceV1.findHistory(null, Instant.parse(SITE_20243_1), Instant.parse(SITE_20243_3)).getFeatures();
 
         assertEquals(3, history.size());
         assertSiteNumber(20243, 0, history);
@@ -159,8 +158,8 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
 
         // Should include second of site 20169 and first of 20243
         final List<SseFeatureV1> history =
-            sseWebServiceV1.findHistory(null, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
-                ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
+            sseWebServiceV1.findHistory(null, Instant.parse(SITE_20169_1).plusSeconds(1),
+                Instant.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
         assertEquals(2, history.size());
 
         assertSiteNumber(20169, 0, history);
@@ -177,8 +176,8 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
 
         // Time span should include all but query filtered with site 20243 -> all of it's
         final List<SseFeatureV1> history =
-            sseWebServiceV1.findHistory(20243, ZonedDateTime.parse(SITE_20169_1).toInstant(),
-                ZonedDateTime.parse(SITE_20243_3).toInstant()).getFeatures();
+            sseWebServiceV1.findHistory(20243, Instant.parse(SITE_20169_1),
+                Instant.parse(SITE_20243_3)).getFeatures();
 
         assertEquals(3, history.size());
         assertSiteNumber(20243, 0, history);
@@ -197,8 +196,8 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
 
         // Should include second of site 20169
         final List<SseFeatureV1> history =
-            sseWebServiceV1.findHistory(20169, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
-                ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
+            sseWebServiceV1.findHistory(20169, Instant.parse(SITE_20169_1).plusSeconds(1),
+                Instant.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
         assertEquals(1, history.size());
 
         assertSiteNumber(20169, 0, history);
@@ -229,8 +228,8 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
         saveNewTlscReports("example-sse-report2.json");
 
         // Should throw IllegalArgumentException as site 12345 not exists
-        final List<SseFeatureV1> history =  sseWebServiceV1.findHistory(12345, ZonedDateTime.parse(SITE_20169_1).plusSeconds(1).toInstant(),
-                ZonedDateTime.parse(SITE_20243_2).minusSeconds(1).toInstant()).getFeatures();
+        final List<SseFeatureV1> history =  sseWebServiceV1.findHistory(12345, Instant.parse(SITE_20169_1).plusSeconds(1),
+                Instant.parse(SITE_20243_2).minusSeconds(1)).getFeatures();
 
         assertEquals(0, history.size());
     }
@@ -238,15 +237,15 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
         assertEquals(expected, history.get(historyIndex).getSiteNumber());
     }
 
-    private void assertLastUpdate(final String expectedTime, int historyIndex, final List<SseFeatureV1> history) {
-        assertEquals(ZonedDateTime.parse(expectedTime).toInstant(), history.get(historyIndex).getProperties().getLastUpdate());
+    private void assertLastUpdate(final String expectedTime, final int historyIndex, final List<SseFeatureV1> history) {
+        assertEquals(Instant.parse(expectedTime), history.get(historyIndex).getProperties().getLastUpdate());
     }
 
     private void saveNewTlscReports(final String file) throws IOException {
         final String postJson = readFile("sse/" + file);
         final ObjectReader genericJsonReader = objectMapper.reader();
         final JsonNode json = genericJsonReader.readTree(postJson);
-        List<SseReport> sseReports = convertToSseReports(json);
+        final List<SseReport> sseReports = convertToSseReports(json);
         sseReports.forEach(sseReport -> {
             sseReportRepository.markSiteLatestReportAsNotLatest(sseReport.getSiteNumber());
             sseReportRepository.save(sseReport);
@@ -254,7 +253,7 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
     }
 
     private List<SseReport> convertToSseReports(final JsonNode json) {
-        List<SseReport> sseReports = new ArrayList<>();
+        final List<SseReport> sseReports = new ArrayList<>();
         final JsonNode sseReportsNode = json.get("SSE_Reports");
         for(int i = 0; i < sseReportsNode.size(); i++) {
             final JsonNode reportNode = sseReportsNode.get(i);
@@ -274,7 +273,7 @@ public class SseWebServiceV1Test extends AbstractWebTestBase {
             site.get("SiteNumber").asInt(),
             site.get("SiteName").asText(),
             SsePropertiesV1.SiteType.fromValue(site.get("SiteType").asText()),
-            ZonedDateTime.parse(sseFields.get("Last_Update").asText()).toInstant(),
+            Instant.parse(sseFields.get("Last_Update").asText()),
             SsePropertiesV1.SeaState.fromValue(sseFields.get("SeaState").asText()),
             SsePropertiesV1.Trend.fromValue(sseFields.get("Trend").asText()),
             sseFields.get("WindWaveDir").asInt(),

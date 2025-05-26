@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dto.winternavigation.v1;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -33,17 +33,17 @@ public class WinterNavigationShipPlannedActivityV1 {
     public final String planComment;
 
     @Schema(description = "When the plan was made or changed")
-    public final ZonedDateTime planTimestamp;
+    public final Instant planTimestamp;
 
     @Schema(description = "When the plan was actualized (only available when retrieving past, historical events)")
-    public final ZonedDateTime planTimestampRealized;
+    public final Instant planTimestampRealized;
 
     @Schema(description = "If canceled, when")
-    public final ZonedDateTime planTimestampCanceled;
+    public final Instant planTimestampCanceled;
 
     public WinterNavigationShipPlannedActivityV1(final String activityType, final String activityText, final String plannedVesselPK, final String planningVesselPK, final Integer ordering,
-                                                 final String plannedWhen, final String plannedWhere, final String planComment, final ZonedDateTime planTimestamp,
-                                                 final ZonedDateTime planTimestampRealized, final ZonedDateTime planTimestampCanceled) {
+                                                 final String plannedWhen, final String plannedWhere, final String planComment, final Instant planTimestamp,
+                                                 final Instant planTimestampRealized, final Instant planTimestampCanceled) {
         this.activityType = activityType;
         this.activityText = activityText;
         this.plannedVesselPK = plannedVesselPK;

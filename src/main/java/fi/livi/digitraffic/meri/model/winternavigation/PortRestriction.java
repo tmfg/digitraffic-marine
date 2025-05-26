@@ -1,7 +1,7 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.time.ZonedDateTime;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -15,7 +15,9 @@ import jakarta.persistence.SequenceGenerator;
 public class PortRestriction {
 
     @Id
-    @SequenceGenerator(name = "SEQ_PORT_RESTRICTION", sequenceName = "SEQ_PORT_RESTRICTION", allocationSize = 1)
+    @SequenceGenerator(name = "SEQ_PORT_RESTRICTION",
+                       sequenceName = "SEQ_PORT_RESTRICTION",
+                       allocationSize = 1)
     @GeneratedValue(generator = "SEQ_PORT_RESTRICTION")
     private Long id;
 
@@ -29,13 +31,13 @@ public class PortRestriction {
 
     private Boolean portClosed;
 
-    private ZonedDateTime issueTime;
+    private Instant issueTime;
 
-    private ZonedDateTime lastModified;
+    private Instant lastModified;
 
-    private Date validFrom;
+    private LocalDate validFrom;
 
-    private Date validUntil;
+    private LocalDate validUntil;
 
     private String rawText;
 
@@ -85,35 +87,35 @@ public class PortRestriction {
         this.portClosed = portClosed;
     }
 
-    public ZonedDateTime getIssueTime() {
+    public Instant getIssueTime() {
         return issueTime;
     }
 
-    public void setIssueTime(final ZonedDateTime issueTime) {
+    public void setIssueTime(final Instant issueTime) {
         this.issueTime = issueTime;
     }
 
-    public ZonedDateTime getLastModified() {
+    public Instant getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(final ZonedDateTime lastModified) {
+    public void setLastModified(final Instant lastModified) {
         this.lastModified = lastModified;
     }
 
-    public Date getValidFrom() {
+    public LocalDate getValidFrom() {
         return validFrom;
     }
 
-    public void setValidFrom(final Date validFrom) {
+    public void setValidFrom(final LocalDate validFrom) {
         this.validFrom = validFrom;
     }
 
-    public Date getValidUntil() {
+    public LocalDate getValidUntil() {
         return validUntil;
     }
 
-    public void setValidUntil(final Date validUntil) {
+    public void setValidUntil(final LocalDate validUntil) {
         this.validUntil = validUntil;
     }
 

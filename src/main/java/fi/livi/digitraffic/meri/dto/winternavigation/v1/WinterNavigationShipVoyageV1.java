@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dto.winternavigation.v1;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -13,7 +13,7 @@ public class WinterNavigationShipVoyageV1 {
     public final String fromName;
 
     @Schema(description = "Actual Time of Departure, if known")
-    public final ZonedDateTime fromAtd;
+    public final Instant fromAtd;
 
     @Schema(description = "UN locode of the current port, if the ship is in harbour")
     public final String inLocode;
@@ -22,10 +22,10 @@ public class WinterNavigationShipVoyageV1 {
     public final String inName;
 
     @Schema(description = "Actual Time of Arrival to current port, if known")
-    public final ZonedDateTime inAta;
+    public final Instant inAta;
 
     @Schema(description = "Estimated Time of Departure to next destination, if known; note that may be confidential")
-    public final ZonedDateTime inEtd;
+    public final Instant inEtd;
 
     @Schema(description = "UN locode of the destination port, if known")
     public final String destLocode;
@@ -34,10 +34,10 @@ public class WinterNavigationShipVoyageV1 {
     public final String destName;
 
     @Schema(description = "Estimated Time of Arrival to destination, if known; note that may be confidential")
-    public final ZonedDateTime destEta;
+    public final Instant destEta;
 
-    public WinterNavigationShipVoyageV1(final String fromLocode, final String fromName, final ZonedDateTime fromAtd, final String inLocode, final String inName, final ZonedDateTime inAta, final ZonedDateTime inEtd,
-                                        final String destLocode, final String destName, final ZonedDateTime destEta) {
+    public WinterNavigationShipVoyageV1(final String fromLocode, final String fromName, final Instant fromAtd, final String inLocode, final String inName, final Instant inAta, final Instant inEtd,
+                                        final String destLocode, final String destName, final Instant destEta) {
         this.fromLocode = fromLocode;
         this.fromName = fromName;
         this.fromAtd = fromAtd;

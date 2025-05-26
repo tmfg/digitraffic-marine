@@ -1,10 +1,9 @@
 package fi.livi.digitraffic.meri.model.winternavigation;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -23,7 +22,7 @@ public class ShipState {
     @MapsId
     private WinterNavigationShip winterNavigationShip;
 
-    private ZonedDateTime timestamp;
+    private Instant timestamp;
 
     private Double longitude;
 
@@ -51,17 +50,17 @@ public class ShipState {
 
     private String aisDestination;
 
-    private ZonedDateTime movingSince;
+    private Instant movingSince;
 
-    private ZonedDateTime stoppedSince;
+    private Instant stoppedSince;
 
-    private ZonedDateTime inactiveSince;
+    private Instant inactiveSince;
 
-    public ZonedDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(final ZonedDateTime timestamp) {
+    public void setTimestamp(final Instant timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -169,27 +168,27 @@ public class ShipState {
         this.aisDestination = aisDestination;
     }
 
-    public ZonedDateTime getMovingSince() {
+    public Instant getMovingSince() {
         return movingSince;
     }
 
-    public void setMovingSince(final ZonedDateTime movingSince) {
+    public void setMovingSince(final Instant movingSince) {
         this.movingSince = movingSince;
     }
 
-    public ZonedDateTime getStoppedSince() {
+    public Instant getStoppedSince() {
         return stoppedSince;
     }
 
-    public void setStoppedSince(final ZonedDateTime stoppedSince) {
+    public void setStoppedSince(final Instant stoppedSince) {
         this.stoppedSince = stoppedSince;
     }
 
-    public ZonedDateTime getInactiveSince() {
+    public Instant getInactiveSince() {
         return inactiveSince;
     }
 
-    public void setInactiveSince(final ZonedDateTime inactiveSince) {
+    public void setInactiveSince(final Instant inactiveSince) {
         this.inactiveSince = inactiveSince;
     }
 

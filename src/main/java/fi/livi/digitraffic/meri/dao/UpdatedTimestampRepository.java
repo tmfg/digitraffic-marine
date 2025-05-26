@@ -1,9 +1,6 @@
 package fi.livi.digitraffic.meri.dao;
 
-import static java.time.ZoneOffset.UTC;
-
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -69,22 +66,14 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         setUpdated(name.name(), time, by);
     }
 
-    default void setUpdated(final UpdatedName name,
-                            final ZonedDateTime time,
-                            final String by) {
-        setUpdated(name.name(), time.toInstant(), by);
-    }
-
     @Query(value = "select updated_time from updated_timestamp where updated_name = :name", nativeQuery = true)
     Instant findLastUpdatedInstant(final String name);
 
     @Query(value = "select updated_time from updated_timestamp where updated_name = :#{#updatedName.name()}", nativeQuery = true)
     Instant findLastUpdatedInstant(final UpdatedName updatedName);
 
-    default ZonedDateTime findLastUpdated(final UpdatedName name) {
-        final Instant i = findLastUpdatedInstant(name.name());
-
-        return i == null ? null : i.atZone(UTC);
+    default Instant findLastUpdated(final UpdatedName name) {
+        return findLastUpdatedInstant(name.name());
     }
 
     @Query(value =
