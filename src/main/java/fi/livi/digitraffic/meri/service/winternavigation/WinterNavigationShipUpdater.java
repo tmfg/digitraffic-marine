@@ -32,8 +32,8 @@ public class WinterNavigationShipUpdater {
      * 2. Insert / update database
      */
     @NotTransactionalServiceMethod
-    // Get varies between 2–150s and update to db 2–10 s so total time is 4–120s
-    @PerformanceMonitor(maxWarnExcecutionTime = 70000, maxErrorExcecutionTime = 160000)
+    // Get varies between 2–190s and update to db 2–10 s so total time is 4–200s
+    @PerformanceMonitor(maxWarnExcecutionTime = 100000, maxErrorExcecutionTime = 200000)
     public void updateWinterNavigationShips() {
         final WinterShips data;
 

@@ -58,60 +58,75 @@ public class WinterNavigationPortUpdater {
     @Transactional
     public int updateWinterNavigationPorts() {
         final Ports data;
-
+        final StopWatch stopWatchGet = StopWatch.createStarted();
+        final StopWatch stopWatchUpdate = StopWatch.create();
         try {
-            data = winterNavigationClient.getWinterNavigationPorts();
-        } catch (final Exception e) {
-            SoapFaultLogger.logException(log, e, "updateWinterNavigationPorts");
+            try {
+                data = winterNavigationClient.getWinterNavigationPorts();
+            } catch (final Exception e) {
+                SoapFaultLogger.logException(log, e, "updateWinterNavigationPorts");
+                return -1;
+            } finally {
+                stopWatchGet.stop();
+            }
 
-            return -1;
+            stopWatchUpdate.start();
+            final Map<Boolean, List<Port>> ports =
+                data.getPort().stream()
+                    .collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.getPortInfo().getLocode())));
+
+            final List<Port> portsWithoutLocode = ports.get(false);
+            final List<Port> portsWithLocode = ports.get(true);
+
+            if (!portsWithoutLocode.isEmpty()) {
+                log.warn(
+                    "method=updateWinterNavigationPorts Received invalidPortCount={} with missing locode. PortIds={}",
+                    portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.getPortInfo().getPortId())
+                        .collect(Collectors.joining(", ")));
+            }
+
+            // Make all ports obsolete before update
+            final List<String> locodes =
+                portsWithLocode.stream().map(p -> p.getPortInfo().getLocode()).collect(Collectors.toList());
+            if (!locodes.isEmpty()) {
+                winterNavigationRepository.setRemovedPortsObsolete(locodes);
+            }
+
+            final List<WinterNavigationPort> added = new ArrayList<>();
+            final List<WinterNavigationPort> updated = new ArrayList<>();
+
+            portsWithLocode.forEach(p -> update(p, added, updated));
+
+            winterNavigationRepository.saveAll(added);
+            stopWatchUpdate.stop();
+
+            log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
+                data.getPort().size(), added.size(), updated.size(), stopWatchUpdate.getDuration().toMillis());
+
+            final Instant now = Instant.now();
+            if (!added.isEmpty() || !updated.isEmpty()) {
+                updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS, now, getClass().getSimpleName());
+            }
+            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS_CHECK, now, getClass().getSimpleName());
+
+            return added.size() + updated.size();
+        } finally {
+            log.info("method=updateWinterNavigationPorts summary getTookMs={}  updateTookMs={} tookMs={}",
+                stopWatchGet.getDuration().toMillis(), stopWatchUpdate.getDuration().toMillis(),
+                stopWatchGet.getDuration().toMillis() + stopWatchUpdate.getDuration().toMillis());
         }
-
-        final Map<Boolean, List<Port>> ports =
-            data.getPort().stream().collect(Collectors.partitioningBy(p -> !StringUtils.isEmpty(p.getPortInfo().getLocode())));
-
-        final List<Port> portsWithoutLocode = ports.get(false);
-        final List<Port> portsWithLocode = ports.get(true);
-
-        if (!portsWithoutLocode.isEmpty()) {
-            log.warn("method=updateWinterNavigationPorts Received invalidPortCount={} with missing locode. PortIds={}",
-                portsWithoutLocode.size(), portsWithoutLocode.stream().map(p -> p.getPortInfo().getPortId()).collect(Collectors.joining(", ")));
-        }
-
-        // Make all ports obsolete before update
-        final List<String> locodes = portsWithLocode.stream().map(p -> p.getPortInfo().getLocode()).collect(Collectors.toList());
-        if (!locodes.isEmpty()) {
-            winterNavigationRepository.setRemovedPortsObsolete(locodes);
-        }
-
-        final List<WinterNavigationPort> added = new ArrayList<>();
-        final List<WinterNavigationPort> updated = new ArrayList<>();
-
-        final StopWatch stopWatch = StopWatch.createStarted();
-        portsWithLocode.forEach(p -> update(p, added, updated));
-
-        winterNavigationRepository.saveAll(added);
-        stopWatch.stop();
-
-        log.info("method=updateWinterNavigationPorts receivedPorts={} addedPorts={} , updatedPorts={} , tookMs={}",
-            data.getPort().size(), added.size(), updated.size(), stopWatch.getTime());
-
-        final Instant now = Instant.now();
-        if (!added.isEmpty() || !updated.isEmpty()) {
-            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS, now, getClass().getSimpleName());
-        }
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_PORTS_CHECK, now, getClass().getSimpleName());
-
-        return added.size() + updated.size();
     }
 
-    private void update(final Port port, final List<WinterNavigationPort> added, final List<WinterNavigationPort> updated) {
+    private void update(final Port port, final List<WinterNavigationPort> added,
+                        final List<WinterNavigationPort> updated) {
         // filter out ports with invalid LOCODEs
         if (port.getPortInfo().getLocode().length() > 7) {
-            log.warn("method=updateWinterNavigationPorts received invalid (reason: over 7 characters) LOCODE: {}", port.getPortInfo().getLocode());
+            log.warn("method=updateWinterNavigationPorts received invalid (reason: over 7 characters) LOCODE: {}",
+                port.getPortInfo().getLocode());
             return;
         }
-        final WinterNavigationPort old = winterNavigationRepository.findById(port.getPortInfo().getLocode()).orElse(null);
+        final WinterNavigationPort old =
+            winterNavigationRepository.findById(port.getPortInfo().getLocode()).orElse(null);
 
         if (old == null) {
             added.add(addNew(port));
