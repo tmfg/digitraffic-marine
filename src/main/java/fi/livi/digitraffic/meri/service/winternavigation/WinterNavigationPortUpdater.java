@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.common.annotation.PerformanceMonitor;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationPortRepository;
 import fi.livi.digitraffic.meri.model.winternavigation.PortRestriction;
@@ -55,6 +56,8 @@ public class WinterNavigationPortUpdater {
      *
      * @return total number of added or updated ports
      */
+    // Get varies between 2–125s and update to db 0–10 s so total time is 2–200s
+    @PerformanceMonitor(maxWarnExcecutionTime = 100000, maxErrorExcecutionTime = 150000)
     @Transactional
     public int updateWinterNavigationPorts() {
         final Ports data;

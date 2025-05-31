@@ -43,6 +43,8 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         setMessageSender(sender);
     }
 
+    // Get varies between 2–125s
+    @PerformanceMonitor(maxWarnExcecutionTime = 90000, maxErrorExcecutionTime = 150000)
     @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public Ports getWinterNavigationPorts() {
@@ -65,6 +67,8 @@ public class WinterNavigationClient extends WebServiceGatewaySupport {
         return winterShipsResponseTypeJAXBElement.getValue().getWinterShips();
     }
 
+    // Get varies between 2–120s
+    @PerformanceMonitor(maxWarnExcecutionTime = 90000, maxErrorExcecutionTime = 150000)
     @NotTransactionalServiceMethod
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public DirWaysType getWinterNavigationWaypoints() {

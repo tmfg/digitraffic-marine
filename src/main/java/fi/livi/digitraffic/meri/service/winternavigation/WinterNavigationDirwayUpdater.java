@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebAppli
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.livi.digitraffic.common.annotation.PerformanceMonitor;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayPointRepository;
 import fi.livi.digitraffic.meri.dao.winternavigation.WinterNavigationDirwayRepository;
@@ -54,51 +55,62 @@ public class WinterNavigationDirwayUpdater {
      * 2. Insert / update database
      * @return total number of added or updated dirways
      */
+    // Get varies between 2–120s and update to db 0–10 s so total time is 2–130s
+    @PerformanceMonitor(maxWarnExcecutionTime = 100000, maxErrorExcecutionTime = 150000)
     @Transactional
     public int updateWinterNavigationDirways() {
         final DirWaysType data;
-
+        final StopWatch stopWatchGet = StopWatch.createStarted();
+        final StopWatch stopWatchUpdate = StopWatch.create();
         try {
-            data = winterNavigationClient.getWinterNavigationWaypoints();
-        } catch(final Exception e) {
-            SoapFaultLogger.logException(log, e, "updateWinterNavigationDirways");
+            try {
+                data = winterNavigationClient.getWinterNavigationWaypoints();
+            } catch(final Exception e) {
+                SoapFaultLogger.logException(log, e, "updateWinterNavigationDirways");
 
-            return -1;
+                return -1;
+            } finally {
+                stopWatchGet.stop();
+            }
+
+            stopWatchUpdate.start();
+            final List<String> names = data.getDirWay().stream().map(DirWayType::getName).collect(Collectors.toList());
+            final long deletedCount;
+
+            if(names.isEmpty()) {
+                deletedCount = winterNavigationDirwayPointRepository.count();
+                winterNavigationDirwayRepository.deleteAll();
+            } else {
+                winterNavigationDirwayPointRepository.deleteAllNotIn(names);
+                deletedCount = winterNavigationDirwayRepository.deleteAllNotIn(names);
+            }
+
+            final List<WinterNavigationDirway> added = new ArrayList<>();
+            final List<WinterNavigationDirway> updated = new ArrayList<>();
+
+            data.getDirWay().forEach(dirway -> update(dirway, added, updated));
+            winterNavigationDirwayRepository.saveAll(added);
+
+            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS,
+                                                  data.getDataValidTime().toGregorianCalendar().toInstant(),
+                                                  getClass().getSimpleName());
+
+            final Instant now = Instant.now();
+            if (!added.isEmpty() || !updated.isEmpty()) {
+                updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS, now, getClass().getSimpleName());
+            }
+            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS_CHECK, now, getClass().getSimpleName());
+            stopWatchUpdate.stop();
+
+            log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , deletedDirways={} , tookMs={}", added
+                .size(), updated.size(), deletedCount, stopWatchUpdate.getDuration().toMillis());
+
+            return added.size() + updated.size();
+        } finally {
+            log.info("method=updateWinterNavigationDirways summary getTookMs={}  updateTookMs={} tookMs={}",
+                stopWatchGet.getDuration().toMillis(), stopWatchUpdate.getDuration().toMillis(),
+                stopWatchGet.getDuration().toMillis() + stopWatchUpdate.getDuration().toMillis());
         }
-
-        final List<String> names = data.getDirWay().stream().map(DirWayType::getName).collect(Collectors.toList());
-        final long deletedCount;
-
-        if(names.isEmpty()) {
-            deletedCount = winterNavigationDirwayPointRepository.count();
-            winterNavigationDirwayRepository.deleteAll();
-        } else {
-            winterNavigationDirwayPointRepository.deleteAllNotIn(names);
-            deletedCount = winterNavigationDirwayRepository.deleteAllNotIn(names);
-        }
-
-        final List<WinterNavigationDirway> added = new ArrayList<>();
-        final List<WinterNavigationDirway> updated = new ArrayList<>();
-
-        final StopWatch stopWatch = StopWatch.createStarted();
-        data.getDirWay().forEach(dirway -> update(dirway, added, updated));
-        winterNavigationDirwayRepository.saveAll(added);
-        stopWatch.stop();
-
-        log.info("method=updateWinterNavigationDirways addedDirways={} , updatedDirways={} , deletedDirways={} , tookMs={}", added
-            .size(), updated.size(), deletedCount, stopWatch.getTime());
-
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS,
-                                              data.getDataValidTime().toGregorianCalendar().toInstant(),
-                                              getClass().getSimpleName());
-
-        final Instant now = Instant.now();
-        if (!added.isEmpty() || !updated.isEmpty()) {
-            updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS, now, getClass().getSimpleName());
-        }
-        updatedTimestampRepository.setUpdated(WINTER_NAVIGATION_DIRWAYS_CHECK, now, getClass().getSimpleName());
-
-        return added.size() + updated.size();
     }
 
     private void update(final DirWayType dirway, final List<WinterNavigationDirway> added, final List<WinterNavigationDirway> updated) {
