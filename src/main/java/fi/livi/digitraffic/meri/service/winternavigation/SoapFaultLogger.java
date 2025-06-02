@@ -10,7 +10,7 @@ public final class SoapFaultLogger {
         if(e instanceof SoapFaultClientException) {
             logger.error("method={} failed, soapfault={}", methodName, getSoapFaultAsString((SoapFaultClientException) e));
         } else {
-            logger.error(StringUtil.format("method={} failed, exception from soap", methodName), e);
+            logger.error(StringUtil.format("method={} failed, exception from soap {}", methodName, e.getMessage()), e);
         }
     }
 
