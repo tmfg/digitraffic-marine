@@ -65,10 +65,17 @@ Or without Maven
 
 ### Misc commands
 
-Check for Maven dependency updates
+#### Check for Maven dependency updates
 
     $ mvn versions:display-dependency-updates
 
-### GitFlow
+#### Run dependency check
 
-See http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/
+    mvn -Pdepcheck
+
+Report can be found at  [target/dependency-check-report.html](target/dependency-check-report.html)
+
+Oneliner to run dependency check and open the report in default browser (MacOS):
+
+    mvn -Pdepcheck; open target/dependency-check-report.html
+
