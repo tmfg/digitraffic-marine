@@ -17,8 +17,6 @@ dt.pooki.url = http://localhost:18080/test/nautical-warnings
 dt.portnet.portcall.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/satamakaynti/v1.0
 dt.portnet.vesselDetails.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/alustiedot/v1.0
 
-winter.navigation.url=https://testioag.liikennevirasto.fi/ibnextmulti/baltice/services/IBNet_Baltice_Service/
-
 # Job schedules in ms or by cron in UTC
 # Cron: http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html
 # To disable job, just comment it out.
@@ -30,9 +28,6 @@ dt.job.SseReportUpdateJobUpdateJob.schedule =     0/30 * * * * ?
 
 # Every 1 minute
 dt.job.PortCallUpdateJob.schedule =               0 * * * * ?
-dt.job.WinterNavigationDirwayUpdateJob.schedule = 0 * * * * ?
-dt.job.WinterNavigationShipUpdateJob.schedule =   0 * * * * ?
-dt.job.WinterNavigationPortUpdateJob.schedule =   0 * * * * ?
 
 # Every 30 minutes
 dt.job.VesselDetailsUpdateJob.schedule =          0 0/30 * * * ?

@@ -49,9 +49,6 @@ import fi.livi.digitraffic.meri.quartz.BerthUpdateJob;
 import fi.livi.digitraffic.meri.quartz.PortCallUpdateJob;
 import fi.livi.digitraffic.meri.quartz.SsnLocationUpdateJob;
 import fi.livi.digitraffic.meri.quartz.VesselDetailsUpdateJob;
-import fi.livi.digitraffic.meri.quartz.WinterNavigationDirwayUpdateJob;
-import fi.livi.digitraffic.meri.quartz.WinterNavigationPortUpdateJob;
-import fi.livi.digitraffic.meri.quartz.WinterNavigationShipUpdateJob;
 
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
@@ -175,21 +172,6 @@ public class QuartzSchedulerConfiguration {
     }
 
     @Bean
-    public JobDetailFactoryBean winterNavigationShipUpdateJobDetail() {
-        return createJobDetail(WinterNavigationShipUpdateJob.class);
-    }
-
-    @Bean
-    public JobDetailFactoryBean winterNavigationPortUpdateJobDetail() {
-        return createJobDetail(WinterNavigationPortUpdateJob.class);
-    }
-
-    @Bean
-    public JobDetailFactoryBean winterNavigationDirwayUpdateJobDetail() {
-        return createJobDetail(WinterNavigationDirwayUpdateJob.class);
-    }
-
-    @Bean
     public FactoryBean<? extends Trigger> portCallUpdateJobTrigger(final JobDetail portCallUpdateJobDetail) {
         return createTrigger(portCallUpdateJobDetail);
     }
@@ -207,21 +189,6 @@ public class QuartzSchedulerConfiguration {
     @Bean
     public FactoryBean<? extends Trigger> vesselDetailUpdateJobTrigger(final JobDetail vesselDetailsUpdateJobDetail) {
         return createTrigger(vesselDetailsUpdateJobDetail);
-    }
-
-    @Bean
-    public FactoryBean<? extends Trigger> winterNavigationShipUpdateJobTrigger(final JobDetail winterNavigationShipUpdateJobDetail) {
-        return createTrigger(winterNavigationShipUpdateJobDetail);
-    }
-
-    @Bean
-    public FactoryBean<? extends Trigger> winterNavigationPortUpdateJobTrigger(final JobDetail winterNavigationPortUpdateJobDetail) {
-        return createTrigger(winterNavigationPortUpdateJobDetail);
-    }
-
-    @Bean
-    public FactoryBean<? extends Trigger> winterNavigationDirwayUpdateJobTrigger(final JobDetail winterNavigationDirwayUpdateJobDetail) {
-        return createTrigger(winterNavigationDirwayUpdateJobDetail);
     }
 
     private static JobDetailFactoryBean createJobDetail(final Class<? extends Job> jobClass) {

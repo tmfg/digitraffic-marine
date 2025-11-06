@@ -3,6 +3,8 @@ package fi.livi.digitraffic.meri.controller.winternavigation;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.API_WINTER_NAVIGATION;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.WINTER_NAVIGATION_V1_TAG;
+import static fi.livi.digitraffic.meri.controller.ApiDeprecations.SUNSET_2025_11_30;
+import static fi.livi.digitraffic.meri.controller.ApiDeprecations.SUNSET_NOTE_2025_11_30;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_GEO_JSON;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fi.livi.digitraffic.common.annotation.Sunset;
 import fi.livi.digitraffic.meri.dto.winternavigation.v1.WinterNavigationDirwayFeatureCollectionV1;
 import fi.livi.digitraffic.meri.dto.winternavigation.v1.WinterNavigationPortFeatureCollectionV1;
 import fi.livi.digitraffic.meri.dto.winternavigation.v1.WinterNavigationPortFeatureV1;
@@ -30,11 +33,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = WINTER_NAVIGATION_V1_TAG, description = "Winter Navigation APIs")
+@Tag(name = WINTER_NAVIGATION_V1_TAG, description = "Winter Navigation APIs. " + SUNSET_NOTE_2025_11_30)
 @RestController
 @Validated
 @ConditionalOnWebApplication
+@Deprecated(forRemoval = true)
+@Sunset(date = SUNSET_2025_11_30)
 public class WinterNavigationControllerV1 {
+
+
+
     public static final String API_WINTER_NAVIGATION_V1 = API_WINTER_NAVIGATION + V1;
     public static final String PORTS = "/ports";
     public static final String VESSELS = "/vessels";
@@ -46,18 +54,22 @@ public class WinterNavigationControllerV1 {
         this.winterNavigationWebServiceV1 = winterNavigationWebServiceV1;
     }
 
-    @Operation(summary = "Return winter navigation ports")
+    @Deprecated(forRemoval = true)
+    @Sunset(date = SUNSET_2025_11_30)
+    @Operation(summary = "Return winter navigation ports. " + SUNSET_NOTE_2025_11_30)
     @GetMapping(path = API_WINTER_NAVIGATION_V1 + PORTS, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                       MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                       MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
-    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of winter navigation ports"),
+    @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of winter navigation ports. "),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
     public WinterNavigationPortFeatureCollectionV1 getWinterNavigationPorts() {
         return winterNavigationWebServiceV1.getWinterNavigationPorts();
     }
 
-    @Operation(summary = "Return winter navigation vessels")
+    @Deprecated(forRemoval = true)
+    @Sunset(date = SUNSET_2025_11_30)
+    @Operation(summary = "Return winter navigation vessels. " + SUNSET_NOTE_2025_11_30)
     @GetMapping(path = API_WINTER_NAVIGATION_V1 + VESSELS, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                         MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                         MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -68,7 +80,9 @@ public class WinterNavigationControllerV1 {
         return winterNavigationWebServiceV1.getWinterNavigationShips();
     }
 
-    @Operation(summary = "Return winter navigation dirways")
+    @Deprecated(forRemoval = true)
+    @Sunset(date = SUNSET_2025_11_30)
+    @Operation(summary = "Return winter navigation dirways. " + SUNSET_NOTE_2025_11_30)
     @GetMapping(path = API_WINTER_NAVIGATION_V1 + DIRWAYS, produces = { MEDIA_TYPE_APPLICATION_JSON,
                                                                           MEDIA_TYPE_APPLICATION_GEO_JSON,
                                                                           MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -79,7 +93,9 @@ public class WinterNavigationControllerV1 {
         return winterNavigationWebServiceV1.getWinterNavigationDirways();
     }
 
-    @Operation(summary = "Return winter navigation vessel")
+    @Deprecated(forRemoval = true)
+    @Sunset(date = SUNSET_2025_11_30)
+    @Operation(summary = "Return winter navigation vessel. " + SUNSET_NOTE_2025_11_30)
     @GetMapping(path = API_WINTER_NAVIGATION_V1 + VESSELS +"/{vesselId}", produces = { MEDIA_TYPE_APPLICATION_JSON,
         MEDIA_TYPE_APPLICATION_GEO_JSON,
         MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
@@ -93,7 +109,9 @@ public class WinterNavigationControllerV1 {
         return winterNavigationWebServiceV1.getWinterNavigationShipByVesselId(vesselId);
     }
 
-    @Operation(summary = "Return winter navigation port")
+    @Deprecated(forRemoval = true)
+    @Sunset(date = SUNSET_2025_11_30)
+    @Operation(summary = "Return winter navigation port. " + SUNSET_NOTE_2025_11_30)
     @GetMapping(path = API_WINTER_NAVIGATION_V1 + PORTS + "/{locode}", produces = { MEDIA_TYPE_APPLICATION_JSON,
         MEDIA_TYPE_APPLICATION_GEO_JSON,
         MEDIA_TYPE_APPLICATION_VND_GEO_JSON })
