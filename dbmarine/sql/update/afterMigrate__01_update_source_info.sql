@@ -10,9 +10,9 @@ VALUES
      ,('VESSEL_DETAIL', null, 'PT30M', 'PT5M')
      ,('VESSEL_LOCATION', null, 'PT0M', 'PT1M')
 
-    ,('WINTER_NAVIGATION_PORT', null, 'PT5M', 'PT1M')
-    ,('WINTER_NAVIGATION_VESSEL', null, 'PT5M', 'PT1M')
-    ,('WINTER_NAVIGATION_DIRWAY', null, 'PT15M', 'PT5M')
+    ,('WN_LOCATION', null, 'PT5M', 'PT5M')
+    ,('WN_VESSEL', null, 'PT5M', 'PT5M')
+    ,('WN_DIRWAY', null, 'PT5M', 'PT5M')
 
     ,('NAUTICAL_WARNING', null, 'PT10M', 'PT5M')
 

@@ -21,7 +21,6 @@ import fi.livi.digitraffic.meri.controller.ApiConstants;
 import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
 import fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1;
 import fi.livi.digitraffic.meri.controller.sse.SseControllerV1;
-import fi.livi.digitraffic.meri.controller.winternavigation.WinterNavigationControllerV1;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
@@ -52,7 +51,7 @@ public class DataStatusService {
                 getSseUpdateInfos().stream(),
                 getPortCallUpdateInfos().stream(),
                 getVesselsUpdateInfos().stream(),
-                getWinterNavigationPortsUpdateInfos().stream(),
+                getWinterNavigationUpdateInfos().stream(),
                 getNauticalWarningssUpdateInfos().stream(),
                 getBridgeLockisruptionUpdateInfos().stream(),
                 getAtonFaultUpdateInfos().stream()
@@ -126,26 +125,26 @@ public class DataStatusService {
         );
     }
 
-    private List<UpdateInfoDtoV1> getWinterNavigationPortsUpdateInfos() {
-        final DataSourceInfoDtoV1 portInfo = getDataSourceInfo(DataSource.WINTER_NAVIGATION_PORT);
-        final DataSourceInfoDtoV1 vesselInfo = getDataSourceInfo(DataSource.WINTER_NAVIGATION_VESSEL);
-        final DataSourceInfoDtoV1 dirwayInfo = getDataSourceInfo(DataSource.WINTER_NAVIGATION_DIRWAY);
+    private List<UpdateInfoDtoV1> getWinterNavigationUpdateInfos() {
+        final DataSourceInfoDtoV1 locationInfo = getDataSourceInfo(DataSource.WN_LOCATION);
+        final DataSourceInfoDtoV1 vesselInfo = getDataSourceInfo(DataSource.WN_VESSEL);
+        final DataSourceInfoDtoV1 dirwayInfo = getDataSourceInfo(DataSource.WN_DIRWAY);
 
         return Arrays.asList(
-            // /api/winter-navigation/v1/ports
-            new UpdateInfoDtoV1(WinterNavigationControllerV1.API_WINTER_NAVIGATION_V1 + WinterNavigationControllerV1.PORTS,
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS),
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_PORTS_CHECK),
-                                portInfo.getUpdateInterval(), portInfo.getRecommendedFetchInterval()),
-            // /api/winter-navigation/v1/vessels
-            new UpdateInfoDtoV1(WinterNavigationControllerV1.API_WINTER_NAVIGATION_V1 + WinterNavigationControllerV1.VESSELS,
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS),
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_VESSELS_CHECK),
+            // /api/winter-navigation/v2/locations
+            new UpdateInfoDtoV1(ApiConstants.API_WINTER_NAVIGATION_V2_LOCATIONS,
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_LOCATION),
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_LOCATION_CHECK),
+                                locationInfo.getUpdateInterval(), locationInfo.getRecommendedFetchInterval()),
+            // /api/winter-navigation/v2/vessels
+            new UpdateInfoDtoV1(ApiConstants.API_WINTER_NAVIGATION_V2_VESSELS,
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_VESSEL),
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_VESSEL_CHECK),
                                 vesselInfo.getUpdateInterval(), vesselInfo.getRecommendedFetchInterval()),
-            // /api/winter-navigation/v1/dirways
-            new UpdateInfoDtoV1(WinterNavigationControllerV1.API_WINTER_NAVIGATION_V1 + WinterNavigationControllerV1.DIRWAYS,
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS),
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WINTER_NAVIGATION_DIRWAYS_CHECK),
+            // /api/winter-navigation/v2/dirways
+            new UpdateInfoDtoV1(ApiConstants.API_WINTER_NAVIGATION_V2_DIRWAYS,
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_DIRWAY),
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_DIRWAY_CHECK),
                                 dirwayInfo.getUpdateInterval(), dirwayInfo.getRecommendedFetchInterval())
         );
     }

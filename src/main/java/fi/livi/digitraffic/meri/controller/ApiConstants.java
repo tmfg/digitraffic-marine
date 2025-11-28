@@ -21,11 +21,6 @@ public final class ApiConstants {
     public static final String AIS_V1_TAG = "AIS V1";
     public static final String API_AIS = API + "/ais";
 
-    /** Winter Navigation */
-    public static final String WINTER_NAVIGATION_V1_TAG = "Winter Navigation V1";
-    public static final String API_WINTER_NAVIGATION = API + "/winter-navigation";
-
-
     /** Info api */
     public static final String INFO_TAG_V1 = "Info V1";
     public static final String API_INFO = API + "/info";
@@ -34,6 +29,9 @@ public final class ApiConstants {
     public static final String API_NAUTICAL_WARNING_V1_WARNINGS = "/api/nautical-warning/v1/warnings";
     public static final String API_BRIDGE_LOCK_V1_DISRUPTIONS = "/api/bridge-lock/v1/disruptions";
     public static final String API_ATON_V1_FAULTS = "/api/aton/v1/faults";
-
+    public static final String API_WINTER_NAVIGATION_V2_LOCATIONS = "/api/winter-navigation/v2/locations";
+    public static final String API_WINTER_NAVIGATION_V2_VESSELS = "/api/winter-navigation/v2/vessels";
+    public static final String API_WINTER_NAVIGATION_V2_DIRWAYS = "/api/winter-navigation/v2/dirways";
+    
     private ApiConstants() {}
 }
