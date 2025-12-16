@@ -92,12 +92,12 @@ jobs:
 
           cp target/*.jar marine.jar
       - name: Upload jar
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: marine.jar
           path: marine.jar
       - name: Upload sql
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: sql
           path: dbmarine/sql
