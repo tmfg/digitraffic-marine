@@ -71,7 +71,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: image
-          image-ref: ${{ secrets.ECR_URL }}/dt-road-mqtt-repository:latest
+          image-ref: ${{ secrets.ECR_URL }}/dt-marine-mqtt-repository:latest
           format: cyclonedx
           output: mosquitto-sbom.json
       - name: Update marine-mqtt task-def
@@ -99,7 +99,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.SBOM_AWS_ROLE }}
-          role-session-name: gh-actions-upload-sbom-road-mosquitto-${{ github.event.inputs.env }}
+          role-session-name: gh-actions-upload-sbom-marine-mosquitto-${{ github.event.inputs.env }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Upload SBOM
         run: |

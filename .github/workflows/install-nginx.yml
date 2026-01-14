@@ -105,7 +105,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.SBOM_AWS_ROLE }}
-          role-session-name: gh-actions-upload-sbom-road-nginx-${{ github.event.inputs.env }}
+          role-session-name: gh-actions-upload-sbom-marine-nginx-${{ github.event.inputs.env }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Upload SBOM
         run: |
