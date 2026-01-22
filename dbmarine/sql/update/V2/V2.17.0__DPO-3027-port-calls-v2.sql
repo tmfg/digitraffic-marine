@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS PC2_VISIT
+(
+    VISIT_ID      VARCHAR(36)   PRIMARY KEY,
+    VESSEL_ID     VARCHAR(7)    NOT NULL,
+    VESSEL_NAME   TEXT          NOT NULL,
+    PORT_LOCODE   VARCHAR(5)    NOT NULL,
+    ETA           TIMESTAMPTZ   NOT NULL,
+    ETD           TIMESTAMPTZ,
+    ATA           TIMESTAMPTZ,
+    ATD           TIMESTAMPTZ,
+    STATUS        TEXT          NOT NULL,
+    UPDATE_TIME   TIMESTAMPTZ   NOT NULL,
+
+    CREATED       TIMESTAMPTZ   DEFAULT now() NOT NULL,
+    MODIFIED      TIMESTAMPTZ   DEFAULT now() NOT NULL
+);
+
+-- indexes?
+
+ALTER TABLE PC2_VISIT ADD CONSTRAINT PC2_VISIT_STATUS_CHECK
+  CHECK (status in ('Expected to Arrive', 'Arrived', 'Departed', 'Cancelled'));
