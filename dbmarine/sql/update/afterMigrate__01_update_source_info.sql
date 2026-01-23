@@ -14,8 +14,6 @@ VALUES
     ,('WN_VESSEL', null, 'PT5M', 'PT5M')
     ,('WN_DIRWAY', null, 'PT5M', 'PT5M')
 
-    ,('NAUTICAL_WARNING', null, 'PT10M', 'PT5M')
-
     ,('BRIDGE_LOCK_DISRUPTION', null, 'PT10M', 'PT5M')
 
     ,('ATON_FAULTS', null, 'PT0S', 'PT1M')

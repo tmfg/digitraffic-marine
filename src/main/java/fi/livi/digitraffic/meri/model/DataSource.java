@@ -16,8 +16,6 @@ public enum DataSource {
     WN_VESSEL,
     WN_DIRWAY,
 
-    NAUTICAL_WARNING,
-
     BRIDGE_LOCK_DISRUPTION,
 
     ATON_FAULTS
