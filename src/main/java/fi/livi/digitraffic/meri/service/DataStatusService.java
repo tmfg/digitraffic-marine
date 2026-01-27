@@ -52,7 +52,6 @@ public class DataStatusService {
                 getPortCallUpdateInfos().stream(),
                 getVesselsUpdateInfos().stream(),
                 getWinterNavigationUpdateInfos().stream(),
-                getNauticalWarningssUpdateInfos().stream(),
                 getBridgeLockisruptionUpdateInfos().stream(),
                 getAtonFaultUpdateInfos().stream()
             )
@@ -146,19 +145,6 @@ public class DataStatusService {
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_DIRWAY),
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_DIRWAY_CHECK),
                                 dirwayInfo.getUpdateInterval(), dirwayInfo.getRecommendedFetchInterval())
-        );
-    }
-
-    private List<UpdateInfoDtoV1> getNauticalWarningssUpdateInfos() {
-        // /api/nautical-warning/v1/warnings/active
-        // /api/nautical-warning/v1/warnings/archived
-        final DataSourceInfoDtoV1 info = getDataSourceInfo(DataSource.NAUTICAL_WARNING);
-        return Collections.singletonList(
-            new UpdateInfoDtoV1(ApiConstants.API_NAUTICAL_WARNING_V1_WARNINGS,
-                                updatedTimestampRepository.getNauticalWarningsLastModified(UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ACTIVE,
-                                                                                           UpdatedTimestampRepository.JsonCacheKey.NAUTICAL_WARNINGS_ARCHIVED),
-                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.NAUTICAL_WARNINGS_CHECK),
-                                info.getUpdateInterval(), info.getRecommendedFetchInterval())
         );
     }
 

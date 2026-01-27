@@ -31,22 +31,6 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         BRIDGE_LOCK_DISRUPTIONS_CHECK,
         ATON_FAULTS,
         ATON_FAULTS_CHECK,
-        NAUTICAL_WARNINGS_CHECK
-    }
-
-    enum JsonCacheKey {
-        NAUTICAL_WARNINGS_ACTIVE("nautical-warnings-active"),
-        NAUTICAL_WARNINGS_ARCHIVED("nautical-warnings-archived");
-
-        private final String key;
-
-        JsonCacheKey(final String key) {
-            this.key = key;
-        }
-
-        public String getKey() {
-            return key;
-        }
     }
 
     @Modifying
@@ -94,17 +78,6 @@ public interface UpdatedTimestampRepository extends SqlRepository {
             .orElse(null);
     }
 
-    @Query(value =
-        "select max(j.last_updated)\n" +
-        "from cached_json j\n" +
-        "where j.cache_id in (:#{#cacheKeys.![getKey()]})", nativeQuery = true)
-    Instant getNauticalWarningsLastUpdated(final JsonCacheKey...cacheKeys);
-
-    @Query(value =
-               "select max(j.modified)\n" +
-               "from cached_json j\n" +
-               "where j.cache_id in (:#{#cacheKeys.![getKey()]})", nativeQuery = true)
-    Instant getNauticalWarningsLastModified(final JsonCacheKey...cacheKeys);
 
     @Query(value =
                "select max(av.modified)\n" +

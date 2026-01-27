@@ -13,7 +13,6 @@ marine.datasource.url=jdbc:postgresql://localhost:54321/marine?reWriteBatchedIns
 marine.datasource.username=marine
 marine.datasource.password=marine
 
-dt.pooki.url = http://localhost:18080/test/nautical-warnings
 dt.portnet.portcall.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/satamakaynti/v1.0
 dt.portnet.vesselDetails.url = https://sosotes.trafi.fi/liikennevaline/vesiliikenne/alustiedot/v1.0
 
