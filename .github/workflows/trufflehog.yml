@@ -13,9 +13,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Secret Scanning
+      - name: Secret scanning
         uses: trufflesecurity/trufflehog@v3.92.5
         with:
-          extra_args: --results=verified,unknown
           base: ""
           head: ${{ github.ref_name }}
+          extra_args: --exclude-paths=.github/trufflehog-exclude.txt --results=verified,unknown
