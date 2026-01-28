@@ -1,4 +1,4 @@
-name: "Trufflehog"
+name: "Trufflehog secret scanning"
 
 on:
   push:
