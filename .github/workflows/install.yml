@@ -290,7 +290,7 @@ jobs:
           network-config: ${{ secrets.NETWORK_CONFIG }}
   deploy:
     needs: [install, update-db]
-    if: github.repository != 'tmfg/digitraffic-marine' && ${{ always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }}
+    if: ${{ github.repository != 'tmfg/digitraffic-marine' && always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }}
     strategy:
       matrix:
         app: [daemon, web]
