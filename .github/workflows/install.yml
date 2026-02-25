@@ -356,4 +356,4 @@ jobs:
 
       - name: Upload SBOM
         run: |          
-          aws s3 cp sbom.json s3://${{ secrets.SBOM_BUCKET }}/${{ fromJson(steps.sbom-config.outputs.common).bucketArn }}/${{ fromJson(steps.sbom-config.outputs.config)[github.event.inputs.env][matrix.app] }}/${{ github.run_id }}-${{ github.sha }}.json
+          aws s3 cp sbom.json s3://${{ fromJson(steps.sbom-config.outputs.common).bucketArn }}/${{ fromJson(steps.sbom-config.outputs.config)[github.event.inputs.env][matrix.app] }}/${{ github.run_id }}-${{ github.sha }}.json
