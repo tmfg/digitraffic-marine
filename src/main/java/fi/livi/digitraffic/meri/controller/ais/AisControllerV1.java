@@ -15,6 +15,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+import fi.livi.digitraffic.meri.controller.CacheControl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,11 +81,14 @@ public class AisControllerV1 {
         final Double latitude,
         @Parameter(description = "Longitude of the point")
         @RequestParam(value = "longitude", required = false)
-        final Double longitude) {
+        final Double longitude,
+        final HttpServletResponse response) {
 
         if(!NullUtil.allNullOrNoneNull(radius, latitude, longitude)) {
             throw new IllegalArgumentException("To find vessels within a circle all parameters radius, latitude and longitude must be given");
         }
+
+        CacheControl.setOneMinuteCache(response);
 
         if(radius != null) {
             if (mmsi != null) {
@@ -102,7 +107,10 @@ public class AisControllerV1 {
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @GetMapping(path = API_AIS_V1 + VESSELS +"/{mmsi}", produces = MediaTypes.MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public VesselMetadataJsonV1 vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi) {
+    public VesselMetadataJsonV1 vesselMetadataByMssi(@PathVariable("mmsi") final int mmsi,
+                                                     final HttpServletResponse response) {
+        CacheControl.setOneMinuteCache(response);
+
         return vesselMetadataService.findAllowedMetadataByMssi(mmsi);
     }
 
@@ -116,9 +124,13 @@ public class AisControllerV1 {
                                                final Long from,
                                                                                        @Parameter(description = "To timestamp")
                                                @RequestParam(value = "to", required = false)
-                                               final Long to) {
+                                               final Long to,
+                                               final HttpServletResponse response) {
         final List<VesselMetadataJsonV1> vms = vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
         final Instant lastModified = vms.stream().map(LastModifiedSupport::getLastModified).max(Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
+
+        CacheControl.setOneMinuteCache(response);
+
         return ResponseEntityWithLastModifiedHeader.of(vms, lastModified, API_AIS_V1 + VESSELS);
     }
 }
