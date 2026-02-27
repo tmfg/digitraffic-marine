@@ -4,10 +4,10 @@ import static fi.livi.digitraffic.meri.controller.ApiConstants.API_INFO;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.BETA;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.INFO_TAG_V1;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
-import static fi.livi.digitraffic.meri.controller.DtMediaType.APPLICATION_JSON_VALUE;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +45,7 @@ public class InfoControllerV1 {
                              "`null` value indicates static data and it is only updated when needed." )
     @RequestMapping(method = RequestMethod.GET,
                     path = API_INFO_V1 + UPDATE_TIMES,
-                    produces = { APPLICATION_JSON_VALUE })
+                    produces = { MediaType.APPLICATION_JSON_VALUE })
     @ApiResponses(@ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of weather Station Feature Collections"))
     public UpdateInfosDtoV1 dataUpdatedInfos() {
         return dataStatusService.getUpdatedInfos();
