@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
+import fi.livi.digitraffic.meri.controller.CacheControl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -134,8 +136,9 @@ public class PortcallControllerV1 {
         @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
         @Parameter(description = "Return port calls for given vessel type code")
-        @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode
-    ) {
+        @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode,
+
+        final HttpServletResponse response) {
 
         // use default, if no other parameters given
         final Instant actualFrom;
@@ -146,6 +149,8 @@ public class PortcallControllerV1 {
         }
 
         final Instant actualTo = to != null ? to : Instant.now().plus(Duration.ofDays(100));
+
+        CacheControl.setOneMinuteCache(response);
 
         return portCallWebServiceV1.findPortCalls(date,
             actualFrom,
@@ -169,14 +174,20 @@ public class PortcallControllerV1 {
     @Operation(summary = "Return all code descriptions")
     @GetMapping(path = API_PORT_CALL_V1 + CODE_DESCRIPTIONS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public CodeDescriptionsV1 listCodeDescriptions() {
+    public CodeDescriptionsV1 listCodeDescriptions(
+        final HttpServletResponse response) {
+
+        CacheControl.setOneHourCache(response);
+
         return portCallWebServiceV1.listCodeDescriptions();
     }
 
     @Operation(summary = "Return all ports with port areas and berths.")
     @GetMapping(path = API_PORT_CALL_V1 + PORTS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
-    public PortLocationDtoV1 findPortsLocations() {
+    public PortLocationDtoV1 findPortsLocations(final HttpServletResponse response) {
+        CacheControl.setOneMinuteCache(response);
+
         return portCallWebServiceV1.findPortsLocations();
     }
 
@@ -186,7 +197,10 @@ public class PortcallControllerV1 {
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Location not found", content = @Content),
                     @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public PortLocationDtoV1 findPortLocationByLocode(@PathVariable(value = "locode") final String locode) {
+    public PortLocationDtoV1 findPortLocationByLocode(@PathVariable(value = "locode") final String locode,
+                                                      final HttpServletResponse response) {
+        CacheControl.setOneMinuteCache(response);
+
         return portCallWebServiceV1.findPortLocationByLocode(locode);
     }
 
@@ -215,11 +229,15 @@ public class PortcallControllerV1 {
         @RequestParam(value = "nationality", required = false) final List<String> nationality,
 
         @Parameter(description = "Return vessel details for given vessel type code")
-        @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode) {
+        @RequestParam(value = "vesselTypeCode", required = false) final Integer vesselTypeCode,
+
+        final HttpServletResponse response) {
 
         if (!ObjectUtils.anyNotNull(from, vesselName, mmsi, imo, nationality, vesselTypeCode)) {
             from = Instant.now().minus(Duration.ofDays(1));
         }
+
+        CacheControl.setOneMinuteCache(response);
 
         final List<VesselDetails> vds = portCallWebServiceV1.findVesselDetails(from, vesselName, mmsi, imo, nationality, vesselTypeCode);
         final Instant lastModified = vds.stream()
@@ -227,6 +245,5 @@ public class PortcallControllerV1 {
             .filter(ObjectUtils::isNotEmpty)
             .max(Comparator.comparing(Function.identity())).orElse(updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS));
         return ResponseEntityWithLastModifiedHeader.of(vds, lastModified != null ? lastModified : Instant.EPOCH, API_PORT_CALL_V1 + VESSEL_DETAILS);
-
     }
 }

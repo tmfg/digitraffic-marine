@@ -1,9 +1,7 @@
 package fi.livi.digitraffic.meri.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -18,6 +16,7 @@ public class PortcallControllerTest extends AbstractWebTestBase {
         mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS +
                 "?vesselName=test"))
                 .andExpect(status().isOk())
+                .andExpect(header().stringValues("Cache-Control", "max-age=60, public"))
                 .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
@@ -28,6 +27,7 @@ public class PortcallControllerTest extends AbstractWebTestBase {
         mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS +
                 "?locode=FIHEL&vesselName=test"))
                 .andExpect(status().isOk())
+                .andExpect(header().stringValues("Cache-Control", "max-age=60, public"))
                 .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
@@ -37,6 +37,7 @@ public class PortcallControllerTest extends AbstractWebTestBase {
     public void listAllPortCallsFromLocodeSucceeds() throws Exception {
         mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS + "?locode=FIHEL"))
                 .andExpect(status().isOk())
+                .andExpect(header().stringValues("Cache-Control", "max-age=60, public"))
                 .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
                 .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
@@ -46,6 +47,7 @@ public class PortcallControllerTest extends AbstractWebTestBase {
     public void listCodeDescriptions() throws Exception {
         mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.CODE_DESCRIPTIONS))
             .andExpect(status().isOk())
+            .andExpect(header().stringValues("Cache-Control", "max-age=3600, public"))
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("agentTypes", Matchers.notNullValue()))
             .andExpect(jsonPath("agentTypes[0].code", Matchers.notNullValue()))

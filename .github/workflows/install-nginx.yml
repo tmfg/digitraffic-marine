@@ -22,7 +22,7 @@ jobs:
           echo "Environment ${{ github.event.inputs.env }}" >> parameters.txt
           echo "config-repo-branch ${{ github.event.inputs.config-repo-branch }}" >> parameters.txt
       - name: Upload parameters.txt
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: parameters.txt
           path: parameters.txt
@@ -74,7 +74,7 @@ jobs:
               --file=Dockerfile .
           docker push ${{ secrets.ECR_URL }}/dt-marine-nginx-repository:latest
       - name: Generate SBOM
-        uses: aquasecurity/trivy-action@0.34.0
+        uses: aquasecurity/trivy-action@0.34.2
         with:
           scan-type: image
           image-ref: ${{ secrets.ECR_URL }}/dt-marine-nginx-repository:latest

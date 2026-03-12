@@ -55,7 +55,6 @@ crashlytics-build.properties
 **/*.log
 buildNumber.properties
 *.log.gz
-**/application-localhost.properties
 **/application-*-web.properties
 **/application-*-daemon.properties
 
