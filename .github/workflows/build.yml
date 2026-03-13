@@ -21,7 +21,7 @@ jobs:
       - name: Get database IP
         run: echo "db_addr=$(docker inspect dbmarine-db-1 -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}')" >> $GITHUB_ENV
       - name: Prepare test run
-        run: cp src/test/resources/application-default.properties.template target/test-classes/application-ci.properties
+        run: cp src/test/resources/application-localhost.properties target/test-classes/application-ci.properties
       - name: Run tests
         run: |
           mvn org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report -e -U -Dmaven.gitcommitid.skip=true -Dspring.jdbc.getParameterType.ignore=true -Dspring.profiles.active=ci -Dquartz.enabled=false -Dmarine.datasource.url=jdbc:postgresql://${{ env.db_addr }}:5432/marine
