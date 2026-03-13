@@ -26,7 +26,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.common.util.StringUtil;

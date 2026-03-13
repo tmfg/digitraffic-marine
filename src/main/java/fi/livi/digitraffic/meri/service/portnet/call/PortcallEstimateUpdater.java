@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.meri.portnet.xsd.BerthDetails;
 import fi.livi.digitraffic.meri.portnet.xsd.PortAreaDetails;

@@ -8,8 +8,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.common.util.TimeUtil;
@@ -62,7 +62,7 @@ public class MqttMessageSender {
         try {
             log.debug("method=sendMqttMessage {}", message);
             mqttRelayQueue.queueMqttMessage(message.getTopic(), objectMapper.writeValueAsString(message.getData()), statisticsType);
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
             setLastError(Instant.now());
             log.error("method=sendMqttMessage Error sending message", e);
             return false;

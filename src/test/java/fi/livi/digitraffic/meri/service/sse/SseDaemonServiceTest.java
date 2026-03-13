@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectReader;
 
 import fi.livi.digitraffic.common.util.ThreadUtil;
 import fi.livi.digitraffic.common.util.TimeUtil;

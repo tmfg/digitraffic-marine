@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,8 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -37,6 +40,7 @@ import jakarta.validation.ConstraintViolationException;
 @TestPropertySource(properties = {
     "marine.datasource.hikari.maximum-pool-size=1",
 })
+@ExtendWith(MockitoExtension.class)
 public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
     private MockMvc mockMvc;
     @Mock
@@ -56,8 +60,8 @@ public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
         mockMvc = MockMvcBuilders.standaloneSetup(aisControllerV1)
             .setControllerAdvice(new DefaultExceptionHandler(exceptionHandlerLogger))
             .build();
-        when(exceptionHandlerLogger.isErrorEnabled()).thenReturn(true);
-        when(exceptionHandlerLogger.isInfoEnabled()).thenReturn(true);
+        lenient().when(exceptionHandlerLogger.isErrorEnabled()).thenReturn(true);
+        lenient().when(exceptionHandlerLogger.isInfoEnabled()).thenReturn(true);
     }
 
     private ResultActions performQuery() throws Exception {

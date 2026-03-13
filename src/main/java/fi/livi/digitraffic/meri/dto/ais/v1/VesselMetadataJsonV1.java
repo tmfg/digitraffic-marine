@@ -1,6 +1,6 @@
 package fi.livi.digitraffic.meri.dto.ais.v1;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 import fi.livi.digitraffic.common.dto.LastModifiedSupport;
 import io.swagger.v3.oas.annotations.media.Schema;

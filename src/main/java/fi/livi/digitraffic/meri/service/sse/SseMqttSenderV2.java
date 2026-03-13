@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import fi.livi.digitraffic.common.service.locking.CachedLockingService;
 import fi.livi.digitraffic.common.service.locking.LockingService;
