@@ -1,74 +1,46 @@
-### JetBrains template
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
+# Whitelist-style gitignore: ignore everything except tracked files
 
-*.iml
+# Ignore everything by default
+*
 
-## Directory-based project format:
-.idea/
-# if you remove the above rule, at least ignore the following:
+# Root files
+!.editorconfig
+!.gitignore
+!LICENSE.txt
+!README.md
+!ais-portforward.sh
+!check-dependency-updates.sh
+!clean-logs.sh
+!owasp-suppressions.xml
+!pom.xml
+!pooki-portforward.sh
+!portnet-portforward.sh
+!versions-maven-plugin-rules.xml
 
-# User-specific stuff:
-# .idea/workspace.xml
-# .idea/tasks.xml
-# .idea/dictionaries
+# .github directory
+!.github/
+!.github/**
 
-# Sensitive or high-churn files:
-# .idea/dataSources.ids
-# .idea/dataSources.xml
-# .idea/sqlDataSources.xml
-# .idea/dynamic.xml
-# .idea/uiDesigner.xml
+# common directory
+!common/
+!common/**
 
-# Gradle:
-# .idea/gradle.xml
-# .idea/libraries
+# dbmarine directory
+!dbmarine/
+!dbmarine/**
 
-# Mongo Explorer plugin:
-# .idea/mongoSettings.xml
+# lib directory (submodule)
+!lib/
+!lib/digitraffic-common-java
 
-## File-based project format:
-*.ipr
-*.iws
+# mqttmarine directory
+!mqttmarine/
+!mqttmarine/**
 
-## Plugin-specific files:
+# scripts directory
+!scripts/
+!scripts/**
 
-# IntelliJ
-/out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-
-# Created by .ignore support plugin (hsz.mobi)
-
-# Ignore developer local conf
-/src/main/resources/application-default.properties
-
-/target/
-**/*.log
-buildNumber.properties
-*.log.gz
-**/application-*-web.properties
-**/application-*-daemon.properties
-
-# SchemaSpyn generoimat schemat ja kirjastot
-/dbmarine/schemaspy/schema
-/dbmarine/schemaspy/lib
-
-/javamelody
-/src/test/resources/sse/post-sse-report-meri-test.sh
-# no_commit tekstin sisältävät tiedostot
-**/*no_commit*
-**/*.tmp
-/pom.xml.versionsBackup
-**/sse_export_test_6.json.gz
-/build
-.gitmodules
-.DS_Store
+# src directory
+!src/
+!src/**
