@@ -26,7 +26,6 @@ public final class ApiConstants {
     public static final String API_INFO = API + "/info";
 
     // Apis in AWS ApiGW with Lambda implementation
-    public static final String API_BRIDGE_LOCK_V1_DISRUPTIONS = "/api/bridge-lock/v1/disruptions";
     public static final String API_ATON_V1_FAULTS = "/api/aton/v1/faults";
     public static final String API_WINTER_NAVIGATION_V2_LOCATIONS = "/api/winter-navigation/v2/locations";
     public static final String API_WINTER_NAVIGATION_V2_VESSELS = "/api/winter-navigation/v2/vessels";

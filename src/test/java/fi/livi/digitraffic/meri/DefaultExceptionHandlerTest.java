@@ -30,7 +30,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
 import fi.livi.digitraffic.meri.controller.exception.DefaultExceptionHandler;
-import fi.livi.digitraffic.meri.controller.exception.PookiException;
 import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
 import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
@@ -147,10 +146,5 @@ public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
     @Test
     public void methodArgumentTypeMismatchException() throws Exception {
         testException(MethodArgumentTypeMismatchException.class, 400, LogMode.INFO);
-    }
-
-    @Test
-    public void pookiException() throws Exception {
-        testException(PookiException.class, 502, LogMode.INFO);
     }
 }
