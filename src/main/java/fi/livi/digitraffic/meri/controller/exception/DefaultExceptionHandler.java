@@ -100,7 +100,7 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler({ObjectNotFoundException.class, ResourceAccessException.class, BadRequestException.class,
-        IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, PookiException.class })
+        IllegalArgumentException.class, MethodArgumentTypeMismatchException.class })
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final Exception exception, final ServletWebRequest request) {
         final HttpStatus status;
@@ -108,8 +108,6 @@ public class DefaultExceptionHandler {
             status = HttpStatus.NOT_FOUND;
         } else if (exception instanceof BadRequestException || exception instanceof IllegalArgumentException || exception instanceof MethodArgumentTypeMismatchException) {
             status = HttpStatus.BAD_REQUEST;
-        } else if (exception instanceof PookiException) {
-            status = HttpStatus.BAD_GATEWAY;
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }

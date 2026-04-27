@@ -52,7 +52,6 @@ public class DataStatusService {
                 getPortCallUpdateInfos().stream(),
                 getVesselsUpdateInfos().stream(),
                 getWinterNavigationUpdateInfos().stream(),
-                getBridgeLockisruptionUpdateInfos().stream(),
                 getAtonFaultUpdateInfos().stream()
             )
                 .flatMap(Function.identity())
@@ -145,17 +144,6 @@ public class DataStatusService {
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_DIRWAY),
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.WN_DIRWAY_CHECK),
                                 dirwayInfo.getUpdateInterval(), dirwayInfo.getRecommendedFetchInterval())
-        );
-    }
-
-    private List<UpdateInfoDtoV1> getBridgeLockisruptionUpdateInfos() {
-        // /api/bridge-lock/v1/disruptions
-        final DataSourceInfoDtoV1 info = getDataSourceInfo(DataSource.BRIDGE_LOCK_DISRUPTION);
-        return Collections.singletonList(
-            new UpdateInfoDtoV1(ApiConstants.API_BRIDGE_LOCK_V1_DISRUPTIONS,
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.BRIDGE_LOCK_DISRUPTIONS),
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.BRIDGE_LOCK_DISRUPTIONS_CHECK),
-                                info.getUpdateInterval(), info.getRecommendedFetchInterval())
         );
     }
 

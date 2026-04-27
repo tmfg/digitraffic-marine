@@ -27,8 +27,6 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         WN_VESSEL_CHECK,
         WN_DIRWAY,
         WN_DIRWAY_CHECK,
-        BRIDGE_LOCK_DISRUPTIONS,
-        BRIDGE_LOCK_DISRUPTIONS_CHECK,
         ATON_FAULTS,
         ATON_FAULTS_CHECK,
     }
