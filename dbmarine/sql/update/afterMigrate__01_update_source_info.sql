@@ -3,6 +3,7 @@ VALUES
       ('SSE_DATA', null, 'PT30M', 'PT5M')
 
      ,('PORT_CALL', null, 'PT1M', 'PT1M')
+     ,('PORT_CALL_V2', null, 'PT10M', 'PT5M')
      ,('PORT_CALL_VESSEL_DETAIL', null, 'PT30M', 'PT5M')
      ,('PORT_CALL_LOCATION', null, 'PT12H', 'PT1H')
      ,('PORT_CALL_CODE_DESCRIPTIONS', null, 'P365D', 'P1D')

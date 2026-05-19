@@ -5,6 +5,7 @@ public enum DataSource {
     SSE_DATA,
 
     PORT_CALL,
+    PORT_CALL_V2,
     PORT_CALL_VESSEL_DETAIL,
     PORT_CALL_LOCATION,
     PORT_CALL_CODE_DESCRIPTIONS,
