@@ -17,6 +17,7 @@ public interface UpdatedTimestampRepository extends SqlRepository {
         PORT_CALLS,
         PORT_CALLS_CHECK,
         PORT_CALLS_TO,
+        PC2_VISITS,
         PORT_METADATA,
         PORT_VESSEL_DETAILS,
         PORT_VESSEL_DETAILS_CHECK,

@@ -81,6 +81,7 @@ public class DataStatusService {
     private List<UpdateInfoDtoV1> getPortCallUpdateInfos() {
 
         final DataSourceInfoDtoV1 portCallInfo = getDataSourceInfo(DataSource.PORT_CALL);
+        final DataSourceInfoDtoV1 portCallV2Info = getDataSourceInfo(DataSource.PORT_CALL_V2);
         final DataSourceInfoDtoV1 portCallCodeInfo = getDataSourceInfo(DataSource.PORT_CALL_CODE_DESCRIPTIONS);
         final DataSourceInfoDtoV1 portCallVesselDetailInfo = getDataSourceInfo(DataSource.PORT_CALL_VESSEL_DETAIL);
         final DataSourceInfoDtoV1 portCallLocationInfo = getDataSourceInfo(DataSource.PORT_CALL_LOCATION);
@@ -103,7 +104,12 @@ public class DataStatusService {
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.VESSEL_DETAILS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS),
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS_CHECK),
-                                portCallVesselDetailInfo.getUpdateInterval(), portCallVesselDetailInfo.getRecommendedFetchInterval())
+                                portCallVesselDetailInfo.getUpdateInterval(), portCallVesselDetailInfo.getRecommendedFetchInterval()),
+            // /api/port-call/v2/visits
+            new UpdateInfoDtoV1(ApiConstants.API_PORT_CALL_V2_VISITS,
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PC2_VISITS),
+                                null,
+                                portCallV2Info.getUpdateInterval(), portCallV2Info.getRecommendedFetchInterval())
         );
     }
 
