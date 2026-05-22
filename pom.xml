@@ -23,7 +23,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
-        <!-- spring-cloud-starter-config and spring-cloud-starter-bootstrap version independently -->
         <spring-cloud-config.version>5.0.3</spring-cloud-config.version>
         <spring-cloud-commons.version>5.0.1</spring-cloud-commons.version>
         <!-- TODO: Remove overrides when Spring Boot includes Netty ≥4.2.13 and Tomcat ≥11.0.22
@@ -156,7 +155,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.10</version>
+            <version>42.7.11</version>
         </dependency>
 
         <dependency>
