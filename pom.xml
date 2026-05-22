@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fi.fta.digitraffic</groupId>
@@ -14,15 +15,21 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.5</version>
-        <relativePath/>
+        <version>4.0.6</version>
+        <relativePath />
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
-        <spring.cloud.version>5.0.1</spring.cloud.version>
+        <!-- spring-cloud-starter-config and spring-cloud-starter-bootstrap version independently -->
+        <spring-cloud-config.version>5.0.3</spring-cloud-config.version>
+        <spring-cloud-commons.version>5.0.1</spring-cloud-commons.version>
+        <!-- TODO: Remove overrides when Spring Boot includes Netty ≥4.2.13 and Tomcat ≥11.0.22
+             Added 2026-05-22 to fix CVE-2026-42581 (Netty) and CVE-2026-41293 (Tomcat) -->
+        <netty.version>4.2.13.Final</netty.version>
+        <tomcat.version>11.0.22</tomcat.version>
         <org.glassfish.metro.ws.version>4.0.6</org.glassfish.metro.ws.version>
         <project.digitraffic-common-java.directory>lib/digitraffic-common-java</project.digitraffic-common-java.directory>
     </properties>
@@ -39,7 +46,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>12.2.0</version>
+                        <version>12.2.2</version>
                         <configuration>
                             <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
                             <failBuildOnCVSS>7</failBuildOnCVSS>
@@ -73,17 +80,18 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>
-            <version>${spring.cloud.version}</version>
+            <version>${spring-cloud-config.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
-            <version>${spring.cloud.version}</version>
+            <version>${spring-cloud-commons.version}</version>
         </dependency>
 
         <!-- TEMPORARY DEPS TO MITIGATE SECURITY VULNERABILITIES STARTS -->
-        <!-- TODO: Temporary patch for CVE-2025-27820 in spring-cloud-starter-config:4.2.1:httpclient5 -->
+        <!-- TODO: Temporary patch for CVE-2025-27820 in
+        spring-cloud-starter-config:4.2.1:httpclient5 -->
         <!--E.g.-->
         <!-- Temporary patch for CVE-2025-27820 in spring-cloud-starter-config:4.2.1:httpclient5 -->
         <!--<dependency>-->
@@ -509,7 +517,8 @@
                         <phase>initialize</phase>
                         <configuration>
                             <dotGitDirectory>.git/modules/lib/digitraffic-common-java/</dotGitDirectory>
-                            <generateGitPropertiesFilename>${project.build.outputDirectory}/common-git.properties</generateGitPropertiesFilename>
+                            <generateGitPropertiesFilename>
+                                ${project.build.outputDirectory}/common-git.properties</generateGitPropertiesFilename>
                         </configuration>
                     </execution>
                 </executions>
