@@ -6,15 +6,13 @@ import java.util.Collections;
 
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import fi.livi.digitraffic.meri.controller.ApiConstants;
-import fi.livi.digitraffic.meri.documentation.MarineApiInfo;
-import fi.livi.digitraffic.meri.service.MarineApiInfoService;
+import fi.livi.digitraffic.meri.service.BuildVersionService;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 
@@ -22,17 +20,16 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class SwaggerConfiguration {
 
-    private final MarineApiInfo marineApiInfo;
     private final String host;
     private final String scheme;
+    private final BuildVersionService buildVersionService;
 
     private final static String API_PATHS = ApiConstants.API + "/**";
     private final static String BETA_PATHS = "/**" + ApiConstants.BETA + "/**";
 
-    @Autowired
-    public SwaggerConfiguration(final MarineApiInfoService marineApiInfoService,
+    public SwaggerConfiguration(final BuildVersionService buildVersionService,
                                 final @Value("${dt.domain.url}") String domainUrl) throws URISyntaxException {
-        this.marineApiInfo = marineApiInfoService.getApiInfo();
+        this.buildVersionService = buildVersionService;
 
         final URI uri = new URI(domainUrl);
 
@@ -65,14 +62,9 @@ public class SwaggerConfiguration {
 
     private OpenApiCustomizer openApiConfig() {
         return openApi -> {
-            openApi
-                .setInfo(new Info()
-                    .title(marineApiInfo.getTitle())
-                    .description(marineApiInfo.getDescription())
-                    .version(marineApiInfo.getVersion())
-                    .contact(marineApiInfo.getContact())
-                    .termsOfService(marineApiInfo.getTermsOfServiceUrl())
-                    .license(marineApiInfo.getLicense()));
+            openApi.setInfo(new Info()
+                .title("Digitraffic Marine API")
+                .version(buildVersionService.getAppFullVersion()));
 
             final Server server = new Server();
             final String url = scheme + "://" + host;
