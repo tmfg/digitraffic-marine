@@ -16,18 +16,12 @@ import jakarta.persistence.QueryHint;
 
 @Repository
 public interface SseReportRepository extends CrudRepository<SseReport, Long> {
-
-
-    boolean existsBySiteNumber(final int siteNumber);
-
     List<SseReport> findByLatestIsTrueOrderBySiteNumber();
 
-    @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
     List<SseReport> findByLastUpdateBetweenOrderBySiteNumberAscLastUpdateAsc(final Instant from,
                                                                              final Instant to,
                                                                              final Pageable page);
 
-    @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
     List<SseReport> findByLastUpdateBetweenAndSiteNumberOrderBySiteNumberAscLastUpdateAsc(final Instant from,
                                                                                           final Instant to,
                                                                                           final Integer siteNumber,
@@ -35,7 +29,6 @@ public interface SseReportRepository extends CrudRepository<SseReport, Long> {
 
     SseReport findByLatestIsTrueAndSiteNumber(final int siteNumber);
 
-    @QueryHints({ @QueryHint(name = "org.hibernate.fetchSize", value = "1000") })
     List<SseReport> findByCreatedAfterOrderByCreatedAsc(final Instant created);
 
     @Modifying

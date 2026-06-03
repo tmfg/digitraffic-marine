@@ -12,7 +12,5 @@ import jakarta.persistence.QueryHint;
 
 @Repository
 public interface VesselDetailsRepository extends JpaRepository<VesselDetails, Long> {
-
-    @QueryHints(@QueryHint(name = AvailableHints.HINT_FETCH_SIZE, value = "1000"))
     List<VesselDetails> findByVesselIdInOrderByVesselIdAsc(final List<Long> vesselIds);
 }
