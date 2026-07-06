@@ -10,13 +10,12 @@ import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICAT
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_JSON;
 import static fi.livi.digitraffic.meri.controller.MediaTypes.MEDIA_TYPE_APPLICATION_VND_GEO_JSON;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import fi.livi.digitraffic.meri.controller.CacheControl;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.livi.digitraffic.common.dto.LastModifiedSupport;
+import fi.livi.digitraffic.meri.controller.CacheControl;
 import fi.livi.digitraffic.meri.controller.MediaTypes;
 import fi.livi.digitraffic.meri.controller.ResponseEntityWithLastModifiedHeader;
 import fi.livi.digitraffic.meri.dto.ais.v1.VesselLocationFeatureCollectionV1;
@@ -39,6 +39,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Tag(name = AIS_V1_TAG, description = "Automatic Identification System (AIS) APIs")
 @RestController
@@ -49,6 +50,8 @@ public class AisControllerV1 {
     public static final String LOCATIONS = "/locations";
     public static final String VESSELS = "/vessels";
 
+    private static final long DEFAULT_FROM_OFFSET_MS = Duration.ofHours(24).toMillis();
+
     private final VesselLocationService vesselLocationService;
     private final VesselMetadataService vesselMetadataService;
 
@@ -56,6 +59,10 @@ public class AisControllerV1 {
                            final VesselMetadataService vesselMetadataService) {
         this.vesselLocationService = vesselLocationService;
         this.vesselMetadataService = vesselMetadataService;
+    }
+
+    private static long defaultFrom() {
+        return System.currentTimeMillis() - DEFAULT_FROM_OFFSET_MS;
     }
 
     @Operation(summary = "Find latest vessel locations by mmsi and optional timestamp interval in milliseconds from Unix epoch.")
@@ -67,7 +74,7 @@ public class AisControllerV1 {
         @Parameter(description = "Maritime Mobile Service Identity (MMSI)")
         @RequestParam(value = "mmsi", required = false)
         final Integer mmsi,
-        @Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+        @Parameter(description = "From timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z. Default value is 24 hours in the past.")
         @RequestParam(value = "from", required = false)
         final Long from,
         @Parameter(description = "To timestamp")
@@ -88,6 +95,8 @@ public class AisControllerV1 {
             throw new IllegalArgumentException("To find vessels within a circle all parameters radius, latitude and longitude must be given");
         }
 
+        final Long effectiveFrom = from != null ? from : defaultFrom();
+
         CacheControl.setOneMinuteCache(response);
 
         if(radius != null) {
@@ -95,10 +104,10 @@ public class AisControllerV1 {
                 throw new IllegalArgumentException("Circle search does not support mmsi");
             }
 
-            return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, from, to);
+            return vesselLocationService.findAllowedLocationsWithinRadiusFromPoint(radius, latitude, longitude, effectiveFrom, to);
         }
 
-        return vesselLocationService.findAllowedLocations(mmsi, from, to);
+        return vesselLocationService.findAllowedLocations(mmsi, effectiveFrom, to);
     }
 
     @Operation(summary = "Return latest vessel metadata by mmsi.")
@@ -119,14 +128,15 @@ public class AisControllerV1 {
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of vessel metadata"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
     @ResponseBody
-    public ResponseEntityWithLastModifiedHeader<List<VesselMetadataJsonV1>> allVessels(@Parameter(description = "From timestamp timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z")
+    public ResponseEntityWithLastModifiedHeader<List<VesselMetadataJsonV1>> allVessels(@Parameter(description = "From timestamp in milliseconds from Unix epoch 1970-01-01T00:00:00Z. Default value is 24 hours in the past.")
                                                @RequestParam(value = "from", required = false)
                                                final Long from,
                                                                                        @Parameter(description = "To timestamp")
                                                @RequestParam(value = "to", required = false)
                                                final Long to,
                                                final HttpServletResponse response) {
-        final List<VesselMetadataJsonV1> vms = vesselMetadataService.findAllowedVesselMetadataFrom(from, to);
+        final Long effectiveFrom = from != null ? from : defaultFrom();
+        final List<VesselMetadataJsonV1> vms = vesselMetadataService.findAllowedVesselMetadataFrom(effectiveFrom, to);
         final Instant lastModified = vms.stream().map(LastModifiedSupport::getLastModified).max(Comparator.comparing(Function.identity())).orElse(Instant.EPOCH);
 
         CacheControl.setOneMinuteCache(response);
