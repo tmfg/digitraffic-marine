@@ -25,10 +25,10 @@
         <maven.compiler.release>25</maven.compiler.release>
         <spring-cloud-config.version>5.0.4</spring-cloud-config.version>
         <spring-cloud-commons.version>5.0.2</spring-cloud-commons.version>
-        <!-- TODO: Remove overrides when Spring Boot includes Netty ≥4.2.13 and Tomcat ≥11.0.22
+        <!-- TODO: Remove overrides when Spring Boot includes Netty ≥4.2.16 and Tomcat ≥11.0.24
              Added 2026-05-22 to fix CVE-2026-42581 (Netty) and CVE-2026-41293 (Tomcat) -->
-        <netty.version>4.2.13.Final</netty.version>
-        <tomcat.version>11.0.22</tomcat.version>
+        <netty.version>4.2.16.Final</netty.version>
+        <tomcat.version>11.0.24</tomcat.version>
         <org.glassfish.metro.ws.version>4.0.7</org.glassfish.metro.ws.version>
         <project.digitraffic-common-java.directory>lib/digitraffic-common-java</project.digitraffic-common-java.directory>
     </properties>
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>io.awspring.cloud</groupId>
             <artifactId>spring-cloud-aws-starter-secrets-manager</artifactId>
-            <version>4.0.2</version>
+            <version>4.1.0</version>
         </dependency>
 
         <!-- Web Service dependencies-->
@@ -155,7 +155,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.11</version>
+            <version>42.7.13</version>
         </dependency>
 
         <dependency>
