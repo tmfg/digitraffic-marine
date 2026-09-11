@@ -2,6 +2,7 @@ services:
   db:
     # align major version with AWS RDS version
     image: postgis/postgis:16-3.5-alpine
+    platform: linux/amd64
     restart: always
     environment:
       POSTGRES_USER: marine

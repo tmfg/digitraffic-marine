@@ -26,6 +26,19 @@ docker compose build && docker compose up
 
 PostgreSql db is running at localhost:54321 and adminer at localhost:8081
 
+### Linux ARM64 Users
+
+The default config uses `platform: linux/amd64`. If you're on Linux ARM64, update `docker-compose.override.yml` to use your native architecture:
+
+```yaml
+# docker-compose.override.yml
+services:
+  db:
+    platform: linux/arm64/v8
+```
+
+This file is git-ignored and won't affect other team members.
+
 List containers
 ``````bash
 docker compose ps

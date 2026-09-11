@@ -62,6 +62,9 @@ buildNumber.properties
 /dbmarine/schemaspy/schema
 /dbmarine/schemaspy/lib
 
+# Docker Compose platform overrides (local environment-specific)
+**/docker-compose.override.yml
+
 /javamelody
 /src/test/resources/sse/post-sse-report-meri-test.sh
 # no_commit tekstin sisältävät tiedostot
