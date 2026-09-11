@@ -6,8 +6,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.catalina.connector.ClientAbortException;
+import org.apache.tomcat.util.http.InvalidParameterException;
 import org.slf4j.Logger;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -99,14 +101,22 @@ public class DefaultExceptionHandler {
             HttpStatus.BAD_REQUEST, exception);
     }
 
-    @ExceptionHandler({ObjectNotFoundException.class, ResourceAccessException.class, BadRequestException.class,
-        IllegalArgumentException.class, MethodArgumentTypeMismatchException.class })
+    @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleObjectNotFoundException(final Exception exception, final ServletWebRequest request) {
+        return getErrorResponseEntityAndLogException(request, exception.getMessage(), HttpStatus.NOT_FOUND, exception);
+    }
+
+    @ExceptionHandler({ ResourceAccessException.class, BadRequestException.class, ConversionFailedException.class,
+        IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, InvalidParameterException.class })
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleOtherExceptions(final Exception exception, final ServletWebRequest request) {
         final HttpStatus status;
-        if (exception instanceof ObjectNotFoundException) {
-            status = HttpStatus.NOT_FOUND;
-        } else if (exception instanceof BadRequestException || exception instanceof IllegalArgumentException || exception instanceof MethodArgumentTypeMismatchException) {
+        if (exception instanceof BadRequestException
+            || exception instanceof IllegalArgumentException
+            || exception instanceof MethodArgumentTypeMismatchException
+            || exception instanceof ConversionFailedException
+            || exception instanceof InvalidParameterException) {
             status = HttpStatus.BAD_REQUEST;
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;

@@ -1,5 +1,8 @@
 package fi.livi.digitraffic.meri;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -35,6 +38,14 @@ import fi.livi.digitraffic.meri.service.BadRequestException;
 import fi.livi.digitraffic.meri.service.ObjectNotFoundException;
 import fi.livi.digitraffic.meri.service.ais.VesselLocationService;
 import jakarta.validation.ConstraintViolationException;
+import org.apache.tomcat.util.http.InvalidParameterException;
+import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @TestPropertySource(properties = {
     "marine.datasource.hikari.maximum-pool-size=1",
@@ -42,6 +53,7 @@ import jakarta.validation.ConstraintViolationException;
 @ExtendWith(MockitoExtension.class)
 public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
     private MockMvc mockMvc;
+    private DefaultExceptionHandler exceptionHandler;
     @Mock
     private VesselLocationService vesselLocationService;
 
@@ -53,11 +65,12 @@ public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
 
     @BeforeEach
     public void setUp() {
-        // Mockito ei käsittele AisControllerV1 luokan @Validated tagia oikein, koska tuo tagi käyttää aspecteja.
-        // Sen takia luodaan AisControllerV1:stä itse mokkaus objekti ja annetaan sille vain tuo ExceptionHandler
-        // riippuvuus
+        exceptionHandler = new DefaultExceptionHandler(exceptionHandlerLogger);
+        // Mockito does not handle the @Validated annotation on AisControllerV1 correctly, because it uses aspects.
+        // Therefore we create a mock instance of AisControllerV1 manually and give it only the ExceptionHandler
+        // dependency.
         mockMvc = MockMvcBuilders.standaloneSetup(aisControllerV1)
-            .setControllerAdvice(new DefaultExceptionHandler(exceptionHandlerLogger))
+            .setControllerAdvice(exceptionHandler)
             .build();
         lenient().when(exceptionHandlerLogger.isErrorEnabled()).thenReturn(true);
         lenient().when(exceptionHandlerLogger.isInfoEnabled()).thenReturn(true);
@@ -146,5 +159,55 @@ public class DefaultExceptionHandlerTest extends AbstractWebTestBase {
     @Test
     public void methodArgumentTypeMismatchException() throws Exception {
         testException(MethodArgumentTypeMismatchException.class, 400, LogMode.INFO);
+    }
+
+    @Test
+    public void typeMismatchException() throws Exception {
+        testException(TypeMismatchException.class, 400, LogMode.INFO);
+    }
+
+    @Test
+    public void missingServletRequestParameterException() throws Exception {
+        testException(MissingServletRequestParameterException.class, 400, LogMode.INFO);
+    }
+
+    @Test
+    public void conversionFailedException() throws Exception {
+        testException(ConversionFailedException.class, 400, LogMode.INFO);
+    }
+
+    @Test
+    public void invalidParameterException() throws Exception {
+        testException(InvalidParameterException.class, 400, LogMode.INFO);
+    }
+
+    @Test
+    public void httpMediaTypeNotAcceptableException() throws Exception {
+        testException(HttpMediaTypeNotAcceptableException.class, 406, LogMode.INFO);
+    }
+
+    @Test
+    public void httpRequestMethodNotSupportedException() throws Exception {
+        testException(HttpRequestMethodNotSupportedException.class, 405, LogMode.INFO);
+    }
+
+    @Test
+    public void httpMediaTypeNotSupportedException() throws Exception {
+        testException(HttpMediaTypeNotSupportedException.class, 500, LogMode.INFO);
+    }
+
+    @Test
+    public void noResourceFoundException() throws Exception {
+        testException(NoResourceFoundException.class, 404, LogMode.INFO);
+    }
+
+    @Test
+    public void clientAbortIOException() throws Exception {
+        testException(new org.apache.catalina.connector.ClientAbortException("aborted"), 200, LogMode.NONE);
+    }
+
+    @Test
+    public void exceptionFallback() throws Exception {
+        testException(Exception.class, 500, LogMode.INFO);
     }
 }
