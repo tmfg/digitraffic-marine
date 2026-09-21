@@ -16,6 +16,7 @@ import javax.net.ssl.KeyManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -60,8 +61,10 @@ public class WebClientConfiguration {
                 .build()
         ).build();
     }
+
     @Bean
     @Profile("aws")
+    @ConditionalOnNotWebApplication
     public WebClient portnetWebClient(@Value("${portnet.privatekey}") final String portnetPrivateKeyBase64) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException {
         log.info("Init WebClient with authentication");
         final KeyStore clientKeyStore = openKeyStore(portnetPrivateKeyBase64);

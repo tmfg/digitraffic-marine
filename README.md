@@ -2,80 +2,79 @@
 
 ## Development
 
-### Preconditions
-1. Java 17 JDK
+### Prerequisites
+1. Java 25 JDK
 2. Maven
 3. Git client
-4. Postgresql-database
-5. Node.js 18 (for initializing Git submodules during build)
-6. (optional) mqtt-server
+4. PostgreSQL database
+5. Node.js 18+ (for build tooling)
+6. Optional: MQTT server
 
-You can run postgresql and mqtt in docker.  See dbmarine/README.md and mqttmarine/README.md for details.
+You can run PostgreSQL and MQTT locally with Docker. See `dbmarine/README.md` and `mqttmarine/README.md`.
 
-### Clone project to your computer
+### Clone
 
-	$ git clone https://github.com/tmfg/digitraffic-marine.git
-	# Clones a repository to your computer
+```bash
+git clone https://github.com/tmfg/digitraffic-marine-private.git
+```
 
-### Configure project
+### Local profiles
 
-To configure project copy ***src/main/resources/application-localhost.template*** -file
-as ***application-localhost.properties*** and configure it according to your environment.
+Use one of these local profiles:
 
-### Build project
+- `localhost-web` for the web app
+- `localhost-daemon` for the daemon
 
-	$ mvn clean install
+The corresponding files are:
 
-### Running the application
+- `src/main/resources/application-localhost-web.properties`
+- `src/main/resources/application-localhost-daemon.properties`
 
-Before building application with tests enabled, start dbmarine instance.
-See [dbmarine/README.md](dbmarine/README.md).
+### Running locally
 
-    # tunnel ie. port 18080 to server that has access to pooki
-    $ ssh user@server -L18080:remote.server.ip:80
+Start the local database first, then run the application with the desired profile:
 
-    # Start application
-	$ mvn spring-boot:run -Dspring-boot.run.profiles=localhost=localhost
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=localhost-web
+mvn spring-boot:run -Dspring-boot.run.profiles=localhost-daemon
+```
 
-	Some errors will show on the console, because of some integrations are not reachable. The
-	integrations are configured
+Or run the packaged JAR:
 
-Or build the JAR file with:
+```bash
+java -Dspring.profiles.active=localhost-web -jar target/*.jar
+java -Dspring.profiles.active=localhost-daemon -jar target/*.jar
+```
 
-	$ mvn clean package
+### Notes
 
- And run the JAR by typing:
+- `localhost-web` is for the web application only.
+- `localhost-daemon` is for background jobs and integrations.
+- The old `application-localhost.properties.template` has been removed.
 
- 	$ java -Dspring.profiles.active=localhost -jar target/AIS-0.0.1-SNAPSHOT.jar
+### SchemaSpy
 
-### Generate SchemaSpy schemas from the db with Maven
+```bash
+mvn exec:exec@schemaspy
+```
 
-    $ mvn exec:exec@schemaspy
+Or:
 
-Generated schemas can be found at `dbmarine/schemaspy/schema` -directory    
+```bash
+cd dbmarine/schemaspy
+./get-deps-and-run-schemaspy.sh [-o=/tmp/schema]
+```
 
-Or with custom parameters.
-    
-    $ mvn exec:exec@schemaspy -Dexec.args="-o=/tmp/schema"
+### Misc
 
-Or without Maven
+Dependency updates:
 
-    $ cd dbmarine/schemaspy
-    $ get-deps-and-run-schemaspy.sh [-o=/tmp/schema]
+```bash
+mvn versions:display-dependency-updates
+```
 
-### Misc commands
+Dependency check:
 
-#### Check for Maven dependency updates
-
-    $ mvn versions:display-dependency-updates
-
-#### Run dependency check
-
-    mvn -Pdepcheck
-
-Report can be found at  [target/dependency-check-report.html](target/dependency-check-report.html)
-
-Oneliner to run dependency check and open the report in default browser (MacOS):
-
-    mvn -Pdepcheck; open target/dependency-check-report.html
-
+```bash
+mvn -Pdepcheck
+```

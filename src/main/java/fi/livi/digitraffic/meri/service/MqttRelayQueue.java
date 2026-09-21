@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import fi.livi.digitraffic.meri.config.MqttConfiguration;
 
 @Component
-@ConditionalOnExpression("'${app.type}' == 'daemon' and '${config.test}' != 'true'")
+@ConditionalOnExpression("'${app.type}' == 'daemon' and '${config.test}' != 'true' and ('${ais.mqtt.enabled}' == 'true' or '${sse.mqtt.enabled}' == 'true')")
 public class MqttRelayQueue {
     private static final Logger logger = LoggerFactory.getLogger(MqttRelayQueue.class);
 

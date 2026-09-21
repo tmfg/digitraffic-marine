@@ -1,20 +1,22 @@
 package fi.livi.digitraffic.meri.config;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.spec.InvalidKeySpecException;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 
 public class WebClientConfigurationTest {
     private final WebClientConfiguration webClientConfiguration = new WebClientConfiguration();
+
+    private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner()
+        .withUserConfiguration(WebClientConfiguration.class)
+        .withPropertyValues("spring.profiles.active=aws");
+
+    private final ApplicationContextRunner nonWebContextRunner = new ApplicationContextRunner()
+        .withUserConfiguration(WebClientConfiguration.class)
+        .withPropertyValues("spring.profiles.active=aws");
 
     @Test
     public void nullKey() {
@@ -35,5 +37,32 @@ public class WebClientConfigurationTest {
         Assertions.assertThrows(IllegalArgumentException.class, () ->
             webClientConfiguration.portnetWebClient("not_valid")
         );
+    }
+
+    @Test
+    public void awsWebContextDoesNotRequirePortnetPrivateKey() {
+        webContextRunner.run(context -> {
+            Assertions.assertTrue(context.isRunning());
+            Assertions.assertFalse(context.containsBean("portnetWebClient"));
+        });
+    }
+
+    @Test
+    public void awsNonWebContextCreatesAuthenticatedPortnetWebClient() {
+        nonWebContextRunner
+            .withPropertyValues("portnet.privatekey=not_valid")
+            .run(context -> {
+                final Throwable startupFailure = context.getStartupFailure();
+                Assertions.assertNotNull(startupFailure);
+                Assertions.assertInstanceOf(IllegalArgumentException.class, getRootCause(startupFailure));
+            });
+    }
+
+    private static Throwable getRootCause(final Throwable throwable) {
+        Throwable rootCause = throwable;
+        while (rootCause.getCause() != null) {
+            rootCause = rootCause.getCause();
+        }
+        return rootCause;
     }
 }
