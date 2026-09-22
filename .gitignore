@@ -52,6 +52,7 @@ crashlytics-build.properties
 /src/main/resources/application-default.properties
 
 /target/
+/tmp/
 **/*.log
 buildNumber.properties
 *.log.gz
