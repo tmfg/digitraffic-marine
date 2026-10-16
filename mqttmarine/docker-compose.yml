@@ -1,6 +1,0 @@
-services:
-  mqtt:
-    build: .
-    ports:
-      - "1883:1883"
-      - "9002:9002"
