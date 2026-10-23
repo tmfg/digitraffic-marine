@@ -6,13 +6,15 @@ import static fi.livi.digitraffic.common.util.TimeUtil.timeToString;
 
 import java.time.ZonedDateTime;
 
+import fi.livi.digitraffic.common.logging.HttpLogger;
+import fi.livi.digitraffic.common.logging.HttpLoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.*;
 
 import fi.livi.digitraffic.common.annotation.NotTransactionalServiceMethod;
 import fi.livi.digitraffic.common.util.StringUtil;
@@ -26,23 +28,27 @@ public class PortCallClient {
 
     private static final Logger log = LoggerFactory.getLogger(PortCallClient.class);
 
+    private final HttpLoggerFactory factory;
+
     public PortCallClient(@Value("${dt.portnet.portcall.url}") final String portCallUrl,
                           final WebClient portnetWebClient) {
         this.portCallUrl = portCallUrl;
         this.portnetWebClient = portnetWebClient;
+
+        this.factory = new HttpLoggerFactory("Port-call", null, buildTemplate());
     }
 
     @NotTransactionalServiceMethod
     @Retryable
     public PortCallList getList(final ZonedDateTime lastUpdated, final ZonedDateTime now) {
         final String url = buildUrl(lastUpdated, now);
-
-        log.info("Fetching port calls from url={}", url);
+        final HttpLogger httpLogger = this.factory.logger(url);
 
         final PortCallList portCallList = portnetWebClient
             .mutate().baseUrl(url).build()
-            .get().retrieve()
-            .bodyToMono(PortCallList.class).block();
+            .get()
+            .exchangeToMono(response -> httpLogger.log(response, PortCallList.class))
+            .block();
 
         logInfo(portCallList);
 
@@ -74,5 +80,9 @@ public class PortCallClient {
 
         // order is important, must be startDte,endDte,startTme,endTme, otherwise 404
         return String.format("%s%s&%s&%s&%s", portCallUrl, dateStartParameter, dateEndParameter, timeStartParameter, timeEndParameter);
+    }
+
+    private String buildTemplate() {
+        return String.format("%s?startDte={date}&endDte={date}&startTme={time}&endTme={time}", portCallUrl);
     }
 }

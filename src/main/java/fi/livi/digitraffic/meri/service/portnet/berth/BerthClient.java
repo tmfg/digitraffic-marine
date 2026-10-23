@@ -1,5 +1,7 @@
 package fi.livi.digitraffic.meri.service.portnet.berth;
 
+import fi.livi.digitraffic.common.logging.HttpLogger;
+import fi.livi.digitraffic.common.logging.HttpLoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.retry.annotation.Backoff;
@@ -17,14 +19,23 @@ public class BerthClient {
     private final WebClient webClient;
     private final BerthReader berthReader;
 
+    private final String url;
+    private final HttpLoggerFactory factory;
+
     public BerthClient(@Value("${metadata.csv.baseUrl:}") final String baseUrl, final WebClient webClient) {
-        this.webClient = webClient.mutate().baseUrl(baseUrl + FILENAME).build();
+        this.url = baseUrl + FILENAME;
+        this.factory = new HttpLoggerFactory("Port-call", null, url);
+        this.webClient = webClient.mutate().baseUrl(url).build();
         this.berthReader = new BerthReader();
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public List<BerthLine> getBerthLines() {
-        final String res = webClient.get().retrieve().bodyToMono(String.class).block();
+        final HttpLogger httpLogger = this.factory.logger(url);
+
+        final String res = webClient.get()
+            .exchangeToMono(response -> httpLogger.log(response, String.class))
+            .block();
 
         return berthReader.readCsv(res);
     }

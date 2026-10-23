@@ -5,6 +5,8 @@ import static fi.livi.digitraffic.common.util.TimeUtil.timeToString;
 
 import java.time.ZonedDateTime;
 
+import fi.livi.digitraffic.common.logging.HttpLogger;
+import fi.livi.digitraffic.common.logging.HttpLoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,18 +26,25 @@ public class VesselDetailsClient {
 
     private static final Logger log = LoggerFactory.getLogger(VesselDetailsClient.class);
 
+    private final HttpLoggerFactory factory;
+
     public VesselDetailsClient(@Value("${dt.portnet.vesselDetails.url}") final String vesselDetailsUrl,
                                final WebClient portnetWebClient) {
         this.vesselDetailsUrl = vesselDetailsUrl;
         this.portnetWebclient = portnetWebClient;
+
+        this.factory = new HttpLoggerFactory("Port-call", null, buildTemplate());
     }
 
     @NotTransactionalServiceMethod
     public VesselList getVesselList(final ZonedDateTime from) {
         final String url = buildUrl(from);
+        final HttpLogger httpLogger = this.factory.logger(url);
 
         return portnetWebclient.mutate().baseUrl(url).build()
-            .get().retrieve().bodyToMono(VesselList.class).block();
+            .get()
+            .exchangeToMono(response -> httpLogger.log(response, VesselList.class))
+            .block();
     }
 
     private static void logInfo(final VesselList vesselList) {
@@ -49,5 +58,9 @@ public class VesselDetailsClient {
         final String timeFromParameter = timeToString("fromTme", from);
 
         return String.format("%s%s&%s", vesselDetailsUrl, dateFromParameter, timeFromParameter);
+    }
+
+    private String buildTemplate() {
+        return String.format("%s?fromDte={date}&fromTme={time}", vesselDetailsUrl);
     }
 }

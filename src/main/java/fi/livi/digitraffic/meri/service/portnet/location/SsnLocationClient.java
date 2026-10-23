@@ -2,6 +2,9 @@ package fi.livi.digitraffic.meri.service.portnet.location;
 
 import java.util.List;
 
+import fi.livi.digitraffic.common.logging.HttpLogger;
+import fi.livi.digitraffic.common.logging.HttpLoggerFactory;
+import fi.livi.digitraffic.meri.portnet.xsd.VesselList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
@@ -21,14 +24,24 @@ public class SsnLocationClient {
     private final WebClient webClient;
     private final SsnLocationReader ssnLocationReader;
 
+    private final String url;
+    private final HttpLoggerFactory factory;
+
     public SsnLocationClient(@Value("${metadata.csv.baseUrl:}") final String baseUrl, final WebClient webClient) {
         this.ssnLocationReader = new SsnLocationReader();
-        this.webClient = webClient.mutate().baseUrl(baseUrl+FILENAME).build();
+        this.url = baseUrl+FILENAME;
+        this.webClient = webClient.mutate().baseUrl(url).build();
+
+        this.factory = new HttpLoggerFactory("Port-call", null, url);
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 30000))
     public List<SsnLocation> getSsnLocations() {
-        final String res = webClient.get().retrieve().bodyToMono(String.class).block();
+        final HttpLogger httpLogger = this.factory.logger(url);
+
+        final String res = webClient.get()
+            .exchangeToMono(response -> httpLogger.log(response, String.class))
+            .block();
 
         return ssnLocationReader.readCsv(res);
     }

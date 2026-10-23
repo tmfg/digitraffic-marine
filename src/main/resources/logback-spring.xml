@@ -29,7 +29,7 @@
     <!-- Standard log for others -->
     <springProfile name="!aws">
         <root level="INFO">
-            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="CONSOLE_JSON" />
         </root>
     </springProfile>
 

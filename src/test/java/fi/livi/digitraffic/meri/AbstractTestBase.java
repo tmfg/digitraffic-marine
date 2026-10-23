@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Random;
 
+import okhttp3.Headers;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
@@ -25,6 +26,10 @@ import jakarta.persistence.EntityManager;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+
+import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_XML;
 
 @TestPropertySource(properties = {
         "config.test=true",
@@ -49,7 +54,11 @@ abstract class AbstractTestBase {
     protected void addXmlResponseFromFile(final MockWebServer server, final String fileName) throws IOException {
         final String response = readFile(fileName);
 
-        server.enqueue(new MockResponse().setBody(response).setHeader("Content-Type", "application/xml"));
+        server.enqueue(new MockResponse()
+            .setBody(response)
+            .setHeader(CONTENT_TYPE, APPLICATION_XML)
+            .setHeader(CONTENT_LENGTH, response.getBytes().length)
+        );
     }
 
     protected void expectResponse(final MockWebServer server, final String urlPath) throws InterruptedException {
@@ -57,7 +66,6 @@ abstract class AbstractTestBase {
 
         Assertions.assertEquals(urlPath, request.getRequestUrl().encodedPath());
     }
-
 
     protected String readFile(final String filename) throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();
