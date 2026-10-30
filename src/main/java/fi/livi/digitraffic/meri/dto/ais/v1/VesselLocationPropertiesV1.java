@@ -37,10 +37,10 @@ public class VesselLocationPropertiesV1 extends Properties {
             minimum = "-128", maximum = "127", requiredMode = Schema.RequiredMode.REQUIRED)
     public final int rot;
 
-    @Schema(description = "Position accuracy, 1 = high, 0 = low", allowableValues = {"0", "1"}, requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Position accuracy, true = high, false = low", requiredMode = Schema.RequiredMode.REQUIRED)
     public final boolean posAcc;
 
-    @Schema(description = "Receiver autonomous integrity monitoring (RAIM) flag of electronic position fixing device", allowableValues = {"0", "1"}, requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Receiver autonomous integrity monitoring (RAIM) flag of electronic position fixing device", requiredMode = Schema.RequiredMode.REQUIRED)
     public final boolean raim;
 
     @Schema(description = "Degrees (0-359), 511 = not available (default)",  minimum = "0", maximum = "359")
