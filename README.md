@@ -12,11 +12,26 @@
 
 You can run PostgreSQL and MQTT locally with Docker. See `dbmarine/README.md` and `mqttmarine/README.md`.
 
-### Clone
+
+### Common Java submodule
+
+`lib/digitraffic-common-java` is a git submodule pointing to the public `https://github.com/tmfg/digitraffic-common-java.git`. `.gitmodules` is intentionally not committed and must be listed in `.gitignore`, otherwise the initialization fails. Instead, the Maven `initialize` phase runs `common/scripts/git-submodule-extra.mjs init`, which reads the submodule path and URL from `common/config/repo/settings.default.json` and checks out the submodule.
+
+Initialize manually (e.g. after cloning or if `lib/digitraffic-common-java` is empty):
 
 ```bash
-git clone https://github.com/tmfg/digitraffic-marine-private.git
+node common/scripts/git-submodule-extra.mjs init
 ```
+
+Update to the latest common-java and commit the new pointer:
+
+```bash
+git -C lib/digitraffic-common-java checkout master
+git -C lib/digitraffic-common-java pull origin master
+git add lib/digitraffic-common-java
+```
+
+On a fresh clone run the init script first: plain `git submodule update --init` fails because `.gitmodules` is missing. `git subtree` does not apply, since this is a submodule.
 
 ### Local profiles
 
