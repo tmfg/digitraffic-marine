@@ -33,12 +33,22 @@ jobs:
           echo "SWAGGER_ENV_NAME=$SWAGGER_ENV_NAME" >> $GITHUB_ENV
       - name: Update API Gateway documentation
         run: |
-          cdm_result=$(aws lambda invoke --region ${{ secrets.AWS_REGION }} --function-name SwaggerJoinerMarine${{ env.SWAGGER_ENV_NAME }}-UpdateApiGwDocumentation  update-api-docs-result.json)
-          echo ${cdm_result}
-          if grep -q "Error" <<< ${cdm_result}; then echo "There was error executing lambda"; exit 1; fi
+          invoke_result=$(aws lambda invoke --region ${{ secrets.AWS_REGION }} --function-name SwaggerJoinerMarine${{ env.SWAGGER_ENV_NAME }}-UpdateApiGwDocumentation --log-type Tail update-api-docs-result.json)
+          echo "${invoke_result}"
+          # The error details are in the response payload and in the log tail,
+          # not in the invoke metadata. Print both so failures show up here.
+          echo "--- Lambda response ---"
+          cat update-api-docs-result.json; echo
+          echo "--- Lambda log tail ---"
+          echo "${invoke_result}" | jq -r '.LogResult // empty' | base64 --decode || true
+          if grep -q "FunctionError" <<< "${invoke_result}"; then echo "There was an error executing lambda"; exit 1; fi
       - name: Update Swagger documentation
         run: |
-          cdm_result=$(aws lambda invoke --region ${{ secrets.AWS_REGION }} --function-name SwaggerJoinerMarine${{ env.SWAGGER_ENV_NAME }}-UpdateSwaggerDescriptions  update-swagger-docs-result.json)
-          echo ${cdm_result}
-          if grep -q "Error" <<< ${cdm_result}; then echo "There was erron executing lambda"; exit 1; fi
+          invoke_result=$(aws lambda invoke --region ${{ secrets.AWS_REGION }} --function-name SwaggerJoinerMarine${{ env.SWAGGER_ENV_NAME }}-UpdateSwaggerDescriptions --log-type Tail update-swagger-docs-result.json)
+          echo "${invoke_result}"
+          echo "--- Lambda response ---"
+          cat update-swagger-docs-result.json; echo
+          echo "--- Lambda log tail ---"
+          echo "${invoke_result}" | jq -r '.LogResult // empty' | base64 --decode || true
+          if grep -q "FunctionError" <<< "${invoke_result}"; then echo "There was an error executing lambda"; exit 1; fi
 
