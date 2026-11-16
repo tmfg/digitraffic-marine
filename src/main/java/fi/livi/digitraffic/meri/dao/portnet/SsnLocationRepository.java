@@ -1,8 +1,10 @@
 package fi.livi.digitraffic.meri.dao.portnet;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.hibernate.jpa.AvailableHints;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,6 @@ public interface SsnLocationRepository extends JpaRepository<SsnLocation, String
 
     SsnLocation findByLocode(final String locode);
 
-    @QueryHints(@QueryHint(name=AvailableHints.HINT_FETCH_SIZE, value="100"))
-    Stream<SsnLocation> streamByCountryIgnoreCase(final String country);
+    @QueryHints(@QueryHint(name=AvailableHints.HINT_FETCH_SIZE, value="1000"))
+    List<SsnLocation> findByLocodeStartsWith(@NonNull String country);
 }

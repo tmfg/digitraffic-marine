@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,6 +47,7 @@ public class PortcallControllerV1Test extends AbstractWebTestBase {
         logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS + "?vesselName=test")))
             .andExpect(status().isOk())
+            .andExpect(header().stringValues("Cache-Control", "max-age=60, public"))
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
@@ -56,6 +58,7 @@ public class PortcallControllerV1Test extends AbstractWebTestBase {
         logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS + "?locode=FIHEL&vesselName=test")))
             .andExpect(status().isOk())
+            .andExpect(header().stringValues("Cache-Control", "max-age=60, public"))
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
@@ -66,6 +69,7 @@ public class PortcallControllerV1Test extends AbstractWebTestBase {
         logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS + "?locode=FIHEL")))
             .andExpect(status().isOk())
+            .andExpect(header().stringValues("Cache-Control", "max-age=60, public"))
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("portCalls", Matchers.notNullValue()))
         ;
@@ -79,6 +83,7 @@ public class PortcallControllerV1Test extends AbstractWebTestBase {
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.dataUpdatedTime", is(dataUpdatedTime)))
             .andExpect(jsonPath("$.ssnLocations.features", hasSize(PORT_LOCATIONS)))
+            .andExpect(jsonPath("$.ssnLocations.features[0].locode", Matchers.notNullValue()))
             .andExpect(jsonPath("$.portAreas.features", hasSize(OTHER_PORTS+FIHEL_PORTS)))
             .andExpect(jsonPath("$.berths.berths", hasSize(FIHEL_BERTHS+OTHER_BERTHS)))
         ;
@@ -99,6 +104,16 @@ public class PortcallControllerV1Test extends AbstractWebTestBase {
     }
 
     @Test
+    public void findSsnLocationByLocode() throws Exception {
+        logDebugResponse(
+            mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS + "/FIHKO")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
+            .andExpect(jsonPath("$.ssnLocations.features[0].locode", is("FIHKO")))
+        ;
+    }
+
+    @Test
     public void listPortsWithUnknownLocodeFails() throws Exception {
         logDebugResponse(
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS + "/" + UNKNOWN_LOCODE)))
@@ -114,8 +129,14 @@ public class PortcallControllerV1Test extends AbstractWebTestBase {
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
             .andExpect(jsonPath("$.dataUpdatedTime", is(dataUpdatedTime)))
             .andExpect(jsonPath("$.cargoTypes", hasSize(0)))
+            .andExpect(header().stringValues("Cache-Control", "max-age=86400, public"))
             .andExpect(jsonPath("$.vesselTypes", hasSize(20)))
+            .andExpect(jsonPath("$.vesselTypes[0].code", Matchers.notNullValue()))
+            .andExpect(jsonPath("$.vesselTypes[0].descriptionFi", Matchers.notNullValue()))
             .andExpect(jsonPath("$.agentTypes", hasSize(3)))
+            .andExpect(jsonPath("$.agentTypes[0].code", Matchers.notNullValue()))
+            .andExpect(jsonPath("$.agentTypes[0].descriptionFi", Matchers.notNullValue()))
+            .andExpect(jsonPath("$.agentTypes[0].descriptionEn", Matchers.notNullValue()))
         ;
     }
 
@@ -125,6 +146,7 @@ public class PortcallControllerV1Test extends AbstractWebTestBase {
             mockMvc.perform(get(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.VESSEL_DETAILS)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaTypes.MEDIA_TYPE_APPLICATION_JSON))
+            .andExpect(content().string("[ ]"))
         ;
     }
 }

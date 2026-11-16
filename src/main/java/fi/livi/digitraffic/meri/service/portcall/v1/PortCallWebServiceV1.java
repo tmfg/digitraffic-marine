@@ -255,12 +255,6 @@ public class PortCallWebServiceV1 {
         );
     }
 
-//    If we would have locations for berths?
-//    @Transactional(readOnly = true)
-//    public BerthFeatureCollection findBerths() {
-//        return SsnLocationConverter.convertBerths(berthRepository.streamAllBy(), updatedTimestampRepository.findLastUpdatedInstant(PORT_METADATA));
-//    }
-
     @Transactional(readOnly = true)
     public List<VesselDetails> findVesselDetails(final Instant from, final String vesselName, final Integer mmsi, final Integer imo,
                                                  final List<String> nationalities, final Integer vesselTypeCode) {

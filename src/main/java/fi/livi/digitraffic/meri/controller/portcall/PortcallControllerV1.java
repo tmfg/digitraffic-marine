@@ -3,6 +3,7 @@ package fi.livi.digitraffic.meri.controller.portcall;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.API_PORT_CALL;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.PORT_CALL_V1_TAG;
 import static fi.livi.digitraffic.meri.controller.ApiConstants.V1;
+import static fi.livi.digitraffic.meri.controller.ApiDeprecations.SUNSET_NOTE_2027_07_01;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_INTERNAL_SERVER_ERROR;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_NOT_FOUND;
 import static fi.livi.digitraffic.meri.controller.HttpCodeConstants.HTTP_OK;
@@ -17,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
+import fi.livi.digitraffic.common.annotation.Sunset;
+import fi.livi.digitraffic.meri.controller.ApiDeprecations;
 import fi.livi.digitraffic.meri.controller.CacheControl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ObjectUtils;
@@ -48,6 +51,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Validated
 @ConditionalOnWebApplication
+@Deprecated(forRemoval = true)
+@Sunset(date = ApiDeprecations.SUNSET_2027_07_01)
 public class PortcallControllerV1 {
     private static final String NOTE = "If the search result size exceeds 1000 items, the operation will return an error, and thus " +
         "try to narrow down your search criteria to limit the result size below 1000 items.\n\n" +
@@ -68,7 +73,7 @@ public class PortcallControllerV1 {
         this.updatedTimestampRepository = updatedTimestampRepository;
     }
 
-    @Operation(summary = "Find port calls", description = NOTE)
+    @Operation(summary = "Find port calls. " + SUNSET_NOTE_2027_07_01, description = NOTE)
     @GetMapping(path = API_PORT_CALL_V1 + PORT_CALLS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of port calls"),
         @ApiResponse(responseCode = HTTP_INTERNAL_SERVER_ERROR, description = "Internal server error", content = @Content) })
@@ -149,10 +154,7 @@ public class PortcallControllerV1 {
         }
 
         final Instant actualTo = to != null ? to : Instant.now().plus(Duration.ofDays(100));
-
-        CacheControl.setOneMinuteCache(response);
-
-        return portCallWebServiceV1.findPortCalls(date,
+        final var responseDto = portCallWebServiceV1.findPortCalls(date,
             actualFrom,
             actualTo,
             etaFrom,
@@ -169,29 +171,32 @@ public class PortcallControllerV1 {
             imo,
             nationality,
             vesselTypeCode);
+
+        CacheControl.setOneMinuteCache(response);
+        return responseDto;
     }
 
-    @Operation(summary = "Return all code descriptions")
+    @Operation(summary = "Return all code descriptions. " + SUNSET_NOTE_2027_07_01)
     @GetMapping(path = API_PORT_CALL_V1 + CODE_DESCRIPTIONS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public CodeDescriptionsV1 listCodeDescriptions(
         final HttpServletResponse response) {
 
-        CacheControl.setOneHourCache(response);
+        CacheControl.setOneDayCache(response);
 
         return portCallWebServiceV1.listCodeDescriptions();
     }
 
-    @Operation(summary = "Return all ports with port areas and berths.")
+    @Operation(summary = "Return all ports with port areas and berths. " + SUNSET_NOTE_2027_07_01)
     @GetMapping(path = API_PORT_CALL_V1 + PORTS, produces = MEDIA_TYPE_APPLICATION_JSON)
     @ResponseBody
     public PortLocationDtoV1 findPortsLocations(final HttpServletResponse response) {
-        CacheControl.setOneMinuteCache(response);
+        CacheControl.setOneDayCache(response);
 
         return portCallWebServiceV1.findPortsLocations();
     }
 
-    @Operation(summary = "Return one port with port areas and berths by SafeSeaNet location code (locode).")
+    @Operation(summary = "Return one port with port areas and berths by SafeSeaNet location code (locode). " + SUNSET_NOTE_2027_07_01)
     @GetMapping(path = API_PORT_CALL_V1 + PORTS + "/{locode}", produces = MEDIA_TYPE_APPLICATION_JSON)
     @ApiResponses({ @ApiResponse(responseCode = HTTP_OK, description = "Successful retrieval of ports"),
                     @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Location not found", content = @Content),
@@ -199,11 +204,12 @@ public class PortcallControllerV1 {
     @ResponseBody
     public PortLocationDtoV1 findPortLocationByLocode(@PathVariable(value = "locode") final String locode,
                                                       final HttpServletResponse response) {
-        CacheControl.setOneMinuteCache(response);
+        final var responseDto = portCallWebServiceV1.findPortLocationByLocode(locode);
 
-        return portCallWebServiceV1.findPortLocationByLocode(locode);
+        CacheControl.setOneDayCache(response);
+
+        return responseDto;
     }
-
 
     @Operation(summary = "Return list of vessels details.")
     @GetMapping(path = API_PORT_CALL_V1 + VESSEL_DETAILS, produces = MEDIA_TYPE_APPLICATION_JSON)
