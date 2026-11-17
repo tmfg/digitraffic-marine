@@ -19,6 +19,7 @@ import fi.livi.digitraffic.common.dto.info.v1.UpdateInfosDtoV1;
 import fi.livi.digitraffic.common.util.TimeUtil;
 import fi.livi.digitraffic.meri.controller.ApiConstants;
 import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
+import fi.livi.digitraffic.meri.controller.portcall.PortCallControllerV2;
 import fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1;
 import fi.livi.digitraffic.meri.controller.sse.SseControllerV1;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
@@ -87,24 +88,28 @@ public class DataStatusService {
         final DataSourceInfoDtoV1 portCallLocationInfo = getDataSourceInfo(DataSource.PORT_CALL_LOCATION);
 
         return Arrays.asList(
-        // /api/port-call/v1/vessel-details
+            // /api/port-call/v1/port-calls
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORT_CALLS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_CALLS),
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_CALLS_CHECK),
                                 portCallInfo.getUpdateInterval(), portCallInfo.getRecommendedFetchInterval()),
-            // /api/port-call/v1/port-calls
+            // /api/port-call/v1/code-descriptions
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.CODE_DESCRIPTIONS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_METADATA),
                                 null, portCallCodeInfo.getUpdateInterval(), portCallCodeInfo.getRecommendedFetchInterval()),
-            // /api/port-call/v1/locations (ssnLocation, portArea, berthRepository)
+            // /api/port-call/v1/ports
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.PORTS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_METADATA),
                                 null, portCallLocationInfo.getUpdateInterval(), portCallLocationInfo.getRecommendedFetchInterval()),
-            // /api/port-call/v1/code-descriptions
+            // /api/port-call/v1/vessel-details
             new UpdateInfoDtoV1(PortcallControllerV1.API_PORT_CALL_V1 + PortcallControllerV1.VESSEL_DETAILS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS),
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_VESSEL_DETAILS_CHECK),
                                 portCallVesselDetailInfo.getUpdateInterval(), portCallVesselDetailInfo.getRecommendedFetchInterval()),
+            // /api/port-call/v2/ports
+            new UpdateInfoDtoV1(PortCallControllerV2.API_PORT_CALL_V2 + PortCallControllerV2.PORTS,
+                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PORT_METADATA),
+                                null, portCallLocationInfo.getUpdateInterval(), portCallLocationInfo.getRecommendedFetchInterval()),
             // /api/port-call/v2/visits
             new UpdateInfoDtoV1(ApiConstants.API_PORT_CALL_V2_VISITS,
                                 updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.PC2_VISITS),
