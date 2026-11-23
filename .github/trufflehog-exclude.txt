@@ -1,1 +1,4 @@
 dbmarine/docker-compose.yml
+.*localhost.*\.(properties|conf|template)$
+db/flyway\.properties
+src/test/resources/application-default\.properties\.template
