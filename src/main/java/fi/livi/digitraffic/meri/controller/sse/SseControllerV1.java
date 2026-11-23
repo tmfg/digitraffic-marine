@@ -14,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 
@@ -22,8 +21,8 @@ import static fi.livi.digitraffic.meri.controller.ApiConstants.*;
 import static fi.livi.digitraffic.meri.controller.ApiDeprecations.SUNSET_NOTE_2026_11_24;
 import static fi.livi.digitraffic.meri.controller.Constants.*;
 
+// TODO remove SSE controller and services
 @Tag(name = SSE_V1_TAG, description = "Sea State Estimate (SSE) APIs")
-@RestController
 @Validated
 @ConditionalOnWebApplication
 @Deprecated(forRemoval = true)

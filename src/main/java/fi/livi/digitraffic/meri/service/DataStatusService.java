@@ -21,7 +21,6 @@ import fi.livi.digitraffic.meri.controller.ApiConstants;
 import fi.livi.digitraffic.meri.controller.ais.AisControllerV1;
 import fi.livi.digitraffic.meri.controller.portcall.PortCallControllerV2;
 import fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1;
-import fi.livi.digitraffic.meri.controller.sse.SseControllerV1;
 import fi.livi.digitraffic.meri.dao.UpdatedTimestampRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselLocationRepository;
 import fi.livi.digitraffic.meri.dao.ais.VesselMetadataRepository;
@@ -49,7 +48,6 @@ public class DataStatusService {
 
         final List<UpdateInfoDtoV1> updatedInfos =
             Stream.of(
-                getSseUpdateInfos().stream(),
                 getPortCallUpdateInfos().stream(),
                 getVesselsUpdateInfos().stream(),
                 getWinterNavigationUpdateInfos().stream(),
@@ -66,17 +64,6 @@ public class DataStatusService {
                 .max(Instant::compareTo)
                 .orElse(Instant.EPOCH);
         return new UpdateInfosDtoV1(updatedInfos, max);
-    }
-
-    private List<UpdateInfoDtoV1> getSseUpdateInfos() {
-        // /api/sse/v1/measurements
-        final DataSourceInfoDtoV1 info = getDataSourceInfo(DataSource.SSE_DATA);
-        return Collections.singletonList(
-            new UpdateInfoDtoV1(SseControllerV1.API_SSE_V1 + SseControllerV1.MEASUREMENTS,
-                                updatedTimestampRepository.findLastUpdatedInstant(UpdatedTimestampRepository.UpdatedName.SSE_DATA),
-                                null, // Data is pushed to DT
-                                info.getUpdateInterval(), info.getRecommendedFetchInterval())
-        );
     }
 
     private List<UpdateInfoDtoV1> getPortCallUpdateInfos() {

@@ -2,6 +2,8 @@ package fi.livi.digitraffic.meri;
 
 import static fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1.API_PORT_CALL_V1;
 import static fi.livi.digitraffic.meri.controller.portcall.PortcallControllerV1.PORT_CALLS;
+import static fi.livi.digitraffic.meri.controller.sse.SseControllerV1.API_SSE_V1;
+import static fi.livi.digitraffic.meri.controller.sse.SseControllerV1.MEASUREMENTS;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -50,7 +52,14 @@ public class SwaggerUiWebTest extends AbstractWebTestBase {
             .andExpect(content().contentType(restContentType))
             .andExpect(jsonPath("$.openapi", is("3.0.1")))
             .andExpect(jsonPath("$.info.version", is(versionService.getAppFullVersion())))
-            .andExpect(jsonPath("$.paths." + API_PORT_CALL_V1 + PORT_CALLS, anything()));
+            .andExpect(jsonPath("$.paths." + API_PORT_CALL_V1 + PORT_CALLS, anything()))
+            .andExpect(jsonPath("$.paths['" + API_SSE_V1 + MEASUREMENTS + "']").doesNotExist());
+    }
+
+    @Test
+    public void testSseMeasurementsIsRemoved() throws Exception {
+        mockMvc.perform(get(API_SSE_V1 + MEASUREMENTS))
+            .andExpect(status().isNotFound());
     }
 
     @Test

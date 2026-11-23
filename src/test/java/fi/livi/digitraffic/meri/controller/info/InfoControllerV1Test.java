@@ -40,7 +40,6 @@ public class InfoControllerV1Test extends AbstractWebTestBase {
     @Test
     public void updateTimes() throws Exception {
 
-        final String sseInterval = dataStatusService.getDataSourceUpdateInterval(DataSource.SSE_DATA);
         final String portCallInterval = dataStatusService.getDataSourceUpdateInterval(DataSource.PORT_CALL);
 
         final ResultActions response =
@@ -52,7 +51,7 @@ public class InfoControllerV1Test extends AbstractWebTestBase {
             .andExpect(jsonPath("updateTimes[*].dataUpdatedTime").exists())
             .andExpect(jsonPath("updateTimes[*].dataCheckedTime").exists())
             .andExpect(jsonPath("updateTimes[*].dataUpdateInterval").exists())
-            .andExpect(jsonPath("$.updateTimes[?(@.api=='/api/sse/v1/measurements')].dataUpdateInterval").value(sseInterval))
+            .andExpect(jsonPath("$.updateTimes[*].api", Matchers.not(Matchers.hasItem("/api/sse/v1/measurements"))))
             .andExpect(jsonPath("$.updateTimes[?(@.api=='/api/port-call/v1/port-calls')].dataUpdateInterval", Matchers.hasItem(portCallInterval)))
             ;
     }
